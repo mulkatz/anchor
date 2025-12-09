@@ -1,51 +1,88 @@
-import { type FC, useEffect } from 'react';
+import { type FC, useEffect, useState, useRef } from 'react';
 import { Volume2 } from 'lucide-react';
+import { usePinkNoise } from '../../../hooks/usePinkNoise';
+import { WaveVisualizer } from '../../ui/WaveVisualizer';
 
 interface GroundingSoundProps {
   onComplete: () => void;
 }
 
 export const GroundingSound: FC<GroundingSoundProps> = ({ onComplete }) => {
-  useEffect(() => {
-    // TODO: Play pink noise audio
-    // For now, just auto-advance after 20 seconds
-    const timer = setTimeout(() => {
-      onComplete();
-    }, 20000);
+  const { isPlaying, start, stop, analyser } = usePinkNoise();
+  const [timeLeft, setTimeLeft] = useState(20);
+  const onCompleteRef = useRef(onComplete);
 
-    return () => clearTimeout(timer);
+  // Keep ref updated
+  useEffect(() => {
+    onCompleteRef.current = onComplete;
   }, [onComplete]);
+
+  useEffect(() => {
+    // Start pink noise on mount
+    start();
+
+    // Timer countdown
+    const interval = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
+          clearInterval(interval);
+          stop();
+          setTimeout(() => onCompleteRef.current(), 500);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => {
+      clearInterval(interval);
+      stop();
+    };
+  }, [start, stop]);
 
   return (
     <div className="flex h-full flex-col items-center justify-center bg-void-blue px-6">
-      {/* Minimal pulsing orb */}
-      <div className="mb-12 animate-breathe">
-        <div className="h-24 w-24 rounded-full bg-biolum-cyan/20 shadow-inner-glow" />
+      {/* Wave Visualizer */}
+      <div className="mb-8">
+        {analyser && (
+          <WaveVisualizer
+            analyser={analyser}
+            width={320}
+            height={160}
+            color="#64FFDA"
+            glowColor="rgba(100, 255, 218, 0.6)"
+          />
+        )}
       </div>
 
       {/* Icon */}
-      <Volume2 size={48} className="mb-6 text-biolum-cyan/50" />
+      <Volume2
+        size={48}
+        className={`mb-6 transition-all duration-300 ${
+          isPlaying ? 'text-biolum-cyan drop-shadow-glow' : 'text-biolum-cyan/50'
+        }`}
+      />
 
       {/* Instruction */}
       <h2 className="mb-4 text-center text-2xl font-light text-mist-white">
         Just listen
       </h2>
-      <p className="text-center text-sm text-mist-white/40">
+      <p className="mb-8 text-center text-sm text-mist-white/40">
         Close your eyes if you feel safe
       </p>
 
-      {/* Visual timer (subtle) */}
-      <div className="absolute bottom-32">
-        <div className="flex gap-1">
-          {Array.from({ length: 20 }).map((_, i) => (
-            <div
-              key={i}
-              className="h-1 w-1 rounded-full bg-mist-white/20 animate-pulse"
-              style={{
-                animationDelay: `${i * 0.1}s`,
-              }}
-            />
-          ))}
+      {/* Timer */}
+      <div className="flex flex-col items-center">
+        <p className="text-4xl font-light text-biolum-cyan/60">
+          {timeLeft}s
+        </p>
+        <div className="mt-4 h-1 w-64 overflow-hidden rounded-full bg-mist-white/10">
+          <div
+            className="h-full bg-biolum-cyan/50 transition-all duration-1000 ease-linear"
+            style={{
+              width: `${((20 - timeLeft) / 20) * 100}%`,
+            }}
+          />
         </div>
       </div>
     </div>
