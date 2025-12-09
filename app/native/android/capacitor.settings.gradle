@@ -16,3 +16,6 @@ project(':capacitor-haptics').projectDir = new File('../../../node_modules/@capa
 
 include ':capacitor-share'
 project(':capacitor-share').projectDir = new File('../../../node_modules/@capacitor/share/android')
+
+include ':capacitor-voice-recorder'
+project(':capacitor-voice-recorder').projectDir = new File('../../../node_modules/capacitor-voice-recorder/android')

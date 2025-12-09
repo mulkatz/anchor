@@ -1,8 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
 import { collection, query, orderBy, onSnapshot, addDoc, Timestamp } from 'firebase/firestore';
-import { firestore, auth } from '../services/firebase.service';
+import { ref, uploadBytes } from 'firebase/storage';
+import { firestore, auth, storage } from '../services/firebase.service';
 import { useHaptics } from './useHaptics';
 import type { Message } from '../models';
+import type { RecordingData } from './useVoiceRecorder';
 
 interface UseChatProps {
   conversationId: string | null;
@@ -61,11 +63,16 @@ export const useChat = ({ conversationId }: UseChatProps) => {
             id: doc.id,
             userId: data.userId,
             conversationId: data.conversationId,
-            text: data.text,
+            text: data.text || '',
             role: data.role,
             createdAt: data.createdAt?.toDate() || new Date(),
             isCrisisResponse: data.isCrisisResponse,
             metadata: data.metadata,
+            // Voice message fields
+            hasAudio: data.hasAudio,
+            audioPath: data.audioPath,
+            audioDuration: data.audioDuration,
+            transcriptionStatus: data.transcriptionStatus,
           } as Message);
         });
 
@@ -143,10 +150,71 @@ export const useChat = ({ conversationId }: UseChatProps) => {
     [userId, conversationId]
   );
 
+  // Send voice message function
+  const sendVoiceMessage = useCallback(
+    async (recordingData: RecordingData) => {
+      if (!userId) {
+        setError('Not authenticated');
+        return;
+      }
+
+      if (!conversationId) {
+        setError('No active conversation');
+        return;
+      }
+
+      try {
+        setIsThinking(true);
+        setError(null);
+
+        // Generate unique message ID
+        const messageId = crypto.randomUUID();
+
+        // Upload audio to Cloud Storage
+        const audioPath = `audio-messages/${userId}/${conversationId}/${messageId}.m4a`;
+        const storageRef = ref(storage, audioPath);
+
+        await uploadBytes(storageRef, recordingData.blob, {
+          contentType: recordingData.mimeType,
+        });
+
+        // Write Firestore message with audio metadata
+        const messagesRef = collection(
+          firestore,
+          `users/${userId}/conversations/${conversationId}/messages`
+        );
+
+        await addDoc(messagesRef, {
+          userId,
+          conversationId,
+          text: '', // Empty until transcribed
+          role: 'user',
+          hasAudio: true,
+          audioPath,
+          audioDuration: recordingData.duration,
+          transcriptionStatus: 'pending',
+          createdAt: Timestamp.now(),
+          metadata: {
+            audioFormat: recordingData.mimeType, // Store full mimeType for backend
+          },
+        });
+
+        // Note: Backend Cloud Function will handle transcription
+        // isThinking will be set to false when transcription completes
+      } catch (err) {
+        console.error('Error sending voice message:', err);
+        setError('Failed to send voice message. Please try again.');
+        setIsThinking(false);
+      }
+    },
+    [userId, conversationId]
+  );
+
   return {
     messages,
     isThinking,
     error,
     sendMessage,
+    sendVoiceMessage,
   };
 };

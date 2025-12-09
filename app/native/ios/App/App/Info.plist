@@ -45,5 +45,7 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Record voice messages to communicate with Anchor, your mental health companion.</string>
 </dict>
 </plist>

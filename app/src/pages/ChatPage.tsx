@@ -23,7 +23,7 @@ export const ChatPage: FC = () => {
     error: conversationError,
   } = useConversation();
 
-  const { messages, isThinking, error, sendMessage } = useChat({
+  const { messages, isThinking, error, sendMessage, sendVoiceMessage } = useChat({
     conversationId: activeConversation?.id || null,
   });
 
@@ -104,7 +104,11 @@ export const ChatPage: FC = () => {
       <div className="relative flex-1 overflow-hidden">
         <ChatContainer messages={messages} isThinking={isThinking} />
         {/* Input Area (absolute positioned within the flex container) */}
-        <ChatInput onSend={sendMessage} disabled={isThinking || !activeConversation} />
+        <ChatInput
+          onSend={sendMessage}
+          onSendVoice={sendVoiceMessage}
+          disabled={isThinking || !activeConversation}
+        />
       </div>
     </div>
   );

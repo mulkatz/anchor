@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { UserMessage } from './UserMessage';
 import { AssistantMessage } from './AssistantMessage';
 import { CrisisCard } from './CrisisCard';
+import { AudioMessageBubble } from './AudioMessageBubble';
 import type { Message } from '../../../models';
 
 interface MessageBubbleProps {
@@ -30,6 +31,10 @@ export const MessageBubble: FC<MessageBubbleProps> = ({ message, index }) => {
   const renderMessage = () => {
     switch (message.role) {
       case 'user':
+        // If message has audio, render audio bubble, otherwise regular user message
+        if (message.hasAudio) {
+          return <AudioMessageBubble message={message} />;
+        }
         return <UserMessage text={message.text} />;
 
       case 'assistant':

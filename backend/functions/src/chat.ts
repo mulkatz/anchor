@@ -77,10 +77,20 @@ export const onMessageCreate = onDocumentCreated(
       return;
     }
 
+    // 2. Skip audio messages that are still being transcribed
+    if (message.hasAudio && message.transcriptionStatus === 'pending') {
+      logger.info('Skipping message with pending transcription', {
+        userId,
+        conversationId,
+        messageId: snap.id,
+      });
+      return;
+    }
+
     logger.info('Processing user message', { userId, conversationId, messageId: snap.id });
 
     try {
-      // 2. Crisis Detection: Check for self-harm keywords BEFORE AI call
+      // 3. Crisis Detection: Check for self-harm keywords BEFORE AI call
       const hasCrisisKeyword = CRISIS_KEYWORDS.some((regex) => regex.test(message.text));
 
       if (hasCrisisKeyword) {
@@ -110,7 +120,7 @@ export const onMessageCreate = onDocumentCreated(
         return;
       }
 
-      // 3. Fetch Context: Get last 10 messages for conversation history
+      // 4. Fetch Context: Get last 10 messages for conversation history
       const messagesSnapshot = await admin
         .firestore()
         .collection(`users/${userId}/conversations/${conversationId}/messages`)
@@ -132,13 +142,13 @@ export const onMessageCreate = onDocumentCreated(
         historyLength: conversationHistory.length,
       });
 
-      // 4. Build Gemini Conversation Format
+      // 5. Build Gemini Conversation Format
       const contents = conversationHistory.map((msg) => ({
         role: msg.role === 'user' ? 'user' : 'model',
         parts: [{ text: msg.text }],
       }));
 
-      // 5. Call Vertex AI (Gemini 1.5 Pro)
+      // 6. Call Vertex AI (Gemini 2.5 Flash)
       const vertexAI = new VertexAI({
         project: process.env.GCLOUD_PROJECT,
         location: 'us-central1',

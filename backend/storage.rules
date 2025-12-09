@@ -1,0 +1,35 @@
+rules_version = '2';
+
+// Cloud Storage Security Rules for Anxiety Buddy
+// Controls access to audio messages stored in Cloud Storage
+
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    // Audio messages: User-scoped access for voice recordings
+    match /audio-messages/{userId}/{conversationId}/{messageId} {
+
+      // Allow write (upload) only if:
+      // 1. User is authenticated
+      // 2. User is uploading to their own folder (userId matches auth.uid)
+      // 3. File size is under 5MB (prevent abuse)
+      // 4. Content type is audio (aac, webm, wav, m4a, mp4)
+      allow write: if request.auth != null
+                   && request.auth.uid == userId
+                   && request.resource.size < 5 * 1024 * 1024
+                   && (request.resource.contentType.matches('audio/.*')
+                       || request.resource.contentType == 'video/mp4');  // m4a uses video/mp4
+
+      // Allow read only if:
+      // 1. User is authenticated
+      // 2. User is reading from their own folder (userId matches auth.uid)
+      allow read: if request.auth != null
+                  && request.auth.uid == userId;
+    }
+
+    // Deny all other access to any files not explicitly allowed above
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

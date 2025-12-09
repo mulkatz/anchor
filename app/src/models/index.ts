@@ -40,14 +40,28 @@ export interface Message {
   id: string;
   userId: string;
   conversationId: string;
-  text: string;
+  text: string; // Transcribed text or typed text
   role: 'user' | 'assistant' | 'crisis';
   createdAt: Date;
   isCrisisResponse?: boolean;
+
+  // Voice message fields
+  hasAudio?: boolean;
+  audioPath?: string; // Cloud Storage path
+  audioDuration?: number; // milliseconds
+  transcriptionStatus?: 'pending' | 'completed' | 'failed';
+
   metadata?: {
+    // Text message metadata
     model?: string;
     tokensUsed?: number;
     responseTime?: number;
+
+    // Voice message transcription metadata
+    transcriptionConfidence?: number; // 0-1
+    transcriptionTime?: number; // milliseconds
+    audioFormat?: 'aac' | 'webm' | 'm4a' | 'wav';
+    lowConfidenceWarning?: boolean;
   };
 }
 
