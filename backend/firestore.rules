@@ -3,18 +3,45 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Chat messages - users can read/write their own messages
-    match /users/{userId}/messages/{messageId} {
-      // Authenticated users can access their own messages
-      allow read, write: if request.auth != null && request.auth.uid == userId;
-
-      // Anonymous users (development/testing)
-      // Pattern: anonymous_[uuid]
-      allow read, write: if userId.matches('anonymous_.*');
+    // Helper function to check userId ownership
+    function isOwner(userId) {
+      return (request.auth != null && request.auth.uid == userId) ||
+             (userId.matches('anonymous_.*') && request.auth == null);
     }
 
-    // Future: User profiles
+    // Users collection
     match /users/{userId} {
+
+      // Conversations subcollection
+      match /conversations/{conversationId} {
+        // Read: User can read their own conversations
+        allow read: if isOwner(userId);
+
+        // Create: Only if creating conversation for self
+        allow create: if isOwner(userId) &&
+                         request.resource.data.userId == userId;
+
+        // Update: Owner can archive/unarchive
+        allow update: if isOwner(userId) &&
+                         request.resource.data.userId == userId;
+
+        // Delete: Owner can delete archived conversations only
+        allow delete: if isOwner(userId) &&
+                         resource.data.status == 'archived';
+
+        // Messages subcollection within conversations
+        match /messages/{messageId} {
+          allow read, write: if isOwner(userId);
+        }
+      }
+
+      // Legacy: Chat messages - users can read/write their own messages
+      // Keep for migration period
+      match /messages/{messageId} {
+        allow read, write: if isOwner(userId);
+      }
+
+      // User profiles
       allow read, write: if request.auth != null && request.auth.uid == userId;
     }
 

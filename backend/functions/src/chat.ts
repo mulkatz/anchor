@@ -59,7 +59,7 @@ Guidelines:
  * Responds with AI-generated therapeutic messages or crisis resources
  */
 export const onMessageCreate = onDocumentCreated(
-  'users/{userId}/messages/{messageId}',
+  'users/{userId}/conversations/{conversationId}/messages/{messageId}',
   async (event): Promise<void> => {
     const snap = event.data;
     if (!snap) {
@@ -69,30 +69,42 @@ export const onMessageCreate = onDocumentCreated(
 
     const message = snap.data();
     const userId = event.params.userId;
+    const conversationId = event.params.conversationId;
 
     // 1. Validate: Only process user messages
     if (message.role !== 'user') {
-      logger.info('Skipping non-user message', { userId, role: message.role });
+      logger.info('Skipping non-user message', { userId, conversationId, role: message.role });
       return;
     }
 
-    logger.info('Processing user message', { userId, messageId: snap.id });
+    logger.info('Processing user message', { userId, conversationId, messageId: snap.id });
 
     try {
       // 2. Crisis Detection: Check for self-harm keywords BEFORE AI call
       const hasCrisisKeyword = CRISIS_KEYWORDS.some((regex) => regex.test(message.text));
 
       if (hasCrisisKeyword) {
-        logger.warn('Crisis keyword detected', { userId, text: message.text });
+        logger.warn('Crisis keyword detected', { userId, conversationId, text: message.text });
 
         // Write crisis response immediately and exit
         await admin
           .firestore()
-          .collection(`users/${userId}/messages`)
+          .collection(`users/${userId}/conversations/${conversationId}/messages`)
           .add({
             ...CRISIS_RESPONSE,
             userId,
+            conversationId,
             createdAt: admin.firestore.FieldValue.serverTimestamp(),
+          });
+
+        // Update conversation metadata
+        await admin
+          .firestore()
+          .doc(`users/${userId}/conversations/${conversationId}`)
+          .update({
+            updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+            messageCount: admin.firestore.FieldValue.increment(1),
+            'metadata.hasCrisisMessages': true,
           });
 
         return;
@@ -101,7 +113,7 @@ export const onMessageCreate = onDocumentCreated(
       // 3. Fetch Context: Get last 10 messages for conversation history
       const messagesSnapshot = await admin
         .firestore()
-        .collection(`users/${userId}/messages`)
+        .collection(`users/${userId}/conversations/${conversationId}/messages`)
         .where('role', 'in', ['user', 'assistant']) // Exclude crisis messages
         .orderBy('createdAt', 'desc')
         .limit(10)
@@ -116,6 +128,7 @@ export const onMessageCreate = onDocumentCreated(
 
       logger.info('Fetched conversation history', {
         userId,
+        conversationId,
         historyLength: conversationHistory.length,
       });
 
@@ -165,6 +178,7 @@ export const onMessageCreate = onDocumentCreated(
 
       logger.info('AI response generated', {
         userId,
+        conversationId,
         responseTime,
         messageLength: responseText.length,
         actualText: responseText,
@@ -173,9 +187,10 @@ export const onMessageCreate = onDocumentCreated(
       // 6. Write Assistant Response to Firestore
       await admin
         .firestore()
-        .collection(`users/${userId}/messages`)
+        .collection(`users/${userId}/conversations/${conversationId}/messages`)
         .add({
           userId,
+          conversationId,
           role: 'assistant',
           text: responseText,
           createdAt: admin.firestore.FieldValue.serverTimestamp(),
@@ -184,16 +199,29 @@ export const onMessageCreate = onDocumentCreated(
             responseTime,
           },
         });
+
+      // 7. Update Conversation Metadata
+      await admin
+        .firestore()
+        .doc(`users/${userId}/conversations/${conversationId}`)
+        .update({
+          updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+          messageCount: admin.firestore.FieldValue.increment(1),
+        });
     } catch (error) {
-      logger.error('Error processing message', { userId, error });
+      logger.error('Error processing message', { userId, conversationId, error });
 
       // Write fallback error message
-      await admin.firestore().collection(`users/${userId}/messages`).add({
-        userId,
-        role: 'assistant',
-        text: "I'm having trouble connecting right now. Please try again in a moment, or reach out to a crisis line if you need immediate support.",
-        createdAt: admin.firestore.FieldValue.serverTimestamp(),
-      });
+      await admin
+        .firestore()
+        .collection(`users/${userId}/conversations/${conversationId}/messages`)
+        .add({
+          userId,
+          conversationId,
+          role: 'assistant',
+          text: "I'm having trouble connecting right now. Please try again in a moment, or reach out to a crisis line if you need immediate support.",
+          createdAt: admin.firestore.FieldValue.serverTimestamp(),
+        });
 
       throw error; // Trigger Function retry
     }

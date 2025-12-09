@@ -5,3 +5,6 @@ admin.initializeApp();
 
 // Export Deep Talk chat function
 export { onMessageCreate } from './chat';
+
+// Export conversation management functions
+export { generateConversationTitle, enforceSingleActiveConversation } from './conversations';

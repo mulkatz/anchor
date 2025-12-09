@@ -1,43 +1,37 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { collection, query, orderBy, onSnapshot, addDoc, Timestamp } from 'firebase/firestore';
 import { firestore, auth } from '../services/firebase.service';
 import { useHaptics } from './useHaptics';
 import type { Message } from '../models';
 
-/**
- * Get or create anonymous user ID
- * Stored in localStorage to maintain session across reloads
- */
-const getAnonymousUserId = (): string => {
-  const storageKey = 'anxiety_buddy_user_id';
-  let userId = localStorage.getItem(storageKey);
-
-  if (!userId) {
-    userId = `anonymous_${crypto.randomUUID()}`;
-    localStorage.setItem(storageKey, userId);
-  }
-
-  return userId;
-};
+interface UseChatProps {
+  conversationId: string | null;
+}
 
 /**
  * Custom hook for Deep Talk chat functionality
  * Manages real-time Firestore sync and message sending
  */
-export const useChat = () => {
+export const useChat = ({ conversationId }: UseChatProps) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isThinking, setIsThinking] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { medium } = useHaptics();
 
-  // Get user ID (authenticated or anonymous)
-  const userId = useMemo(() => {
-    return auth.currentUser?.uid || getAnonymousUserId();
-  }, []);
+  const userId = auth.currentUser?.uid;
 
-  // Real-time Firestore listener
+  // Real-time Firestore listener for messages in specific conversation
   useEffect(() => {
-    const messagesRef = collection(firestore, `users/${userId}/messages`);
+    // If no userId or conversationId, clear messages
+    if (!userId || !conversationId) {
+      setMessages([]);
+      return;
+    }
+
+    const messagesRef = collection(
+      firestore,
+      `users/${userId}/conversations/${conversationId}/messages`
+    );
     const q = query(messagesRef, orderBy('createdAt', 'asc'));
 
     let previousMessageCount = 0;
@@ -66,6 +60,7 @@ export const useChat = () => {
           newMessages.push({
             id: doc.id,
             userId: data.userId,
+            conversationId: data.conversationId,
             text: data.text,
             role: data.role,
             createdAt: data.createdAt?.toDate() || new Date(),
@@ -92,11 +87,21 @@ export const useChat = () => {
     );
 
     return () => unsubscribe();
-  }, [userId, medium]);
+  }, [userId, conversationId, medium]);
 
   // Send message function
   const sendMessage = useCallback(
     async (text: string) => {
+      if (!userId) {
+        setError('Not authenticated');
+        return;
+      }
+
+      if (!conversationId) {
+        setError('No active conversation');
+        return;
+      }
+
       const trimmedText = text.trim();
       if (!trimmedText) return;
 
@@ -104,10 +109,14 @@ export const useChat = () => {
         setIsThinking(true);
         setError(null);
 
-        const messagesRef = collection(firestore, `users/${userId}/messages`);
+        const messagesRef = collection(
+          firestore,
+          `users/${userId}/conversations/${conversationId}/messages`
+        );
 
         await addDoc(messagesRef, {
           userId,
+          conversationId,
           text: trimmedText,
           role: 'user',
           createdAt: Timestamp.now(),
@@ -131,7 +140,7 @@ export const useChat = () => {
         setIsThinking(false);
       }
     },
-    [userId]
+    [userId, conversationId]
   );
 
   return {

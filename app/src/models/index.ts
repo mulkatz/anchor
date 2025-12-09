@@ -19,9 +19,27 @@ export interface ApiResponse<T> {
   message?: string;
 }
 
+export interface Conversation {
+  id: string;
+  userId: string;
+  status: 'active' | 'archived';
+  title: string;
+  preview: string;
+  messageCount: number;
+  createdAt: Date;
+  updatedAt: Date;
+  archivedAt: Date | null;
+  metadata?: {
+    hasCrisisMessages?: boolean;
+    firstUserMessage?: string;
+    lastUserMessage?: string;
+  };
+}
+
 export interface Message {
   id: string;
   userId: string;
+  conversationId: string;
   text: string;
   role: 'user' | 'assistant' | 'crisis';
   createdAt: Date;

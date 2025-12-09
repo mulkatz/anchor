@@ -1,7 +1,7 @@
 import { initializeApp } from 'firebase/app';
 import { getAnalytics, logEvent as firebaseLogEvent } from 'firebase/analytics';
 import { getAuth } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore';
+import { getFirestore, enableIndexedDbPersistence } from 'firebase/firestore';
 import { isWeb } from '../utils/platform';
 
 /**
@@ -25,6 +25,17 @@ export const app = initializeApp(firebaseConfig);
 // Initialize services
 export const auth = getAuth(app);
 export const firestore = getFirestore(app);
+
+// Enable offline persistence
+enableIndexedDbPersistence(firestore).catch((err) => {
+  if (err.code === 'failed-precondition') {
+    console.warn('Offline persistence failed: Multiple tabs open');
+  } else if (err.code === 'unimplemented') {
+    console.warn('Offline persistence not available in this browser');
+  } else {
+    console.error('Offline persistence error:', err);
+  }
+});
 
 // Analytics (only on web)
 let analytics: ReturnType<typeof getAnalytics> | null = null;

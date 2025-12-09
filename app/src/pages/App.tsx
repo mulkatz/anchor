@@ -1,10 +1,13 @@
-import { type FC } from 'react';
+import { type FC, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
+import { signInAnonymously } from 'firebase/auth';
+import { auth } from '../services/firebase.service';
 import { MainLayout } from '../components/layouts/MainLayout';
 import { HomePage } from './HomePage';
 import { SOSPage } from './SOSPage';
 import { ChatPage } from './ChatPage';
+import { ArchivePage } from './ArchivePage';
 import { VaultPage } from './VaultPage';
 import { ProfilePage } from './ProfilePage';
 
@@ -83,6 +86,21 @@ const AnimatedRoutes: FC = () => {
           }
         />
         <Route
+          path="/archive"
+          element={
+            <motion.div
+              variants={pageVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              transition={pageTransition}
+              className="h-full w-full"
+            >
+              <ArchivePage />
+            </motion.div>
+          }
+        />
+        <Route
           path="/vault"
           element={
             <motion.div
@@ -118,6 +136,15 @@ const AnimatedRoutes: FC = () => {
 };
 
 const App: FC = () => {
+  // Ensure user is signed in anonymously on app load
+  useEffect(() => {
+    if (!auth.currentUser) {
+      signInAnonymously(auth).catch((error) => {
+        console.error('Anonymous sign-in failed:', error);
+      });
+    }
+  }, []);
+
   return (
     <BrowserRouter>
       <MainLayout>
