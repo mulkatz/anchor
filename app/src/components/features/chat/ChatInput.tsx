@@ -2,6 +2,7 @@ import { type FC, useState, useRef, useEffect } from 'react';
 import { Send } from 'lucide-react';
 import { cn } from '../../../utils/cn';
 import { useHaptics } from '../../../hooks/useHaptics';
+import { useNavbarHeight } from '../../../hooks/useNavbarHeight';
 
 interface ChatInputProps {
   onSend: (text: string) => void;
@@ -16,6 +17,7 @@ export const ChatInput: FC<ChatInputProps> = ({ onSend, disabled }) => {
   const [text, setText] = useState('');
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { light } = useHaptics();
+  const navbarOffset = useNavbarHeight();
 
   // Auto-resize textarea based on content
   useEffect(() => {
@@ -49,12 +51,15 @@ export const ChatInput: FC<ChatInputProps> = ({ onSend, disabled }) => {
   return (
     <div
       className={cn(
-        'safe-area-margin-bottom fixed bottom-24 left-0 right-0 z-40',
+        'absolute bottom-0 left-0 right-0 z-40',
         'px-6 pb-4 pt-3',
-        'bg-void-blue/90 backdrop-blur-glass',
+        'bg-void-blue/95 backdrop-blur-glass',
         'border-t border-glass-border',
         'pointer-events-auto'
       )}
+      style={{
+        marginBottom: navbarOffset > 0 ? `${navbarOffset + 8}px` : '96px', // +8px for gap
+      }}
     >
       <div
         className={cn(

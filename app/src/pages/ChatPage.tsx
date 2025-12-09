@@ -54,9 +54,9 @@ export const ChatPage: FC = () => {
   };
 
   return (
-    <div className="flex h-full flex-col bg-void-blue">
+    <div className="flex h-screen w-full flex-col bg-void-blue">
       {/* Header */}
-      <header className="safe-area-top flex items-center justify-between border-b border-glass-border px-6 py-4">
+      <header className="safe-area-top flex shrink-0 items-center justify-between border-b border-glass-border px-6 py-4">
         <div>
           <h1 className="text-2xl font-light text-mist-white">Deep Talk</h1>
           <p className="text-sm text-mist-white/60">with Anchor</p>
@@ -95,16 +95,17 @@ export const ChatPage: FC = () => {
 
       {/* Error Banner (if any) */}
       {(error || conversationError) && (
-        <div className="border-b border-danger/50 bg-danger/20 px-6 py-3">
+        <div className="shrink-0 border-b border-danger/50 bg-danger/20 px-6 py-3">
           <p className="text-sm text-mist-white">{error || conversationError}</p>
         </div>
       )}
 
-      {/* Message List (scrollable) */}
-      <ChatContainer messages={messages} isThinking={isThinking} />
-
-      {/* Input Area (fixed bottom) */}
-      <ChatInput onSend={sendMessage} disabled={isThinking || !activeConversation} />
+      {/* Message List (scrollable) - This is the ONLY scrollable area */}
+      <div className="relative flex-1 overflow-hidden">
+        <ChatContainer messages={messages} isThinking={isThinking} />
+        {/* Input Area (absolute positioned within the flex container) */}
+        <ChatInput onSend={sendMessage} disabled={isThinking || !activeConversation} />
+      </div>
     </div>
   );
 };

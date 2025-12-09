@@ -8,10 +8,8 @@ interface MainLayoutProps {
 export const MainLayout: FC<MainLayoutProps> = ({ children }) => {
   return (
     <div className="relative h-screen w-full overflow-hidden bg-void-blue">
-      {/* Main content area */}
-      <main className="safe-area-top safe-area-bottom h-full w-full overflow-y-auto overflow-x-hidden pb-28">
-        {children}
-      </main>
+      {/* Main content area - no overflow, let pages handle their own scrolling */}
+      <main className="h-full w-full">{children}</main>
 
       {/* Floating navigation dock */}
       <FloatingDock />

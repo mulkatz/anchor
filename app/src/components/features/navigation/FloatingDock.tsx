@@ -22,7 +22,10 @@ export const FloatingDock: FC = () => {
   ];
 
   return (
-    <div className="safe-area-margin-bottom fixed bottom-6 left-0 right-0 z-50 flex justify-center px-6">
+    <div
+      data-floating-dock
+      className="safe-area-margin-bottom fixed bottom-6 left-0 right-0 z-50 flex justify-center px-6"
+    >
       <nav
         className={cn(
           'flex items-center gap-4 rounded-full px-6 py-3',
