@@ -48,9 +48,7 @@ export const UserProfileFlow: FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6 dark:from-gray-900 dark:to-gray-800">
       <div className="mx-auto max-w-2xl">
-        <h1 className="mb-6 text-3xl font-bold text-gray-900 dark:text-white">
-          User Profile
-        </h1>
+        <h1 className="mb-6 text-3xl font-bold text-gray-900 dark:text-white">User Profile</h1>
 
         <UserCard user={user} onEdit={() => setShowEditDialog(true)} />
 

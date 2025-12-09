@@ -70,14 +70,27 @@ export const WaveVisualizer: FC<WaveVisualizerProps> = ({
         for (let i = 0; i < bufferLength; i++) {
           // Normalize frequency data (0-255) to wave height
           const value = dataArray[i] / 255.0;
-          const y = height / 2 + (Math.sin((i / bufferLength) * Math.PI * 4 + Date.now() / 1000) * 20 * value * layer.amplitude) + layer.offset;
+          const y =
+            height / 2 +
+            Math.sin((i / bufferLength) * Math.PI * 4 + Date.now() / 1000) *
+              20 *
+              value *
+              layer.amplitude +
+            layer.offset;
 
           if (i === 0) {
             ctx.moveTo(x, y);
           } else {
             // Smooth curves using quadratic bezier
             const prevX = x - sliceWidth;
-            const prevY = height / 2 + (Math.sin(((i - 1) / bufferLength) * Math.PI * 4 + Date.now() / 1000) * 20 * dataArray[i - 1] / 255.0 * layer.amplitude) + layer.offset;
+            const prevY =
+              height / 2 +
+              ((Math.sin(((i - 1) / bufferLength) * Math.PI * 4 + Date.now() / 1000) *
+                20 *
+                dataArray[i - 1]) /
+                255.0) *
+                layer.amplitude +
+              layer.offset;
             const cpX = (prevX + x) / 2;
             const cpY = (prevY + y) / 2;
             ctx.quadraticCurveTo(cpX, cpY, x, y);

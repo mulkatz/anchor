@@ -19,4 +19,18 @@ export interface ApiResponse<T> {
   message?: string;
 }
 
+export interface Message {
+  id: string;
+  userId: string;
+  text: string;
+  role: 'user' | 'assistant' | 'crisis';
+  createdAt: Date;
+  isCrisisResponse?: boolean;
+  metadata?: {
+    model?: string;
+    tokensUsed?: number;
+    responseTime?: number;
+  };
+}
+
 // Add more models as needed

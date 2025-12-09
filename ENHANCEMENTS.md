@@ -7,10 +7,12 @@ This document lists all the battle-tested components and patterns added from the
 ### ✅ Vertex AI Integration
 
 **Files Added:**
+
 - `backend/functions/src/vertexai.ts` - Complete Vertex AI service module
 - Updated `backend/functions/src/index.ts` - Example functions using Vertex AI
 
 **Features:**
+
 - Text analysis with Gemini Pro
 - Image analysis (multimodal)
 - Streaming responses
@@ -19,11 +21,13 @@ This document lists all the battle-tested components and patterns added from the
 - Authentication checks
 
 **Example Functions:**
+
 1. `analyzeWithAI` - Callable function for text analysis
 2. `analyzeImageWithAI` - Image analysis with Vertex AI
 3. `batchAnalyze` - Process multiple items at once
 
 **Dependencies Added:**
+
 ```json
 {
   "@google-cloud/vertexai": "^1.10.0",
@@ -35,17 +39,20 @@ This document lists all the battle-tested components and patterns added from the
 ## UI Components from cap2cal
 
 ### Dialog System
+
 - **Dialog.tsx** - Portal-based modal with backdrop
 - **Backdrop.tsx** - Reusable overlay component
 - Features: Close on outside click, animations, dark mode support
 
 ### Button Components
+
 - **CTAButton.tsx** - Call-to-action button with loading state
 - **IconButton.tsx** - Circular icon buttons
 - **RoundIconButton.tsx** - Smaller variant
 - **Button.tsx** - Base button with variants
 
 ### Loader
+
 - **LoaderAnimation.tsx** - Animated sparkle loader from cap2cal
 - Beautiful CSS animations
 - Customizable colors via CSS variables
@@ -55,11 +62,13 @@ This document lists all the battle-tested components and patterns added from the
 ### Complete Example Flow
 
 **UserProfileFlow** - Full CRUD example showing:
+
 - **UserCard.tsx** - Display user information
 - **UserEditDialog.tsx** - Edit form in modal
 - **UserProfileFlow.tsx** - Complete flow orchestration
 
 **Demonstrates:**
+
 - ✅ Composition of UI and feature components
 - ✅ State management
 - ✅ Async operations
@@ -71,16 +80,19 @@ This document lists all the battle-tested components and patterns added from the
 ## Custom Hooks
 
 ### useLocalStorage
+
 - Persist state to localStorage
 - Automatic serialization/deserialization
 - React state sync
 
 ### useDebounce
+
 - Debounce values (search inputs, API calls)
 - Configurable delay
 - TypeScript generic
 
 ### useAsync
+
 - Handle async operations
 - Loading/error states
 - Execute/reset methods
@@ -89,6 +101,7 @@ This document lists all the battle-tested components and patterns added from the
 ## Utility Functions
 
 ### validators.ts
+
 - Email validation
 - Password strength
 - Phone numbers
@@ -97,34 +110,40 @@ This document lists all the battle-tested components and patterns added from the
 - Min/max length
 
 ### dateTime.ts
+
 - Format dates (using date-fns)
 - Relative time ("2 hours ago")
 - Date comparisons
 - Start/end of day
 
 ### platform.ts
+
 - Platform detection (iOS/Android/Web)
 - Native platform checks
 - Dev/prod environment
 
 ### logger.ts
+
 - Centralized logging
 - Auto-removed in production
 - Structured logging
 
 ### cn.ts (from cap2cal)
+
 - Tailwind class merging
 - Using clsx + tailwind-merge
 
 ## Services
 
 ### firebase.service.ts
+
 - Firebase initialization
 - Analytics wrapper
 - Auth, Firestore exports
 - Platform-aware (web-only analytics)
 
 ### api.ts
+
 - Axios client with interceptors
 - Auth token management
 - Error handling
@@ -133,6 +152,7 @@ This document lists all the battle-tested components and patterns added from the
 ## Example Screens
 
 ### HomeScreen.tsx
+
 - Complete screen template
 - Safe area handling
 - Header/footer layout
@@ -142,6 +162,7 @@ This document lists all the battle-tested components and patterns added from the
 ## Prettier Configuration
 
 Added `.prettierrc` to all workspaces:
+
 - **App** - With Tailwind plugin
 - **Backend** - Standard config
 - **Web** - With Tailwind plugin
@@ -200,13 +221,15 @@ app/src/
 ## Dependencies Added
 
 ### App Dependencies
+
 ```json
 {
-  "react-spinners": "^0.15.0"  // For CTAButton loader
+  "react-spinners": "^0.15.0" // For CTAButton loader
 }
 ```
 
 ### Backend Dependencies
+
 ```json
 {
   "@google-cloud/vertexai": "^1.10.0",
@@ -245,6 +268,7 @@ app/src/
 ## Quick Start with Examples
 
 ### Use the Dialog
+
 ```tsx
 import { Dialog, CTAButton } from './components/ui';
 
@@ -266,6 +290,7 @@ return (
 ```
 
 ### Use Vertex AI Backend
+
 ```tsx
 // Frontend
 import { getFunctions, httpsCallable } from 'firebase/functions';
@@ -274,11 +299,12 @@ const functions = getFunctions();
 const analyzeWithAI = httpsCallable(functions, 'analyzeWithAI');
 
 const result = await analyzeWithAI({
-  prompt: 'Explain React hooks'
+  prompt: 'Explain React hooks',
 });
 ```
 
 ### Use Custom Hooks
+
 ```tsx
 // Debounced search
 const [search, setSearch] = useState('');
@@ -291,10 +317,7 @@ useEffect(() => {
 }, [debouncedSearch]);
 
 // Async operation
-const { data, loading, error } = useAsync(
-  () => api.get('/users'),
-  true
-);
+const { data, loading, error } = useAsync(() => api.get('/users'), true);
 ```
 
 ## File Count

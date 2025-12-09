@@ -73,14 +73,17 @@ cd ../backend/functions && npm install  # Backend dependencies
 ### Development
 
 **Mobile App (Web Preview)**
+
 ```bash
 npm run app:dev
 # or
 cd app && npm run dev
 ```
+
 Visit http://localhost:9000
 
 **iOS Development**
+
 ```bash
 npm run app:build        # Build web assets
 npm run app:sync         # Sync with native projects
@@ -88,6 +91,7 @@ npm run app:ios          # Open in iOS simulator
 ```
 
 **Android Development**
+
 ```bash
 npm run app:build        # Build web assets
 npm run app:sync         # Sync with native projects
@@ -95,6 +99,7 @@ npm run app:android      # Open in Android simulator
 ```
 
 **Backend (Firebase Functions)**
+
 ```bash
 npm run backend:serve    # Start local emulator
 # or
@@ -155,32 +160,32 @@ npm run clean            # Remove all node_modules and build outputs
 
 ### Frontend (Mobile App)
 
-| Technology | Purpose |
-|------------|---------|
-| React 18 | UI framework |
-| TypeScript | Type safety |
-| Vite | Build tool & dev server |
-| Tailwind CSS | Styling |
-| Capacitor 7 | Native mobile runtime |
-| Dexie | IndexedDB wrapper (offline storage) |
-| i18next | Internationalization |
-| React Router | Navigation (if needed) |
-| Axios | HTTP client |
+| Technology   | Purpose                             |
+| ------------ | ----------------------------------- |
+| React 18     | UI framework                        |
+| TypeScript   | Type safety                         |
+| Vite         | Build tool & dev server             |
+| Tailwind CSS | Styling                             |
+| Capacitor 7  | Native mobile runtime               |
+| Dexie        | IndexedDB wrapper (offline storage) |
+| i18next      | Internationalization                |
+| React Router | Navigation (if needed)              |
+| Axios        | HTTP client                         |
 
 ### Backend
 
-| Technology | Purpose |
-|------------|---------|
-| Firebase Functions | Serverless compute |
+| Technology         | Purpose              |
+| ------------------ | -------------------- |
+| Firebase Functions | Serverless compute   |
 | Firebase Admin SDK | Server-side Firebase |
-| TypeScript | Type safety |
+| TypeScript         | Type safety          |
 
 ### Developer Tools
 
-| Tool | Purpose |
-|------|---------|
-| ESLint | Code linting |
-| Prettier | Code formatting |
+| Tool           | Purpose             |
+| -------------- | ------------------- |
+| ESLint         | Code linting        |
+| Prettier       | Code formatting     |
 | npm workspaces | Monorepo management |
 
 ## Project Guidelines
@@ -204,12 +209,14 @@ npm run clean            # Remove all node_modules and build outputs
 ### Component Architecture
 
 **UI Components** (`components/ui/`)
+
 - Atomic, single responsibility
 - Presentational only
 - Props-driven and reusable
 - Example: `Button`, `Input`, `Card`
 
 **Feature Components** (`components/features/`)
+
 - Smart components with business logic
 - Domain-specific
 - Composed from UI components
@@ -220,6 +227,7 @@ npm run clean            # Remove all node_modules and build outputs
 ### Mobile App
 
 **iOS**
+
 ```bash
 cd app
 npm run build
@@ -229,6 +237,7 @@ npx cap open ios
 ```
 
 **Android**
+
 ```bash
 cd app
 npm run build
@@ -249,18 +258,22 @@ firebase deploy --only functions
 ### Remove Features You Don't Need
 
 **Don't need offline storage?**
+
 - Remove Dexie dependencies from `app/package.json`
 - Delete `app/src/db/`
 
 **Don't need internationalization?**
+
 - Remove i18next dependencies from `app/package.json`
 - Delete `app/src/assets/translations/`
 
 **Don't need a separate web app?**
+
 - Delete the `web/` directory
 - Remove `"web"` from root `package.json` workspaces
 
 **Don't need Firebase Functions?**
+
 - Delete the `backend/` directory
 
 ## Resources
@@ -274,16 +287,20 @@ firebase deploy --only functions
 ## Troubleshooting
 
 **Build errors after installation**
+
 - Run `npm run clean` and reinstall dependencies
 
 **iOS simulator not launching**
+
 - Ensure Xcode Command Line Tools are installed: `xcode-select --install`
 
 **Android build fails**
+
 - Check Java version (JDK 17 recommended)
 - Verify `ANDROID_HOME` environment variable is set
 
 **Firebase emulator errors**
+
 - Make sure Firebase CLI is installed: `npm install -g firebase-tools`
 - Login to Firebase: `firebase login`
 
@@ -294,4 +311,5 @@ This is a starter template - use it however you like! No attribution required.
 ---
 
 **Happy Building!** 🚀
+
 # anxiety-buddy

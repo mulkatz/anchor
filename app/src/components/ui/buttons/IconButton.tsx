@@ -30,7 +30,8 @@ export const IconButton = ({
         'transform transition-all hover:bg-primary-700 active:bg-primary-600',
         className
       )}
-      aria-label="Icon button">
+      aria-label="Icon button"
+    >
       {icon}
     </button>
   );
@@ -39,12 +40,7 @@ export const IconButton = ({
 /**
  * Round Icon Button (Smaller variant)
  */
-export const RoundIconButton = ({
-  onClick,
-  icon,
-  className,
-  active,
-}: IconButtonProps) => {
+export const RoundIconButton = ({ onClick, icon, className, active }: IconButtonProps) => {
   return (
     <button
       onClick={onClick}
@@ -54,7 +50,8 @@ export const RoundIconButton = ({
         'hover:bg-gray-50 active:bg-gray-100',
         className
       )}
-      aria-label="Round icon button">
+      aria-label="Round icon button"
+    >
       {icon}
     </button>
   );

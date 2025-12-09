@@ -5,6 +5,7 @@ Place your image assets in this directory.
 ## Optimization
 
 Before adding images:
+
 1. Compress using tools like TinyPNG or Squoosh
 2. Use WebP format for better compression
 3. Provide multiple sizes for responsive images
@@ -21,7 +22,7 @@ Before adding images:
 ```tsx
 import heroImage from '../assets/images/hero.jpg';
 
-<img src={heroImage} alt="Hero" className="w-full" />
+<img src={heroImage} alt="Hero" className="w-full" />;
 ```
 
 For responsive images:

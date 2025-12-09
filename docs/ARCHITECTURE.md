@@ -43,17 +43,20 @@ This document describes the high-level architecture of the Project Starter templ
 **Responsibility:** Render UI, handle user interactions, display data
 
 **Components:**
+
 - **Pages** - Top-level route components (screens)
 - **UI Components** - Reusable presentational components
 - **Feature Components** - Smart components with business logic
 
 **Rules:**
+
 - Components should be pure and focused
 - Business logic extracted into hooks
 - I/O operations delegated to services
 - Use TypeScript for prop types
 
 **Example:**
+
 ```typescript
 // ✅ Good - Pure presentation
 export const UserProfile: FC<UserProfileProps> = ({ user, onEdit }) => {
@@ -84,17 +87,20 @@ export const UserProfile: FC = () => {
 **Responsibility:** Encapsulate reusable business logic, state management
 
 **Hooks:**
+
 - Data fetching hooks (`useUserData`, `useProducts`)
 - Stateful logic hooks (`useAuth`, `useCart`)
 - Side effect hooks (`useAnalytics`, `useNotifications`)
 
 **Rules:**
+
 - One hook per feature/concern
 - Return stable object structure
 - Handle loading/error states
 - Clean up side effects
 
 **Example:**
+
 ```typescript
 export const useUserData = (userId: string) => {
   const [user, setUser] = useState<User | null>(null);
@@ -130,18 +136,21 @@ export const useUserData = (userId: string) => {
 **Responsibility:** Encapsulate external integrations, platform APIs
 
 **Services:**
+
 - **API Service** - HTTP requests to backend
 - **Analytics Service** - Event tracking
 - **Auth Service** - Authentication operations
 - **Storage Service** - Local/remote data persistence
 
 **Rules:**
+
 - One service per external system
 - Abstract platform differences (iOS vs Android vs Web)
 - Centralized error handling
 - Return typed promises
 
 **Example:**
+
 ```typescript
 // api.service.ts
 export const api = {
@@ -176,17 +185,20 @@ export const analytics = {
 **Responsibility:** Data persistence, type definitions
 
 **Components:**
+
 - **Database** (Dexie) - Offline-first local storage
 - **Models** - TypeScript type definitions
 - **Schemas** - Database table definitions
 
 **Rules:**
+
 - All data has type definitions
 - Database operations are async
 - Use hooks for reactive queries
 - Implement data validation
 
 **Example:**
+
 ```typescript
 // models/index.ts
 export interface User {
@@ -246,6 +258,7 @@ return <UserCard user={user} />;
 ### Local State (useState)
 
 Use for:
+
 - Component-specific UI state
 - Form input values
 - Toggle states
@@ -258,6 +271,7 @@ const [inputValue, setInputValue] = useState('');
 ### Context State (React Context)
 
 Use for:
+
 - App-wide configuration
 - User authentication state
 - Theme preferences
@@ -282,6 +296,7 @@ const { user, theme } = useContext(AppContext);
 ### Persistent State (Dexie/LocalStorage)
 
 Use for:
+
 - Offline data storage
 - User preferences
 - Cached API responses
@@ -374,11 +389,9 @@ export const onUserCreate = functions.firestore
   });
 
 // Scheduled Function
-export const dailyCleanup = functions.pubsub
-  .schedule('0 0 * * *')
-  .onRun(async () => {
-    // Daily maintenance tasks
-  });
+export const dailyCleanup = functions.pubsub.schedule('0 0 * * *').onRun(async () => {
+  // Daily maintenance tasks
+});
 ```
 
 ## Performance Considerations
@@ -443,6 +456,7 @@ import { FixedSizeList } from 'react-window';
 ### Security Rules
 
 **Firestore Rules Example:**
+
 ```javascript
 rules_version = '2';
 service cloud.firestore {
@@ -513,16 +527,19 @@ apiClient.interceptors.response.use(
 ## Testing Strategy (Recommended)
 
 ### Unit Tests
+
 - **Target:** Utils, hooks, services
 - **Tool:** Jest + React Testing Library
 - **Coverage:** 60%+
 
 ### Integration Tests
+
 - **Target:** API integration, database operations
 - **Tool:** Jest
 - **Coverage:** Critical paths
 
 ### E2E Tests
+
 - **Target:** User flows
 - **Tool:** Playwright or Detox
 - **Coverage:** Happy paths + error cases
@@ -563,20 +580,21 @@ apiClient.interceptors.response.use(
 
 ## Key Architectural Decisions
 
-| Decision | Rationale |
-|----------|-----------|
-| React over Vue/Angular | Largest ecosystem, best mobile support |
-| Capacitor over React Native | Web-first, easier to learn, better for teams with web skills |
-| Vite over CRA | 10-100x faster builds, better DX |
-| Context over Redux | Simpler for most apps, less boilerplate |
-| Dexie over raw IndexedDB | Better API, TypeScript support, reactive hooks |
-| Firebase over custom backend | Faster time to market, scales automatically |
-| TypeScript everywhere | Type safety prevents bugs, better IDE support |
-| Monorepo structure | Shared code, consistent tooling, easier refactoring |
+| Decision                     | Rationale                                                    |
+| ---------------------------- | ------------------------------------------------------------ |
+| React over Vue/Angular       | Largest ecosystem, best mobile support                       |
+| Capacitor over React Native  | Web-first, easier to learn, better for teams with web skills |
+| Vite over CRA                | 10-100x faster builds, better DX                             |
+| Context over Redux           | Simpler for most apps, less boilerplate                      |
+| Dexie over raw IndexedDB     | Better API, TypeScript support, reactive hooks               |
+| Firebase over custom backend | Faster time to market, scales automatically                  |
+| TypeScript everywhere        | Type safety prevents bugs, better IDE support                |
+| Monorepo structure           | Shared code, consistent tooling, easier refactoring          |
 
 ---
 
 This architecture is designed to:
+
 - ✅ Scale from MVP to production
 - ✅ Maintain developer productivity
 - ✅ Support offline-first mobile apps

@@ -22,7 +22,7 @@ icons/
 ```tsx
 import logo from '../assets/icons/logo.svg';
 
-<img src={logo} alt="Logo" />
+<img src={logo} alt="Logo" />;
 ```
 
 Or with Lucide React icons (already installed):
@@ -30,5 +30,5 @@ Or with Lucide React icons (already installed):
 ```tsx
 import { Camera, User, Settings } from 'lucide-react';
 
-<Camera size={24} />
+<Camera size={24} />;
 ```

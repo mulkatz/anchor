@@ -1,15 +1,22 @@
-import * as functions from 'firebase-functions';
+import * as logger from 'firebase-functions/logger';
 import * as admin from 'firebase-admin';
+import { onRequest } from 'firebase-functions/v2/https';
+import { onCall, HttpsError } from 'firebase-functions/v2/https';
+import { onDocumentCreated } from 'firebase-functions/v2/firestore';
+import { onSchedule } from 'firebase-functions/v2/scheduler';
 import { analyzeText, analyzeImage } from './vertexai';
 
 // Initialize Firebase Admin
 admin.initializeApp();
 
+// Export Deep Talk chat function
+export { onMessageCreate } from './chat';
+
 /**
  * Example HTTP Cloud Function
  */
-export const helloWorld = functions.https.onRequest((request, response) => {
-  functions.logger.info('Hello logs!', { structuredData: true });
+export const helloWorld = onRequest((request, response) => {
+  logger.info('Hello logs!', { structuredData: true });
   response.json({ message: 'Hello from Firebase!' });
 });
 
@@ -17,27 +24,21 @@ export const helloWorld = functions.https.onRequest((request, response) => {
  * Example Callable Function with Vertex AI
  * Can be called directly from the client SDK
  */
-export const analyzeWithAI = functions.https.onCall(async (data, context) => {
+export const analyzeWithAI = onCall(async (request) => {
   // Check authentication
-  if (!context.auth) {
-    throw new functions.https.HttpsError(
-      'unauthenticated',
-      'The function must be called while authenticated.'
-    );
+  if (!request.auth) {
+    throw new HttpsError('unauthenticated', 'The function must be called while authenticated.');
   }
 
-  const { prompt, type } = data;
+  const { prompt, type } = request.data;
 
   if (!prompt) {
-    throw new functions.https.HttpsError(
-      'invalid-argument',
-      'The function must be called with a prompt.'
-    );
+    throw new HttpsError('invalid-argument', 'The function must be called with a prompt.');
   }
 
   try {
-    functions.logger.info('Analyzing with AI', {
-      uid: context.auth.uid,
+    logger.info('Analyzing with AI', {
+      uid: request.auth.uid,
       type,
     });
 
@@ -47,33 +48,27 @@ export const analyzeWithAI = functions.https.onCall(async (data, context) => {
       success: true,
       data: {
         result,
-        message: `Analysis completed for user ${context.auth.uid}`,
+        message: `Analysis completed for user ${request.auth.uid}`,
       },
     };
   } catch (error) {
-    functions.logger.error('AI analysis failed', error);
-    throw new functions.https.HttpsError(
-      'internal',
-      'AI analysis failed. Please try again.'
-    );
+    logger.error('AI analysis failed', error);
+    throw new HttpsError('internal', 'AI analysis failed. Please try again.');
   }
 });
 
 /**
  * Example: Image Analysis with Vertex AI
  */
-export const analyzeImageWithAI = functions.https.onCall(async (data, context) => {
-  if (!context.auth) {
-    throw new functions.https.HttpsError('unauthenticated', 'Must be logged in');
+export const analyzeImageWithAI = onCall(async (request) => {
+  if (!request.auth) {
+    throw new HttpsError('unauthenticated', 'Must be logged in');
   }
 
-  const { imageBase64, prompt } = data;
+  const { imageBase64, prompt } = request.data;
 
   if (!imageBase64 || !prompt) {
-    throw new functions.https.HttpsError(
-      'invalid-argument',
-      'Image and prompt are required'
-    );
+    throw new HttpsError('invalid-argument', 'Image and prompt are required');
   }
 
   try {
@@ -84,8 +79,8 @@ export const analyzeImageWithAI = functions.https.onCall(async (data, context) =
       data: { result },
     };
   } catch (error) {
-    functions.logger.error('Image analysis failed', error);
-    throw new functions.https.HttpsError('internal', 'Image analysis failed');
+    logger.error('Image analysis failed', error);
+    throw new HttpsError('internal', 'Image analysis failed');
   }
 });
 
@@ -93,76 +88,70 @@ export const analyzeImageWithAI = functions.https.onCall(async (data, context) =
  * Example Firestore Trigger
  * Runs when a document is created in the 'users' collection
  */
-export const onUserCreate = functions.firestore
-  .document('users/{userId}')
-  .onCreate(async (snap, context) => {
-    const userId = context.params.userId;
-    const userData = snap.data();
+export const onUserCreate = onDocumentCreated('users/{userId}', async (event) => {
+  const snap = event.data;
+  if (!snap) {
+    logger.error('No data in snapshot');
+    return;
+  }
 
-    functions.logger.info('New user created', { userId, userData });
+  const userId = event.params.userId;
+  const userData = snap.data();
 
-    // Your logic here (e.g., send welcome email, create related documents)
+  logger.info('New user created', { userId, userData });
 
-    return null;
-  });
+  // Your logic here (e.g., send welcome email, create related documents)
+});
 
 /**
  * Example Scheduled Function
  * Runs every day at midnight UTC
  */
-export const dailyCleanup = functions.pubsub
-  .schedule('0 0 * * *')
-  .timeZone('UTC')
-  .onRun(async (context) => {
-    functions.logger.info('Running daily cleanup');
+export const dailyCleanup = onSchedule('0 0 * * *', async () => {
+  logger.info('Running daily cleanup');
 
-    // Your cleanup logic here
-    // Example: Delete old temporary data
-    const cutoffDate = new Date();
-    cutoffDate.setDate(cutoffDate.getDate() - 30); // 30 days ago
+  // Your cleanup logic here
+  // Example: Delete old temporary data
+  const cutoffDate = new Date();
+  cutoffDate.setDate(cutoffDate.getDate() - 30); // 30 days ago
 
-    const oldDocs = await admin
-      .firestore()
-      .collection('temp')
-      .where('createdAt', '<', cutoffDate)
-      .get();
+  const oldDocs = await admin
+    .firestore()
+    .collection('temp')
+    .where('createdAt', '<', cutoffDate)
+    .get();
 
-    const batch = admin.firestore().batch();
-    oldDocs.docs.forEach((doc) => {
-      batch.delete(doc.ref);
-    });
-
-    await batch.commit();
-    functions.logger.info(`Deleted ${oldDocs.size} old documents`);
-
-    return null;
+  const batch = admin.firestore().batch();
+  oldDocs.docs.forEach((doc) => {
+    batch.delete(doc.ref);
   });
+
+  await batch.commit();
+  logger.info(`Deleted ${oldDocs.size} old documents`);
+});
 
 /**
  * Example: Batch Processing with AI
  * Process multiple items with Vertex AI
  */
-export const batchAnalyze = functions.https.onCall(async (data, context) => {
-  if (!context.auth) {
-    throw new functions.https.HttpsError('unauthenticated', 'Must be logged in');
+export const batchAnalyze = onCall(async (request) => {
+  if (!request.auth) {
+    throw new HttpsError('unauthenticated', 'Must be logged in');
   }
 
-  const { items } = data; // Array of items to analyze
+  const { items } = request.data; // Array of items to analyze
 
   if (!Array.isArray(items) || items.length === 0) {
-    throw new functions.https.HttpsError('invalid-argument', 'Items array required');
+    throw new HttpsError('invalid-argument', 'Items array required');
   }
 
   if (items.length > 10) {
-    throw new functions.https.HttpsError(
-      'invalid-argument',
-      'Maximum 10 items per batch'
-    );
+    throw new HttpsError('invalid-argument', 'Maximum 10 items per batch');
   }
 
   try {
     const results = await Promise.all(
-      items.map(async (item) => {
+      items.map(async (item: { id: string; prompt: string }) => {
         try {
           const result = await analyzeText(item.prompt);
           return { success: true, data: result, id: item.id };
@@ -177,7 +166,7 @@ export const batchAnalyze = functions.https.onCall(async (data, context) => {
       data: { results },
     };
   } catch (error) {
-    functions.logger.error('Batch analysis failed', error);
-    throw new functions.https.HttpsError('internal', 'Batch analysis failed');
+    logger.error('Batch analysis failed', error);
+    throw new HttpsError('internal', 'Batch analysis failed');
   }
 });

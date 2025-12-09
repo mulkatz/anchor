@@ -11,9 +11,7 @@ export const HomeScreen: FC = () => {
     <div className="flex min-h-screen flex-col bg-gradient-to-br from-primary-50 to-primary-100 dark:from-gray-900 dark:to-gray-800">
       {/* Header */}
       <header className="safe-area-top flex items-center justify-between p-4">
-        <h1 className="text-2xl font-bold text-primary-900 dark:text-white">
-          YourApp
-        </h1>
+        <h1 className="text-2xl font-bold text-primary-900 dark:text-white">YourApp</h1>
         <div className="flex gap-2">
           <IconButton icon={<User size={20} />} onClick={() => {}} />
           <IconButton icon={<Settings size={20} />} onClick={() => {}} />
@@ -31,15 +29,8 @@ export const HomeScreen: FC = () => {
           </p>
 
           <div className="max-w-sm space-y-3">
-            <CTAButton
-              text="Get Started"
-              onClick={() => {}}
-              highlight
-            />
-            <CTAButton
-              text="Learn More"
-              onClick={() => {}}
-            />
+            <CTAButton text="Get Started" onClick={() => {}} highlight />
+            <CTAButton text="Learn More" onClick={() => {}} />
           </div>
         </div>
       </main>

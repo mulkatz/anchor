@@ -5,6 +5,7 @@ This directory contains development utilities and automation scripts.
 ## Purpose
 
 Tools are separate projects that help with:
+
 - Automated testing
 - Screenshot generation
 - Code generation
@@ -72,12 +73,14 @@ npm init -y
 ### When to Create a Tool
 
 Create a tool when:
+
 - ✅ Task is repetitive and time-consuming
 - ✅ Task can be automated
 - ✅ Tool can be reused across projects
 - ✅ Tool has clear input/output
 
 Don't create a tool when:
+
 - ❌ Task is one-time only
 - ❌ Existing tools can do the job
 - ❌ Tool is more complex than manual work
@@ -160,31 +163,37 @@ try {
 ## Example Tools You Might Add
 
 ### Screenshot Generator
+
 - Automate app screenshot capture
 - Generate localized screenshots
 - Resize for different devices
 
 ### Code Generator
+
 - Generate boilerplate components
 - Create CRUD operations
 - Scaffold new features
 
 ### Database Seeder
+
 - Populate development database
 - Create test data
 - Reset database to known state
 
 ### Asset Optimizer
+
 - Compress images
 - Generate icon sets
 - Optimize SVGs
 
 ### Release Automation
+
 - Update version numbers
 - Generate changelogs
 - Create git tags
 
 ### i18n Manager
+
 - Extract translation keys
 - Generate translation files
 - Validate translations

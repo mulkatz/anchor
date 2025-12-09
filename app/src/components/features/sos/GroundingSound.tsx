@@ -64,18 +64,14 @@ export const GroundingSound: FC<GroundingSoundProps> = ({ onComplete }) => {
       />
 
       {/* Instruction */}
-      <h2 className="mb-4 text-center text-2xl font-light text-mist-white">
-        Just listen
-      </h2>
+      <h2 className="mb-4 text-center text-2xl font-light text-mist-white">Just listen</h2>
       <p className="mb-8 text-center text-sm text-mist-white/40">
         Close your eyes if you feel safe
       </p>
 
       {/* Timer */}
       <div className="flex flex-col items-center">
-        <p className="text-4xl font-light text-biolum-cyan/60">
-          {timeLeft}s
-        </p>
+        <p className="text-4xl font-light text-biolum-cyan/60">{timeLeft}s</p>
         <div className="mt-4 h-1 w-64 overflow-hidden rounded-full bg-mist-white/10">
           <div
             className="h-full bg-biolum-cyan/50 transition-all duration-1000 ease-linear"

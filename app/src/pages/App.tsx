@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { MainLayout } from '../components/layouts/MainLayout';
 import { HomePage } from './HomePage';
 import { SOSPage } from './SOSPage';
+import { ChatPage } from './ChatPage';
 import { VaultPage } from './VaultPage';
 import { ProfilePage } from './ProfilePage';
 
@@ -63,6 +64,21 @@ const AnimatedRoutes: FC = () => {
               className="h-full w-full"
             >
               <SOSPage />
+            </motion.div>
+          }
+        />
+        <Route
+          path="/chat"
+          element={
+            <motion.div
+              variants={pageVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              transition={pageTransition}
+              className="h-full w-full"
+            >
+              <ChatPage />
             </motion.div>
           }
         />

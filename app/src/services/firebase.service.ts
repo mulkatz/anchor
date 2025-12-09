@@ -35,10 +35,7 @@ if (isWeb() && firebaseConfig.measurementId) {
 /**
  * Log analytics event
  */
-export const logAnalyticsEvent = (
-  eventName: string,
-  params?: Record<string, unknown>
-) => {
+export const logAnalyticsEvent = (eventName: string, params?: Record<string, unknown>) => {
   if (analytics) {
     firebaseLogEvent(analytics, eventName, params);
   }

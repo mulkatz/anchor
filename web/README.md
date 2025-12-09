@@ -1,6 +1,7 @@
 # Web App
 
 This is an optional separate web application for:
+
 - Marketing website
 - Admin dashboard
 - Public-facing features that don't need mobile capabilities
@@ -13,6 +14,7 @@ This is an optional separate web application for:
 ## When to use this
 
 Use this directory if you need:
+
 - A marketing/landing page separate from the mobile app
 - An admin dashboard
 - A web-only experience with different UI/UX from the mobile app

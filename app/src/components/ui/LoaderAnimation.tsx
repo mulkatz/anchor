@@ -116,33 +116,39 @@ export const LoaderAnimation = () => {
           id="pegtopone"
           xmlns="http://www.w3.org/2000/svg"
           xmlnsXlink="http://www.w3.org/1999/xlink"
-          viewBox="0 0 100 100">
+          viewBox="0 0 100 100"
+        >
           <g>
             <path
               d="M63,37c-6.7-4-4-27-13-27s-6.3,23-13,27-27,4-27,13,20.3,9,27,13,4,27,13,27,6.3-23,13-27,27-4,27-13-20.3-9-27-13Z"
-              fill="currentColor"></path>
+              fill="currentColor"
+            ></path>
           </g>
         </svg>
         <svg
           id="pegtoptwo"
           xmlns="http://www.w3.org/2000/svg"
           xmlnsXlink="http://www.w3.org/1999/xlink"
-          viewBox="0 0 100 100">
+          viewBox="0 0 100 100"
+        >
           <g>
             <path
               d="M63,37c-6.7-4-4-27-13-27s-6.3,23-13,27-27,4-27,13,20.3,9,27,13,4,27,13,27,6.3-23,13-27,27-4,27-13-20.3-9-27-13Z"
-              fill="currentColor"></path>
+              fill="currentColor"
+            ></path>
           </g>
         </svg>
         <svg
           id="pegtopthree"
           xmlns="http://www.w3.org/2000/svg"
           xmlnsXlink="http://www.w3.org/1999/xlink"
-          viewBox="0 0 100 100">
+          viewBox="0 0 100 100"
+        >
           <g>
             <path
               d="M63,37c-6.7-4-4-27-13-27s-6.3,23-13,27-27,4-27,13,20.3,9,27,13,4,27,13,27,6.3-23,13-27,27-4,27-13-20.3-9-27-13Z"
-              fill="currentColor"></path>
+              fill="currentColor"
+            ></path>
           </g>
         </svg>
       </div>

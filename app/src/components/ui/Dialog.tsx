@@ -19,7 +19,12 @@ export const Dialog = ({
   noCard = false,
 }: DialogProps) => {
   const dialogContent = (
-    <div className={cn('fixed inset-0 z-[100]', full && 'bg-gradient-to-br from-primary-900 to-primary-950')}>
+    <div
+      className={cn(
+        'fixed inset-0 z-[100]',
+        full && 'bg-gradient-to-br from-primary-900 to-primary-950'
+      )}
+    >
       {/* Backdrop layer - separate from content */}
       {!noCard && (
         <div
@@ -36,23 +41,29 @@ export const Dialog = ({
 
       {/* Content layer - isolated from backdrop */}
       <div
-        className={'pointer-events-none absolute inset-0 flex max-h-screen items-center justify-center p-6'}
-        onClick={closeOnClickOutside ? onClose : undefined}>
+        className={
+          'pointer-events-none absolute inset-0 flex max-h-screen items-center justify-center p-6'
+        }
+        onClick={closeOnClickOutside ? onClose : undefined}
+      >
         {/* Dialog container with smooth fade + scale animation */}
         <div
           className={'pointer-events-auto flex max-h-[90%] w-full max-w-md animate-fadeIn flex-col'}
-          onClick={(e) => e.stopPropagation()}>
+          onClick={(e) => e.stopPropagation()}
+        >
           {onClose && (
             <div
               className={'flex w-full items-end justify-end pb-1 pr-0'}
               onClick={(event) => {
                 event.stopPropagation();
                 event.preventDefault();
-              }}>
+              }}
+            >
               <button
                 onClick={onClose}
                 className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-sm transition-colors hover:bg-white/20 active:bg-white/30"
-                aria-label="Close dialog">
+                aria-label="Close dialog"
+              >
                 <X size={20} />
               </button>
             </div>
@@ -66,7 +77,8 @@ export const Dialog = ({
               className={cn(
                 'relative overflow-hidden rounded-3xl bg-white shadow-2xl',
                 'border border-gray-200 dark:border-gray-700 dark:bg-gray-800'
-              )}>
+              )}
+            >
               {children}
             </div>
           )}

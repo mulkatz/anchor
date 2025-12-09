@@ -43,7 +43,8 @@ export const CTAButton = ({
             ? 'transform bg-primary-600 text-white transition-all hover:bg-primary-700 active:bg-primary-800'
             : 'transform bg-primary-500 text-white transition-all hover:bg-primary-600 active:bg-primary-700',
         className
-      )}>
+      )}
+    >
       {/* Only show the icon if not loading */}
       {!!icon && !loading && icon}
 

@@ -29,9 +29,7 @@ export const AcknowledgeScreen: FC<AcknowledgeScreenProps> = ({ onComplete }) =>
       </div>
 
       {/* Acknowledgement message */}
-      <h1 className="text-center text-4xl font-light text-mist-white">
-        I've got you.
-      </h1>
+      <h1 className="text-center text-4xl font-light text-mist-white">I've got you.</h1>
 
       <p className="mt-6 text-center text-lg text-mist-white/60">
         You're safe. Let's take this together.

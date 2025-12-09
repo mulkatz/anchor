@@ -43,16 +43,15 @@ export const UserEditDialog: FC<UserEditDialogProps> = ({ user, onClose, onSave 
   return (
     <Dialog onClose={onClose} closeOnClickOutside={false}>
       <div className="p-6">
-        <h2 className="mb-4 text-2xl font-bold text-gray-900 dark:text-white">
-          Edit Profile
-        </h2>
+        <h2 className="mb-4 text-2xl font-bold text-gray-900 dark:text-white">Edit Profile</h2>
 
         <div className="space-y-4">
           {/* Name Input */}
           <div>
             <label
               htmlFor="name"
-              className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
+              className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
+            >
               Name
             </label>
             <input
@@ -73,7 +72,8 @@ export const UserEditDialog: FC<UserEditDialogProps> = ({ user, onClose, onSave 
           <div>
             <label
               htmlFor="email"
-              className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
+              className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
+            >
               Email
             </label>
             <input
@@ -102,7 +102,8 @@ export const UserEditDialog: FC<UserEditDialogProps> = ({ user, onClose, onSave 
             <button
               onClick={onClose}
               disabled={loading}
-              className="flex-1 rounded-lg border border-gray-300 px-4 py-2 font-medium text-gray-700 transition-colors hover:bg-gray-50 disabled:opacity-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700">
+              className="flex-1 rounded-lg border border-gray-300 px-4 py-2 font-medium text-gray-700 transition-colors hover:bg-gray-50 disabled:opacity-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
+            >
               Cancel
             </button>
             <CTAButton

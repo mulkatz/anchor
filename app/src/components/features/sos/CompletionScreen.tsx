@@ -30,18 +30,12 @@ export const CompletionScreen: FC<CompletionScreenProps> = ({ duration }) => {
       </div>
 
       {/* Message */}
-      <h1 className="mb-4 text-center text-4xl font-light text-mist-white">
-        You did it
-      </h1>
-      <p className="mb-8 text-center text-lg text-mist-white/70">
-        You're safe. You're here.
-      </p>
+      <h1 className="mb-4 text-center text-4xl font-light text-mist-white">You did it</h1>
+      <p className="mb-8 text-center text-lg text-mist-white/70">You're safe. You're here.</p>
 
       {/* Session stats */}
       <div className="mb-12 rounded-2xl border border-glass-border bg-glass-bg p-6 backdrop-blur-glass">
-        <p className="text-center text-sm text-mist-white/60">
-          Session time
-        </p>
+        <p className="text-center text-sm text-mist-white/60">Session time</p>
         <p className="text-center text-3xl font-light text-biolum-cyan">
           {formatDuration(duration)}
         </p>
@@ -68,9 +62,7 @@ export const CompletionScreen: FC<CompletionScreenProps> = ({ duration }) => {
 
       {/* Optional: Feeling scale */}
       <div className="mt-12">
-        <p className="mb-4 text-center text-sm text-mist-white/50">
-          How do you feel now?
-        </p>
+        <p className="mb-4 text-center text-sm text-mist-white/50">How do you feel now?</p>
         <div className="flex gap-2">
           {[1, 2, 3, 4, 5].map((rating) => (
             <button

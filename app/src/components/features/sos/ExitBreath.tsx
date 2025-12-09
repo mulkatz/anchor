@@ -118,9 +118,7 @@ export const ExitBreath: FC<ExitBreathProps> = ({ onComplete }) => {
       </div>
 
       {/* Phase text */}
-      <h2 className="mb-2 text-center text-2xl font-light text-mist-white">
-        {getPhaseText()}
-      </h2>
+      <h2 className="mb-2 text-center text-2xl font-light text-mist-white">{getPhaseText()}</h2>
 
       {/* Cycle progress */}
       <div className="flex gap-2">

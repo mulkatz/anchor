@@ -54,9 +54,7 @@ export const GroundingSight: FC<GroundingSightProps> = ({ onComplete }) => {
       </div>
 
       {/* Instruction */}
-      <h2 className="mb-4 text-center text-2xl font-light text-mist-white">
-        Tap 5 things you see
-      </h2>
+      <h2 className="mb-4 text-center text-2xl font-light text-mist-white">Tap 5 things you see</h2>
 
       {/* Counter */}
       <div className="flex items-center gap-2">
@@ -78,7 +76,7 @@ export const GroundingSight: FC<GroundingSightProps> = ({ onComplete }) => {
       {ripples.map((ripple) => (
         <div
           key={ripple.id}
-          className="pointer-events-none absolute rounded-full border-2 border-biolum-cyan/50 animate-ping"
+          className="pointer-events-none absolute animate-ping rounded-full border-2 border-biolum-cyan/50"
           style={{
             left: ripple.x,
             top: ripple.y,

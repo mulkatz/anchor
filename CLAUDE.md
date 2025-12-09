@@ -1,4 +1,5 @@
 # CLAUDE.md - Anxiety Buddy (Project Anchor)
+
 **AI Assistant Context & Project Brain**
 
 ---
@@ -11,15 +12,19 @@
 **Core Purpose:** Immediate Relief Tool for Anxiety & Panic Attacks
 
 ### The Vision
+
 This is NOT a wellness app with gamification. This is a **therapeutic interface**.
+
 - **The Interface IS the Therapy** - Every pixel, every animation, every haptic pulse is designed to ground and de-escalate panic.
 - **Evidence-Based:** Built on Cognitive Behavioral Therapy (CBT) + Somatic Grounding techniques.
 - **Mobile-First:** Native iOS/Android with Capacitor. The app must feel native, not web-wrapped.
 
 ### The Aesthetic: "Bioluminescence in the Deep"
+
 Imagine the deep ocean at night. Viscous, slow-moving, calming darkness punctuated by gentle glowing life forms.
 
 **Mood Board Keywords:**
+
 - Deep ocean darkness (safety in the void)
 - Bioluminescent jellyfish (soft, pulsing light)
 - Viscous liquid motion (slow, deliberate)
@@ -31,32 +36,37 @@ Imagine the deep ocean at night. Viscous, slow-moving, calming darkness punctuat
 ## 🛠️ TECHNOLOGY STACK
 
 ### Frontend Core
+
 - **Framework:** React 18.3+ (Functional components only, hooks-based)
 - **Language:** TypeScript 5.7+ (Strict mode, all `.tsx` files)
 - **Build Tool:** Vite 6.0+ (Fast HMR, optimized production builds)
 - **Styling:** Tailwind CSS 3.4+ (Mobile-first, custom design tokens)
 
 ### Mobile Runtime
+
 - **Platform:** Capacitor 7.0+ (Native iOS/Android bridge)
 - **Routing:** `react-router-dom` v7+ (Client-side routing with animations)
 - **Animation:** Framer Motion (Page transitions, micro-interactions, physics-based motion)
 
 ### Native APIs (Critical Dependencies)
+
 ```json
 {
-  "@capacitor/haptics": "^7.0.0",        // CRITICAL - Therapeutic haptic feedback
-  "@capacitor/status-bar": "^7.0.0",     // CRITICAL - Dark mode, overlay styling
-  "@capacitor/app": "^7.0.0",            // App lifecycle hooks
-  "@capacitor/camera": "^7.0.1",         // Future: Photo journaling
-  "@capacitor/filesystem": "^7.0.1"      // Future: Local data persistence
+  "@capacitor/haptics": "^7.0.0", // CRITICAL - Therapeutic haptic feedback
+  "@capacitor/status-bar": "^7.0.0", // CRITICAL - Dark mode, overlay styling
+  "@capacitor/app": "^7.0.0", // App lifecycle hooks
+  "@capacitor/camera": "^7.0.1", // Future: Photo journaling
+  "@capacitor/filesystem": "^7.0.1" // Future: Local data persistence
 }
 ```
 
 ### UI Components
+
 - **Icons:** `lucide-react` (Consistent, minimal icon set)
 - **Utilities:** `clsx`, `tailwind-merge` (Conditional styling)
 
 ### Backend (Future)
+
 - **Platform:** Firebase (Firestore, Auth, Functions)
 - **Offline-First:** Dexie (IndexedDB wrapper for local data)
 
@@ -65,6 +75,7 @@ Imagine the deep ocean at night. Viscous, slow-moving, calming darkness punctuat
 ## 🎨 DESIGN TOKENS
 
 ### Color Palette
+
 Add these to `tailwind.config.ts`:
 
 ```typescript
@@ -94,6 +105,7 @@ colors: {
 ```
 
 ### Typography
+
 ```typescript
 fontFamily: {
   sans: ['Inter', 'SF Pro Display', 'system-ui', 'sans-serif'],
@@ -114,6 +126,7 @@ fontSize: {
 ```
 
 ### Animation Physics
+
 All animations must feel **viscous and deliberate** - never snappy or jarring.
 
 ```typescript
@@ -139,6 +152,7 @@ transitionTimingFunction: {
 ```
 
 ### Shadows & Glows
+
 ```typescript
 boxShadow: {
   'glow-sm': '0 0 10px rgba(100, 255, 218, 0.3)',
@@ -155,6 +169,7 @@ dropShadow: {
 ```
 
 ### Backdrop Blur (Glass Morphism)
+
 ```typescript
 backdropBlur: {
   'glass': '12px',
@@ -252,14 +267,17 @@ anxiety-buddy/
 ## 🧠 CORE FEATURES
 
 ### ✅ Implemented
+
 - [ ] None yet (greenfield)
 
 ### 🚧 In Progress
+
 - [ ] Base Layout (MainLayout + FloatingDock)
 - [ ] SOS Flow (7-step state machine)
 - [ ] Haptics integration
 
 ### 📋 Planned
+
 - [ ] Home screen with quick access
 - [ ] Vault (session history, journal entries)
 - [ ] Profile (settings, preferences, crisis contacts)
@@ -277,12 +295,14 @@ anxiety-buddy/
 This is the heart of the app. A guided, multi-sensory experience to ground the user during a panic attack.
 
 #### Step 1: The Breach (Trigger)
+
 **User Action:** Long-press the SOS button (2 seconds)
 **Haptic:** Heavy Impact (strong, single pulse)
 **Visual:** Screen darkens, SOS button pulses with cyan glow
 **Purpose:** Immediate acknowledgement of distress
 
 #### Step 2: Acknowledgement
+
 **Screen Text:** "I've got you."
 **Haptic:** Heartbeat pattern (rhythmic pulses at 60 BPM)
 **Visual:** Soft breathing animation (slow, gentle)
@@ -290,6 +310,7 @@ This is the heart of the app. A guided, multi-sensory experience to ground the u
 **Purpose:** Establish safety and presence
 
 #### Step 3: Grounding - SIGHT
+
 **Instruction:** "Tap 5 things you can see."
 **User Action:** Tap screen 5 times (anywhere)
 **Haptic:** Light Impact on each tap (crisp click)
@@ -297,6 +318,7 @@ This is the heart of the app. A guided, multi-sensory experience to ground the u
 **Purpose:** Engage visual cortex, break panic loop
 
 #### Step 4: Grounding - TOUCH
+
 **Instruction:** "Feel the texture. Move your finger slowly."
 **User Action:** Drag finger across screen (scrubbing motion)
 **Haptic:** Selection feedback (gritty, continuous vibration while dragging)
@@ -305,6 +327,7 @@ This is the heart of the app. A guided, multi-sensory experience to ground the u
 **Purpose:** Engage tactile sense, slow down movements
 
 #### Step 5: Grounding - SOUND
+
 **Instruction:** "Close your eyes. Just listen."
 **Haptic:** None (silence)
 **Visual:** Screen fades to near-black, minimal pulsing orb
@@ -313,6 +336,7 @@ This is the heart of the app. A guided, multi-sensory experience to ground the u
 **Purpose:** Auditory grounding, sensory reset
 
 #### Step 6: The Exit Breath
+
 **Instruction:** "Breathe with the circle."
 **Visual:** Expanding/contracting circle (4s in, 7s hold, 8s out)
 **Haptic:** Swell on inhale (gentle build), fade on exhale
@@ -320,10 +344,12 @@ This is the heart of the app. A guided, multi-sensory experience to ground the u
 **Purpose:** Activate parasympathetic nervous system (4-7-8 breathing)
 
 #### Step 7: Completion
+
 **Screen Text:** "You did it. You're safe."
 **Visual:** Success animation (gentle glow, particles)
 **Haptic:** Medium Impact (success pulse)
 **Actions:**
+
 - "Save Session" button
 - "Return Home" button
 - Optional: "How do you feel?" (1-5 scale)
@@ -333,12 +359,14 @@ This is the heart of the app. A guided, multi-sensory experience to ground the u
 ## 🎨 DESIGN PRINCIPLES
 
 ### 1. Viscosity Over Speed
+
 - No jarring animations
 - All transitions feel like moving through thick liquid
 - Minimum animation duration: 400ms
 - Preferred easing: `cubic-bezier(0.22, 1, 0.36, 1)`
 
 ### 2. Haptics as Therapy
+
 - Every user interaction should have appropriate haptic feedback
 - Haptics are not "UI candy" - they are grounding tools
 - Types used:
@@ -348,17 +376,20 @@ This is the heart of the app. A guided, multi-sensory experience to ground the u
   - **Selection:** Continuous feedback (scrubbing, dragging)
 
 ### 3. Dark by Default
+
 - Background is always `void-blue` (#0A1128)
 - Text is always `mist-white` (#E2E8F0)
 - No "light mode" - this is a nighttime app
 
 ### 4. Glass Morphism Everywhere
+
 - Floating UI elements use frosted glass effect
 - `backdrop-blur-glass` (12px blur)
 - Semi-transparent backgrounds with `glass-border`
 - Layering creates depth perception
 
 ### 5. Minimal Text
+
 - Instructions should be 5 words or less
 - Use icons + text combination
 - Assume user is in cognitive overload (panic state)
@@ -368,6 +399,7 @@ This is the heart of the app. A guided, multi-sensory experience to ground the u
 ## 🚀 DEVELOPMENT WORKFLOW
 
 ### Starting the App
+
 ```bash
 # Terminal 1: Start dev server
 cd app && npm run dev
@@ -380,6 +412,7 @@ cd app && npm run android
 ```
 
 ### Before Committing
+
 ```bash
 npm run format    # Auto-format all TypeScript files
 npm run lint      # Check for errors
@@ -387,6 +420,7 @@ npm run build     # Ensure production build works
 ```
 
 ### Testing on Real Device
+
 ```bash
 cd app
 npm run build      # Build production bundle
@@ -400,6 +434,7 @@ npx cap open android # Open Android Studio
 ## ⚠️ CRITICAL IMPLEMENTATION NOTES
 
 ### Capacitor Haptics API
+
 ```typescript
 import { Haptics, ImpactStyle } from '@capacitor/haptics';
 
@@ -419,6 +454,7 @@ await Haptics.selectionEnd();
 ```
 
 ### Framer Motion Page Transitions
+
 ```typescript
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -448,17 +484,18 @@ const pageTransition = {
 ```
 
 ### Safe Area Handling (Notch/Home Indicator)
+
 ```tsx
 // All screens must respect safe areas
-<div className="h-screen w-full bg-void-blue safe-area-top safe-area-bottom">
-  {/* Content */}
-</div>
+<div className="bg-void-blue safe-area-top safe-area-bottom h-screen w-full">{/* Content */}</div>
 ```
 
 ### Prevent Overscroll Bounce (iOS)
+
 ```css
 /* Already in index.css */
-html, body {
+html,
+body {
   overscroll-behavior: none;
 }
 ```
@@ -468,15 +505,18 @@ html, body {
 ## 🧪 TESTING STRATEGY (Future)
 
 ### Unit Tests
+
 - [ ] Utils (pure functions)
 - [ ] Hooks (useHaptics, useSOSSession)
 - [ ] Components (isolated)
 
 ### Integration Tests
+
 - [ ] SOS flow (complete 7-step sequence)
 - [ ] Navigation (routing, deep links)
 
 ### E2E Tests (Detox)
+
 - [ ] Critical path: Home → SOS → Completion
 - [ ] Haptics verification (requires real device)
 
@@ -485,16 +525,19 @@ html, body {
 ## 📊 PERFORMANCE TARGETS
 
 ### Build Size
+
 - Initial bundle: < 500KB (gzipped)
 - Code splitting: Lazy-load Vault, Profile pages
 - Lighthouse score: > 90
 
 ### Runtime Performance
+
 - 60 FPS animations (no jank)
 - Time to Interactive: < 2 seconds
 - Haptics latency: < 50ms
 
 ### Battery Usage
+
 - Minimal wake locks
 - No background processes (yet)
 - Optimize animation loops
@@ -504,11 +547,13 @@ html, body {
 ## 🔐 SECURITY & PRIVACY
 
 ### Data Storage
+
 - All user data stored locally (Dexie/IndexedDB)
 - No cloud sync without explicit opt-in
 - No analytics without consent
 
 ### Permissions Required
+
 - Haptics: Yes (core feature)
 - Camera: Future (photo journaling)
 - Notifications: Future (check-ins)
@@ -518,12 +563,14 @@ html, body {
 ## 📚 REFERENCES & INSPIRATION
 
 ### Clinical References
+
 - Cognitive Behavioral Therapy (CBT) principles
 - 5-4-3-2-1 Grounding Technique
 - 4-7-8 Breathing (Dr. Andrew Weil)
 - Somatic Experiencing (Peter Levine)
 
 ### Design References
+
 - Apple Human Interface Guidelines (Haptics)
 - Glass Morphism (iOS design language)
 - Deep ocean bioluminescence photography
@@ -534,11 +581,13 @@ html, body {
 ## 🎯 SUCCESS METRICS (Future)
 
 ### User Engagement
+
 - SOS completion rate (target: > 80%)
 - Time to completion (benchmark: 2-3 minutes)
 - Repeat usage (daily active users)
 
 ### Clinical Efficacy
+
 - Self-reported anxiety reduction (1-5 scale)
 - Session notes (qualitative data)
 
@@ -547,11 +596,13 @@ html, body {
 ## 🚧 KNOWN LIMITATIONS
 
 ### Current
+
 - No backend (offline-only)
 - No audio playback (pink noise placeholder)
 - No user accounts
 
 ### Future Considerations
+
 - HIPAA compliance (if medical device)
 - Crisis hotline integration
 - Emergency contact auto-dial
@@ -561,16 +612,19 @@ html, body {
 ## 🆘 TROUBLESHOOTING
 
 ### Haptics Not Working
+
 1. Check device (simulator doesn't support haptics)
 2. Verify `@capacitor/haptics` installed
 3. Test on real device with iOS 13+ or Android 8+
 
 ### Animations Janky
+
 1. Check GPU acceleration (`transform: translateZ(0)`)
 2. Reduce backdrop blur (expensive)
 3. Use `will-change` sparingly
 
 ### Safe Area Not Working
+
 1. Check `tailwindcss-safe-area` plugin installed
 2. Verify `safe-area-*` classes in Tailwind config
 3. Test on device with notch (iPhone X+)
@@ -580,6 +634,7 @@ html, body {
 ## 📝 CHANGELOG
 
 ### v0.1.0 (Current)
+
 - Initial project setup
 - Design system defined
 - SOS flow architecture planned
@@ -592,6 +647,7 @@ html, body {
 ---
 
 **For AI Assistants:** This document is the source of truth. When implementing features, always reference:
+
 1. Design tokens (colors, animations)
 2. SOS flow state machine (exact steps)
 3. Haptics API usage (correct patterns)

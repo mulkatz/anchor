@@ -85,15 +85,13 @@ export const GroundingTouch: FC<GroundingTouchProps> = ({ onComplete }) => {
       </div>
 
       {/* Instruction */}
-      <h2 className="mb-4 text-center text-2xl font-light text-mist-white">
-        Move slowly
-      </h2>
+      <h2 className="mb-4 text-center text-2xl font-light text-mist-white">Move slowly</h2>
       <p className="mb-8 text-center text-sm text-mist-white/60">
         Feel the texture under your finger
       </p>
 
       {/* Progress bar */}
-      <div className="w-64 h-2 rounded-full bg-mist-white/20 overflow-hidden">
+      <div className="h-2 w-64 overflow-hidden rounded-full bg-mist-white/20">
         <div
           className="h-full bg-biolum-cyan shadow-glow-sm transition-all duration-100"
           style={{ width: `${progress}%` }}
@@ -108,7 +106,7 @@ export const GroundingTouch: FC<GroundingTouchProps> = ({ onComplete }) => {
       {trail.map((point, i) => (
         <div
           key={point.id}
-          className="pointer-events-none absolute h-2 w-2 rounded-full bg-biolum-cyan/50 animate-fade-out"
+          className="pointer-events-none absolute h-2 w-2 animate-fade-out rounded-full bg-biolum-cyan/50"
           style={{
             left: point.x,
             top: point.y,

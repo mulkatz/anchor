@@ -15,11 +15,13 @@ Before you begin, ensure you have the following installed:
 ### For Mobile Development
 
 **iOS (macOS only)**
+
 - Xcode 14 or higher
 - Xcode Command Line Tools: `xcode-select --install`
 - CocoaPods: `sudo gem install cocoapods`
 
 **Android**
+
 - Android Studio
 - JDK 17 (recommended)
 - Android SDK (API level 33+)
@@ -45,11 +47,13 @@ cd anxiety-buddy
 ### 2. Install Dependencies
 
 **Option A: Install everything at once**
+
 ```bash
 npm run install:all
 ```
 
 **Option B: Install individually**
+
 ```bash
 # Root dependencies
 npm install
@@ -75,6 +79,7 @@ cp .env.example .env
 ```
 
 Edit `app/.env` and add your configuration:
+
 ```env
 VITE_API_URL=https://your-api-endpoint.com
 VITE_FIREBASE_API_KEY=your_firebase_api_key
@@ -97,10 +102,11 @@ VITE_FIREBASE_APP_ID=your_app_id
 #### Capacitor Configuration
 
 Update `app/capacitor.config.ts`:
+
 ```typescript
 const config: CapacitorConfig = {
-  appId: 'com.yourcompany.yourapp',  // Your unique bundle ID
-  appName: 'YourApp',                 // Your app display name
+  appId: 'com.yourcompany.yourapp', // Your unique bundle ID
+  appName: 'YourApp', // Your app display name
   webDir: 'dist',
 };
 ```
@@ -134,10 +140,12 @@ npx cap open ios
 ```
 
 In Xcode:
+
 1. Select a simulator (e.g., iPhone 15 Pro)
 2. Click Run (▶️) or press Cmd+R
 
 **For live reload during development:**
+
 1. Find your computer's local IP: `ifconfig` (look for en0)
 2. Update `app/capacitor.config.ts`:
    ```typescript
@@ -165,6 +173,7 @@ npx cap open android
 ```
 
 In Android Studio:
+
 1. Select a device/emulator
 2. Click Run (▶️) or press Ctrl+R (Cmd+R on Mac)
 
@@ -182,6 +191,7 @@ firebase emulators:start
 Access Firebase Emulator UI at http://localhost:4000
 
 Available emulators:
+
 - Functions: http://localhost:5001
 - Firestore: http://localhost:8080
 
@@ -209,6 +219,7 @@ app/src/
 Example: Add a user profile screen
 
 **Step 1: Define types**
+
 ```typescript
 // app/src/models/index.ts
 export interface UserProfile {
@@ -220,6 +231,7 @@ export interface UserProfile {
 ```
 
 **Step 2: Create the page**
+
 ```typescript
 // app/src/pages/ProfileScreen.tsx
 import { FC } from 'react';
@@ -234,6 +246,7 @@ export const ProfileScreen: FC = () => {
 ```
 
 **Step 3: Add navigation**
+
 ```typescript
 // app/src/pages/App.tsx
 import { ProfileScreen } from './ProfileScreen';
@@ -244,6 +257,7 @@ import { ProfileScreen } from './ProfileScreen';
 ### 2. Add an API Endpoint
 
 **Step 1: Define backend function**
+
 ```typescript
 // backend/functions/src/index.ts
 export const getUserProfile = functions.https.onCall(async (data, context) => {
@@ -259,6 +273,7 @@ export const getUserProfile = functions.https.onCall(async (data, context) => {
 ```
 
 **Step 2: Deploy or test locally**
+
 ```bash
 # Local testing
 cd backend && firebase emulators:start
@@ -268,6 +283,7 @@ cd backend && firebase deploy --only functions
 ```
 
 **Step 3: Call from app**
+
 ```typescript
 // app/src/services/api.ts
 export const userService = {
@@ -311,6 +327,7 @@ export const useUserProfile = () => {
 ```
 
 **Use in component**
+
 ```typescript
 const { profile, loading, error } = useUserProfile();
 ```
@@ -331,6 +348,7 @@ const { profile, loading, error } = useUserProfile();
 ### Automated Testing (To be added)
 
 This starter doesn't include tests yet, but you can add:
+
 - Jest + React Testing Library (unit tests)
 - Playwright or Detox (E2E tests)
 
@@ -339,6 +357,7 @@ This starter doesn't include tests yet, but you can add:
 ### Mobile App
 
 **iOS**
+
 ```bash
 cd app
 npm run build
@@ -352,6 +371,7 @@ npx cap open ios
 ```
 
 **Android**
+
 ```bash
 cd app
 npm run build
@@ -376,26 +396,32 @@ firebase deploy --only functions
 ### Common Issues
 
 **Issue: `npm install` fails**
+
 - Solution: Delete `node_modules` and `package-lock.json`, then run `npm install` again
 - Ensure you're using Node.js 18+: `node --version`
 
 **Issue: iOS build fails**
+
 - Solution: Run `pod install` in `app/native/ios/App`
 - Ensure Xcode Command Line Tools are installed: `xcode-select --install`
 
 **Issue: Android build fails**
+
 - Solution: Check Java version: `java -version` (should be 17)
 - Verify `ANDROID_HOME` is set: `echo $ANDROID_HOME`
 - Clean build: In Android Studio → Build → Clean Project
 
 **Issue: Capacitor sync errors**
+
 - Solution: Delete `native` folder and run `npx cap add ios` and `npx cap add android`
 
 **Issue: Firebase emulator won't start**
+
 - Solution: Check if ports are in use: `lsof -i :5001`
 - Install Java JDK if missing (required for emulators)
 
 **Issue: Environment variables not working**
+
 - Solution: Restart dev server after changing `.env`
 - Ensure variables start with `VITE_` prefix
 - Check `vite-env.d.ts` has correct type definitions

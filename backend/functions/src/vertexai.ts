@@ -1,5 +1,6 @@
 import { VertexAI } from '@google-cloud/vertexai';
-import * as functions from 'firebase-functions';
+import * as logger from 'firebase-functions/logger';
+import { HttpsError } from 'firebase-functions/v2/https';
 
 /**
  * Vertex AI Integration Example
@@ -28,36 +29,37 @@ export const analyzeText = async (prompt: string): Promise<string> => {
     const response = result.response;
     return response.candidates?.[0]?.content?.parts?.[0]?.text || '';
   } catch (error) {
-    functions.logger.error('Error analyzing text:', error);
-    throw new functions.https.HttpsError('internal', 'Failed to analyze text');
+    logger.error('Error analyzing text:', error);
+    throw new HttpsError('internal', 'Failed to analyze text');
   }
 };
 
 /**
  * Example: Analyze image with Vertex AI
  */
-export const analyzeImage = async (
-  imageBase64: string,
-  prompt: string
-): Promise<string> => {
+export const analyzeImage = async (imageBase64: string, prompt: string): Promise<string> => {
   try {
-    const imagePart = {
-      inlineData: {
-        data: imageBase64,
-        mimeType: 'image/jpeg',
-      },
-    };
-
-    const textPart = {
-      text: prompt,
-    };
-
-    const result = await model.generateContent([textPart, imagePart]);
+    const result = await model.generateContent({
+      contents: [
+        {
+          role: 'user',
+          parts: [
+            { text: prompt },
+            {
+              inlineData: {
+                data: imageBase64,
+                mimeType: 'image/jpeg',
+              },
+            },
+          ],
+        },
+      ],
+    });
     const response = result.response;
     return response.candidates?.[0]?.content?.parts?.[0]?.text || '';
   } catch (error) {
-    functions.logger.error('Error analyzing image:', error);
-    throw new functions.https.HttpsError('internal', 'Failed to analyze image');
+    logger.error('Error analyzing image:', error);
+    throw new HttpsError('internal', 'Failed to analyze image');
   }
 };
 
@@ -75,7 +77,7 @@ export async function* streamAnalysis(prompt: string) {
       }
     }
   } catch (error) {
-    functions.logger.error('Error streaming analysis:', error);
-    throw new functions.https.HttpsError('internal', 'Failed to stream analysis');
+    logger.error('Error streaming analysis:', error);
+    throw new HttpsError('internal', 'Failed to stream analysis');
   }
 }

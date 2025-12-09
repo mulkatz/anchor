@@ -64,17 +64,11 @@ export const BreachScreen: FC<BreachScreenProps> = ({ onComplete }) => {
             }
           `}
         </style>
-        <AlertCircle
-          size={120}
-          className="text-biolum-cyan icon-glow-pulse"
-          strokeWidth={2}
-        />
+        <AlertCircle size={120} className="icon-glow-pulse text-biolum-cyan" strokeWidth={2} />
       </div>
 
       {/* Instruction */}
-      <h2 className="mb-6 text-center text-2xl font-light text-mist-white">
-        Hold to begin
-      </h2>
+      <h2 className="mb-6 text-center text-2xl font-light text-mist-white">Hold to begin</h2>
 
       {/* Long-press button */}
       <div className="relative">

@@ -26,7 +26,7 @@ export const ProfilePage: FC = () => {
         {menuItems.map(({ icon: Icon, label, description }) => (
           <button
             key={label}
-            className="flex items-center gap-4 rounded-2xl border border-glass-border bg-glass-bg p-4 backdrop-blur-glass transition-all duration-300 ease-viscous active:scale-98 active:bg-glass-bg-hover"
+            className="active:scale-98 flex items-center gap-4 rounded-2xl border border-glass-border bg-glass-bg p-4 backdrop-blur-glass transition-all duration-300 ease-viscous active:bg-glass-bg-hover"
           >
             <div className="flex h-12 w-12 items-center justify-center rounded-full bg-void-blue">
               <Icon size={24} className="text-biolum-cyan" />
@@ -41,9 +41,7 @@ export const ProfilePage: FC = () => {
 
       {/* Version */}
       <div className="mt-auto pt-8 text-center">
-        <p className="text-xs text-mist-white/30">
-          Anxiety Buddy v0.1.0
-        </p>
+        <p className="text-xs text-mist-white/30">Anxiety Buddy v0.1.0</p>
       </div>
     </div>
   );

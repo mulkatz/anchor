@@ -16,9 +16,7 @@ export const HomePage: FC = () => {
       <h1 className="mb-4 text-center text-4xl font-light tracking-wide text-mist-white">
         Anxiety Buddy
       </h1>
-      <p className="mb-12 text-center text-lg text-mist-white/70">
-        I'm here when you need me.
-      </p>
+      <p className="mb-12 text-center text-lg text-mist-white/70">I'm here when you need me.</p>
 
       {/* Quick Actions */}
       <div className="flex flex-col gap-4">

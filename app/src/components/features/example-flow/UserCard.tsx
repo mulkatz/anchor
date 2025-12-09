@@ -26,7 +26,8 @@ export const UserCard: FC<UserCardProps> = ({ user, onEdit, className }) => {
         'rounded-xl bg-white p-6 shadow-lg transition-shadow hover:shadow-xl',
         'border border-gray-200 dark:border-gray-700 dark:bg-gray-800',
         className
-      )}>
+      )}
+    >
       <div className="flex items-start gap-4">
         {/* Avatar */}
         <div className="flex-shrink-0">
@@ -45,9 +46,7 @@ export const UserCard: FC<UserCardProps> = ({ user, onEdit, className }) => {
 
         {/* User Info */}
         <div className="flex-1">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-            {user.name}
-          </h3>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{user.name}</h3>
 
           <div className="mt-2 space-y-1">
             <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
@@ -65,7 +64,8 @@ export const UserCard: FC<UserCardProps> = ({ user, onEdit, className }) => {
           {onEdit && (
             <button
               onClick={onEdit}
-              className="mt-4 rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-700 active:bg-primary-800">
+              className="mt-4 rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-700 active:bg-primary-800"
+            >
               Edit Profile
             </button>
           )}
