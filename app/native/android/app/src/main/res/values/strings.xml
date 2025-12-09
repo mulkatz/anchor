@@ -2,6 +2,6 @@
 <resources>
     <string name="app_name">YourApp</string>
     <string name="title_activity_main">YourApp</string>
-    <string name="package_name">com.yourcompany.yourapp</string>
-    <string name="custom_url_scheme">com.yourcompany.yourapp</string>
+    <string name="package_name">cx.franz.anxietybuddy</string>
+    <string name="custom_url_scheme">cx.franz.anxietybuddy</string>
 </resources>

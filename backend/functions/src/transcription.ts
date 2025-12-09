@@ -69,28 +69,47 @@ export const onAudioMessageCreate = onDocumentCreated(
       let encoding: string;
       let sampleRateHertz: number;
 
-      logger.info('Calling Speech-to-Text API', {
+      logger.info('Calling Speech-to-Text API - Initial detection', {
         audioFormat: mimeType,
         audioSize: audioBuffer.length,
+        audioPath: message.audioPath,
       });
 
       // Map mimeType to Speech-to-Text encoding
+      // Android typically records as audio/mp4 or audio/aac
+      // iOS records as audio/mp4 or audio/m4a
+      // Web records as audio/webm with opus codec
       if (mimeType.includes('webm') || mimeType.includes('opus')) {
         encoding = 'WEBM_OPUS';
         sampleRateHertz = 48000;
       } else if (mimeType.includes('ogg')) {
         encoding = 'OGG_OPUS';
         sampleRateHertz = 48000;
-      } else if (mimeType.includes('mp4') || mimeType.includes('m4a')) {
-        encoding = 'MP4';
-        sampleRateHertz = 48000;
+      } else if (
+        mimeType.includes('aac') ||
+        mimeType.includes('mp4') ||
+        mimeType.includes('m4a') ||
+        mimeType.includes('audio/mpeg')
+      ) {
+        // Android and iOS use AAC in MP4 container
+        // Note: Google Speech-to-Text does NOT support AAC directly
+        // We need to use ENCODING_UNSPECIFIED and let Google auto-detect
+        encoding = 'ENCODING_UNSPECIFIED';
+        sampleRateHertz = 16000; // Try 16kHz for mobile audio
       } else {
-        // Default to LINEAR16 as fallback
-        encoding = 'LINEAR16';
+        // Fallback: Let Google auto-detect
+        logger.warn('Unknown audio format, using auto-detection', { mimeType });
+        encoding = 'ENCODING_UNSPECIFIED';
         sampleRateHertz = 16000;
       }
 
-      logger.info('Using audio encoding', { encoding, sampleRateHertz });
+      logger.info('Using audio encoding', {
+        encoding,
+        sampleRateHertz,
+        mimeType,
+        detectedFormat:
+          mimeType.includes('aac') || mimeType.includes('mp4') ? 'mobile (AAC/MP4)' : 'web (WebM)',
+      });
 
       // 4. Call Google Cloud Speech-to-Text API
       const [response] = await speechClient.recognize({

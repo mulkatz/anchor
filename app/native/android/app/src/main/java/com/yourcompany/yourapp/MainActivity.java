@@ -1,4 +1,4 @@
-package com.yourcompany.yourapp;
+package cx.franz.anxietybuddy;
 
 import com.getcapacitor.BridgeActivity;
 
