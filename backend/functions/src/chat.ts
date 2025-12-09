@@ -158,7 +158,7 @@ export const onMessageCreate = onDocumentCreated(
           text: responseText,
           createdAt: admin.firestore.FieldValue.serverTimestamp(),
           metadata: {
-            model: 'gemini-2.0-flash-exp',
+            model: 'gemini-2.5-flash',
             responseTime,
           },
         });
