@@ -1,6 +1,6 @@
 import * as logger from 'firebase-functions/logger';
 import * as admin from 'firebase-admin';
-import { onDocumentCreated } from 'firebase-functions/v2/firestore';
+import { onDocumentWritten } from 'firebase-functions/v2/firestore';
 import { VertexAI } from '@google-cloud/vertexai';
 
 /**
@@ -55,13 +55,17 @@ Guidelines:
 
 /**
  * Cloud Function: onMessageCreate
- * Triggered when a new message is added to Firestore
+ * Triggered when a message is created or updated in Firestore
  * Responds with AI-generated therapeutic messages or crisis resources
+ *
+ * Note: Uses onDocumentWritten to handle both:
+ * 1. New text messages (created)
+ * 2. Voice messages after transcription completes (updated)
  */
-export const onMessageCreate = onDocumentCreated(
+export const onMessageCreate = onDocumentWritten(
   'users/{userId}/conversations/{conversationId}/messages/{messageId}',
   async (event): Promise<void> => {
-    const snap = event.data;
+    const snap = event.data?.after;
     if (!snap) {
       logger.error('No data in snapshot');
       return;
@@ -71,13 +75,19 @@ export const onMessageCreate = onDocumentCreated(
     const userId = event.params.userId;
     const conversationId = event.params.conversationId;
 
-    // 1. Validate: Only process user messages
+    // 1. Validate: Check message exists
+    if (!message) {
+      logger.error('Message data is undefined');
+      return;
+    }
+
+    // 2. Validate: Only process user messages
     if (message.role !== 'user') {
       logger.info('Skipping non-user message', { userId, conversationId, role: message.role });
       return;
     }
 
-    // 2. Skip audio messages that are still being transcribed
+    // 3. Skip audio messages that are still being transcribed
     if (message.hasAudio && message.transcriptionStatus === 'pending') {
       logger.info('Skipping message with pending transcription', {
         userId,
@@ -90,7 +100,7 @@ export const onMessageCreate = onDocumentCreated(
     logger.info('Processing user message', { userId, conversationId, messageId: snap.id });
 
     try {
-      // 3. Crisis Detection: Check for self-harm keywords BEFORE AI call
+      // 4. Crisis Detection: Check for self-harm keywords BEFORE AI call
       const hasCrisisKeyword = CRISIS_KEYWORDS.some((regex) => regex.test(message.text));
 
       if (hasCrisisKeyword) {
@@ -120,7 +130,7 @@ export const onMessageCreate = onDocumentCreated(
         return;
       }
 
-      // 4. Fetch Context: Get last 10 messages for conversation history
+      // 5. Fetch Context: Get last 10 messages for conversation history
       const messagesSnapshot = await admin
         .firestore()
         .collection(`users/${userId}/conversations/${conversationId}/messages`)
@@ -142,13 +152,13 @@ export const onMessageCreate = onDocumentCreated(
         historyLength: conversationHistory.length,
       });
 
-      // 5. Build Gemini Conversation Format
+      // 6. Build Gemini Conversation Format
       const contents = conversationHistory.map((msg) => ({
         role: msg.role === 'user' ? 'user' : 'model',
         parts: [{ text: msg.text }],
       }));
 
-      // 6. Call Vertex AI (Gemini 2.5 Flash)
+      // 7. Call Vertex AI (Gemini 2.5 Flash)
       const vertexAI = new VertexAI({
         project: process.env.GCLOUD_PROJECT,
         location: 'us-central1',
@@ -194,7 +204,7 @@ export const onMessageCreate = onDocumentCreated(
         actualText: responseText,
       });
 
-      // 6. Write Assistant Response to Firestore
+      // 8. Write Assistant Response to Firestore
       await admin
         .firestore()
         .collection(`users/${userId}/conversations/${conversationId}/messages`)
@@ -210,7 +220,7 @@ export const onMessageCreate = onDocumentCreated(
           },
         });
 
-      // 7. Update Conversation Metadata
+      // 9. Update Conversation Metadata
       await admin
         .firestore()
         .doc(`users/${userId}/conversations/${conversationId}`)
