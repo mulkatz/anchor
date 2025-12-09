@@ -1,4 +1,4 @@
-import { type FC, useState, useEffect } from 'react';
+import { type FC, useState, useEffect, useRef } from 'react';
 import { AlertCircle } from 'lucide-react';
 import { useHaptics } from '../../../hooks/useHaptics';
 
@@ -10,7 +10,13 @@ export const BreachScreen: FC<BreachScreenProps> = ({ onComplete }) => {
   const { heavy } = useHaptics();
   const [isPressed, setIsPressed] = useState(false);
   const [progress, setProgress] = useState(0);
+  const onCompleteRef = useRef(onComplete);
   const LONG_PRESS_DURATION = 2000; // 2 seconds
+
+  // Keep ref updated
+  useEffect(() => {
+    onCompleteRef.current = onComplete;
+  }, [onComplete]);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -25,21 +31,44 @@ export const BreachScreen: FC<BreachScreenProps> = ({ onComplete }) => {
         if (currentProgress >= 100) {
           clearInterval(interval);
           heavy(); // Heavy haptic on trigger
-          setTimeout(onComplete, 300);
+          setTimeout(() => onCompleteRef.current(), 300);
         }
       }, 16); // ~60fps
     } else {
       setProgress(0);
     }
 
-    return () => clearInterval(interval);
-  }, [isPressed, onComplete, heavy]);
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [isPressed, heavy]);
 
   return (
     <div className="flex h-full flex-col items-center justify-center px-6">
       {/* Pulsing SOS Icon */}
-      <div className="mb-8 animate-pulse-glow">
-        <AlertCircle size={120} className="text-biolum-cyan drop-shadow-glow-strong" />
+      <div className="mb-8 flex items-center justify-center">
+        <style>
+          {`
+            @keyframes iconGlowPulse {
+              0%, 100% {
+                filter: drop-shadow(0 0 10px rgba(100, 255, 218, 0.4));
+                transform: scale(1);
+              }
+              50% {
+                filter: drop-shadow(0 0 30px rgba(100, 255, 218, 0.9));
+                transform: scale(1.05);
+              }
+            }
+            .icon-glow-pulse {
+              animation: iconGlowPulse 2s ease-in-out infinite;
+            }
+          `}
+        </style>
+        <AlertCircle
+          size={120}
+          className="text-biolum-cyan icon-glow-pulse"
+          strokeWidth={2}
+        />
       </div>
 
       {/* Instruction */}

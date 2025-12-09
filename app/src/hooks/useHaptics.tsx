@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import { Haptics, ImpactStyle } from '@capacitor/haptics';
 
 /**
@@ -6,35 +7,35 @@ import { Haptics, ImpactStyle } from '@capacitor/haptics';
  */
 export const useHaptics = () => {
   // Heavy impact - Crisis moments (SOS trigger)
-  const heavy = async () => {
+  const heavy = useCallback(async () => {
     await Haptics.impact({ style: ImpactStyle.Heavy });
-  };
+  }, []);
 
   // Medium impact - Completion, success
-  const medium = async () => {
+  const medium = useCallback(async () => {
     await Haptics.impact({ style: ImpactStyle.Medium });
-  };
+  }, []);
 
   // Light impact - UI interactions (taps, swipes)
-  const light = async () => {
+  const light = useCallback(async () => {
     await Haptics.impact({ style: ImpactStyle.Light });
-  };
+  }, []);
 
   // Selection feedback - Continuous (start, change, end)
-  const selectionStart = async () => {
+  const selectionStart = useCallback(async () => {
     await Haptics.selectionStart();
-  };
+  }, []);
 
-  const selectionChanged = async () => {
+  const selectionChanged = useCallback(async () => {
     await Haptics.selectionChanged();
-  };
+  }, []);
 
-  const selectionEnd = async () => {
+  const selectionEnd = useCallback(async () => {
     await Haptics.selectionEnd();
-  };
+  }, []);
 
   // Heartbeat pattern (60 BPM - 1000ms interval)
-  const heartbeat = async (duration: number = 5000) => {
+  const heartbeat = useCallback(async (duration: number = 5000) => {
     const interval = 1000; // 60 BPM
     const pulses = Math.floor(duration / interval);
 
@@ -42,17 +43,17 @@ export const useHaptics = () => {
       await Haptics.impact({ style: ImpactStyle.Light });
       await new Promise((resolve) => setTimeout(resolve, interval));
     }
-  };
+  }, []);
 
   // Breathing pattern (4s in, 6s out - swell and fade)
-  const breathingCycle = async () => {
+  const breathingCycle = useCallback(async () => {
     // Inhale - gentle swell
     await Haptics.impact({ style: ImpactStyle.Light });
     await new Promise((resolve) => setTimeout(resolve, 4000));
 
     // Exhale - fade (no haptic, just pause)
     await new Promise((resolve) => setTimeout(resolve, 6000));
-  };
+  }, []);
 
   return {
     heavy,
