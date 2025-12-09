@@ -49,11 +49,10 @@ export const ChatInput: FC<ChatInputProps> = ({ onSend, disabled }) => {
   return (
     <div
       className={cn(
-        'fixed bottom-0 left-0 right-0',
-        'px-6 pb-6 pt-3',
+        'fixed bottom-20 left-0 right-0',
+        'px-6 pb-3 pt-3',
         'bg-void-blue/90 backdrop-blur-glass',
-        'border-t border-glass-border',
-        'safe-area-bottom'
+        'border-t border-glass-border'
       )}
     >
       <div

@@ -39,9 +39,19 @@ You matter. Please reach out to one of these services now.`,
 
 /**
  * Therapeutic System Prompt for Gemini
- * CBT/ACT-based approach with Socratic questioning
+ * UPDATED: Optimized for depth, empathy, and thorough CBT/ACT support.
  */
-const SYSTEM_PROMPT = `You are 'Anchor,' a compassionate, calm, and grounded mental health companion for a Gen Z user. Your Goal: Help the user de-escalate anxiety using CBT (Cognitive Behavioral Therapy) and ACT (Acceptance and Commitment Therapy) techniques. Guidelines: 1. Tone: Warm, concise, and low-pressure. Do not sound like a robot. Speak like a wise, calm friend. 2. Method: Use Socratic Questioning. Do not just fix their problem. Ask: 'What evidence do you have for that thought?' or 'Is this thought helpful right now?' 3. Length: Keep responses short (under 3 sentences usually). Large blocks of text cause anxiety. 4. Formatting: You can use bullet points if helpful, but avoid markdown headers. 5. Safety: You are NOT a doctor. If the user mentions self-harm, direct them to professional help immediately. 6. Context: The user is likely in 'Dark Mode' on their phone, seeking relief. Be the light in the dark.`;
+const SYSTEM_PROMPT = `You are 'Anchor,' a compassionate, calm, and grounded mental health companion for a Gen Z user.
+
+Your Goal: Help the user de-escalate anxiety using CBT (Cognitive Behavioral Therapy) and ACT (Acceptance and Commitment Therapy) techniques.
+
+Guidelines:
+1. Tone: Warm, validating, and low-pressure. Speak like a wise, calm friend, not a clinical robot.
+2. Method: Use Socratic Questioning, but balance it with comforting explanations. Don't just ask questions—validate their feelings first.
+3. Length: **Prioritize depth and clarity.** You are free to provide comprehensive answers, analogies, and step-by-step guidance. Do not rush.
+4. Formatting: Use paragraphs, bullet points, and spacing to make long text easy to read.
+5. Safety: You are NOT a doctor. If the user mentions self-harm, direct them to professional help immediately.
+6. Context: The user is looking for a meaningful conversation. Be present with them.`;
 
 /**
  * Cloud Function: onMessageCreate
@@ -130,7 +140,7 @@ export const onMessageCreate = onDocumentCreated(
       const result = await model.generateContent({
         contents,
         generationConfig: {
-          maxOutputTokens: 200, // Keep responses concise
+          maxOutputTokens: 8192, // Allow deep, comprehensive responses (~6000 words)
           temperature: 0.7, // Balanced creativity
           topP: 0.9,
           topK: 40,
@@ -138,6 +148,17 @@ export const onMessageCreate = onDocumentCreated(
       });
 
       const responseTime = Date.now() - startTime;
+
+      // Debug: Log full response structure
+      const candidate = result.response.candidates?.[0];
+      logger.info('Gemini raw response', {
+        userId,
+        finishReason: candidate?.finishReason,
+        safetyRatings: candidate?.safetyRatings,
+        partsCount: candidate?.content?.parts?.length,
+        fullResponse: JSON.stringify(candidate),
+      });
+
       const responseText =
         result.response.candidates?.[0]?.content?.parts?.[0]?.text ||
         "I'm here for you. Can you tell me more about what you're feeling?";
@@ -146,6 +167,7 @@ export const onMessageCreate = onDocumentCreated(
         userId,
         responseTime,
         messageLength: responseText.length,
+        actualText: responseText,
       });
 
       // 6. Write Assistant Response to Firestore
