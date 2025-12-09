@@ -7,6 +7,7 @@ import { useChat } from '../hooks/useChat';
 import { useConversation } from '../hooks/useConversation';
 import { useHaptics } from '../hooks/useHaptics';
 import { cn } from '../utils/cn';
+import { auth } from '../services/firebase.service';
 
 /**
  * Chat Page - "Deep Talk"
@@ -19,23 +20,32 @@ export const ChatPage: FC = () => {
     activeConversation,
     isLoading: conversationLoading,
     createNewConversation,
+    error: conversationError,
   } = useConversation();
 
   const { messages, isThinking, error, sendMessage } = useChat({
     conversationId: activeConversation?.id || null,
   });
 
-  // Auto-create first conversation if none exists
+  // Auto-create first conversation if none exists (only when authenticated)
   useEffect(() => {
-    if (!conversationLoading && !activeConversation) {
-      createNewConversation();
+    const userId = auth.currentUser?.uid;
+    if (!conversationLoading && !activeConversation && userId) {
+      console.log('Auto-creating first conversation...');
+      createNewConversation().catch((err) => {
+        console.error('Failed to auto-create conversation:', err);
+      });
     }
   }, [conversationLoading, activeConversation, createNewConversation]);
 
   const handleNewChat = async () => {
     await light();
-    await createNewConversation();
-    // Cloud function will auto-archive current conversation
+    try {
+      await createNewConversation();
+      console.log('New conversation created successfully');
+    } catch (err) {
+      console.error('Failed to create new conversation:', err);
+    }
   };
 
   const handleOpenArchive = async () => {
@@ -84,9 +94,9 @@ export const ChatPage: FC = () => {
       </header>
 
       {/* Error Banner (if any) */}
-      {error && (
+      {(error || conversationError) && (
         <div className="border-b border-danger/50 bg-danger/20 px-6 py-3">
-          <p className="text-sm text-mist-white">{error}</p>
+          <p className="text-sm text-mist-white">{error || conversationError}</p>
         </div>
       )}
 

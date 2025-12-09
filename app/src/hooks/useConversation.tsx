@@ -72,12 +72,18 @@ export const useConversation = () => {
 
   // Create new conversation (and auto-archive current via Cloud Function)
   const createNewConversation = useCallback(async (): Promise<string> => {
+    if (!userId) {
+      throw new Error('User not authenticated');
+    }
+
     try {
       // Check if current conversation is empty - reuse it instead of archiving
       if (activeConversation && activeConversation.messageCount === 0) {
+        console.log('Reusing empty conversation:', activeConversation.id);
         return activeConversation.id;
       }
 
+      console.log('Creating new conversation for user:', userId);
       const conversationsRef = collection(firestore, `users/${userId}/conversations`);
 
       const newConversation = await addDoc(conversationsRef, {
@@ -92,6 +98,7 @@ export const useConversation = () => {
         metadata: {},
       });
 
+      console.log('New conversation created:', newConversation.id);
       return newConversation.id;
     } catch (err) {
       console.error('Error creating conversation:', err);
@@ -102,6 +109,10 @@ export const useConversation = () => {
   // Archive current conversation
   const archiveConversation = useCallback(
     async (conversationId: string) => {
+      if (!userId) {
+        throw new Error('User not authenticated');
+      }
+
       try {
         const conversationRef = doc(firestore, `users/${userId}/conversations/${conversationId}`);
 
@@ -120,6 +131,10 @@ export const useConversation = () => {
   // Unarchive conversation (makes it active, Cloud Function archives others)
   const unarchiveConversation = useCallback(
     async (conversationId: string) => {
+      if (!userId) {
+        throw new Error('User not authenticated');
+      }
+
       try {
         const conversationRef = doc(firestore, `users/${userId}/conversations/${conversationId}`);
 

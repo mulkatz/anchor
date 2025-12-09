@@ -9,7 +9,7 @@ export const MainLayout: FC<MainLayoutProps> = ({ children }) => {
   return (
     <div className="relative h-screen w-full overflow-hidden bg-void-blue">
       {/* Main content area */}
-      <main className="safe-area-top h-full w-full overflow-y-auto overflow-x-hidden pb-24">
+      <main className="safe-area-top safe-area-bottom h-full w-full overflow-y-auto overflow-x-hidden pb-28">
         {children}
       </main>
 

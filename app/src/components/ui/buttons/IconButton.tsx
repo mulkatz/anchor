@@ -1,9 +1,10 @@
-import { ReactElement } from 'react';
+import { type LucideIcon } from 'lucide-react';
 import { cn } from '../../../utils/cn';
 
 interface IconButtonProps {
   onClick?: () => void;
-  icon: ReactElement;
+  icon: LucideIcon;
+  iconSize?: number;
   className?: string;
   active?: boolean;
   'data-testid'?: string;
@@ -12,10 +13,12 @@ interface IconButtonProps {
 /**
  * Icon Button
  * Circular button with icon, perfect for toolbars and FABs
+ * Uses lucide-react icons only
  */
 export const IconButton = ({
   onClick,
-  icon,
+  icon: Icon,
+  iconSize = 24,
   className,
   active,
   'data-testid': dataTestId,
@@ -32,15 +35,22 @@ export const IconButton = ({
       )}
       aria-label="Icon button"
     >
-      {icon}
+      <Icon size={iconSize} />
     </button>
   );
 };
 
 /**
  * Round Icon Button (Smaller variant)
+ * Uses lucide-react icons only
  */
-export const RoundIconButton = ({ onClick, icon, className, active }: IconButtonProps) => {
+export const RoundIconButton = ({
+  onClick,
+  icon: Icon,
+  iconSize = 20,
+  className,
+  active,
+}: IconButtonProps) => {
   return (
     <button
       onClick={onClick}
@@ -52,7 +62,7 @@ export const RoundIconButton = ({ onClick, icon, className, active }: IconButton
       )}
       aria-label="Round icon button"
     >
-      {icon}
+      <Icon size={iconSize} />
     </button>
   );
 };

@@ -49,15 +49,16 @@ export const ChatInput: FC<ChatInputProps> = ({ onSend, disabled }) => {
   return (
     <div
       className={cn(
-        'fixed bottom-20 left-0 right-0',
-        'px-6 pb-3 pt-3',
+        'safe-area-margin-bottom fixed bottom-24 left-0 right-0 z-40',
+        'px-6 pb-4 pt-3',
         'bg-void-blue/90 backdrop-blur-glass',
-        'border-t border-glass-border'
+        'border-t border-glass-border',
+        'pointer-events-auto'
       )}
     >
       <div
         className={cn(
-          'flex items-end gap-3',
+          'flex items-center gap-3',
           'bg-glass-bg backdrop-blur-glass',
           'rounded-3xl border border-glass-border',
           'px-4 py-3 shadow-glass'
@@ -75,6 +76,7 @@ export const ChatInput: FC<ChatInputProps> = ({ onSend, disabled }) => {
             'placeholder:text-mist-white/40',
             'resize-none outline-none',
             'max-h-32 min-h-[24px]',
+            'py-1 leading-6',
             'disabled:opacity-50'
           )}
           rows={1}

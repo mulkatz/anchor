@@ -1,11 +1,12 @@
 import { cn } from '../../../utils/cn';
-import { ReactNode } from 'react';
+import { type LucideIcon } from 'lucide-react';
 import { ClipLoader } from 'react-spinners';
 
 interface CTAButtonProps {
   loading?: boolean;
   text: string;
-  icon?: ReactNode;
+  icon?: LucideIcon;
+  iconSize?: number;
   onClick?: () => void;
   className?: string;
   disabled?: boolean;
@@ -16,11 +17,13 @@ interface CTAButtonProps {
 /**
  * CTA (Call to Action) Button
  * Primary button component with loading state and icon support
+ * Uses lucide-react icons only
  */
 export const CTAButton = ({
   loading,
   text,
-  icon,
+  icon: Icon,
+  iconSize = 20,
   onClick,
   className,
   disabled,
@@ -46,7 +49,7 @@ export const CTAButton = ({
       )}
     >
       {/* Only show the icon if not loading */}
-      {!!icon && !loading && icon}
+      {Icon && !loading && <Icon size={iconSize} />}
 
       {/* Loading Spinner */}
       {loading && (

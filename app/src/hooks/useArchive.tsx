@@ -62,6 +62,10 @@ export const useArchive = () => {
   // Delete conversation permanently
   const deleteConversation = useCallback(
     async (conversationId: string) => {
+      if (!userId) {
+        throw new Error('User not authenticated');
+      }
+
       try {
         const conversationRef = doc(firestore, `users/${userId}/conversations/${conversationId}`);
         await deleteDoc(conversationRef);

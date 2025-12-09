@@ -13,8 +13,8 @@ export const HomeScreen: FC = () => {
       <header className="safe-area-top flex items-center justify-between p-4">
         <h1 className="text-2xl font-bold text-primary-900 dark:text-white">YourApp</h1>
         <div className="flex gap-2">
-          <IconButton icon={<User size={20} />} onClick={() => {}} />
-          <IconButton icon={<Settings size={20} />} onClick={() => {}} />
+          <IconButton icon={User} iconSize={20} onClick={() => {}} />
+          <IconButton icon={Settings} iconSize={20} onClick={() => {}} />
         </div>
       </header>
 

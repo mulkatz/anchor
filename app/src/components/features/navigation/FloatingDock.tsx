@@ -1,6 +1,6 @@
 import { type FC } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Home, AlertCircle, MessageCircle, Archive, User } from 'lucide-react';
+import { AlertCircle, MessageCircle, Archive, User } from 'lucide-react';
 import { Haptics, ImpactStyle } from '@capacitor/haptics';
 import { cn } from '../../../utils/cn';
 
@@ -15,15 +15,14 @@ export const FloatingDock: FC = () => {
   };
 
   const navItems = [
-    { path: '/', icon: Home, label: 'Home' },
-    { path: '/sos', icon: AlertCircle, label: 'SOS', isCenter: true },
+    { path: '/sos', icon: AlertCircle, label: 'SOS' },
     { path: '/chat', icon: MessageCircle, label: 'Chat' },
     { path: '/vault', icon: Archive, label: 'Vault' },
     { path: '/profile', icon: User, label: 'Profile' },
   ];
 
   return (
-    <div className="safe-area-bottom fixed bottom-0 left-0 right-0 z-50 flex justify-center pb-6">
+    <div className="safe-area-margin-bottom fixed bottom-6 left-0 right-0 z-50 flex justify-center px-6">
       <nav
         className={cn(
           'flex items-center gap-4 rounded-full px-6 py-3',
@@ -32,7 +31,7 @@ export const FloatingDock: FC = () => {
           'no-select'
         )}
       >
-        {navItems.map(({ path, icon: Icon, label, isCenter }) => {
+        {navItems.map(({ path, icon: Icon, label }) => {
           const isActive = location.pathname === path;
 
           return (
@@ -42,21 +41,13 @@ export const FloatingDock: FC = () => {
               className={cn(
                 'flex flex-col items-center justify-center',
                 'transition-all duration-300 ease-viscous',
-                'active:scale-95',
-                isCenter ? 'relative -my-2 rounded-full bg-biolum-cyan p-4 shadow-glow-md' : 'p-2',
-                isActive && !isCenter && 'text-biolum-cyan drop-shadow-glow',
-                !isActive && !isCenter && 'text-mist-white/60'
+                'p-2 active:scale-95',
+                isActive && 'text-biolum-cyan drop-shadow-glow',
+                !isActive && 'text-mist-white/60'
               )}
               aria-label={label}
             >
-              <Icon
-                size={isCenter ? 32 : 24}
-                className={cn(
-                  'transition-transform duration-300',
-                  isCenter && 'text-void-blue',
-                  isCenter && 'animate-pulse-glow'
-                )}
-              />
+              <Icon size={24} className="transition-transform duration-300" />
             </button>
           );
         })}
