@@ -30,5 +30,5 @@ db.exampleItems.hook('creating', (primKey, obj) => {
 });
 
 db.exampleItems.hook('updating', (modifications) => {
-  modifications.updatedAt = new Date();
+  (modifications as Partial<ExampleItem>).updatedAt = new Date();
 });

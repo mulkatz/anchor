@@ -9,11 +9,11 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "format": "prettier --write \"src/**/*.{ts,tsx}\"",
-    "ios": "npx cap run ios",
-    "android": "npx cap run android",
+    "ios": "npx cap run native/ios",
+    "android": "npx cap run native/android",
     "sync": "npx cap sync",
-    "open:ios": "npx cap open ios",
-    "open:android": "npx cap open android"
+    "open:ios": "npx cap open native/ios",
+    "open:android": "npx cap open native/android"
   },
   "dependencies": {
     "@capacitor/android": "^7.0.0",
@@ -27,6 +27,7 @@
     "dexie": "^4.0.11",
     "dexie-react-hooks": "^1.1.7",
     "firebase": "^12.6.0",
+    "framer-motion": "^12.23.25",
     "i18next": "^24.2.2",
     "i18next-browser-languagedetector": "^8.0.2",
     "lucide-react": "^0.554.0",
@@ -59,6 +60,7 @@
     "tailwind-merge": "^3.0.1",
     "tailwindcss": "^3.4.17",
     "tailwindcss-safe-area": "^0.8.0",
+    "terser": "^5.44.1",
     "typescript": "^5.7.3",
     "vite": "^6.0.11"
   }

@@ -1,31 +1,114 @@
-import { useState } from 'react';
+import { type FC } from 'react';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { AnimatePresence, motion } from 'framer-motion';
+import { MainLayout } from '../components/layouts/MainLayout';
+import { HomePage } from './HomePage';
+import { SOSPage } from './SOSPage';
+import { VaultPage } from './VaultPage';
+import { ProfilePage } from './ProfilePage';
 
-function App() {
-  const [count, setCount] = useState(0);
+// Animation variants for page transitions
+const pageVariants = {
+  initial: {
+    opacity: 0,
+    y: 20,
+  },
+  animate: {
+    opacity: 1,
+    y: 0,
+  },
+  exit: {
+    opacity: 0,
+    y: -20,
+  },
+};
+
+// Viscous, slow transition
+const pageTransition = {
+  duration: 0.6,
+  ease: [0.22, 1, 0.36, 1] as [number, number, number, number], // cubic-bezier(0.22, 1, 0.36, 1) - viscous easing
+};
+
+// Animated route wrapper component
+const AnimatedRoutes: FC = () => {
+  const location = useLocation();
 
   return (
-    <div className="flex h-screen w-full items-center justify-center bg-gradient-to-br from-primary-500 to-primary-700">
-      <div className="text-center">
-        <h1 className="mb-8 text-6xl font-bold text-white">
-          Project Starter
-        </h1>
-        <p className="mb-8 text-xl text-white/90">
-          Modern monorepo template with React, TypeScript, and Capacitor
-        </p>
-        <div className="rounded-lg bg-white p-8 shadow-2xl">
-          <button
-            onClick={() => setCount((count) => count + 1)}
-            className="rounded-md bg-primary-600 px-6 py-3 text-white transition-colors hover:bg-primary-700 active:bg-primary-800"
-          >
-            Count is {count}
-          </button>
-          <p className="mt-4 text-gray-600">
-            Edit <code className="rounded bg-gray-100 px-2 py-1">src/pages/App.tsx</code> and save to test HMR
-          </p>
-        </div>
-      </div>
-    </div>
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
+        <Route
+          path="/"
+          element={
+            <motion.div
+              variants={pageVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              transition={pageTransition}
+              className="h-full w-full"
+            >
+              <HomePage />
+            </motion.div>
+          }
+        />
+        <Route
+          path="/sos"
+          element={
+            <motion.div
+              variants={pageVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              transition={pageTransition}
+              className="h-full w-full"
+            >
+              <SOSPage />
+            </motion.div>
+          }
+        />
+        <Route
+          path="/vault"
+          element={
+            <motion.div
+              variants={pageVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              transition={pageTransition}
+              className="h-full w-full"
+            >
+              <VaultPage />
+            </motion.div>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <motion.div
+              variants={pageVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              transition={pageTransition}
+              className="h-full w-full"
+            >
+              <ProfilePage />
+            </motion.div>
+          }
+        />
+      </Routes>
+    </AnimatePresence>
   );
-}
+};
+
+const App: FC = () => {
+  return (
+    <BrowserRouter>
+      <MainLayout>
+        <AnimatedRoutes />
+      </MainLayout>
+    </BrowserRouter>
+  );
+};
 
 export default App;

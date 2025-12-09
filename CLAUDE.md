@@ -1,698 +1,598 @@
-# Project Starter - AI Assistant Context
-
-**Purpose:** This document provides comprehensive context for AI assistants (Claude Code, GitHub Copilot, etc.) working on projects built from this starter template.
-
----
-
-## Project Overview
-
-**Project Starter** is a modern monorepo template for building cross-platform applications with a focus on:
-- **Mobile-first development** (iOS, Android, Web PWA)
-- **Type safety** (TypeScript everywhere)
-- **Developer experience** (Fast builds, HMR, linting)
-- **Production-ready** (Optimized builds, error tracking, analytics ready)
-- **Scalability** (Monorepo structure, clear separation of concerns)
-
-### Core Tech Stack
-
-- **Frontend:** React 18 + TypeScript + Vite + Tailwind CSS
-- **Mobile:** Capacitor 7 (native iOS/Android)
-- **Backend:** Firebase Functions (Node.js + TypeScript)
-- **State:** React Context API + Dexie (IndexedDB for offline)
-- **Build:** Vite (fast bundler with HMR)
+# CLAUDE.md - Anxiety Buddy (Project Anchor)
+**AI Assistant Context & Project Brain**
 
 ---
 
-## Repository Structure
+## 🎯 THE MANIFEST
+
+**Project Name:** Anxiety Buddy (Internal Codename: Project Anchor)
+**Stage:** Greenfield Development
+**Target Audience:** Gen Z (18-26 years old)
+**Core Purpose:** Immediate Relief Tool for Anxiety & Panic Attacks
+
+### The Vision
+This is NOT a wellness app with gamification. This is a **therapeutic interface**.
+- **The Interface IS the Therapy** - Every pixel, every animation, every haptic pulse is designed to ground and de-escalate panic.
+- **Evidence-Based:** Built on Cognitive Behavioral Therapy (CBT) + Somatic Grounding techniques.
+- **Mobile-First:** Native iOS/Android with Capacitor. The app must feel native, not web-wrapped.
+
+### The Aesthetic: "Bioluminescence in the Deep"
+Imagine the deep ocean at night. Viscous, slow-moving, calming darkness punctuated by gentle glowing life forms.
+
+**Mood Board Keywords:**
+- Deep ocean darkness (safety in the void)
+- Bioluminescent jellyfish (soft, pulsing light)
+- Viscous liquid motion (slow, deliberate)
+- Frosted glass surfaces (depth, layering)
+- Warm glows in cold darkness (hope, guidance)
+
+---
+
+## 🛠️ TECHNOLOGY STACK
+
+### Frontend Core
+- **Framework:** React 18.3+ (Functional components only, hooks-based)
+- **Language:** TypeScript 5.7+ (Strict mode, all `.tsx` files)
+- **Build Tool:** Vite 6.0+ (Fast HMR, optimized production builds)
+- **Styling:** Tailwind CSS 3.4+ (Mobile-first, custom design tokens)
+
+### Mobile Runtime
+- **Platform:** Capacitor 7.0+ (Native iOS/Android bridge)
+- **Routing:** `react-router-dom` v7+ (Client-side routing with animations)
+- **Animation:** Framer Motion (Page transitions, micro-interactions, physics-based motion)
+
+### Native APIs (Critical Dependencies)
+```json
+{
+  "@capacitor/haptics": "^7.0.0",        // CRITICAL - Therapeutic haptic feedback
+  "@capacitor/status-bar": "^7.0.0",     // CRITICAL - Dark mode, overlay styling
+  "@capacitor/app": "^7.0.0",            // App lifecycle hooks
+  "@capacitor/camera": "^7.0.1",         // Future: Photo journaling
+  "@capacitor/filesystem": "^7.0.1"      // Future: Local data persistence
+}
+```
+
+### UI Components
+- **Icons:** `lucide-react` (Consistent, minimal icon set)
+- **Utilities:** `clsx`, `tailwind-merge` (Conditional styling)
+
+### Backend (Future)
+- **Platform:** Firebase (Firestore, Auth, Functions)
+- **Offline-First:** Dexie (IndexedDB wrapper for local data)
+
+---
+
+## 🎨 DESIGN TOKENS
+
+### Color Palette
+Add these to `tailwind.config.ts`:
+
+```typescript
+colors: {
+  // Core brand colors
+  'void-blue': '#0A1128',        // Main background - deep ocean void
+  'biolum-cyan': '#64FFDA',      // Primary glow - bioluminescence
+  'warm-ember': '#FFB38A',       // Accent - warm hope in darkness
+  'mist-white': '#E2E8F0',       // Text - soft, readable white
+
+  // Glass morphism
+  'glass': {
+    'border': 'rgba(255, 255, 255, 0.1)',
+    'bg': 'rgba(255, 255, 255, 0.05)',
+    'bg-hover': 'rgba(255, 255, 255, 0.08)',
+  },
+
+  // States (derived from base palette)
+  'success': '#4ECDC4',          // Teal - calm achievement
+  'warning': '#FFD93D',          // Yellow - gentle alert
+  'danger': '#FF6B6B',           // Coral red - soft danger
+
+  // Shadows & Glows
+  'glow-cyan': 'rgba(100, 255, 218, 0.4)',
+  'glow-ember': 'rgba(255, 179, 138, 0.3)',
+}
+```
+
+### Typography
+```typescript
+fontFamily: {
+  sans: ['Inter', 'SF Pro Display', 'system-ui', 'sans-serif'],
+  mono: ['SF Mono', 'Menlo', 'Monaco', 'monospace'],
+}
+
+fontSize: {
+  // Scale designed for mobile readability
+  'xs': ['0.75rem', { lineHeight: '1rem' }],       // 12px
+  'sm': ['0.875rem', { lineHeight: '1.25rem' }],   // 14px
+  'base': ['1rem', { lineHeight: '1.5rem' }],      // 16px
+  'lg': ['1.125rem', { lineHeight: '1.75rem' }],   // 18px
+  'xl': ['1.25rem', { lineHeight: '1.75rem' }],    // 20px
+  '2xl': ['1.5rem', { lineHeight: '2rem' }],       // 24px
+  '3xl': ['1.875rem', { lineHeight: '2.25rem' }],  // 30px
+  '4xl': ['2.25rem', { lineHeight: '2.5rem' }],    // 36px
+}
+```
+
+### Animation Physics
+All animations must feel **viscous and deliberate** - never snappy or jarring.
+
+```typescript
+animation: {
+  // Page transitions
+  'fade-in': 'fadeIn 0.6s cubic-bezier(0.22, 1, 0.36, 1)',
+  'fade-out': 'fadeOut 0.4s cubic-bezier(0.22, 1, 0.36, 1)',
+  'slide-up': 'slideUp 0.8s cubic-bezier(0.22, 1, 0.36, 1)',
+  'slide-down': 'slideDown 0.8s cubic-bezier(0.22, 1, 0.36, 1)',
+
+  // Micro-interactions
+  'pulse-glow': 'pulseGlow 2s ease-in-out infinite',
+  'breathe': 'breathe 10s ease-in-out infinite',  // 4s in, 6s out
+
+  // UI feedback
+  'tap-scale': 'tapScale 0.2s ease-out',
+}
+
+transitionTimingFunction: {
+  'viscous': 'cubic-bezier(0.22, 1, 0.36, 1)',     // Slow ease-out
+  'elastic': 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
+}
+```
+
+### Shadows & Glows
+```typescript
+boxShadow: {
+  'glow-sm': '0 0 10px rgba(100, 255, 218, 0.3)',
+  'glow-md': '0 0 20px rgba(100, 255, 218, 0.4)',
+  'glow-lg': '0 0 40px rgba(100, 255, 218, 0.5)',
+  'glass': '0 8px 32px rgba(0, 0, 0, 0.3)',
+  'inner-glow': 'inset 0 0 20px rgba(100, 255, 218, 0.2)',
+}
+
+dropShadow: {
+  'glow': '0 0 8px rgba(100, 255, 218, 0.6)',
+  'glow-strong': '0 0 16px rgba(100, 255, 218, 0.8)',
+}
+```
+
+### Backdrop Blur (Glass Morphism)
+```typescript
+backdropBlur: {
+  'glass': '12px',
+  'glass-heavy': '24px',
+}
+```
+
+---
+
+## 📁 PROJECT STRUCTURE
 
 ```
 anxiety-buddy/
-├── app/                          # Mobile app (React + Capacitor)
-│   ├── src/                      # Application source code
-│   │   ├── pages/                # Top-level screens (App.tsx, etc.)
-│   │   ├── components/           # UI components
-│   │   │   ├── ui/               # Atomic, reusable UI elements (Button, Input, etc.)
-│   │   │   └── features/         # Business logic components (specific features)
-│   │   ├── services/             # External integrations (API, analytics, etc.)
-│   │   ├── hooks/                # Custom React hooks (useAuth, useCapture, etc.)
-│   │   ├── contexts/             # React Context providers (global state)
-│   │   ├── models/               # TypeScript type definitions
-│   │   ├── db/                   # Dexie (IndexedDB) configuration
-│   │   ├── utils/                # Pure helper functions
-│   │   └── assets/               # Static resources (icons, translations, images)
-│   │       ├── translations/     # i18next language files
-│   │       ├── icons/            # Icon assets
-│   │       └── images/           # Image assets
-│   ├── public/                   # Static assets served at build time
-│   ├── native/                   # Native iOS/Android projects (generated by Capacitor)
-│   ├── package.json              # App dependencies
-│   ├── tsconfig.json             # TypeScript config
-│   ├── vite.config.ts            # Vite build configuration
-│   ├── capacitor.config.ts       # Capacitor configuration
-│   ├── tailwind.config.ts        # Tailwind CSS configuration
-│   ├── postcss.config.js         # PostCSS configuration
-│   ├── .eslintrc.cjs             # ESLint rules
-│   ├── .env.example              # Environment variables template
-│   └── index.html                # HTML entry point
+├── CLAUDE.md                        # This file - AI context
+├── README.md                        # User documentation
+├── package.json                     # Root workspace config
 │
-├── backend/                      # Firebase backend
-│   ├── functions/                # Cloud Functions
-│   │   ├── src/                  # Function source code
-│   │   │   └── index.ts          # Main functions export
-│   │   ├── package.json          # Backend dependencies
-│   │   ├── tsconfig.json         # TypeScript config
-│   │   └── .eslintrc.js          # ESLint rules
-│   ├── .gitignore                # Git ignore for backend
-│   ├── firebase.json             # Firebase configuration
-│   └── .firebaserc               # Firebase project reference
+├── app/                             # Mobile app (React + Capacitor)
+│   ├── src/
+│   │   ├── main.tsx                 # App entry point
+│   │   ├── index.css                # Global styles (Tailwind imports)
+│   │   │
+│   │   ├── pages/                   # Top-level screens
+│   │   │   ├── App.tsx              # Root component with Router
+│   │   │   ├── HomePage.tsx         # Landing screen
+│   │   │   ├── SOSPage.tsx          # Panic de-escalation flow
+│   │   │   ├── VaultPage.tsx        # Saved sessions, journal
+│   │   │   └── ProfilePage.tsx      # Settings, preferences
+│   │   │
+│   │   ├── components/
+│   │   │   ├── layouts/
+│   │   │   │   └── MainLayout.tsx   # Shell with floating nav
+│   │   │   │
+│   │   │   ├── ui/                  # Atomic components
+│   │   │   │   ├── Button.tsx
+│   │   │   │   ├── GlassCard.tsx    # Frosted glass container
+│   │   │   │   ├── PulseOrb.tsx     # Animated glow circle
+│   │   │   │   └── ...
+│   │   │   │
+│   │   │   ├── features/            # Feature-specific components
+│   │   │   │   ├── sos/
+│   │   │   │   │   ├── SOSSession.tsx        # 7-step state machine
+│   │   │   │   │   ├── BreachScreen.tsx      # Step 1: Trigger
+│   │   │   │   │   ├── AcknowledgeScreen.tsx # Step 2: "I've got you"
+│   │   │   │   │   ├── GroundingSight.tsx    # Step 3: Tap 5 things
+│   │   │   │   │   ├── GroundingTouch.tsx    # Step 4: Tactile scrub
+│   │   │   │   │   ├── GroundingSound.tsx    # Step 5: Pink noise
+│   │   │   │   │   ├── ExitBreath.tsx        # Step 6: 4-7-8 breathing
+│   │   │   │   │   └── CompletionScreen.tsx  # Step 7: Success
+│   │   │   │   │
+│   │   │   │   ├── navigation/
+│   │   │   │   │   └── FloatingDock.tsx      # Bottom nav bar
+│   │   │   │   │
+│   │   │   │   └── ...
+│   │   │   │
+│   │   │   └── index.ts             # Component exports
+│   │   │
+│   │   ├── hooks/                   # Custom React hooks
+│   │   │   ├── useHaptics.tsx       # Wrapper for Capacitor Haptics
+│   │   │   ├── useSOSSession.tsx    # State machine for SOS flow
+│   │   │   └── ...
+│   │   │
+│   │   ├── contexts/                # React Context providers
+│   │   │   ├── AppContext.tsx       # Global app state
+│   │   │   └── ...
+│   │   │
+│   │   ├── services/                # External integrations
+│   │   │   ├── api.ts
+│   │   │   ├── firebase.service.ts
+│   │   │   └── ...
+│   │   │
+│   │   ├── utils/                   # Pure helper functions
+│   │   │   ├── cn.ts                # Tailwind class merger
+│   │   │   ├── logger.ts
+│   │   │   └── ...
+│   │   │
+│   │   ├── models/                  # TypeScript types
+│   │   │   └── index.ts
+│   │   │
+│   │   └── assets/
+│   │       ├── icons/
+│   │       ├── sounds/               # Pink noise, ambient sounds
+│   │       └── translations/
+│   │
+│   ├── capacitor.config.ts          # Capacitor configuration
+│   ├── tailwind.config.ts           # Design tokens
+│   ├── vite.config.ts               # Build configuration
+│   └── package.json
 │
-├── web/                          # Optional separate web app
-│   ├── src/                      # Web-only source code
-│   ├── package.json              # Web dependencies
-│   └── README.md                 # Web app documentation
-│
-├── docs/                         # Documentation
-│   ├── README.md                 # Documentation index
-│   ├── ARCHITECTURE.md           # Architecture overview
-│   └── GETTING-STARTED.md        # Setup guide
-│
-├── tools/                        # Development utilities
-│   └── README.md                 # Tools documentation
-│
-├── package.json                  # Root package.json (npm workspaces)
-├── .gitignore                    # Global git ignore
-├── README.md                     # Project introduction
-└── CLAUDE.md                     # This file - AI assistant context
+└── backend/                         # Firebase Functions (future)
 ```
 
 ---
 
-## Key Files & Their Purpose
+## 🧠 CORE FEATURES
 
-### Mobile App (`/app`)
+### ✅ Implemented
+- [ ] None yet (greenfield)
 
-| File | Purpose |
-|------|---------|
-| `src/main.tsx` | Application entry point, renders root component |
-| `src/pages/App.tsx` | Main application component, routing logic |
-| `src/index.css` | Global styles, Tailwind imports, safe area handling |
-| `vite.config.ts` | Build configuration, plugins, optimization settings |
-| `capacitor.config.ts` | App ID, name, native project paths |
-| `tailwind.config.ts` | Theme colors, fonts, custom animations |
-| `.env.example` | Template for environment variables |
+### 🚧 In Progress
+- [ ] Base Layout (MainLayout + FloatingDock)
+- [ ] SOS Flow (7-step state machine)
+- [ ] Haptics integration
 
-### Backend (`/backend`)
-
-| File | Purpose |
-|------|---------|
-| `functions/src/index.ts` | Cloud Functions definitions (HTTP, callable, triggers) |
-| `firebase.json` | Firebase configuration, emulator settings |
-| `.firebaserc` | Firebase project ID reference |
-
-### Root
-
-| File | Purpose |
-|------|---------|
-| `package.json` | Workspace configuration, global scripts |
-| `.gitignore` | Files to exclude from version control |
-| `README.md` | User-facing documentation |
-| `CLAUDE.md` | AI assistant context (this file) |
+### 📋 Planned
+- [ ] Home screen with quick access
+- [ ] Vault (session history, journal entries)
+- [ ] Profile (settings, preferences, crisis contacts)
+- [ ] Offline-first data sync
+- [ ] Firebase Auth integration
+- [ ] Pink noise audio playback
+- [ ] Photo journaling
 
 ---
 
-## Architecture Patterns
+## 🎮 THE SOS FLOW (Core Feature)
 
-### State Management Philosophy
+### State Machine: 7-Step Panic De-escalation
 
-**Keep it simple. Use the right tool for the job.**
+This is the heart of the app. A guided, multi-sensory experience to ground the user during a panic attack.
 
-1. **Local state first** - Use `useState` for component-specific state
-2. **Context for global state** - Use React Context for app-wide state (user, theme, etc.)
-3. **Persistent state** - Use Dexie (IndexedDB) for offline data, LocalStorage for preferences
-4. **No Redux/Zustand** - Keep complexity low unless project grows significantly
+#### Step 1: The Breach (Trigger)
+**User Action:** Long-press the SOS button (2 seconds)
+**Haptic:** Heavy Impact (strong, single pulse)
+**Visual:** Screen darkens, SOS button pulses with cyan glow
+**Purpose:** Immediate acknowledgement of distress
 
-### Component Architecture
+#### Step 2: Acknowledgement
+**Screen Text:** "I've got you."
+**Haptic:** Heartbeat pattern (rhythmic pulses at 60 BPM)
+**Visual:** Soft breathing animation (slow, gentle)
+**Duration:** 5 seconds (auto-advance)
+**Purpose:** Establish safety and presence
 
-**UI Components** (`components/ui/`)
-- Atomic, single responsibility
-- Presentational only (no business logic)
-- Props-driven, fully reusable
-- Example: `Button.tsx`, `Input.tsx`, `Card.tsx`
+#### Step 3: Grounding - SIGHT
+**Instruction:** "Tap 5 things you can see."
+**User Action:** Tap screen 5 times (anywhere)
+**Haptic:** Light Impact on each tap (crisp click)
+**Visual:** Ripple effect from tap point, counter (1/5, 2/5, etc.)
+**Purpose:** Engage visual cortex, break panic loop
 
-```tsx
-// Good UI Component
-export const Button: FC<ButtonProps> = ({ children, onClick, variant }) => {
-  return <button onClick={onClick} className={styles[variant]}>{children}</button>;
-};
-```
+#### Step 4: Grounding - TOUCH
+**Instruction:** "Feel the texture. Move your finger slowly."
+**User Action:** Drag finger across screen (scrubbing motion)
+**Haptic:** Selection feedback (gritty, continuous vibration while dragging)
+**Visual:** Particle trail following finger, glass texture overlay
+**Completion:** Drag for 10 seconds total
+**Purpose:** Engage tactile sense, slow down movements
 
-**Feature Components** (`components/features/`)
-- Smart components with business logic
-- Domain-specific (tied to app features)
-- Composed from UI components
-- Example: `UserProfile.tsx`, `EventCard.tsx`, `PaymentForm.tsx`
+#### Step 5: Grounding - SOUND
+**Instruction:** "Close your eyes. Just listen."
+**Haptic:** None (silence)
+**Visual:** Screen fades to near-black, minimal pulsing orb
+**Audio:** Pink noise (soft, womb-like)
+**Duration:** 20 seconds (auto-advance)
+**Purpose:** Auditory grounding, sensory reset
 
-```tsx
-// Good Feature Component
-export const UserProfile: FC = () => {
-  const { user } = useAuth();
-  const { updateProfile } = useUserService();
+#### Step 6: The Exit Breath
+**Instruction:** "Breathe with the circle."
+**Visual:** Expanding/contracting circle (4s in, 7s hold, 8s out)
+**Haptic:** Swell on inhale (gentle build), fade on exhale
+**User Action:** Follow animation for 3 cycles (57 seconds)
+**Purpose:** Activate parasympathetic nervous system (4-7-8 breathing)
 
-  return (
-    <Card>
-      <Avatar src={user.photoURL} />
-      <Button onClick={() => updateProfile()}>Edit Profile</Button>
-    </Card>
-  );
-};
-```
-
-### Service Layer Pattern
-
-Encapsulate all external integrations in services:
-
-```typescript
-// ✅ Good - Component uses service
-const { callApi } = useApi();
-const result = await callApi('/endpoint');
-
-// ❌ Bad - Direct API calls in components
-const result = await axios.get('/endpoint');
-```
-
-**Benefits:**
-- Easy to mock for testing
-- Centralized error handling
-- Platform-specific implementations (native vs web)
-- Single source of truth for external dependencies
-
-### Custom Hooks Pattern
-
-Extract complex logic into custom hooks:
-
-```typescript
-// hooks/useAuth.tsx
-export const useAuth = () => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  // Auth logic here
-
-  return { user, loading, signIn, signOut };
-};
-```
-
-**Benefits:**
-- Reusable business logic
-- Testable in isolation
-- Clean component code
-- Clear separation of concerns
+#### Step 7: Completion
+**Screen Text:** "You did it. You're safe."
+**Visual:** Success animation (gentle glow, particles)
+**Haptic:** Medium Impact (success pulse)
+**Actions:**
+- "Save Session" button
+- "Return Home" button
+- Optional: "How do you feel?" (1-5 scale)
 
 ---
 
-## Naming Conventions
+## 🎨 DESIGN PRINCIPLES
 
-### Files & Components
+### 1. Viscosity Over Speed
+- No jarring animations
+- All transitions feel like moving through thick liquid
+- Minimum animation duration: 400ms
+- Preferred easing: `cubic-bezier(0.22, 1, 0.36, 1)`
 
-| Type | Convention | Example |
-|------|-----------|---------|
-| React Components | PascalCase `.tsx` | `EventCard.tsx`, `SettingsScreen.tsx` |
-| Hooks | camelCase `use*.tsx` | `useAuth.tsx`, `usePermissions.tsx` |
-| Services | camelCase `.service.ts` | `api.service.ts`, `analytics.service.ts` |
-| Utils | camelCase `.ts` | `dateFormatter.ts`, `validators.ts` |
-| Types/Models | PascalCase or `index.ts` | `User.ts`, `models/index.ts` |
-| Constants | UPPER_SNAKE_CASE | `API_TIMEOUT`, `MAX_RETRIES` |
+### 2. Haptics as Therapy
+- Every user interaction should have appropriate haptic feedback
+- Haptics are not "UI candy" - they are grounding tools
+- Types used:
+  - **Heavy Impact:** Crisis moments (SOS trigger)
+  - **Medium Impact:** Completion, success
+  - **Light Impact:** UI interactions (taps, swipes)
+  - **Selection:** Continuous feedback (scrubbing, dragging)
 
-### Code Style
+### 3. Dark by Default
+- Background is always `void-blue` (#0A1128)
+- Text is always `mist-white` (#E2E8F0)
+- No "light mode" - this is a nighttime app
 
-- **Named exports** - Avoid default exports (except legacy code)
-- **Explicit types** - No implicit `any`, always define types
-- **Functional components** - No class components (use hooks)
-- **Arrow functions** - Prefer arrow functions for consistency
-- **Services for I/O** - Keep components pure, move side effects to services
+### 4. Glass Morphism Everywhere
+- Floating UI elements use frosted glass effect
+- `backdrop-blur-glass` (12px blur)
+- Semi-transparent backgrounds with `glass-border`
+- Layering creates depth perception
 
-```typescript
-// ✅ Good
-export const MyComponent: FC<Props> = ({ title }) => {
-  return <h1>{title}</h1>;
-};
-
-// ❌ Bad
-export default function MyComponent(props) {
-  return <h1>{props.title}</h1>;
-}
-```
-
----
-
-## Technology Decisions
-
-### Why React + Capacitor?
-
-✅ **Pros:**
-- Single codebase for iOS, Android, Web
-- Web technologies (easier to find developers)
-- Fast iteration (no native rebuilds for most changes)
-- Access to native APIs when needed
-- Mature ecosystem
-
-❌ **When NOT to use:**
-- Heavy 3D graphics (use Unity/Unreal)
-- Complex native animations (consider React Native or native)
-- Performance-critical apps (native may be better)
-
-### Why Vite (not Create React App)?
-
-- ⚡ **Faster builds** - 10-100x faster than CRA
-- 🔥 **Better HMR** - Instant hot module replacement
-- 📦 **Smaller bundles** - Better tree-shaking and code splitting
-- 🆕 **Modern** - CRA is deprecated, Vite is the future
-
-### Why Dexie (IndexedDB)?
-
-- **Offline-first** - Works without network
-- **Structured data** - Better than localStorage
-- **Query capabilities** - Filter, sort, paginate
-- **Reactivity** - `useLiveQuery` hook for reactive updates
-- **Cross-browser** - Works everywhere
-
-### Why Firebase?
-
-- **Quick setup** - Production backend in minutes
-- **Serverless** - No server management
-- **Real-time** - Firestore live updates
-- **Built-in auth** - Social login, email, phone
-- **Free tier** - Generous for MVPs
+### 5. Minimal Text
+- Instructions should be 5 words or less
+- Use icons + text combination
+- Assume user is in cognitive overload (panic state)
 
 ---
 
-## Common Development Tasks
+## 🚀 DEVELOPMENT WORKFLOW
 
-### Adding a New Screen
-
-1. Create component in `app/src/pages/NewScreen.tsx`
-2. Add route/navigation logic in `App.tsx`
-3. Add any required state to Context
-4. Add translations to `assets/translations/*.json`
-5. Add analytics tracking for screen views
-
-### Adding a New API Endpoint
-
-1. Define types in `app/src/models/index.ts`
-2. Add function to `app/src/services/api.ts`
-3. Create custom hook if complex (e.g., `useNewFeature.tsx`)
-4. Use in component
-
-### Adding a Backend Function
-
-1. Define function in `backend/functions/src/index.ts`
-2. Deploy or test with emulator
-3. Update app API service to call new function
-4. Add types for request/response
-
-### Adding a New Dependency
-
+### Starting the App
 ```bash
-# Mobile app
-cd app && npm install package-name
-
-# Backend
-cd backend/functions && npm install package-name
-
-# Root (dev tools)
-npm install -D package-name
-```
-
-### Adding Environment Variables
-
-1. Add to `app/.env.example`
-2. Add to `app/src/vite-env.d.ts` for type safety
-3. Document in README.md
-4. Add to deployment environment (Vercel, Netlify, etc.)
-
----
-
-## Performance Best Practices
-
-### Mobile Performance
-
-- ✅ Compress images before upload
-- ✅ Use lazy loading for routes (`React.lazy`)
-- ✅ Minimize bundle size (check with `npm run build`)
-- ✅ Use `useMemo` and `useCallback` for expensive operations
-- ✅ Implement virtual scrolling for long lists
-- ✅ Cache API responses when appropriate
-
-### Build Optimization
-
-The starter includes:
-- **Terser minification** - Removes console.logs, debuggers in production
-- **Code splitting** - Separate chunks for better caching
-- **Tree shaking** - Removes unused code
-- **Hidden source maps** - For crash reporting, not shipped to users
-
----
-
-## Security Best Practices
-
-### Environment Variables
-
-- ✅ **Never commit `.env` files** - Use `.env.example` as template
-- ✅ **Use different configs per environment** - Dev, staging, production
-- ✅ **Rotate API keys regularly** - Especially after team changes
-
-### API Security
-
-- ✅ **Always validate input** - Never trust client data
-- ✅ **Use Firebase Auth** - Don't roll your own authentication
-- ✅ **Set Firestore rules** - Default deny, explicit allow
-- ✅ **Rate limit APIs** - Prevent abuse
-- ✅ **Use HTTPS only** - No HTTP in production
-
-### Mobile Security
-
-- ✅ **Validate deep links** - Prevent malicious redirects
-- ✅ **Use secure storage** - Capacitor Secure Storage for sensitive data
-- ✅ **Obfuscate sensitive code** - Consider ProGuard (Android), bitcode (iOS)
-
----
-
-## Testing Strategy (Not Yet Implemented)
-
-**Recommended setup when you add testing:**
-
-### Unit Tests
-- **Framework:** Jest + React Testing Library
-- **Target:** Utils, hooks, services
-- **Coverage goal:** 60%+
-
-### Integration Tests
-- **Framework:** Jest
-- **Target:** API services, database operations
-- **Coverage goal:** Critical paths
-
-### E2E Tests
-- **Framework:** Playwright or Detox
-- **Target:** Critical user flows
-- **Coverage goal:** Happy paths + error cases
-
----
-
-## Common Pitfalls
-
-### 1. Capacitor is NOT a Browser
-
-❌ **Don't** assume browser APIs work the same on mobile
-✅ **Do** use Capacitor plugins for native features
-
-```typescript
-// ❌ Bad - May not work on mobile
-navigator.geolocation.getCurrentPosition();
-
-// ✅ Good - Use Capacitor plugin
-import { Geolocation } from '@capacitor/geolocation';
-await Geolocation.getCurrentPosition();
-```
-
-### 2. State-Based Routing (No React Router by default)
-
-The starter uses simple view state switching:
-
-```typescript
-type AppView = 'home' | 'profile' | 'settings';
-const [currentView, setCurrentView] = useState<AppView>('home');
-```
-
-Add React Router if you need:
-- URL-based navigation
-- Deep linking with URLs
-- Browser back/forward buttons
-
-### 3. Image Processing is Expensive
-
-- Always compress before upload
-- Show loading states during processing
-- Consider using Web Workers for heavy operations
-- Use native image processing APIs when available
-
-### 4. IndexedDB is Asynchronous
-
-```typescript
-// ❌ Bad - Synchronous assumption
-const user = db.users.get(1);
-
-// ✅ Good - Await async operations
-const user = await db.users.get(1);
-
-// ✅ Better - Use reactive hook
-const user = useLiveQuery(() => db.users.get(1));
-```
-
----
-
-## Development Workflow
-
-### Starting a New Project from This Template
-
-1. **Clone/download** this template
-2. **Update branding**
-   - `app/capacitor.config.ts` - App ID and name
-   - `app/index.html` - Title and meta tags
-   - `package.json` - Project name and description
-3. **Set up Firebase**
-   - Create project at https://console.firebase.google.com
-   - Update `backend/.firebaserc` with project ID
-   - Add Firebase config to `app/.env`
-4. **Install dependencies** - `npm run install:all`
-5. **Start development** - `npm run app:dev`
-
-### Daily Development
-
-```bash
-# Terminal 1: Frontend dev server
+# Terminal 1: Start dev server
 cd app && npm run dev
 
-# Terminal 2: Backend emulator (if needed)
-cd backend && npm run serve
+# Terminal 2: Run on iOS simulator
+cd app && npm run ios
 
-# Make changes, see instant updates
+# Terminal 3: Run on Android emulator
+cd app && npm run android
 ```
 
 ### Before Committing
-
 ```bash
-npm run format    # Format all code
-npm run lint      # Check for linting errors
+npm run format    # Auto-format all TypeScript files
+npm run lint      # Check for errors
 npm run build     # Ensure production build works
 ```
 
-### Deployment Checklist
-
-- [ ] Environment variables configured
-- [ ] Firebase project created
-- [ ] iOS app configured in App Store Connect
-- [ ] Android app configured in Google Play Console
-- [ ] Analytics set up
-- [ ] Crash reporting configured
-- [ ] Privacy policy and terms of service in place
-
----
-
-## Customization Guide
-
-### Removing Features
-
-**Don't need offline storage?**
+### Testing on Real Device
 ```bash
 cd app
-npm uninstall dexie dexie-react-hooks
-rm -rf src/db
-```
-
-**Don't need internationalization?**
-```bash
-cd app
-npm uninstall i18next i18next-browser-languagedetector react-i18next
-rm -rf src/assets/translations
-```
-
-**Don't need Firebase Functions?**
-```bash
-rm -rf backend
-# Remove from root package.json workspaces
-```
-
-### Adding Features
-
-**Want Redux for state management?**
-```bash
-cd app
-npm install @reduxjs/toolkit react-redux
-# Create store/, reducers/, actions/
-```
-
-**Want React Router for navigation?**
-```bash
-cd app
-npm install react-router-dom
-# Update App.tsx with routes
-```
-
-**Want Zustand instead of Context?**
-```bash
-cd app
-npm install zustand
-# Create stores/ directory
+npm run build      # Build production bundle
+npx cap sync       # Sync to native projects
+npx cap open ios   # Open Xcode
+npx cap open android # Open Android Studio
 ```
 
 ---
 
-## File Templates
+## ⚠️ CRITICAL IMPLEMENTATION NOTES
 
-### New UI Component
-
+### Capacitor Haptics API
 ```typescript
-// app/src/components/ui/NewComponent.tsx
-import { type FC } from 'react';
-import { cn } from '../../utils/cn';
+import { Haptics, ImpactStyle } from '@capacitor/haptics';
 
-interface NewComponentProps {
-  // Define props
+// Heavy impact (SOS trigger)
+await Haptics.impact({ style: ImpactStyle.Heavy });
+
+// Medium impact (success)
+await Haptics.impact({ style: ImpactStyle.Medium });
+
+// Light impact (UI taps)
+await Haptics.impact({ style: ImpactStyle.Light });
+
+// Selection feedback (continuous)
+await Haptics.selectionStart();
+await Haptics.selectionChanged();
+await Haptics.selectionEnd();
+```
+
+### Framer Motion Page Transitions
+```typescript
+import { motion, AnimatePresence } from 'framer-motion';
+
+const pageVariants = {
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0 },
+  exit: { opacity: 0, y: -20 },
+};
+
+const pageTransition = {
+  duration: 0.6,
+  ease: [0.22, 1, 0.36, 1], // Viscous easing
+};
+
+<AnimatePresence mode="wait">
+  <motion.div
+    key={location.pathname}
+    variants={pageVariants}
+    initial="initial"
+    animate="animate"
+    exit="exit"
+    transition={pageTransition}
+  >
+    {children}
+  </motion.div>
+</AnimatePresence>
+```
+
+### Safe Area Handling (Notch/Home Indicator)
+```tsx
+// All screens must respect safe areas
+<div className="h-screen w-full bg-void-blue safe-area-top safe-area-bottom">
+  {/* Content */}
+</div>
+```
+
+### Prevent Overscroll Bounce (iOS)
+```css
+/* Already in index.css */
+html, body {
+  overscroll-behavior: none;
 }
-
-export const NewComponent: FC<NewComponentProps> = ({ /* props */ }) => {
-  return (
-    <div className={cn('base-styles')}>
-      {/* Component JSX */}
-    </div>
-  );
-};
-```
-
-### New Custom Hook
-
-```typescript
-// app/src/hooks/useNewFeature.tsx
-import { useState, useEffect } from 'react';
-
-export const useNewFeature = () => {
-  const [state, setState] = useState(null);
-
-  useEffect(() => {
-    // Setup
-    return () => {
-      // Cleanup
-    };
-  }, []);
-
-  return { state, /* other values */ };
-};
-```
-
-### New API Service
-
-```typescript
-// app/src/services/newService.ts
-import { api } from './api';
-import type { ApiResponse } from '../models';
-
-export const newService = {
-  async fetchData(): Promise<ApiResponse<DataType>> {
-    return api.get('/endpoint');
-  },
-
-  async postData(data: DataType): Promise<ApiResponse<ResultType>> {
-    return api.post('/endpoint', data);
-  },
-};
-```
-
-### New Cloud Function
-
-```typescript
-// backend/functions/src/index.ts
-export const newFunction = functions.https.onCall(async (data, context) => {
-  // Validate auth
-  if (!context.auth) {
-    throw new functions.https.HttpsError('unauthenticated', 'Must be logged in');
-  }
-
-  // Your logic
-
-  return { success: true, data: result };
-});
 ```
 
 ---
 
-## Quick Reference
+## 🧪 TESTING STRATEGY (Future)
 
-### Useful Capacitor Plugins
+### Unit Tests
+- [ ] Utils (pure functions)
+- [ ] Hooks (useHaptics, useSOSSession)
+- [ ] Components (isolated)
 
-- `@capacitor/camera` - Take photos/videos
-- `@capacitor/filesystem` - File operations
-- `@capacitor/haptics` - Vibration feedback
-- `@capacitor/share` - Native share sheet
-- `@capacitor/app` - App lifecycle events
-- `@capacitor/screen-orientation` - Lock screen orientation
+### Integration Tests
+- [ ] SOS flow (complete 7-step sequence)
+- [ ] Navigation (routing, deep links)
 
-### Useful React Hooks
-
-- `useState` - Local component state
-- `useEffect` - Side effects, lifecycle
-- `useContext` - Access context values
-- `useMemo` - Memoize expensive computations
-- `useCallback` - Memoize functions
-- `useRef` - Access DOM or persist values
-
-### Useful Tailwind Classes
-
-- `safe-area-top` - Respect iPhone notch/island
-- `safe-area-bottom` - Respect home indicator
-- `no-select` - Disable text selection
-- `active:` - Touch feedback styles
+### E2E Tests (Detox)
+- [ ] Critical path: Home → SOS → Completion
+- [ ] Haptics verification (requires real device)
 
 ---
 
-## Getting Help
+## 📊 PERFORMANCE TARGETS
 
-### For AI Assistants
+### Build Size
+- Initial bundle: < 500KB (gzipped)
+- Code splitting: Lazy-load Vault, Profile pages
+- Lighthouse score: > 90
 
-When you need more context:
-1. **Read existing code** - Patterns are consistent
-2. **Check documentation** - README.md, inline comments
-3. **Ask clarifying questions** - Better to ask than assume
+### Runtime Performance
+- 60 FPS animations (no jank)
+- Time to Interactive: < 2 seconds
+- Haptics latency: < 50ms
 
-### For Humans
-
-- **Documentation:** Check `/docs` directory
-- **Examples:** Review existing components in `src/components`
-- **Community:** Search GitHub issues, Stack Overflow
-- **Firebase:** https://firebase.google.com/docs
-- **Capacitor:** https://capacitorjs.com/docs
-
----
-
-## Project Philosophy
-
-This starter template follows these principles:
-
-1. **Simplicity over cleverness** - Readable code > clever tricks
-2. **Type safety** - TypeScript everywhere
-3. **Developer experience** - Fast feedback loops
-4. **Production ready** - Not just a toy
-5. **Progressive enhancement** - Start simple, add complexity when needed
-6. **Offline-first** - Work without network when possible
-7. **Mobile-first** - Design for mobile, scale to desktop
+### Battery Usage
+- Minimal wake locks
+- No background processes (yet)
+- Optimize animation loops
 
 ---
 
-## Version History
+## 🔐 SECURITY & PRIVACY
 
-- **v0.1.0** - Initial template created from cap2cal project structure
+### Data Storage
+- All user data stored locally (Dexie/IndexedDB)
+- No cloud sync without explicit opt-in
+- No analytics without consent
+
+### Permissions Required
+- Haptics: Yes (core feature)
+- Camera: Future (photo journaling)
+- Notifications: Future (check-ins)
 
 ---
 
-**Last Updated:** December 2025
+## 📚 REFERENCES & INSPIRATION
 
-**For questions about this template, refer to the code examples and patterns already established in the codebase.**
+### Clinical References
+- Cognitive Behavioral Therapy (CBT) principles
+- 5-4-3-2-1 Grounding Technique
+- 4-7-8 Breathing (Dr. Andrew Weil)
+- Somatic Experiencing (Peter Levine)
+
+### Design References
+- Apple Human Interface Guidelines (Haptics)
+- Glass Morphism (iOS design language)
+- Deep ocean bioluminescence photography
+- Ambient calm apps (Calm, Headspace - but darker)
+
+---
+
+## 🎯 SUCCESS METRICS (Future)
+
+### User Engagement
+- SOS completion rate (target: > 80%)
+- Time to completion (benchmark: 2-3 minutes)
+- Repeat usage (daily active users)
+
+### Clinical Efficacy
+- Self-reported anxiety reduction (1-5 scale)
+- Session notes (qualitative data)
+
+---
+
+## 🚧 KNOWN LIMITATIONS
+
+### Current
+- No backend (offline-only)
+- No audio playback (pink noise placeholder)
+- No user accounts
+
+### Future Considerations
+- HIPAA compliance (if medical device)
+- Crisis hotline integration
+- Emergency contact auto-dial
+
+---
+
+## 🆘 TROUBLESHOOTING
+
+### Haptics Not Working
+1. Check device (simulator doesn't support haptics)
+2. Verify `@capacitor/haptics` installed
+3. Test on real device with iOS 13+ or Android 8+
+
+### Animations Janky
+1. Check GPU acceleration (`transform: translateZ(0)`)
+2. Reduce backdrop blur (expensive)
+3. Use `will-change` sparingly
+
+### Safe Area Not Working
+1. Check `tailwindcss-safe-area` plugin installed
+2. Verify `safe-area-*` classes in Tailwind config
+3. Test on device with notch (iPhone X+)
+
+---
+
+## 📝 CHANGELOG
+
+### v0.1.0 (Current)
+- Initial project setup
+- Design system defined
+- SOS flow architecture planned
+
+---
+
+**Last Updated:** December 9, 2024
+**Next Review:** After SOS flow implementation
+
+---
+
+**For AI Assistants:** This document is the source of truth. When implementing features, always reference:
+1. Design tokens (colors, animations)
+2. SOS flow state machine (exact steps)
+3. Haptics API usage (correct patterns)
+4. File structure (where to place new components)
