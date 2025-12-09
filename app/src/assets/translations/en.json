@@ -1,0 +1,18 @@
+{
+  "common": {
+    "appName": "YourApp",
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "success": "Success!",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "close": "Close",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit"
+  },
+  "welcome": {
+    "title": "Welcome to YourApp",
+    "subtitle": "Get started by editing src/pages/App.tsx"
+  }
+}

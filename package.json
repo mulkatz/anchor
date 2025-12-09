@@ -1,0 +1,35 @@
+{
+  "name": "anxiety-buddy",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Modern monorepo starter for building cross-platform apps with React, TypeScript, and Firebase",
+  "workspaces": [
+    "app",
+    "backend/functions",
+    "web",
+    "tools/*"
+  ],
+  "scripts": {
+    "app:dev": "cd app && npm run dev",
+    "app:build": "cd app && npm run build",
+    "app:ios": "cd app && npx cap run ios",
+    "app:android": "cd app && npx cap run android",
+    "app:sync": "cd app && npx cap sync",
+    "backend:serve": "cd backend/functions && npm run serve",
+    "backend:deploy": "cd backend/functions && npm run deploy",
+    "web:dev": "cd web && npm run dev",
+    "web:build": "cd web && npm run build",
+    "install:all": "npm install && cd app && npm install && cd ../backend/functions && npm install && cd ../../web && npm install",
+    "clean": "rm -rf node_modules app/node_modules backend/functions/node_modules web/node_modules app/dist web/dist backend/functions/lib",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
+    "lint": "npm run lint --workspaces --if-present"
+  },
+  "devDependencies": {
+    "prettier": "^3.4.2",
+    "turbo": "^2.3.3"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  }
+}
