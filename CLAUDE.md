@@ -56,7 +56,8 @@ Imagine the deep ocean at night. Viscous, slow-moving, calming darkness punctuat
   "@capacitor/status-bar": "^7.0.0", // CRITICAL - Dark mode, overlay styling
   "@capacitor/app": "^7.0.0", // App lifecycle hooks
   "@capacitor/camera": "^7.0.1", // Future: Photo journaling
-  "@capacitor/filesystem": "^7.0.1" // Future: Local data persistence
+  "@capacitor/filesystem": "^7.0.1", // Future: Local data persistence
+  "capacitor-voice-recorder": "^7.0.6" // CRITICAL - Voice message recording
 }
 ```
 
@@ -64,11 +65,26 @@ Imagine the deep ocean at night. Viscous, slow-moving, calming darkness punctuat
 
 - **Icons:** `lucide-react` (Consistent, minimal icon set)
 - **Utilities:** `clsx`, `tailwind-merge` (Conditional styling)
+- **Animation:** `framer-motion` (Viscous animations, page transitions)
 
-### Backend (Future)
+### Backend (Production)
 
-- **Platform:** Firebase (Firestore, Auth, Functions)
+- **Platform:** Firebase (Firestore, Auth, Functions, Cloud Storage)
+- **AI:** Google Vertex AI (Gemini 2.5 Flash for therapeutic responses)
+- **Transcription:** Google Cloud Speech-to-Text API v2
 - **Offline-First:** Dexie (IndexedDB wrapper for local data)
+
+**Backend Dependencies:**
+
+```json
+{
+  "@google-cloud/speech": "^6.0.0", // Speech-to-Text transcription
+  "@google-cloud/storage": "^7.0.0", // Cloud Storage for audio files
+  "@google-cloud/vertexai": "latest", // Gemini AI integration
+  "firebase-admin": "latest", // Firebase Admin SDK
+  "firebase-functions": "latest" // Cloud Functions runtime
+}
+```
 
 ---
 
@@ -268,13 +284,15 @@ anxiety-buddy/
 
 ### ✅ Implemented
 
-- [ ] None yet (greenfield)
+- [x] **Voice Chat** - WhatsApp-style voice messaging with Google Cloud Speech-to-Text transcription
+- [x] **AI Chat** - Therapeutic conversations powered by Gemini 2.5 Flash with CBT/ACT techniques
+- [x] **Message System** - Real-time Firestore-based chat with crisis detection
+- [x] **Haptics Integration** - Therapeutic touch feedback throughout the app
 
 ### 🚧 In Progress
 
 - [ ] Base Layout (MainLayout + FloatingDock)
 - [ ] SOS Flow (7-step state machine)
-- [ ] Haptics integration
 
 ### 📋 Planned
 
@@ -393,6 +411,275 @@ This is the heart of the app. A guided, multi-sensory experience to ground the u
 - Instructions should be 5 words or less
 - Use icons + text combination
 - Assume user is in cognitive overload (panic state)
+
+---
+
+## 🎤 VOICE CHAT FEATURE
+
+### Overview
+
+WhatsApp-style voice messaging designed for users who find typing difficult during anxiety episodes. Voice messages are recorded, uploaded to Cloud Storage, transcribed using Google Cloud Speech-to-Text, and then processed through the existing AI therapeutic response pipeline.
+
+### Why Voice Chat?
+
+During panic attacks or high anxiety, typing can be cognitively overwhelming. Voice input provides:
+
+- **Lower cognitive load** - Speaking is easier than typing during distress
+- **Natural expression** - Voice captures emotion and urgency better than text
+- **Accessibility** - Helps users with motor difficulties or visual impairments
+- **Speed** - Faster than typing, especially on mobile
+
+### Technical Architecture
+
+**Complete Flow:**
+
+```
+User clicks mic → Recording starts (60s max) → User clicks again →
+Upload to Cloud Storage → Firestore message (pending) →
+Transcription Cloud Function triggers → Google Speech-to-Text API →
+Update message (completed) → onMessageCreate triggers →
+Crisis detection → Gemini AI response → User sees transcription + AI reply
+```
+
+### Frontend Implementation
+
+**Recording Plugin:**
+
+- **Library:** `capacitor-voice-recorder` v7.0.6
+- **Cross-platform:** iOS (AAC), Android (varies), Web (WebM)
+- **Max duration:** 60 seconds (optimal for anxiety communication)
+- **UI pattern:** Click-to-start, click-to-stop (simplified from hold-to-record)
+
+**Key Components:**
+
+1. **useVoiceRecorder.tsx** (`/app/src/hooks/`)
+   - Manages recording lifecycle (start, stop, cancel)
+   - Handles microphone permissions
+   - Tracks duration with auto-cutoff at 60s
+   - Converts base64 audio to Blob for upload
+   - Integrates haptic feedback (selection patterns)
+
+2. **ChatInput.tsx** (`/app/src/components/features/chat/`)
+   - Dynamic button: Shows mic when input empty, send when text present
+   - Click once to start, click again to stop and send
+   - Visual feedback: Pulsing red dot during recording
+
+3. **AudioMessageBubble.tsx** (`/app/src/components/features/chat/`)
+   - Three states: `transcribing`, `completed`, `failed`
+   - **Transcribing:** Animated waveform + "Transcribing your message..." + duration
+   - **Completed:** Transcribed text + small waveform badge + duration + confidence %
+   - **Failed:** Error message + retry option (fallback to text input)
+   - Styled to match UserMessage bubble (same width, margins, colors)
+
+**Upload Flow:**
+
+```typescript
+// In useChat.tsx
+const sendVoiceMessage = async (recordingData: RecordingData) => {
+  const messageId = crypto.randomUUID();
+  const audioPath = `audio-messages/${userId}/${conversationId}/${messageId}.m4a`;
+
+  // Upload to Cloud Storage
+  await uploadBytes(storageRef, recordingData.blob, {
+    contentType: recordingData.mimeType,
+  });
+
+  // Create Firestore message
+  await addDoc(messagesRef, {
+    userId,
+    conversationId,
+    text: '', // Empty until transcribed
+    role: 'user',
+    hasAudio: true,
+    audioPath,
+    audioDuration: recordingData.duration,
+    transcriptionStatus: 'pending',
+    createdAt: Timestamp.now(),
+    metadata: { audioFormat: recordingData.mimeType },
+  });
+};
+```
+
+### Backend Implementation
+
+**Cloud Storage:**
+
+- **Bucket:** `anxiety-buddy-0.firebasestorage.app` (new Firebase Storage format)
+- **Path structure:** `audio-messages/{userId}/{conversationId}/{messageId}.m4a`
+- **Retention:** Auto-delete after 7 days (privacy + cost optimization)
+- **Security rules:** User-scoped access only, 5MB max, audio MIME types only
+
+**Transcription Function** (`/backend/functions/src/transcription.ts`):
+
+```typescript
+export const onAudioMessageCreate = onDocumentCreated(
+  'users/{userId}/conversations/{conversationId}/messages/{messageId}',
+  async (event) => {
+    // 1. Download audio from Cloud Storage
+    // 2. Determine encoding from mimeType (WEBM_OPUS, OGG_OPUS, MP4, etc.)
+    // 3. Call Google Cloud Speech-to-Text API
+    // 4. Update Firestore message with transcription
+  }
+);
+```
+
+**Speech-to-Text Configuration:**
+
+- **API:** Google Cloud Speech-to-Text v2
+- **Model:** `latest_long` (enhanced for conversational speech)
+- **Language:** `en-US` (future: auto-detect with alternativeLanguageCodes)
+- **Sample Rate:** 48kHz (web audio standard)
+- **Encoding:** Dynamic based on mimeType (WEBM_OPUS, OGG_OPUS, MP4)
+- **Features:** Automatic punctuation enabled, profanity filter OFF (preserves crisis keywords)
+
+**AI Response Trigger** (`/backend/functions/src/chat.ts`):
+
+- **Trigger:** `onDocumentWritten` (fires on both create AND update)
+- **Logic:**
+  - Message created with `transcriptionStatus: 'pending'` → Skip
+  - Message updated to `transcriptionStatus: 'completed'` → Process with AI
+- This ensures AI responds after transcription completes, not before
+
+### Security & Privacy
+
+**Permissions:**
+
+- **iOS:** `NSMicrophoneUsageDescription` in Info.plist
+- **Android:** `RECORD_AUDIO` permission in AndroidManifest.xml
+
+**Cloud Storage Rules** (`/backend/storage.rules`):
+
+```javascript
+match /audio-messages/{userId}/{conversationId}/{messageId} {
+  allow write: if request.auth != null
+               && request.auth.uid == userId
+               && request.resource.size < 5 * 1024 * 1024  // 5MB max
+               && request.resource.contentType.matches('audio/.*');
+
+  allow read: if request.auth != null
+              && request.auth.uid == userId;
+}
+```
+
+**Data Retention:**
+
+- Audio files deleted after 7 days (Cloud Storage lifecycle rule)
+- Transcribed text persists in Firestore
+- Minimizes PHI exposure for HIPAA compliance considerations
+
+**GCP IAM:**
+
+- Cloud Functions service account requires **Cloud Speech Client** role (`roles/speech.client`)
+- Grants permission to call Speech-to-Text API
+
+### Cost Analysis
+
+**Pricing (as of Dec 2024):**
+
+- **Speech-to-Text:** $0.036 per minute (enhanced model)
+- **Cloud Storage:** $0.020/GB/month (minimal, 7-day retention)
+- **Cloud Functions:** Included in Firebase pricing
+- **Bandwidth:** Negligible for audio files
+
+**Example Cost (1000 active users):**
+
+- Assumption: 10 voice messages/user/month, avg 30 seconds each
+- Total minutes: 1000 users × 10 msgs × 0.5 min = 5,000 minutes/month
+- **Total cost: ~$180/month**
+- **Per user: $0.18/month**
+
+**Cost Optimization Strategies:**
+
+1. Rate limiting: Max 20 voice messages per user per day
+2. Client-side silence detection (trim silence before upload)
+3. 60-second max duration enforced
+4. Future: On-device transcription (iOS Speech Framework, Android SpeechRecognizer) - FREE
+
+### Crisis Detection
+
+**Critical:** Voice messages are transcribed BEFORE crisis keyword detection.
+
+```typescript
+// In transcription.ts - after transcription completes
+await messageRef.update({
+  text: transcription, // Now contains transcribed text
+  transcriptionStatus: 'completed',
+});
+
+// This triggers onDocumentWritten in chat.ts
+// Crisis keywords are checked on the transcribed text:
+const hasCrisisKeyword = CRISIS_KEYWORDS.some((regex) => regex.test(message.text));
+```
+
+This ensures crisis detection works identically for voice and text messages.
+
+### Error Handling
+
+| Error                            | Detection                                                   | User Feedback                                           | System Action                     |
+| -------------------------------- | ----------------------------------------------------------- | ------------------------------------------------------- | --------------------------------- |
+| **Mic permission denied**        | `VoiceRecorder.hasAudioRecordingPermission()` returns false | "Microphone access required. Enable in Settings?"       | Show settings deep link           |
+| **Recording fails**              | `startRecording()` throws                                   | "Unable to start recording. Please try again."          | Fallback to text input            |
+| **Upload failure**               | `uploadBytes()` throws                                      | "Connection issue. Retrying..."                         | Retry 3 times, then queue locally |
+| **Low transcription confidence** | `confidence < 0.6`                                          | "Audio was unclear. Transcription may not be accurate." | Show warning banner               |
+| **Transcription API error**      | Speech-to-Text throws                                       | `transcriptionStatus: 'failed'` in message              | Log error, show retry option      |
+| **Network offline**              | Browser check                                               | "You're offline. Recording saved locally."              | Queue for sync when online        |
+
+### Key Files Reference
+
+**Frontend:**
+
+- `/app/src/hooks/useVoiceRecorder.tsx` - Recording state machine
+- `/app/src/hooks/useChat.tsx` - sendVoiceMessage function
+- `/app/src/components/features/chat/ChatInput.tsx` - Mic/send toggle button
+- `/app/src/components/features/chat/AudioMessageBubble.tsx` - Transcription UI
+- `/app/src/models/index.ts` - Message interface with voice fields
+- `/app/native/ios/App/App/Info.plist` - iOS microphone permission
+- `/app/native/android/app/src/main/AndroidManifest.xml` - Android mic permission
+
+**Backend:**
+
+- `/backend/functions/src/transcription.ts` - Speech-to-Text Cloud Function
+- `/backend/functions/src/chat.ts` - AI response trigger (updated to onDocumentWritten)
+- `/backend/storage.rules` - Cloud Storage security rules
+- `/backend/firebase.json` - Storage rules deployment config
+
+### Testing
+
+**Manual Testing Checklist:**
+
+- [ ] Microphone permission dialog appears on first use
+- [ ] Recording starts on first click, stops on second click
+- [ ] Button shows pulsing red dot during recording
+- [ ] Audio uploads to Cloud Storage successfully
+- [ ] Transcription appears in chat bubble
+- [ ] AI responds to transcribed text
+- [ ] Crisis keywords detected in transcribed voice messages
+- [ ] Low confidence warning shows when accuracy is poor
+- [ ] Works offline (queues message for sync)
+- [ ] Works on iOS, Android, and web
+
+### Future Enhancements
+
+**On-Device Transcription** (cost savings):
+
+- iOS: Apple Speech Framework (free, offline, <1s latency)
+- Android: SpeechRecognizer (free, offline)
+- Tradeoff: 80-90% accuracy vs. 95%+ (cloud)
+
+**Multi-Language Support:**
+
+- Auto-detect language with Speech-to-Text API's `alternativeLanguageCodes`
+- Update crisis keyword lists for each language
+
+**Audio Playback:**
+
+- Allow users to replay their own voice messages
+- Download from Cloud Storage on-demand
+
+**Streaming Transcription:**
+
+- Use Speech-to-Text Streaming API for real-time transcription
+- Show text as user speaks (reduces perceived latency)
 
 ---
 
