@@ -1,0 +1,36 @@
+# Dependencies
+node_modules
+**/node_modules
+
+# Build outputs
+dist
+build
+lib
+.next
+out
+
+# Capacitor
+android
+ios
+native
+
+# Firebase
+.firebase
+
+# IDE
+.vscode
+.idea
+
+# OS
+.DS_Store
+
+# Logs
+*.log
+
+# Lock files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Generated files
+*.tsbuildinfo
