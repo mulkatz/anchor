@@ -3,9 +3,58 @@ import { SpeechClient } from '@google-cloud/speech';
 import { Storage } from '@google-cloud/storage';
 import * as admin from 'firebase-admin';
 import * as logger from 'firebase-functions/logger';
+import ffmpeg from 'fluent-ffmpeg';
+import ffmpegInstaller from '@ffmpeg-installer/ffmpeg';
+import * as os from 'os';
+import * as path from 'path';
+import * as fs from 'fs';
+
+// Set ffmpeg path for Cloud Functions
+ffmpeg.setFfmpegPath(ffmpegInstaller.path);
 
 const speechClient = new SpeechClient();
 const storage = new Storage();
+
+/**
+ * Convert audio buffer to LINEAR16 WAV format
+ * Required because Speech-to-Text doesn't support AAC/MP4
+ */
+async function convertToLinear16Wav(inputBuffer: Buffer, inputFormat: string): Promise<Buffer> {
+  const tempDir = os.tmpdir();
+  const inputPath = path.join(tempDir, `input-${Date.now()}.${inputFormat}`);
+  const outputPath = path.join(tempDir, `output-${Date.now()}.wav`);
+
+  try {
+    // Write input buffer to temp file
+    fs.writeFileSync(inputPath, inputBuffer);
+
+    // Convert using ffmpeg
+    await new Promise<void>((resolve, reject) => {
+      ffmpeg(inputPath)
+        .toFormat('wav')
+        .audioCodec('pcm_s16le') // LINEAR16 codec
+        .audioChannels(1) // Mono
+        .audioFrequency(16000) // 16kHz sample rate
+        .on('end', () => resolve())
+        .on('error', (err: Error) => reject(err))
+        .save(outputPath);
+    });
+
+    // Read converted file
+    const convertedBuffer = fs.readFileSync(outputPath);
+
+    // Cleanup temp files
+    fs.unlinkSync(inputPath);
+    fs.unlinkSync(outputPath);
+
+    return convertedBuffer;
+  } catch (error) {
+    // Cleanup on error
+    if (fs.existsSync(inputPath)) fs.unlinkSync(inputPath);
+    if (fs.existsSync(outputPath)) fs.unlinkSync(outputPath);
+    throw error;
+  }
+}
 
 /**
  * Cloud Function: Transcribe Audio Messages
@@ -58,18 +107,15 @@ export const onAudioMessageCreate = onDocumentCreated(
 
       // Download audio file
       logger.info('Downloading audio file from Cloud Storage');
-      const [audioBuffer] = await file.download();
+      let audioBuffer = await file.download().then(([buffer]) => buffer);
 
-      // 2. Prepare audio for Speech-to-Text
-      // Convert to base64 (required by Speech-to-Text API)
-      const audioContent = audioBuffer.toString('base64');
-
-      // 3. Determine audio encoding from mimeType
+      // 2. Determine audio encoding from mimeType
       const mimeType = message.metadata?.audioFormat || 'audio/webm';
       let encoding: string;
       let sampleRateHertz: number;
+      let needsConversion = false;
 
-      logger.info('Calling Speech-to-Text API - Initial detection', {
+      logger.info('Processing audio file', {
         audioFormat: mimeType,
         audioSize: audioBuffer.length,
         audioPath: message.audioPath,
@@ -92,24 +138,46 @@ export const onAudioMessageCreate = onDocumentCreated(
         mimeType.includes('audio/mpeg')
       ) {
         // Android and iOS use AAC in MP4 container
-        // Note: Google Speech-to-Text does NOT support AAC directly
-        // We need to use ENCODING_UNSPECIFIED and let Google auto-detect
-        encoding = 'ENCODING_UNSPECIFIED';
-        sampleRateHertz = 16000; // Try 16kHz for mobile audio
-      } else {
-        // Fallback: Let Google auto-detect
-        logger.warn('Unknown audio format, using auto-detection', { mimeType });
-        encoding = 'ENCODING_UNSPECIFIED';
+        // Google Speech-to-Text does NOT support AAC/MP4 directly
+        // We need to convert to LINEAR16 WAV
+        needsConversion = true;
+        encoding = 'LINEAR16';
         sampleRateHertz = 16000;
+
+        logger.info('AAC/MP4 detected - converting to LINEAR16 WAV');
+
+        // Convert audio to LINEAR16 WAV
+        const inputFormat = mimeType.includes('mp4') ? 'mp4' : 'm4a';
+        audioBuffer = await convertToLinear16Wav(audioBuffer, inputFormat);
+
+        logger.info('Audio conversion completed', {
+          originalFormat: mimeType,
+          convertedFormat: 'LINEAR16 WAV',
+          convertedSize: audioBuffer.length,
+        });
+      } else {
+        // Unknown format - try LINEAR16 conversion as fallback
+        logger.warn('Unknown audio format, attempting LINEAR16 conversion', { mimeType });
+        needsConversion = true;
+        encoding = 'LINEAR16';
+        sampleRateHertz = 16000;
+        audioBuffer = await convertToLinear16Wav(audioBuffer, 'mp4');
       }
 
       logger.info('Using audio encoding', {
         encoding,
         sampleRateHertz,
         mimeType,
+        needsConversion,
         detectedFormat:
-          mimeType.includes('aac') || mimeType.includes('mp4') ? 'mobile (AAC/MP4)' : 'web (WebM)',
+          mimeType.includes('aac') || mimeType.includes('mp4')
+            ? 'mobile (AAC/MP4 → LINEAR16)'
+            : 'web (WebM)',
       });
+
+      // 3. Prepare audio for Speech-to-Text
+      // Convert to base64 (required by Speech-to-Text API)
+      const audioContent = audioBuffer.toString('base64');
 
       // 4. Call Google Cloud Speech-to-Text API
       const [response] = await speechClient.recognize({
