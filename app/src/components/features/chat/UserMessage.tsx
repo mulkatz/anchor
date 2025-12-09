@@ -14,7 +14,7 @@ export const UserMessage: FC<UserMessageProps> = ({ text }) => {
     <div className="mb-4 flex justify-end px-6">
       <div
         className={cn(
-          'max-w-[75%] rounded-3xl rounded-tr-lg px-5 py-3',
+          'max-w-[90%] rounded-3xl rounded-tr-lg px-5 py-3',
           'bg-warm-ember text-void-blue',
           'shadow-lg',
           'break-words'

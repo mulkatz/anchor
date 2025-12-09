@@ -17,7 +17,7 @@ export const AssistantMessage: FC<AssistantMessageProps> = ({ text }) => {
     <div className="mb-4 flex justify-start px-6">
       <div
         className={cn(
-          'max-w-[80%] rounded-3xl rounded-tl-lg px-5 py-3',
+          'max-w-[90%] rounded-3xl rounded-tl-lg px-5 py-3',
           'bg-glass-bg backdrop-blur-glass',
           'border border-glass-border shadow-glass',
           'text-mist-white',
