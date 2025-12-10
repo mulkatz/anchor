@@ -1,0 +1,157 @@
+{
+  "translation": {
+    "meta": {
+      "title": "Anchor - Dein Angstbegleiter | Sofortige Hilfe bei Panikattacken",
+      "description": "Kostenlose App zur Angstbewältigung mit 7-Schritte-Panik-Deeskalation, 24/7 KI-Unterstützung und Datenschutz-First-Design. Jetzt für iOS und Android herunterladen.",
+      "privacyTitle": "Datenschutzerklärung - Anchor",
+      "privacyDescription": "Erfahre, wie Anchor deine Privatsphäre schützt. Wir löschen Sprachaufnahmen automatisch nach 7 Tagen, verkaufen niemals deine Daten und geben dir die volle Kontrolle über deine Informationen.",
+      "termsTitle": "Nutzungsbedingungen - Anchor",
+      "termsDescription": "Nutzungsbedingungen für die Anchor App. Wichtige Hinweise zur psychischen Gesundheit, Nutzungsrichtlinien und Benutzerrechte.",
+      "inviteTitle": "Anchor herunterladen - Dein Angstbegleiter",
+      "inviteDescription": "Lade Anchor herunter für sofortige Hilfe bei Panikattacken. Verfügbar für iOS und Android."
+    },
+    "nav": {
+      "features": "Vorteile",
+      "howItWorks": "So funktioniert's",
+      "privacy": "Datenschutz",
+      "download": "Download"
+    },
+    "hero": {
+      "tagline": "Dein Angstbegleiter",
+      "headline": "Ankere dich im Sturm",
+      "subheadline": "Sofortige Hilfe bei Panikattacken. Evidenzbasiert. Privat. Immer da.",
+      "downloadApp": "App herunterladen"
+    },
+    "features": {
+      "title": "Funktionen für den akuten Moment",
+      "sos": {
+        "title": "7-Schritte Panik-Hilfe",
+        "description": "Klinisch fundierte Deeskalation in 2-3 Minuten. Multisensorische Erdung: Sehen, Fühlen, Hören, Atmen."
+      },
+      "aiChat": {
+        "title": "24/7 KI-Unterstützung",
+        "description": "Therapeutische Gespräche basierend auf KVT und ACT. Krisenerkennung mit sofortigen Ressourcen."
+      },
+      "voice": {
+        "title": "Sprechen statt Tippen",
+        "description": "Sprachnachrichten, wenn Tippen unmöglich erscheint. Geringere kognitive Belastung während Panikattacken."
+      },
+      "privacy": {
+        "title": "Deine Daten, deine Kontrolle",
+        "description": "Automatische Löschung von Audio nach 7 Tagen. Jederzeit exportieren oder löschen. Wir verkaufen niemals deine Daten."
+      }
+    },
+    "howItWorks": {
+      "title": "So funktioniert's",
+      "subtitle": "Von Panik zu Ruhe in 2-3 Minuten. Eine geführte Reise zurück zu dir selbst.",
+      "step1": {
+        "title": "SOS auslösen",
+        "description": "Lange drücken, wenn Panik aufkommt"
+      },
+      "step2": {
+        "title": "Dem Flow folgen",
+        "description": "Multisensorische Erdung führt dich"
+      },
+      "step3": {
+        "title": "Zur Ruhe kommen",
+        "description": "2-3 Minuten bis zur Deeskalation"
+      },
+      "techniques": "Evidenzbasierte Techniken",
+      "technique1": "5-4-3-2-1 Erdung",
+      "technique2": "4-7-8 Atmung",
+      "technique3": "Somatisches Erleben",
+      "technique4": "KVT-Techniken",
+      "technique5": "Therapeutische Haptik"
+    },
+    "philosophy": {
+      "title": "Keine weitere Wellness-App",
+      "subtitle": "Anchor ist bewusst anders",
+      "darkByDesign": {
+        "title": "Dunkel mit Absicht",
+        "description": "Keine toxische Positivität. Eine beruhigende Leere, keine überwältigende Helligkeit."
+      },
+      "evidenceBased": {
+        "title": "Evidenzbasiert",
+        "description": "Basierend auf KVT, ACT und somatischen Erdungstechniken."
+      },
+      "immediateRelief": {
+        "title": "Sofortige Hilfe",
+        "description": "Für den akuten Moment, nicht für tägliche Meditationspraxis."
+      },
+      "therapeuticTouch": {
+        "title": "Therapeutische Berührung",
+        "description": "Haptisches Feedback als Erdungswerkzeug, nicht nur als UI-Element."
+      },
+      "quote": "Wenn du in Panik ertrinkst, brauchst du keine Motivation. Du brauchst einen Anker."
+    },
+    "privacyHighlight": {
+      "title": "Dein sicherer Raum",
+      "subtitle": "Deine psychischen Gesundheitsdaten sind heilig. Wir haben Anchor mit Datenschutz im Kern gebaut, nicht als Nachgedanke.",
+      "badge": "Privacy by Design",
+      "points": {
+        "autoDelete": "Sprachaufnahmen werden nach 7 Tagen automatisch gelöscht",
+        "export": "Exportiere jederzeit alle deine Daten",
+        "noSelling": "Wir verkaufen niemals deine Daten",
+        "encryption": "Ende-zu-Ende-Verschlüsselung bei Übertragung"
+      },
+      "cardTitle": "Deine Daten, deine Kontrolle",
+      "cardSubtitle": "Exportiere oder lösche deine Daten jederzeit. Keine Fragen gestellt.",
+      "stat1Label": "Auto-Löschung Audio",
+      "stat1Value": "7 Tage",
+      "stat2Label": "Daten an Dritte verkauft",
+      "stat2Value": "0",
+      "learnMore": "Unsere Datenschutzerklärung lesen"
+    },
+    "cta": {
+      "title": "Bereit, dich zu ankern?",
+      "subtitle": "Kostenlos herunterladen. Kein Abo erforderlich.",
+      "subtitleHighlight": "Beginne heute deine Reise zur Ruhe.",
+      "trustPrivacy": "Privacy-First-Design",
+      "trustEvidence": "Evidenzbasierte Techniken",
+      "trustCrisis": "Krisenressourcen inklusive",
+      "downloadOn": "Herunterladen bei"
+    },
+    "footer": {
+      "tagline": "Dein Angstbegleiter",
+      "description": "Sofortige Hilfe bei Panikattacken. Evidenzbasiert. Privat. Immer da.",
+      "product": "Produkt",
+      "legal": "Rechtliches",
+      "support": "Hilfe",
+      "features": "Vorteile",
+      "howItWorks": "So funktioniert's",
+      "ourApproach": "Unser Ansatz",
+      "privacyPolicy": "Datenschutzerklärung",
+      "termsOfService": "Nutzungsbedingungen",
+      "contactSupport": "Support kontaktieren",
+      "crisisHotline": "Telefonseelsorge (0800 111 0 111)",
+      "crisisHotlineNumber": "08001110111",
+      "copyright": "Anchor. Alle Rechte vorbehalten.",
+      "crisisBanner": "In einer Krise?",
+      "crisisBannerText": "Wenn du Gedanken an Suizid oder Selbstverletzung hast, wende dich bitte sofort an:",
+      "crisisLine": "Telefonseelsorge (0800 111 0 111)",
+      "crisisOr": "oder",
+      "crisisEmergency": "112",
+      "crisisEmergencyNumber": "112",
+      "madeWith": "Mit",
+      "forThose": "für alle, die kämpfen",
+      "disclaimer": "Anchor ist kein Ersatz für professionelle psychische Gesundheitsversorgung. Wenn du dich in einer Krise befindest, wende dich bitte an den Notruf oder einen Fachmann für psychische Gesundheit."
+    },
+    "invite": {
+      "heading": "Anchor",
+      "tagline": "Dein Angstbegleiter",
+      "description": "Sofortige Hilfe bei Panikattacken.",
+      "subDescription": "Evidenzbasiert. Privat. Immer da.",
+      "redirecting": "Du wirst zum {{store}} weitergeleitet...",
+      "appStore": "App Store",
+      "playStore": "Play Store",
+      "manualLink": "Klicke hier, falls du nicht weitergeleitet wirst",
+      "or": "oder",
+      "visitWebsite": "Zur Website"
+    },
+    "common": {
+      "backToHome": "Zurück zur Startseite",
+      "lastUpdated": "Zuletzt aktualisiert",
+      "effectiveDate": "Gültig ab"
+    }
+  }
+}

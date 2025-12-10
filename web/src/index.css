@@ -1,0 +1,88 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Global styles for Anchor landing page */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-void-blue text-mist-white antialiased;
+    font-family: 'Inter', 'SF Pro Display', system-ui, -apple-system, sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* Selection color */
+  ::selection {
+    @apply bg-biolum-cyan/30 text-mist-white;
+  }
+
+  /* Scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: rgba(10, 17, 40, 0.5);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(100, 255, 218, 0.4);
+  }
+
+  /* Firefox scrollbar */
+  * {
+    scrollbar-color: rgba(255, 255, 255, 0.2) rgba(10, 17, 40, 0.5);
+    scrollbar-width: thin;
+  }
+}
+
+@layer components {
+  /* Glass card utility */
+  .glass-card {
+    @apply rounded-3xl border border-glass-border bg-glass-bg backdrop-blur-glass shadow-glass;
+  }
+
+  /* Glow text utility */
+  .text-glow {
+    text-shadow: 0 0 20px rgba(100, 255, 218, 0.5);
+  }
+
+  /* Focus styles for accessibility */
+  .focus-ring {
+    @apply outline-none focus-visible:ring-2 focus-visible:ring-biolum-cyan focus-visible:ring-offset-2 focus-visible:ring-offset-void-blue;
+  }
+}
+
+@layer utilities {
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  /* Print styles for legal pages */
+  @media print {
+    body {
+      background: white;
+      color: black;
+    }
+
+    .no-print {
+      display: none !important;
+    }
+  }
+}

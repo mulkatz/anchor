@@ -1,0 +1,157 @@
+{
+  "translation": {
+    "meta": {
+      "title": "Anchor - Your Anxiety Buddy | Immediate Panic Attack Relief",
+      "description": "Free anxiety relief app with 7-step panic de-escalation, 24/7 AI support, and privacy-first design. Download for iOS and Android.",
+      "privacyTitle": "Privacy Policy - Anchor",
+      "privacyDescription": "Learn how Anchor protects your privacy. We auto-delete voice recordings after 7 days, never sell your data, and give you full control over your information.",
+      "termsTitle": "Terms of Service - Anchor",
+      "termsDescription": "Terms of Service for Anchor app. Important mental health disclaimers, acceptable use policy, and user rights.",
+      "inviteTitle": "Download Anchor - Your Anxiety Buddy",
+      "inviteDescription": "Download Anchor for immediate relief during panic attacks. Available on iOS and Android."
+    },
+    "nav": {
+      "features": "Features",
+      "howItWorks": "How It Works",
+      "privacy": "Privacy",
+      "download": "Download"
+    },
+    "hero": {
+      "tagline": "Your Anxiety Buddy",
+      "headline": "Anchor yourself in the storm",
+      "subheadline": "Immediate relief during panic attacks. Evidence-based. Private. Always there.",
+      "downloadApp": "Download App"
+    },
+    "features": {
+      "title": "Features designed for the acute moment",
+      "sos": {
+        "title": "7-Step Panic Relief",
+        "description": "Clinically-informed de-escalation in 2-3 minutes. Multi-sensory grounding: sight, touch, sound, breath."
+      },
+      "aiChat": {
+        "title": "24/7 AI Support",
+        "description": "CBT and ACT-based therapeutic conversations. Crisis detection with immediate resources."
+      },
+      "voice": {
+        "title": "Speak, Don't Type",
+        "description": "Voice messages when typing feels impossible. Lower cognitive load during panic episodes."
+      },
+      "privacy": {
+        "title": "Your Data, Your Control",
+        "description": "7-day audio auto-deletion. Export or delete anytime. We never sell your information."
+      }
+    },
+    "howItWorks": {
+      "title": "How it works",
+      "subtitle": "From panic to calm in 2-3 minutes. A guided journey back to yourself.",
+      "step1": {
+        "title": "Trigger SOS",
+        "description": "Long-press when panic hits"
+      },
+      "step2": {
+        "title": "Follow the Flow",
+        "description": "Multi-sensory grounding guides you"
+      },
+      "step3": {
+        "title": "Return to Calm",
+        "description": "2-3 minutes to de-escalation"
+      },
+      "techniques": "Evidence-Based Techniques",
+      "technique1": "5-4-3-2-1 Grounding",
+      "technique2": "4-7-8 Breathing",
+      "technique3": "Somatic Experiencing",
+      "technique4": "CBT Techniques",
+      "technique5": "Therapeutic Haptics"
+    },
+    "philosophy": {
+      "title": "Not another wellness app",
+      "subtitle": "Anchor is different by design",
+      "darkByDesign": {
+        "title": "Dark by Design",
+        "description": "No toxic positivity. A calming void, not overwhelming brightness."
+      },
+      "evidenceBased": {
+        "title": "Evidence-Based",
+        "description": "Built on CBT, ACT, and somatic grounding techniques."
+      },
+      "immediateRelief": {
+        "title": "Immediate Relief",
+        "description": "For the acute moment, not daily meditation practice."
+      },
+      "therapeuticTouch": {
+        "title": "Therapeutic Touch",
+        "description": "Haptic feedback as a grounding tool, not just UI."
+      },
+      "quote": "When you're drowning in panic, you don't need motivation. You need an anchor."
+    },
+    "privacyHighlight": {
+      "title": "Your Safe Space",
+      "subtitle": "Your mental health data is sacred. We built Anchor with privacy at its core, not as an afterthought.",
+      "badge": "Privacy by Design",
+      "points": {
+        "autoDelete": "Voice recordings auto-delete after 7 days",
+        "export": "Export all your data anytime",
+        "noSelling": "We never sell your information",
+        "encryption": "End-to-end encryption in transit"
+      },
+      "cardTitle": "Your Data, Your Control",
+      "cardSubtitle": "Export or delete your data anytime. No questions asked.",
+      "stat1Label": "Audio auto-delete",
+      "stat1Value": "7 days",
+      "stat2Label": "Data sold to third parties",
+      "stat2Value": "0",
+      "learnMore": "Read our Privacy Policy"
+    },
+    "cta": {
+      "title": "Ready to anchor yourself?",
+      "subtitle": "Download free. No subscription required.",
+      "subtitleHighlight": "Start your journey to calm today.",
+      "trustPrivacy": "Privacy-first design",
+      "trustEvidence": "Evidence-based techniques",
+      "trustCrisis": "Crisis resources included",
+      "downloadOn": "Download on"
+    },
+    "footer": {
+      "tagline": "Your Anxiety Buddy",
+      "description": "Immediate relief during panic attacks. Evidence-based. Private. Always there.",
+      "product": "Product",
+      "legal": "Legal",
+      "support": "Support",
+      "features": "Features",
+      "howItWorks": "How It Works",
+      "ourApproach": "Our Approach",
+      "privacyPolicy": "Privacy Policy",
+      "termsOfService": "Terms of Service",
+      "contactSupport": "Contact Support",
+      "crisisHotline": "Crisis Hotline (988)",
+      "crisisHotlineNumber": "988",
+      "copyright": "Anchor. All rights reserved.",
+      "crisisBanner": "In crisis?",
+      "crisisBannerText": "If you're having thoughts of suicide or self-harm, please reach out immediately:",
+      "crisisLine": "988 Suicide & Crisis Lifeline",
+      "crisisOr": "or",
+      "crisisEmergency": "911",
+      "crisisEmergencyNumber": "911",
+      "madeWith": "Made with",
+      "forThose": "for those who struggle",
+      "disclaimer": "Anchor is not a substitute for professional mental health care. If you are in crisis, please contact emergency services or a mental health professional."
+    },
+    "invite": {
+      "heading": "Anchor",
+      "tagline": "Your Anxiety Buddy",
+      "description": "Immediate relief during panic attacks.",
+      "subDescription": "Evidence-based. Private. Always there.",
+      "redirecting": "Taking you to the {{store}}...",
+      "appStore": "App Store",
+      "playStore": "Play Store",
+      "manualLink": "Click here if you're not redirected",
+      "or": "or",
+      "visitWebsite": "Visit Website"
+    },
+    "common": {
+      "backToHome": "Back to Home",
+      "lastUpdated": "Last Updated",
+      "effectiveDate": "Effective Date"
+    }
+  }
+}
