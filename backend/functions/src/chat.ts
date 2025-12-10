@@ -93,13 +93,13 @@ export const onMessageCreate = onDocumentWritten(
         return;
       }
 
-      // 6. Fetch Context: Get last 10 messages for conversation history
+      // 6. Fetch Context: Get last 50 messages for conversation history
       const messagesSnapshot = await admin
         .firestore()
         .collection(`users/${userId}/conversations/${conversationId}/messages`)
         .where('role', 'in', ['user', 'assistant']) // Exclude crisis messages
         .orderBy('createdAt', 'desc')
-        .limit(10)
+        .limit(50)
         .get();
 
       const conversationHistory = messagesSnapshot.docs
