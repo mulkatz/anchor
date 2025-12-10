@@ -247,166 +247,169 @@ export const ProfilePage: FC = () => {
   const crisisResources = getCrisisResources();
 
   return (
-    <div
-      className="flex h-full flex-col overflow-y-auto bg-void-blue/80 px-4 pb-8 pt-safe sm:px-6"
-      style={{ paddingBottom: `${navbarBottom + 32}px` }}
-    >
-      {/* Header */}
-      <div className="mb-6">
+    <div className="flex h-full flex-col bg-void-blue/80">
+      {/* Sticky Header */}
+      <header className="shrink-0 border-b border-glass-border px-4 py-4 pt-safe sm:px-6">
         <h1 className="text-3xl font-light text-mist-white">{t('profile.title')}</h1>
         <p className="text-sm text-mist-white/60">{t('profile.subtitle')}</p>
-      </div>
+      </header>
 
-      {/* App Preferences */}
-      <SettingSection title={t('settings.appPreferences')}>
-        <SettingRow
-          icon={<Languages size={24} />}
-          label={t('settings.language')}
-          description={t('settings.languageDesc')}
-          value={getLanguageDisplay()}
-          onClick={handleLanguageChange}
-          hideChevron
-        />
-        <SettingRow
-          icon={<Zap size={24} />}
-          label={t('settings.haptics')}
-          description={t('settings.hapticsDesc')}
-          toggle
-          checked={settings.hapticsEnabled}
-          onChange={handleHapticsToggle}
-        />
-        <SettingRow
-          icon={<BarChart3 size={24} />}
-          label={t('settings.analytics')}
-          description={t('settings.analyticsDesc')}
-          toggle
-          checked={settings.analyticsEnabled}
-          onChange={handleAnalyticsToggle}
-        />
-        <SettingRow
-          icon={<Music size={24} />}
-          label={t('settings.soundEffects')}
-          description={t('settings.soundEffectsDesc')}
-          toggle
-          checked={settings.soundEffectsEnabled}
-          onChange={handleSoundEffectsToggle}
-        />
-      </SettingSection>
+      {/* Scrollable Content */}
+      <div
+        className="flex-1 overflow-y-auto px-4 sm:px-6"
+        style={{ paddingBottom: `${navbarBottom + 32}px` }}
+      >
+        {/* App Preferences */}
+        <SettingSection title={t('settings.appPreferences')}>
+          <SettingRow
+            icon={<Languages size={24} />}
+            label={t('settings.language')}
+            description={t('settings.languageDesc')}
+            value={getLanguageDisplay()}
+            onClick={handleLanguageChange}
+            hideChevron
+          />
+          <SettingRow
+            icon={<Zap size={24} />}
+            label={t('settings.haptics')}
+            description={t('settings.hapticsDesc')}
+            toggle
+            checked={settings.hapticsEnabled}
+            onChange={handleHapticsToggle}
+          />
+          <SettingRow
+            icon={<BarChart3 size={24} />}
+            label={t('settings.analytics')}
+            description={t('settings.analyticsDesc')}
+            toggle
+            checked={settings.analyticsEnabled}
+            onChange={handleAnalyticsToggle}
+          />
+          <SettingRow
+            icon={<Music size={24} />}
+            label={t('settings.soundEffects')}
+            description={t('settings.soundEffectsDesc')}
+            toggle
+            checked={settings.soundEffectsEnabled}
+            onChange={handleSoundEffectsToggle}
+          />
+        </SettingSection>
 
-      {/* Data & Privacy */}
-      <SettingSection title={t('settings.dataPrivacy')}>
-        <SettingRow
-          icon={<Download size={24} />}
-          label={t('settings.exportData')}
-          description={t('settings.exportDataDesc')}
-          onClick={handleExportData}
-          loading={exporting}
-        />
-        <SettingRow
-          icon={<Trash2 size={24} />}
-          label={t('settings.clearCache')}
-          description={t('settings.clearCacheDesc')}
-          onClick={handleClearCache}
-        />
-        <SettingRow
-          icon={<Trash2 size={24} />}
-          label={t('settings.deleteAllData')}
-          description={t('settings.deleteAllDataDesc')}
-          onClick={handleDeleteAllData}
-          destructive
-          loading={deletingData}
-        />
-        <SettingRow
-          icon={<UserX size={24} />}
-          label={t('settings.deleteAccount')}
-          description={t('settings.deleteAccountDesc')}
-          onClick={handleDeleteAccount}
-          destructive
-          loading={deletingAccount}
-        />
-      </SettingSection>
+        {/* Data & Privacy */}
+        <SettingSection title={t('settings.dataPrivacy')}>
+          <SettingRow
+            icon={<Download size={24} />}
+            label={t('settings.exportData')}
+            description={t('settings.exportDataDesc')}
+            onClick={handleExportData}
+            loading={exporting}
+          />
+          <SettingRow
+            icon={<Trash2 size={24} />}
+            label={t('settings.clearCache')}
+            description={t('settings.clearCacheDesc')}
+            onClick={handleClearCache}
+          />
+          <SettingRow
+            icon={<Trash2 size={24} />}
+            label={t('settings.deleteAllData')}
+            description={t('settings.deleteAllDataDesc')}
+            onClick={handleDeleteAllData}
+            destructive
+            loading={deletingData}
+          />
+          <SettingRow
+            icon={<UserX size={24} />}
+            label={t('settings.deleteAccount')}
+            description={t('settings.deleteAccountDesc')}
+            onClick={handleDeleteAccount}
+            destructive
+            loading={deletingAccount}
+          />
+        </SettingSection>
 
-      {/* Support & Resources */}
-      <SettingSection title={t('settings.supportResources')}>
-        <SettingRow
-          icon={<Phone size={24} />}
-          label={crisisResources.primaryHotline.name}
-          description={crisisResources.primaryHotline.description}
-          onClick={async () => {
-            await heavy();
-            window.open(crisisResources.primaryHotline.telLink, '_system');
-            logAnalyticsEvent(AnalyticsEvent.CRISIS_HOTLINE_CALLED, {
-              number: crisisResources.primaryHotline.number,
-            });
-          }}
-        />
-        {crisisResources.secondaryHotline && (
+        {/* Support & Resources */}
+        <SettingSection title={t('settings.supportResources')}>
           <SettingRow
             icon={<Phone size={24} />}
-            label={crisisResources.secondaryHotline.name}
-            description={crisisResources.secondaryHotline.description}
+            label={crisisResources.primaryHotline.name}
+            description={crisisResources.primaryHotline.description}
             onClick={async () => {
               await heavy();
-              window.open(crisisResources.secondaryHotline!.telLink, '_system');
+              window.open(crisisResources.primaryHotline.telLink, '_system');
               logAnalyticsEvent(AnalyticsEvent.CRISIS_HOTLINE_CALLED, {
-                number: crisisResources.secondaryHotline!.number,
+                number: crisisResources.primaryHotline.number,
               });
             }}
           />
-        )}
-        <SettingRow
-          icon={<RotateCcw size={24} />}
-          label={t('settings.resetTutorial')}
-          description={t('settings.resetTutorialDesc')}
-          onClick={handleResetTutorial}
-        />
-        <SettingRow
-          icon={<Globe size={24} />}
-          label={t('settings.visitWebsite')}
-          description={t('settings.visitWebsiteDesc')}
-          onClick={handleVisitWebsite}
-        />
-        <SettingRow
-          icon={<MessageCircle size={24} />}
-          label={t('settings.giveFeedback')}
-          description={t('settings.giveFeedbackDesc')}
-          onClick={handleGiveFeedback}
-        />
-        {isRatingAvailable() && (
+          {crisisResources.secondaryHotline && (
+            <SettingRow
+              icon={<Phone size={24} />}
+              label={crisisResources.secondaryHotline.name}
+              description={crisisResources.secondaryHotline.description}
+              onClick={async () => {
+                await heavy();
+                window.open(crisisResources.secondaryHotline!.telLink, '_system');
+                logAnalyticsEvent(AnalyticsEvent.CRISIS_HOTLINE_CALLED, {
+                  number: crisisResources.secondaryHotline!.number,
+                });
+              }}
+            />
+          )}
           <SettingRow
-            icon={<Star size={24} />}
-            label={t('settings.rateApp')}
-            description={t('settings.rateAppDesc')}
-            onClick={handleRateApp}
+            icon={<RotateCcw size={24} />}
+            label={t('settings.resetTutorial')}
+            description={t('settings.resetTutorialDesc')}
+            onClick={handleResetTutorial}
           />
-        )}
-      </SettingSection>
+          <SettingRow
+            icon={<Globe size={24} />}
+            label={t('settings.visitWebsite')}
+            description={t('settings.visitWebsiteDesc')}
+            onClick={handleVisitWebsite}
+          />
+          <SettingRow
+            icon={<MessageCircle size={24} />}
+            label={t('settings.giveFeedback')}
+            description={t('settings.giveFeedbackDesc')}
+            onClick={handleGiveFeedback}
+          />
+          {isRatingAvailable() && (
+            <SettingRow
+              icon={<Star size={24} />}
+              label={t('settings.rateApp')}
+              description={t('settings.rateAppDesc')}
+              onClick={handleRateApp}
+            />
+          )}
+        </SettingSection>
 
-      {/* Legal & Information */}
-      <SettingSection title={t('settings.legalInfo')}>
-        <SettingRow
-          icon={<AlertCircle size={24} />}
-          label={t('settings.disclaimer')}
-          description={t('settings.disclaimerDesc')}
-          onClick={handleDisclaimer}
-        />
-        <SettingRow
-          icon={<Shield size={24} />}
-          label={t('settings.privacyPolicy')}
-          description={t('settings.privacyPolicyDesc')}
-          onClick={handlePrivacyPolicy}
-        />
-        <SettingRow
-          icon={<FileText size={24} />}
-          label={t('settings.termsOfService')}
-          description={t('settings.termsOfServiceDesc')}
-          onClick={handleTerms}
-        />
-      </SettingSection>
+        {/* Legal & Information */}
+        <SettingSection title={t('settings.legalInfo')}>
+          <SettingRow
+            icon={<AlertCircle size={24} />}
+            label={t('settings.disclaimer')}
+            description={t('settings.disclaimerDesc')}
+            onClick={handleDisclaimer}
+          />
+          <SettingRow
+            icon={<Shield size={24} />}
+            label={t('settings.privacyPolicy')}
+            description={t('settings.privacyPolicyDesc')}
+            onClick={handlePrivacyPolicy}
+          />
+          <SettingRow
+            icon={<FileText size={24} />}
+            label={t('settings.termsOfService')}
+            description={t('settings.termsOfServiceDesc')}
+            onClick={handleTerms}
+          />
+        </SettingSection>
 
-      {/* Version Footer */}
-      <div className="mt-4 text-center">
-        <p className="text-xs text-mist-white/30">{t('general.version', { version })}</p>
+        {/* Version Footer */}
+        <div className="mt-4 pb-8 text-center">
+          <p className="text-xs text-mist-white/30">{t('general.version', { version })}</p>
+        </div>
       </div>
 
       {/* Confirm Dialog */}
