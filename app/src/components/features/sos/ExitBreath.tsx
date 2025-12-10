@@ -95,7 +95,7 @@ export const ExitBreath: FC<ExitBreathProps> = ({ onComplete }) => {
   };
 
   return (
-    <div className="flex h-full flex-col items-center justify-center px-6">
+    <div className="flex h-full flex-col items-center justify-center bg-void-blue/50 px-6">
       {/* Icon */}
       <div className="mb-12">
         <Wind size={48} className="text-biolum-cyan drop-shadow-glow" />

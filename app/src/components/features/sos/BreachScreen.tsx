@@ -46,7 +46,7 @@ export const BreachScreen: FC<BreachScreenProps> = ({ onComplete }) => {
   }, [isPressed, heavy]);
 
   return (
-    <div className="flex h-full flex-col items-center justify-center px-6">
+    <div className="flex h-full flex-col items-center justify-center bg-void-blue/50 px-6">
       {/* Pulsing SOS Icon */}
       <div className="mb-8 flex items-center justify-center">
         <style>

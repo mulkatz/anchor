@@ -8,7 +8,7 @@ export const HomePage: FC = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="flex h-full flex-col items-center justify-center px-6">
+    <div className="flex h-full flex-col items-center justify-center bg-void-blue/60 px-6">
       {/* Logo/Icon */}
       <div className="mb-8 animate-breathe">
         <Waves size={80} className="text-biolum-cyan drop-shadow-glow" />

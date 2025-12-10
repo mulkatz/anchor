@@ -43,7 +43,7 @@ export const GroundingSound: FC<GroundingSoundProps> = ({ onComplete }) => {
   }, [start, stop]);
 
   return (
-    <div className="flex h-full flex-col items-center justify-center bg-void-blue px-6">
+    <div className="flex h-full flex-col items-center justify-center bg-void-blue/50 px-6">
       {/* Wave Visualizer */}
       <div className="mb-8">
         {analyser && (

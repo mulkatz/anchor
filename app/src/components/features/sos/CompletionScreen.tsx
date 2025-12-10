@@ -25,7 +25,7 @@ export const CompletionScreen: FC<CompletionScreenProps> = ({ duration }) => {
   };
 
   return (
-    <div className="flex h-full flex-col items-center justify-center px-6">
+    <div className="flex h-full flex-col items-center justify-center bg-void-blue/50 px-6">
       {/* Success icon */}
       <div className="mb-8 animate-fade-in">
         <CheckCircle size={80} className="text-success drop-shadow-glow" />

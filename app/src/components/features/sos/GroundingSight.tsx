@@ -46,7 +46,7 @@ export const GroundingSight: FC<GroundingSightProps> = ({ onComplete }) => {
 
   return (
     <div
-      className="relative flex h-full flex-col items-center justify-center px-6"
+      className="relative flex h-full flex-col items-center justify-center bg-void-blue/50 px-6"
       onClick={handleTap}
       onTouchStart={handleTap}
     >

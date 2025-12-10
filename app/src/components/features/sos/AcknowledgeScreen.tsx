@@ -24,7 +24,7 @@ export const AcknowledgeScreen: FC<AcknowledgeScreenProps> = ({ onComplete }) =>
   }, [onComplete, heartbeat]);
 
   return (
-    <div className="flex h-full flex-col items-center justify-center px-6">
+    <div className="flex h-full flex-col items-center justify-center bg-void-blue/50 px-6">
       {/* Breathing heart icon */}
       <div className="mb-12 animate-breathe">
         <Heart size={80} className="text-biolum-cyan drop-shadow-glow" fill="currentColor" />

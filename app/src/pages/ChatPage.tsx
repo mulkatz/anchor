@@ -56,7 +56,7 @@ export const ChatPage: FC = () => {
   };
 
   return (
-    <div className="flex h-screen w-full flex-col bg-void-blue">
+    <div className="flex h-screen w-full flex-col bg-void-blue/85">
       {/* Header */}
       <header className="safe-area-top flex shrink-0 items-center justify-between border-b border-glass-border px-6 py-4">
         <div>

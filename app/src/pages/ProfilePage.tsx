@@ -228,7 +228,7 @@ export const ProfilePage: FC = () => {
 
   return (
     <div
-      className="flex h-full flex-col overflow-y-auto bg-void-blue px-6 pb-8 pt-safe"
+      className="flex h-full flex-col overflow-y-auto bg-void-blue/80 px-6 pb-8 pt-safe"
       style={{ paddingBottom: `${navbarBottom + 32}px` }}
     >
       {/* Header */}
