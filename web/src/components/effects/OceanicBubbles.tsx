@@ -95,14 +95,15 @@ export function OceanicBubbles({ count = 35, className = '' }: OceanicBubblesPro
           animate={{
             // Horizontal wobble (sine wave simulation with keyframes)
             x: [0, bubble.wobbleAmplitude, 0, -bubble.wobbleAmplitude, 0],
-            // Vertical rise (constant upward drift)
-            y: [0, bubble.riseDistance],
-            // Opacity pulse (breathing effect)
-            opacity: [bubble.opacity, bubble.opacity * 1.3, bubble.opacity * 1.3, bubble.opacity],
+            // Vertical rise and reset (loop back to start)
+            y: [0, bubble.riseDistance, bubble.riseDistance, 0],
+            // Opacity: fade in, stay visible, fade out before reset
+            opacity: [0, bubble.opacity, bubble.opacity * 1.3, bubble.opacity, 0],
           }}
           transition={{
             duration: bubble.duration,
             repeat: Infinity,
+            repeatType: 'loop',
             delay: bubble.delay,
             ease: 'linear',
             times: [0, 0.25, 0.5, 0.75, 1],

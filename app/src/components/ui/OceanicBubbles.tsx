@@ -34,9 +34,9 @@ export const OceanicBubbles: FC = () => {
   const prefersReducedMotion =
     typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // Generate 30 bubbles with random properties (memoized)
+  // Generate 40 bubbles with random properties (memoized)
   const bubbles = useMemo<Bubble[]>(() => {
-    return Array.from({ length: 30 }, (_, i) => {
+    return Array.from({ length: 40 }, (_, i) => {
       const size = Math.random() * 4 + 2; // 2-6px
 
       return {
@@ -96,17 +96,18 @@ export const OceanicBubbles: FC = () => {
           animate={{
             // Horizontal wobble (sine wave simulation with keyframes)
             x: [0, bubble.wobbleAmplitude, 0, -bubble.wobbleAmplitude, 0],
-            // Vertical rise (constant upward drift)
-            y: [0, bubble.riseDistance],
-            // Opacity pulse (breathing effect)
-            opacity: [bubble.opacity, bubble.opacity * 1.3, bubble.opacity * 1.3, bubble.opacity],
+            // Vertical rise and reset (loop back to start)
+            y: [0, bubble.riseDistance, bubble.riseDistance, 0],
+            // Opacity: fade in, stay visible, fade out before reset
+            opacity: [0, bubble.opacity, bubble.opacity * 1.3, bubble.opacity, 0],
           }}
           transition={{
             duration: bubble.duration,
             repeat: Infinity,
+            repeatType: 'loop',
             delay: bubble.delay,
             ease: 'linear', // Constant rise speed
-            times: [0, 0.25, 0.5, 0.75, 1], // Keyframes for x wobble (sine wave)
+            times: [0, 0.25, 0.5, 0.75, 1], // Keyframes for animation cycle
           }}
         />
       ))}
