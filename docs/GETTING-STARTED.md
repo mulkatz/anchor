@@ -106,7 +106,7 @@ Update `app/capacitor.config.ts`:
 ```typescript
 const config: CapacitorConfig = {
   appId: 'cx.franz.anxietybuddy', // Your unique bundle ID
-  appName: 'YourApp', // Your app display name
+  appName: 'Anxiety Buddy', // Your app display name
   webDir: 'dist',
 };
 ```

@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "YourApp",
+    "appName": "Anxiety Buddy",
     "loading": "Loading...",
     "error": "An error occurred",
     "success": "Success!",
@@ -12,7 +12,7 @@
     "edit": "Edit"
   },
   "welcome": {
-    "title": "Welcome to YourApp",
+    "title": "Welcome to Anxiety Buddy",
     "subtitle": "Get started by editing src/pages/App.tsx"
   }
 }

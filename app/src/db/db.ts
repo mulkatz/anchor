@@ -14,7 +14,7 @@ export interface ExampleItem {
 }
 
 // Create the database
-export const db = new Dexie('YourAppDatabase') as Dexie & {
+export const db = new Dexie('AnxietyBuddyDatabase') as Dexie & {
   exampleItems: EntityTable<ExampleItem, 'id'>;
 };
 
