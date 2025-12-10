@@ -179,12 +179,17 @@ export const onAudioMessageCreate = onDocumentCreated(
       // Convert to base64 (required by Speech-to-Text API)
       const audioContent = audioBuffer.toString('base64');
 
-      // 4. Call Google Cloud Speech-to-Text API
+      // 4. Get language from message metadata (fallback to en-US)
+      const languageCode = message.metadata?.language || 'en-US';
+
+      logger.info('Using language for transcription', { languageCode });
+
+      // 5. Call Google Cloud Speech-to-Text API
       const [response] = await speechClient.recognize({
         config: {
           encoding: encoding as any,
           sampleRateHertz,
-          languageCode: 'en-US',
+          languageCode, // Use user's preferred language
           model: 'latest_long', // Enhanced model for conversational speech
           enableAutomaticPunctuation: true,
           useEnhanced: true, // Use enhanced model for better accuracy
@@ -196,7 +201,7 @@ export const onAudioMessageCreate = onDocumentCreated(
         },
       });
 
-      // 5. Extract transcription and confidence
+      // 6. Extract transcription and confidence
       const transcription =
         response.results
           ?.map((result) => result.alternatives?.[0]?.transcript)
@@ -212,7 +217,7 @@ export const onAudioMessageCreate = onDocumentCreated(
         duration: Date.now() - startTime,
       });
 
-      // 6. Update Firestore message with transcription
+      // 7. Update Firestore message with transcription
       const messageRef = admin
         .firestore()
         .doc(`users/${userId}/conversations/${conversationId}/messages/${messageId}`);
@@ -231,7 +236,7 @@ export const onAudioMessageCreate = onDocumentCreated(
         lowConfidence: confidence < 0.6,
       });
 
-      // 7. Note: onMessageCreate will now be triggered with the transcribed text
+      // 8. Note: onMessageCreate will now be triggered with the transcribed text
       // This will generate the AI response automatically
     } catch (error: any) {
       // Log detailed error information

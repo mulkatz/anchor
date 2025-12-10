@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { collection, query, where, orderBy, onSnapshot, deleteDoc, doc } from 'firebase/firestore';
+import i18next from 'i18next';
 import { firestore, auth } from '../services/firebase.service';
 import type { Conversation } from '../models';
 
@@ -51,7 +52,7 @@ export const useArchive = () => {
       },
       (err) => {
         console.error('Error listening to archived conversations:', err);
-        setError('Failed to load archived conversations');
+        setError(i18next.t('errors.archive.loadFailed'));
         setIsLoading(false);
       }
     );
@@ -63,7 +64,7 @@ export const useArchive = () => {
   const deleteConversation = useCallback(
     async (conversationId: string) => {
       if (!userId) {
-        throw new Error('User not authenticated');
+        throw new Error(i18next.t('errors.archive.notAuthenticated'));
       }
 
       try {
@@ -72,7 +73,7 @@ export const useArchive = () => {
         // Note: Messages subcollection will need manual deletion or Cloud Function cleanup
       } catch (err) {
         console.error('Error deleting conversation:', err);
-        throw new Error('Failed to delete conversation');
+        throw new Error(i18next.t('errors.archive.deleteFailed'));
       }
     },
     [userId]

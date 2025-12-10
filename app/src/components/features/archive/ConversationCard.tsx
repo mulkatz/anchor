@@ -1,6 +1,8 @@
 import { type FC } from 'react';
 import { MessageCircle, Trash2, Clock, AlertCircle } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { cn } from '../../../utils/cn';
+import { getRelativeTime, formatDate } from '../../../utils/time';
 import type { Conversation } from '../../../models';
 
 interface ConversationCardProps {
@@ -9,54 +11,20 @@ interface ConversationCardProps {
   onDelete: () => void;
 }
 
-/**
- * Format date to relative time string
- * e.g., "2 hours ago", "3 days ago"
- */
-const getRelativeTime = (date: Date): string => {
-  const now = new Date();
-  const diffMs = now.getTime() - date.getTime();
-  const diffSecs = Math.floor(diffMs / 1000);
-  const diffMins = Math.floor(diffSecs / 60);
-  const diffHours = Math.floor(diffMins / 60);
-  const diffDays = Math.floor(diffHours / 24);
-
-  if (diffSecs < 60) return 'just now';
-  if (diffMins < 60) return `${diffMins} min${diffMins > 1 ? 's' : ''} ago`;
-  if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
-  if (diffDays < 30) return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
-
-  const diffMonths = Math.floor(diffDays / 30);
-  if (diffMonths < 12) return `${diffMonths} month${diffMonths > 1 ? 's' : ''} ago`;
-
-  const diffYears = Math.floor(diffMonths / 12);
-  return `${diffYears} year${diffYears > 1 ? 's' : ''} ago`;
-};
-
-/**
- * Format date to readable string
- * e.g., "Dec 9, 2025"
- */
-const formatDate = (date: Date): string => {
-  return date.toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  });
-};
-
 export const ConversationCard: FC<ConversationCardProps> = ({
   conversation,
   onResume,
   onDelete,
 }) => {
+  const { t, i18n } = useTranslation();
+
   const formattedDate = conversation.archivedAt
-    ? formatDate(conversation.archivedAt)
-    : formatDate(conversation.updatedAt);
+    ? formatDate(conversation.archivedAt, i18n.language)
+    : formatDate(conversation.updatedAt, i18n.language);
 
   const relativeTime = conversation.archivedAt
-    ? getRelativeTime(conversation.archivedAt)
-    : getRelativeTime(conversation.updatedAt);
+    ? getRelativeTime(conversation.archivedAt, t)
+    : getRelativeTime(conversation.updatedAt, t);
 
   return (
     <div
@@ -75,7 +43,7 @@ export const ConversationCard: FC<ConversationCardProps> = ({
             {conversation.title}
           </h3>
           <p className="line-clamp-2 text-sm text-mist-white/50">
-            {conversation.preview || 'No preview available'}
+            {conversation.preview || t('archive.noPreview')}
           </p>
         </div>
 
@@ -90,7 +58,7 @@ export const ConversationCard: FC<ConversationCardProps> = ({
       <div className="mb-4 flex items-center gap-4 text-xs text-mist-white/40">
         <div className="flex items-center gap-1.5">
           <MessageCircle size={14} />
-          <span>{conversation.messageCount} messages</span>
+          <span>{t('archive.messageCount', { count: conversation.messageCount })}</span>
         </div>
 
         <div className="flex items-center gap-1.5">
@@ -111,7 +79,7 @@ export const ConversationCard: FC<ConversationCardProps> = ({
             'active:scale-95'
           )}
         >
-          Resume Conversation
+          {t('archive.resumeConversation')}
         </button>
 
         <button

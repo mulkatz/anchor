@@ -1,5 +1,6 @@
 import { type FC, useState } from 'react';
 import { Eye } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useHaptics } from '../../../hooks/useHaptics';
 
 interface GroundingSightProps {
@@ -7,6 +8,7 @@ interface GroundingSightProps {
 }
 
 export const GroundingSight: FC<GroundingSightProps> = ({ onComplete }) => {
+  const { t } = useTranslation();
   const { light } = useHaptics();
   const [tapCount, setTapCount] = useState(0);
   const [ripples, setRipples] = useState<Array<{ id: number; x: number; y: number }>>([]);
@@ -54,7 +56,9 @@ export const GroundingSight: FC<GroundingSightProps> = ({ onComplete }) => {
       </div>
 
       {/* Instruction */}
-      <h2 className="mb-4 text-center text-2xl font-light text-mist-white">Tap 5 things you see</h2>
+      <h2 className="mb-4 text-center text-2xl font-light text-mist-white">
+        {t('sos.groundingSight.instruction')}
+      </h2>
 
       {/* Counter */}
       <div className="flex items-center gap-2">

@@ -1,5 +1,6 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { VoiceRecorder } from 'capacitor-voice-recorder';
+import i18next from 'i18next';
 import { useHaptics } from './useHaptics';
 
 export type RecordingPermission = 'granted' | 'denied' | 'prompt';
@@ -75,7 +76,7 @@ export const useVoiceRecorder = (): UseVoiceRecorderReturn => {
       return value;
     } catch (err) {
       console.error('Failed to request recording permission:', err);
-      setError('Microphone permission request failed');
+      setError(i18next.t('errors.voice.permissionFailed'));
       setPermission('denied');
       return false;
     }
@@ -93,7 +94,7 @@ export const useVoiceRecorder = (): UseVoiceRecorderReturn => {
       if (!hasPermission) {
         const granted = await requestPermission();
         if (!granted) {
-          setError('Microphone access is required to record voice messages');
+          setError(i18next.t('errors.voice.permissionRequired'));
           return;
         }
       }
@@ -120,7 +121,7 @@ export const useVoiceRecorder = (): UseVoiceRecorderReturn => {
       }, 100);
     } catch (err) {
       console.error('Failed to start recording:', err);
-      setError('Unable to start recording. Please try again.');
+      setError(i18next.t('errors.voice.startFailed'));
       setIsRecording(false);
     }
   }, [haptics, requestPermission]);
@@ -156,7 +157,7 @@ export const useVoiceRecorder = (): UseVoiceRecorderReturn => {
 
       // Check if we got valid recording data
       if (!result.value || !result.value.recordDataBase64) {
-        setError('Recording failed - no audio data received');
+        setError(i18next.t('errors.voice.noData'));
         return null;
       }
 
@@ -171,7 +172,7 @@ export const useVoiceRecorder = (): UseVoiceRecorderReturn => {
       };
     } catch (err) {
       console.error('Failed to stop recording:', err);
-      setError('Failed to save recording');
+      setError(i18next.t('errors.voice.saveFailed'));
       setIsRecording(false);
       return null;
     }
@@ -204,7 +205,7 @@ export const useVoiceRecorder = (): UseVoiceRecorderReturn => {
       setDuration(0);
     } catch (err) {
       console.error('Failed to cancel recording:', err);
-      setError('Failed to cancel recording');
+      setError(i18next.t('errors.voice.cancelFailed'));
       setIsRecording(false);
     }
   }, [isRecording, haptics]);
@@ -231,7 +232,7 @@ export const useVoiceRecorder = (): UseVoiceRecorderReturn => {
       await haptics.selectionChanged();
     } catch (err) {
       console.error('Failed to pause recording:', err);
-      setError('Failed to pause recording');
+      setError(i18next.t('errors.voice.pauseFailed'));
     }
   }, [isRecording, isPaused, haptics]);
 
@@ -265,7 +266,7 @@ export const useVoiceRecorder = (): UseVoiceRecorderReturn => {
       await haptics.selectionChanged();
     } catch (err) {
       console.error('Failed to resume recording:', err);
-      setError('Failed to resume recording');
+      setError(i18next.t('errors.voice.resumeFailed'));
     }
   }, [isRecording, isPaused, duration, haptics, stopRecording]);
 

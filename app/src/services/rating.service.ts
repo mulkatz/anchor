@@ -8,10 +8,10 @@ import { logAnalyticsEvent, AnalyticsEvent } from './analytics.service';
  * Adapted from cap2cal's rating.service with placeholder URLs
  */
 
-// Placeholder URLs - update when apps are published
-const IOS_APP_STORE_URL = 'https://apps.apple.com/app/anxiety-buddy/idXXXXXXXXX';
+// App Store URLs
+const IOS_APP_STORE_URL = 'https://apps.apple.com/app/id6756347720';
 const ANDROID_PLAY_STORE_URL =
-  'https://play.google.com/store/apps/details?id=com.cx.franz.anxietybuddy';
+  'https://play.google.com/store/apps/details?id=cx.franz.anxietybuddy';
 
 export const requestAppRating = async (showToastOnFallback: boolean = true): Promise<void> => {
   const platform = Capacitor.getPlatform();

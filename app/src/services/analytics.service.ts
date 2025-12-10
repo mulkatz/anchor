@@ -12,6 +12,7 @@ export enum AnalyticsEvent {
 
   // Settings Events
   SETTINGS_CHANGED = 'settings_changed', // { setting: string, value: any }
+  LANGUAGE_CHANGED = 'language_changed', // { language: string }
   HAPTICS_TOGGLED = 'haptics_toggled', // { enabled: boolean }
   ANALYTICS_TOGGLED = 'analytics_toggled', // { enabled: boolean }
   PINK_NOISE_VOLUME_CHANGED = 'pink_noise_volume_changed', // { volume: number }

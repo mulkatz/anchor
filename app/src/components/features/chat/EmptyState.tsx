@@ -1,12 +1,15 @@
 import { type FC } from 'react';
 import { motion } from 'framer-motion';
 import { Sparkles } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 /**
  * Empty State Component
  * Shown when no messages exist yet
  */
 export const EmptyState: FC = () => {
+  const { t } = useTranslation();
+
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
@@ -33,8 +36,10 @@ export const EmptyState: FC = () => {
       </motion.div>
 
       {/* Greeting text */}
-      <h2 className="mb-2 text-center text-2xl font-light text-mist-white">Hi, I'm Anchor</h2>
-      <p className="max-w-xs text-center text-base text-mist-white/60">What's on your mind?</p>
+      <h2 className="mb-2 text-center text-2xl font-light text-mist-white">
+        {t('chat.emptyGreeting')}
+      </h2>
+      <p className="max-w-xs text-center text-base text-mist-white/60">{t('chat.emptyPrompt')}</p>
     </motion.div>
   );
 };

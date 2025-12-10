@@ -1,5 +1,6 @@
 import { type FC, useEffect } from 'react';
 import { Phone, MessageCircle, User } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { cn } from '../../../utils/cn';
 import { useHaptics } from '../../../hooks/useHaptics';
 
@@ -9,6 +10,7 @@ import { useHaptics } from '../../../hooks/useHaptics';
  * Provides immediate access to crisis resources
  */
 export const CrisisCard: FC = () => {
+  const { t } = useTranslation();
   const { heavy } = useHaptics();
 
   // Heavy haptic feedback when crisis card appears
@@ -26,9 +28,7 @@ export const CrisisCard: FC = () => {
 
   const handleEmergencyContact = () => {
     // TODO: Integrate with user's saved emergency contact
-    alert(
-      'Emergency contact feature coming soon. Please call 988 or text 741741 for immediate help.'
-    );
+    alert(t('crisis.card.comingSoon'));
   };
 
   return (
@@ -42,11 +42,11 @@ export const CrisisCard: FC = () => {
         )}
       >
         <h3 className="mb-3 text-lg font-semibold text-mist-white">
-          I'm deeply concerned about what you're sharing.
+          {t('crisis.card.concernedTitle')}
         </h3>
 
         <p className="mb-4 leading-relaxed text-mist-white/80">
-          You deserve immediate support from a trained professional.
+          {t('crisis.card.concernedMessage')}
         </p>
 
         <div className="space-y-3">
@@ -62,8 +62,8 @@ export const CrisisCard: FC = () => {
           >
             <Phone size={20} />
             <div className="flex-1 text-left">
-              <div>Call 988 Lifeline</div>
-              <div className="text-xs opacity-80">Available 24/7</div>
+              <div>{t('crisis.card.call988')}</div>
+              <div className="text-xs opacity-80">{t('crisis.card.available247')}</div>
             </div>
           </button>
 
@@ -80,8 +80,8 @@ export const CrisisCard: FC = () => {
           >
             <MessageCircle size={20} />
             <div className="flex-1 text-left">
-              <div>Text HOME to 741741</div>
-              <div className="text-xs opacity-80">Crisis Text Line</div>
+              <div>{t('crisis.card.text741741')}</div>
+              <div className="text-xs opacity-80">{t('crisis.card.crisisTextLine')}</div>
             </div>
           </button>
 
@@ -98,15 +98,13 @@ export const CrisisCard: FC = () => {
           >
             <User size={20} />
             <div className="flex-1 text-left">
-              <div>Call Emergency Contact</div>
-              <div className="text-xs opacity-80">Your trusted person</div>
+              <div>{t('crisis.card.emergencyContact')}</div>
+              <div className="text-xs opacity-80">{t('crisis.card.trustedPerson')}</div>
             </div>
           </button>
         </div>
 
-        <p className="mt-4 text-center text-xs text-mist-white/60">
-          You matter. Please reach out now.
-        </p>
+        <p className="mt-4 text-center text-xs text-mist-white/60">{t('crisis.card.footer')}</p>
       </div>
     </div>
   );

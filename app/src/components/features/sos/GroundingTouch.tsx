@@ -1,5 +1,6 @@
 import { type FC, useState, useEffect } from 'react';
 import { Hand } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useHaptics } from '../../../hooks/useHaptics';
 
 interface GroundingTouchProps {
@@ -7,6 +8,7 @@ interface GroundingTouchProps {
 }
 
 export const GroundingTouch: FC<GroundingTouchProps> = ({ onComplete }) => {
+  const { t } = useTranslation();
   const { selectionStart, selectionChanged, selectionEnd } = useHaptics();
   const [isDragging, setIsDragging] = useState(false);
   const [dragDuration, setDragDuration] = useState(0);
@@ -85,9 +87,11 @@ export const GroundingTouch: FC<GroundingTouchProps> = ({ onComplete }) => {
       </div>
 
       {/* Instruction */}
-      <h2 className="mb-4 text-center text-2xl font-light text-mist-white">Move slowly</h2>
+      <h2 className="mb-4 text-center text-2xl font-light text-mist-white">
+        {t('sos.groundingTouch.instruction')}
+      </h2>
       <p className="mb-8 text-center text-sm text-mist-white/60">
-        Feel the texture under your finger
+        {t('sos.groundingTouch.description')}
       </p>
 
       {/* Progress bar */}

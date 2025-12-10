@@ -15,6 +15,7 @@ import {
   AlertCircle,
   Shield,
   FileText,
+  Languages,
 } from 'lucide-react';
 import { useApp } from '../contexts/AppContext';
 import { useDialogContext } from '../contexts/DialogContext';
@@ -37,6 +38,8 @@ import {
 } from '../utils/dataManagement';
 import { auth } from '../services/firebase.service';
 import toast from 'react-hot-toast';
+import type { SupportedLanguage } from '../models';
+import { getCrisisResources } from '../utils/crisisHotlines';
 
 /**
  * ProfilePage Component
@@ -64,6 +67,19 @@ export const ProfilePage: FC = () => {
   };
 
   // Settings handlers
+  const handleLanguageChange = async () => {
+    await light();
+    // Toggle between English and German
+    const newLanguage: SupportedLanguage = settings.language === 'en-US' ? 'de-DE' : 'en-US';
+    updateSetting('language', newLanguage);
+    logAnalyticsEvent(AnalyticsEvent.LANGUAGE_CHANGED, { language: newLanguage });
+    toast.success(t('toasts.languageChanged'));
+  };
+
+  const getLanguageDisplay = () => {
+    return settings.language === 'en-US' ? t('languages.en-US') : t('languages.de-DE');
+  };
+
   const handleHapticsToggle = async (enabled: boolean) => {
     updateSetting('hapticsEnabled', enabled);
     if (enabled) await light(); // Test haptic
@@ -207,6 +223,9 @@ export const ProfilePage: FC = () => {
     logAnalyticsEvent(AnalyticsEvent.TERMS_VIEWED);
   };
 
+  // Get crisis resources based on current language (uses i18next.language internally)
+  const crisisResources = getCrisisResources();
+
   return (
     <div
       className="flex h-full flex-col overflow-y-auto bg-void-blue px-6 pb-8 pt-safe"
@@ -220,6 +239,14 @@ export const ProfilePage: FC = () => {
 
       {/* App Preferences */}
       <SettingSection title={t('settings.appPreferences')}>
+        <SettingRow
+          icon={<Languages size={24} />}
+          label={t('settings.language')}
+          description={t('settings.languageDesc')}
+          value={getLanguageDisplay()}
+          onClick={handleLanguageChange}
+          hideChevron
+        />
         <SettingRow
           icon={<Zap size={24} />}
           label={t('settings.haptics')}
@@ -280,13 +307,30 @@ export const ProfilePage: FC = () => {
       <SettingSection title={t('settings.supportResources')}>
         <SettingRow
           icon={<Phone size={24} />}
-          label={t('settings.crisisHotline')}
-          description={t('settings.crisisHotlineDesc')}
+          label={crisisResources.primaryHotline.name}
+          description={crisisResources.primaryHotline.description}
           onClick={async () => {
             await heavy();
-            window.open('tel:988', '_system');
+            window.open(crisisResources.primaryHotline.telLink, '_system');
+            logAnalyticsEvent(AnalyticsEvent.CRISIS_HOTLINE_CALLED, {
+              number: crisisResources.primaryHotline.number,
+            });
           }}
         />
+        {crisisResources.secondaryHotline && (
+          <SettingRow
+            icon={<Phone size={24} />}
+            label={crisisResources.secondaryHotline.name}
+            description={crisisResources.secondaryHotline.description}
+            onClick={async () => {
+              await heavy();
+              window.open(crisisResources.secondaryHotline!.telLink, '_system');
+              logAnalyticsEvent(AnalyticsEvent.CRISIS_HOTLINE_CALLED, {
+                number: crisisResources.secondaryHotline!.number,
+              });
+            }}
+          />
+        )}
         <SettingRow
           icon={<RotateCcw size={24} />}
           label={t('settings.resetTutorial')}

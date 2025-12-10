@@ -1,5 +1,6 @@
 import { collection, getDocs, query, where, deleteDoc, doc } from 'firebase/firestore';
 import { ref, deleteObject, listAll } from 'firebase/storage';
+import i18next from 'i18next';
 import { firestore, storage, auth } from '../services/firebase.service';
 import { logAnalyticsEvent, AnalyticsEvent } from '../services/analytics.service';
 import toast from 'react-hot-toast';
@@ -70,11 +71,11 @@ export const exportUserData = async (userId: string): Promise<void> => {
     URL.revokeObjectURL(url);
 
     logAnalyticsEvent(AnalyticsEvent.DATA_EXPORTED);
-    toast.success('Data exported successfully');
+    toast.success(i18next.t('toasts.dataExported'));
   } catch (error) {
     console.error('Export failed:', error);
     logAnalyticsEvent(AnalyticsEvent.DATA_EXPORT_FAILED);
-    toast.error('Export failed. Please try again.');
+    toast.error(i18next.t('toasts.exportFailed'));
   }
 };
 
@@ -87,11 +88,11 @@ export const clearLocalStorage = async (): Promise<void> => {
     // This is a placeholder - actual implementation would need Cloud Function
 
     logAnalyticsEvent(AnalyticsEvent.CACHE_CLEARED);
-    toast.success('Cache cleared successfully');
+    toast.success(i18next.t('toasts.cacheCleared'));
   } catch (error) {
     console.error('Clear cache failed:', error);
     logAnalyticsEvent(AnalyticsEvent.CACHE_CLEAR_FAILED);
-    toast.error('Failed to clear cache');
+    toast.error(i18next.t('toasts.clearCacheFailed'));
   }
 };
 
@@ -143,11 +144,11 @@ export const deleteAllUserData = async (userId: string): Promise<void> => {
     });
 
     logAnalyticsEvent(AnalyticsEvent.DATA_DELETED);
-    toast.success('All data deleted');
+    toast.success(i18next.t('toasts.dataDeleted'));
   } catch (error) {
     console.error('Delete failed:', error);
     logAnalyticsEvent(AnalyticsEvent.DATA_DELETE_FAILED);
-    toast.error('Deletion failed. Please try again.');
+    toast.error(i18next.t('toasts.deleteFailed'));
   }
 };
 
@@ -163,18 +164,18 @@ export const deleteUserAccount = async (): Promise<void> => {
     await user.delete();
 
     logAnalyticsEvent(AnalyticsEvent.ACCOUNT_DELETED);
-    toast.success('Account deleted. Goodbye.');
+    toast.success(i18next.t('toasts.accountDeleted'));
 
     // 3. Reload app (clears all state)
     setTimeout(() => window.location.reload(), 1000);
   } catch (error: any) {
     if (error.code === 'auth/requires-recent-login') {
-      toast.error('Please sign in again to delete your account');
+      toast.error(i18next.t('toasts.accountDeleteReauth'));
       // TODO: Trigger re-authentication flow
     } else {
       console.error('Account deletion failed:', error);
       logAnalyticsEvent(AnalyticsEvent.ACCOUNT_DELETE_FAILED);
-      toast.error('Account deletion failed. Please try again.');
+      toast.error(i18next.t('toasts.deleteFailed'));
     }
   }
 };

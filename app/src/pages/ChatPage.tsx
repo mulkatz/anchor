@@ -1,5 +1,6 @@
 import { type FC, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Archive, Plus } from 'lucide-react';
 import { ChatContainer } from '../components/features/chat/ChatContainer';
 import { ChatInput } from '../components/features/chat/ChatInput';
@@ -14,6 +15,7 @@ import { auth } from '../services/firebase.service';
  * Main page for therapeutic AI chat with Anchor
  */
 export const ChatPage: FC = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { light } = useHaptics();
   const {
@@ -58,8 +60,8 @@ export const ChatPage: FC = () => {
       {/* Header */}
       <header className="safe-area-top flex shrink-0 items-center justify-between border-b border-glass-border px-6 py-4">
         <div>
-          <h1 className="text-2xl font-light text-mist-white">Deep Talk</h1>
-          <p className="text-sm text-mist-white/60">with Anchor</p>
+          <h1 className="text-2xl font-light text-mist-white">{t('chat.title')}</h1>
+          <p className="text-sm text-mist-white/60">{t('chat.subtitle')}</p>
         </div>
 
         <div className="flex items-center gap-2">
@@ -88,7 +90,7 @@ export const ChatPage: FC = () => {
             )}
           >
             <Plus size={18} />
-            <span className="text-sm font-medium">New</span>
+            <span className="text-sm font-medium">{t('chat.newButton')}</span>
           </button>
         </div>
       </header>

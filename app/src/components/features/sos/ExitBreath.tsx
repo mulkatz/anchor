@@ -1,5 +1,6 @@
 import { type FC, useState, useEffect } from 'react';
 import { Wind } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useHaptics } from '../../../hooks/useHaptics';
 
 interface ExitBreathProps {
@@ -9,6 +10,7 @@ interface ExitBreathProps {
 type BreathPhase = 'inhale' | 'hold' | 'exhale';
 
 export const ExitBreath: FC<ExitBreathProps> = ({ onComplete }) => {
+  const { t } = useTranslation();
   const { light } = useHaptics();
   const [phase, setPhase] = useState<BreathPhase>('inhale');
   const [cycleCount, setCycleCount] = useState(0);
@@ -84,11 +86,11 @@ export const ExitBreath: FC<ExitBreathProps> = ({ onComplete }) => {
   const getPhaseText = () => {
     switch (phase) {
       case 'inhale':
-        return 'Breathe in';
+        return t('sos.exitBreath.breatheIn');
       case 'hold':
-        return 'Hold';
+        return t('sos.exitBreath.hold');
       case 'exhale':
-        return 'Breathe out';
+        return t('sos.exitBreath.breatheOut');
     }
   };
 
@@ -133,7 +135,7 @@ export const ExitBreath: FC<ExitBreathProps> = ({ onComplete }) => {
       </div>
 
       <p className="mt-4 text-center text-sm text-mist-white/50">
-        Cycle {cycleCount + 1} of {TOTAL_CYCLES}
+        {t('sos.exitBreath.cycleProgress', { current: cycleCount + 1, total: TOTAL_CYCLES })}
       </p>
     </div>
   );

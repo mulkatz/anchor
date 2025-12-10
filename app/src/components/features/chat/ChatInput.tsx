@@ -1,5 +1,6 @@
 import { type FC, useState, useRef, useEffect } from 'react';
 import { Send, Mic } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { cn } from '../../../utils/cn';
 import { useHaptics } from '../../../hooks/useHaptics';
 import { useNavbarHeight } from '../../../hooks/useNavbarHeight';
@@ -17,6 +18,7 @@ interface ChatInputProps {
  * Supports both text and voice input with click-to-record toggle
  */
 export const ChatInput: FC<ChatInputProps> = ({ onSend, onSendVoice, disabled }) => {
+  const { t } = useTranslation();
   const [text, setText] = useState('');
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const micButtonRef = useRef<HTMLButtonElement>(null);
@@ -105,7 +107,7 @@ export const ChatInput: FC<ChatInputProps> = ({ onSend, onSendVoice, disabled })
           value={text}
           onChange={(e) => setText(e.target.value)}
           onKeyPress={handleKeyPress}
-          placeholder="What's on your mind?"
+          placeholder={t('chat.inputPlaceholder')}
           disabled={disabled}
           className={cn(
             'flex-1 bg-transparent text-mist-white',
@@ -134,9 +136,7 @@ export const ChatInput: FC<ChatInputProps> = ({ onSend, onSendVoice, disabled })
                 'shadow-glow-md hover:shadow-glow-lg active:scale-95',
               voiceRecorder.isRecording && 'scale-110 animate-pulse bg-danger shadow-glow-lg'
             )}
-            title={
-              voiceRecorder.isRecording ? 'Click to stop and send' : 'Click to start recording'
-            }
+            title={voiceRecorder.isRecording ? t('chat.stopRecording') : t('chat.startRecording')}
           >
             {voiceRecorder.isRecording ? (
               <div className="h-3 w-3 rounded-full bg-void-blue" />

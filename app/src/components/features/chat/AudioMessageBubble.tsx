@@ -1,6 +1,7 @@
 import { type FC } from 'react';
 import { AudioWaveform, AlertCircle, RefreshCw } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { cn } from '../../../utils/cn';
 import type { Message } from '../../../models';
 
@@ -14,6 +15,7 @@ interface AudioMessageBubbleProps {
  * Displays voice messages in three states: transcribing, completed, failed
  */
 export const AudioMessageBubble: FC<AudioMessageBubbleProps> = ({ message, onRetry }) => {
+  const { t } = useTranslation();
   const isTranscribing = message.transcriptionStatus === 'pending';
   const isFailed = message.transcriptionStatus === 'failed';
   const isCompleted = message.transcriptionStatus === 'completed';
@@ -56,7 +58,7 @@ export const AudioMessageBubble: FC<AudioMessageBubbleProps> = ({ message, onRet
 
             {/* Transcribing text */}
             <div className="flex-1">
-              <div className="text-sm font-medium">Transcribing your message...</div>
+              <div className="text-sm font-medium">{t('audio.transcribing')}</div>
               <div className="mt-1 text-xs opacity-70">{formattedDuration}</div>
             </div>
 
@@ -86,11 +88,9 @@ export const AudioMessageBubble: FC<AudioMessageBubbleProps> = ({ message, onRet
           <div>
             <div className="mb-2 flex items-center gap-2">
               <AlertCircle size={20} className="flex-shrink-0 text-danger" />
-              <div className="text-sm font-medium">Transcription failed</div>
+              <div className="text-sm font-medium">{t('audio.transcriptionFailed')}</div>
             </div>
-            <div className="mb-3 text-xs opacity-70">
-              Unable to transcribe audio. Please try typing your message instead.
-            </div>
+            <div className="mb-3 text-xs opacity-70">{t('audio.transcriptionFailedDesc')}</div>
             {onRetry && (
               <button
                 onClick={onRetry}
@@ -103,7 +103,7 @@ export const AudioMessageBubble: FC<AudioMessageBubbleProps> = ({ message, onRet
                 )}
               >
                 <RefreshCw size={14} />
-                <span>Retry</span>
+                <span>{t('audio.retry')}</span>
               </button>
             )}
           </div>
@@ -122,9 +122,7 @@ export const AudioMessageBubble: FC<AudioMessageBubbleProps> = ({ message, onRet
               >
                 <div className="flex items-center gap-2 text-xs">
                   <AlertCircle size={14} className="flex-shrink-0 text-void-blue/70" />
-                  <span className="text-void-blue/80">
-                    Audio was unclear. Transcription may not be accurate.
-                  </span>
+                  <span className="text-void-blue/80">{t('audio.lowConfidenceWarning')}</span>
                 </div>
               </motion.div>
             )}
@@ -146,9 +144,13 @@ export const AudioMessageBubble: FC<AudioMessageBubbleProps> = ({ message, onRet
               {message.metadata?.transcriptionConfidence !== undefined && (
                 <span
                   className="ml-auto text-xs opacity-50"
-                  title={`Confidence: ${(message.metadata.transcriptionConfidence * 100).toFixed(0)}%`}
+                  title={t('audio.confidenceLabel', {
+                    percent: (message.metadata.transcriptionConfidence * 100).toFixed(0),
+                  })}
                 >
-                  {(message.metadata.transcriptionConfidence * 100).toFixed(0)}% confident
+                  {t('audio.confidenceLabel', {
+                    percent: (message.metadata.transcriptionConfidence * 100).toFixed(0),
+                  })}
                 </span>
               )}
             </div>

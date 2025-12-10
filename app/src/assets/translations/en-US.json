@@ -1,5 +1,17 @@
 {
   "translation": {
+    "home": {
+      "title": "Anxiety Buddy",
+      "subtitle": "I'm here when you need me.",
+      "startSOS": "Start SOS Session",
+      "viewPastSessions": "View Past Sessions"
+    },
+    "vault": {
+      "title": "Vault",
+      "subtitle": "Saved sessions and journal entries",
+      "emptyTitle": "No sessions yet",
+      "emptyDescription": "Complete an SOS session to see it here"
+    },
     "profile": {
       "title": "Profile",
       "subtitle": "Settings & preferences"
@@ -46,13 +58,75 @@
       "termsOfService": "Terms of Service",
       "termsOfServiceDesc": "Terms and conditions of use"
     },
+    "sos": {
+      "breach": {
+        "instruction": "Hold to begin",
+        "buttonText": "Press & Hold",
+        "duration": "(2 seconds)",
+        "note": "This will guide you through a 7-step grounding exercise"
+      },
+      "acknowledge": {
+        "title": "I've got you.",
+        "subtitle": "You're safe. Let's take this together."
+      },
+      "groundingSight": {
+        "instruction": "Tap 5 things you can see"
+      },
+      "groundingTouch": {
+        "instruction": "Move slowly",
+        "description": "Feel the texture under your finger"
+      },
+      "groundingSound": {
+        "instruction": "Just listen",
+        "note": "Close your eyes if you feel safe"
+      },
+      "exitBreath": {
+        "title": "Breathe with the circle",
+        "breatheIn": "Breathe in",
+        "hold": "Hold",
+        "breatheOut": "Breathe out",
+        "cycleProgress": "Cycle {{current}} of {{total}}"
+      },
+      "completion": {
+        "title": "You did it",
+        "subtitle": "You're safe. You're here.",
+        "sessionTime": "Session time",
+        "returnHome": "Return Home",
+        "saveSession": "Save Session",
+        "feelingPrompt": "How do you feel now?"
+      }
+    },
     "crisis": {
       "title": "Crisis Resources",
       "description": "If you're in immediate danger, please reach out to professionals.",
       "hotline988": "988 Crisis Hotline",
       "hotline988Desc": "24/7 Mental Health Support",
       "emergency911": "911 Emergency",
-      "emergency911Desc": "For Immediate Danger"
+      "emergency911Desc": "For Immediate Danger",
+      "card": {
+        "comingSoon": "Emergency contact feature coming soon. Please call 988 or text 741741 for immediate help.",
+        "concernedTitle": "I'm deeply concerned about what you're sharing.",
+        "concernedMessage": "You deserve immediate support from a trained professional.",
+        "call988": "Call 988 Lifeline",
+        "available247": "Available 24/7",
+        "text741741": "Text HOME to 741741",
+        "crisisTextLine": "Crisis Text Line",
+        "emergencyContact": "Call Emergency Contact",
+        "trustedPerson": "Your trusted person",
+        "footer": "You matter. Please reach out now."
+      },
+      "primaryHotline": {
+        "name": "988 Crisis Hotline",
+        "number": "988",
+        "description": "24/7 Mental Health Support",
+        "telLink": "tel:988"
+      },
+      "emergency": {
+        "name": "911 Emergency",
+        "number": "911",
+        "description": "For Immediate Danger",
+        "telLink": "tel:911"
+      }
     },
     "feedback": {
       "title": "Send Feedback",
@@ -95,6 +169,7 @@
     },
     "toasts": {
       "settingsChanged": "Settings updated",
+      "languageChanged": "Language changed",
       "hapticsEnabled": "Haptics enabled",
       "hapticsDisabled": "Haptics disabled",
       "analyticsEnabled": "Analytics enabled",
@@ -111,13 +186,127 @@
       "ratingMobileOnly": "Rating is only available on mobile apps",
       "crisisNumberCopied": "Crisis hotline number copied",
       "ratingFallback": "Didn't see the rating dialog?",
-      "rateOnStore": "Rate on Store"
+      "rateOnStore": "Rate on Store",
+      "notSignedIn": "Not signed in",
+      "tutorialReset": "Tutorial will show on next launch",
+      "accountDeleteReauth": "Please sign in again to delete your account"
     },
     "general": {
       "version": "Version {{version}}",
       "yes": "Yes",
       "no": "No",
-      "ok": "OK"
+      "ok": "OK",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "confirm": "Confirm"
+    },
+    "languages": {
+      "en-US": "English",
+      "de-DE": "Deutsch"
+    },
+    "chat": {
+      "title": "Deep Talk",
+      "subtitle": "with Anchor",
+      "newButton": "New",
+      "placeholder": "Type a message...",
+      "thinking": "Anchor is thinking...",
+      "errorConnection": "Unable to connect to chat. Please check your connection.",
+      "errorNoConversation": "No active conversation",
+      "errorSendFailed": "Failed to send message. Please try again.",
+      "errorTimeout": "Response taking longer than expected. Please try again or reach out to a crisis line.",
+      "emptyGreeting": "Hi, I'm Anchor",
+      "emptyPrompt": "What's on your mind?",
+      "inputPlaceholder": "What's on your mind?",
+      "stopRecording": "Click to stop and send",
+      "startRecording": "Click to start recording"
+    },
+    "audio": {
+      "transcribing": "Transcribing your message...",
+      "transcriptionFailed": "Transcription failed",
+      "transcriptionFailedDesc": "Unable to transcribe audio. Please try typing your message instead.",
+      "retry": "Retry",
+      "lowConfidenceWarning": "Audio was unclear. Transcription may not be accurate.",
+      "confidenceLabel": "{{percent}}% confident",
+      "waveformLabel": "Voice message"
+    },
+    "time": {
+      "justNow": "just now",
+      "minutesAgo_one": "{{count}} min ago",
+      "minutesAgo_other": "{{count}} mins ago",
+      "hoursAgo_one": "{{count}} hour ago",
+      "hoursAgo_other": "{{count}} hours ago",
+      "daysAgo_one": "{{count}} day ago",
+      "daysAgo_other": "{{count}} days ago",
+      "monthsAgo_one": "{{count}} month ago",
+      "monthsAgo_other": "{{count}} months ago",
+      "yearsAgo_one": "{{count}} year ago",
+      "yearsAgo_other": "{{count}} years ago"
+    },
+    "navigation": {
+      "sos": "SOS",
+      "chat": "Chat",
+      "vault": "Vault",
+      "profile": "Profile"
+    },
+    "archive": {
+      "title": "Archive",
+      "savedConversations_zero": "No saved conversations",
+      "savedConversations_one": "{{count}} saved conversation",
+      "savedConversations_other": "{{count}} saved conversations",
+      "emptyTitle": "No archived conversations",
+      "emptyDescription": "When you start a new conversation, your current chat will be automatically archived here.",
+      "deleteTitle": "Delete Conversation?",
+      "deleteMessage": "This will permanently delete all messages in this conversation. This action cannot be undone.",
+      "deleteButton": "Delete",
+      "resumeButton": "Resume",
+      "noPreview": "No preview available",
+      "messageCount_one": "{{count}} message",
+      "messageCount_other": "{{count}} messages",
+      "resumeConversation": "Resume Conversation"
+    },
+    "recording": {
+      "title": "Recording voice message",
+      "slideToCancel": "Slide left to cancel",
+      "maxLengthReached": "Maximum length reached",
+      "timeRemaining": "{{seconds}}s remaining",
+      "cancel": "Cancel"
+    },
+    "conversation": {
+      "creating": "Creating conversation...",
+      "errorCreate": "Failed to create conversation. Please try again."
+    },
+    "errors": {
+      "chat": {
+        "connection": "Unable to connect to chat. Please check your connection.",
+        "noConversation": "No active conversation",
+        "sendFailed": "Failed to send message. Please try again.",
+        "timeout": "Response taking longer than expected. Please try again or reach out to a crisis line.",
+        "voiceNotAuthenticated": "Not authenticated",
+        "voiceNoConversation": "No active conversation",
+        "voiceSendFailed": "Failed to send voice message. Please try again."
+      },
+      "voice": {
+        "permissionFailed": "Microphone permission request failed",
+        "permissionRequired": "Microphone access is required to record voice messages",
+        "startFailed": "Unable to start recording. Please try again.",
+        "noData": "Recording failed - no audio data received",
+        "saveFailed": "Failed to save recording",
+        "cancelFailed": "Failed to cancel recording",
+        "pauseFailed": "Failed to pause recording",
+        "resumeFailed": "Failed to resume recording"
+      },
+      "archive": {
+        "loadFailed": "Failed to load archived conversations",
+        "deleteFailed": "Failed to delete conversation",
+        "notAuthenticated": "User not authenticated"
+      },
+      "conversation": {
+        "loadFailed": "Failed to load conversation",
+        "createFailed": "Failed to create new conversation",
+        "archiveFailed": "Failed to archive conversation",
+        "unarchiveFailed": "Failed to unarchive conversation",
+        "notAuthenticated": "User not authenticated"
+      }
     }
   }
 }

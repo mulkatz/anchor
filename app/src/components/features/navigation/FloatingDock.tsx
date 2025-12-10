@@ -2,10 +2,12 @@ import { type FC, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { AlertCircle, MessageCircle, Archive, User } from 'lucide-react';
 import { Haptics, ImpactStyle } from '@capacitor/haptics';
+import { useTranslation } from 'react-i18next';
 import { cn } from '../../../utils/cn';
 import { useUI } from '../../../contexts/UIContext';
 
 export const FloatingDock: FC = () => {
+  const { t } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
   const { setNavbarDimensions } = useUI();
@@ -34,10 +36,10 @@ export const FloatingDock: FC = () => {
   };
 
   const navItems = [
-    { path: '/sos', icon: AlertCircle, label: 'SOS' },
-    { path: '/chat', icon: MessageCircle, label: 'Chat' },
-    { path: '/vault', icon: Archive, label: 'Vault' },
-    { path: '/profile', icon: User, label: 'Profile' },
+    { path: '/sos', icon: AlertCircle, label: t('navigation.sos') },
+    { path: '/chat', icon: MessageCircle, label: t('navigation.chat') },
+    { path: '/vault', icon: Archive, label: t('navigation.vault') },
+    { path: '/profile', icon: User, label: t('navigation.profile') },
   ];
 
   return (

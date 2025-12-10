@@ -1,5 +1,6 @@
 import { type FC, useEffect } from 'react';
 import { Heart } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useHaptics } from '../../../hooks/useHaptics';
 
 interface AcknowledgeScreenProps {
@@ -7,6 +8,7 @@ interface AcknowledgeScreenProps {
 }
 
 export const AcknowledgeScreen: FC<AcknowledgeScreenProps> = ({ onComplete }) => {
+  const { t } = useTranslation();
   const { heartbeat } = useHaptics();
 
   useEffect(() => {
@@ -29,11 +31,11 @@ export const AcknowledgeScreen: FC<AcknowledgeScreenProps> = ({ onComplete }) =>
       </div>
 
       {/* Acknowledgement message */}
-      <h1 className="text-center text-4xl font-light text-mist-white">I've got you.</h1>
+      <h1 className="text-center text-4xl font-light text-mist-white">
+        {t('sos.acknowledge.title')}
+      </h1>
 
-      <p className="mt-6 text-center text-lg text-mist-white/60">
-        You're safe. Let's take this together.
-      </p>
+      <p className="mt-6 text-center text-lg text-mist-white/60">{t('sos.acknowledge.subtitle')}</p>
     </div>
   );
 };

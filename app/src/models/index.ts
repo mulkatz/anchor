@@ -62,20 +62,25 @@ export interface Message {
     transcriptionTime?: number; // milliseconds
     audioFormat?: 'aac' | 'webm' | 'm4a' | 'wav';
     lowConfidenceWarning?: boolean;
+    language?: string; // Language code for transcription (e.g., 'en-US', 'de-DE')
   };
 }
 
 // Profile and Settings models
+export type SupportedLanguage = 'en-US' | 'de-DE';
+
 export interface AppSettings {
   hapticsEnabled: boolean;
   analyticsEnabled: boolean;
   soundEffectsEnabled: boolean;
   pinkNoiseVolume: number; // 0-100
+  language: SupportedLanguage; // User's preferred language
 }
 
 export interface UserProfile {
   displayName: string;
   photoURL: string | null; // Cloud Storage URL
+  language: SupportedLanguage; // User's preferred language (for backend)
   createdAt: Date;
   updatedAt: Date;
   settings: AppSettings;

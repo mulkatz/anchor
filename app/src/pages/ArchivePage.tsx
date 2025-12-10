@@ -1,5 +1,6 @@
 import { type FC, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Archive, ArrowLeft } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useArchive } from '../hooks/useArchive';
@@ -11,6 +12,7 @@ import { ConfirmDialog } from '../components/ui/ConfirmDialog';
 import { cn } from '../utils/cn';
 
 export const ArchivePage: FC = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { light, medium } = useHaptics();
   const { archivedConversations, isLoading, deleteConversation } = useArchive();
@@ -68,13 +70,19 @@ export const ArchivePage: FC = () => {
 
           <div className="flex items-center gap-3">
             <Archive size={28} className="text-biolum-cyan" />
-            <h1 className="text-2xl font-light text-mist-white">Archive</h1>
+            <h1 className="text-2xl font-light text-mist-white">{t('archive.title')}</h1>
           </div>
         </div>
 
         <p className="text-sm text-mist-white/60">
-          {archivedConversations.length} saved conversation
-          {archivedConversations.length !== 1 ? 's' : ''}
+          {t(
+            archivedConversations.length === 0
+              ? 'archive.savedConversations_zero'
+              : archivedConversations.length === 1
+                ? 'archive.savedConversations_one'
+                : 'archive.savedConversations_other',
+            { count: archivedConversations.length }
+          )}
         </p>
       </header>
 
@@ -118,10 +126,10 @@ export const ArchivePage: FC = () => {
         open={deleteDialogOpen}
         onClose={() => setDeleteDialogOpen(false)}
         onConfirm={handleDeleteConfirm}
-        title="Delete Conversation?"
-        message="This will permanently delete all messages in this conversation. This action cannot be undone."
-        confirmText="Delete"
-        cancelText="Cancel"
+        title={t('archive.deleteTitle')}
+        message={t('archive.deleteMessage')}
+        confirmText={t('archive.deleteButton')}
+        cancelText={t('general.cancel')}
         destructive
       />
     </div>

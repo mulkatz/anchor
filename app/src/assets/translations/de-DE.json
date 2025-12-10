@@ -1,0 +1,322 @@
+{
+  "translation": {
+    "home": {
+      "title": "Anxiety Buddy",
+      "subtitle": "Ich bin für dich da, wenn du mich brauchst.",
+      "startSOS": "SOS-Sitzung starten",
+      "viewPastSessions": "Vergangene Sitzungen ansehen"
+    },
+    "vault": {
+      "title": "Tresor",
+      "subtitle": "Gespeicherte Sitzungen und Tagebucheinträge",
+      "emptyTitle": "Noch keine Sitzungen",
+      "emptyDescription": "Schließe eine SOS-Sitzung ab, um sie hier zu sehen"
+    },
+    "profile": {
+      "title": "Profil",
+      "subtitle": "Einstellungen & Präferenzen"
+    },
+    "settings": {
+      "appPreferences": "App-Einstellungen",
+      "dataPrivacy": "Daten & Datenschutz",
+      "supportResources": "Unterstützung & Ressourcen",
+      "legalInfo": "Rechtliches & Informationen",
+
+      "language": "Sprache",
+      "languageDesc": "App-Sprache und KI-Antworten",
+      "haptics": "Therapeutisches Haptik",
+      "hapticsDesc": "Erdende Berührungsrückmeldung während Sitzungen",
+      "analytics": "Anonyme Analysen",
+      "analyticsDesc": "Hilf uns, die App zu verbessern (keine persönlichen Daten)",
+      "pinkNoiseVolume": "Rosa-Rauschen Lautstärke",
+      "pinkNoiseVolumeDesc": "Hintergrundgeräusche während Atemübungen",
+      "soundEffects": "Soundeffekte",
+      "soundEffectsDesc": "UI-Interaktionsgeräusche",
+
+      "exportData": "Daten exportieren",
+      "exportDataDesc": "Alle Gespräche und Sitzungen herunterladen",
+      "clearCache": "Cache leeren",
+      "clearCacheDesc": "Speicherplatz freigeben (behält Gespräche)",
+      "deleteAllData": "Alle Daten löschen",
+      "deleteAllDataDesc": "Alle Gespräche und Sitzungen dauerhaft löschen",
+      "deleteAccount": "Konto löschen",
+      "deleteAccountDesc": "Dein Konto und alle Daten dauerhaft löschen",
+
+      "crisisHotline": "Krisenhotline anrufen",
+      "crisisHotlineDesc": "24/7 Telefonseelsorge (0800-1110111)",
+      "resetTutorial": "Anleitung zurücksetzen",
+      "resetTutorialDesc": "Das Onboarding erneut anzeigen",
+      "visitWebsite": "Website besuchen",
+      "visitWebsiteDesc": "Mehr über Anxiety Buddy erfahren",
+      "giveFeedback": "Feedback geben",
+      "giveFeedbackDesc": "Ideen teilen oder Fehler melden",
+      "rateApp": "Anxiety Buddy bewerten",
+      "rateAppDesc": "Gefällt dir die App? Hinterlasse eine Bewertung",
+
+      "disclaimer": "Haftungsausschluss",
+      "disclaimerDesc": "Wichtige Informationen über diese App",
+      "privacyPolicy": "Datenschutzerklärung",
+      "privacyPolicyDesc": "Wie wir mit deinen Daten umgehen",
+      "termsOfService": "Nutzungsbedingungen",
+      "termsOfServiceDesc": "Allgemeine Geschäftsbedingungen"
+    },
+    "sos": {
+      "breach": {
+        "instruction": "Halte, um zu beginnen",
+        "buttonText": "Drücken & Halten",
+        "duration": "(2 Sekunden)",
+        "note": "Dies führt dich durch eine 7-Schritte-Erdungsübung"
+      },
+      "acknowledge": {
+        "title": "Ich bin für dich da.",
+        "subtitle": "Du bist sicher. Lass uns das zusammen durchstehen."
+      },
+      "groundingSight": {
+        "instruction": "Tippe auf 5 Dinge, die du siehst"
+      },
+      "groundingTouch": {
+        "instruction": "Bewege dich langsam",
+        "description": "Spüre die Textur unter deinem Finger"
+      },
+      "groundingSound": {
+        "instruction": "Hör einfach zu",
+        "note": "Schließe die Augen, wenn du dich sicher fühlst"
+      },
+      "exitBreath": {
+        "title": "Atme mit dem Kreis",
+        "breatheIn": "Einatmen",
+        "hold": "Halten",
+        "breatheOut": "Ausatmen",
+        "cycleProgress": "Zyklus {{current}} von {{total}}"
+      },
+      "completion": {
+        "title": "Du hast es geschafft",
+        "subtitle": "Du bist sicher. Du bist hier.",
+        "sessionTime": "Sitzungsdauer",
+        "returnHome": "Zurück zur Startseite",
+        "saveSession": "Sitzung speichern",
+        "feelingPrompt": "Wie fühlst du dich jetzt?"
+      }
+    },
+    "crisis": {
+      "title": "Krisenressourcen",
+      "description": "Wenn du in unmittelbarer Gefahr bist, wende dich bitte an professionelle Hilfe.",
+      "hotline": "Telefonseelsorge",
+      "hotlineDesc": "24/7 kostenlose Beratung",
+      "hotline1": "0800-1110111",
+      "hotline2": "0800-1110222",
+      "emergency": "112 Notruf",
+      "emergencyDesc": "Bei akuter Gefahr",
+      "card": {
+        "comingSoon": "Notfallkontakt-Funktion kommt bald. Bitte rufe 0800-1110111 an oder schreibe eine SMS an 116 123 für sofortige Hilfe.",
+        "concernedTitle": "Was du teilst, macht mir große Sorgen.",
+        "concernedMessage": "Du verdienst sofortige Unterstützung von einer ausgebildeten Fachperson.",
+        "call988": "Telefonseelsorge anrufen",
+        "available247": "24/7 erreichbar",
+        "text741741": "SMS an 116 123",
+        "crisisTextLine": "Krisen-SMS-Dienst",
+        "emergencyContact": "Notfallkontakt anrufen",
+        "trustedPerson": "Deine Vertrauensperson",
+        "footer": "Du bist wichtig. Bitte melde dich jetzt."
+      },
+      "primaryHotline": {
+        "name": "Telefonseelsorge",
+        "number": "0800-1110111",
+        "description": "24/7 kostenlose Beratung",
+        "telLink": "tel:08001110111"
+      },
+      "secondaryHotline": {
+        "name": "Telefonseelsorge (Alternative)",
+        "number": "0800-1110222",
+        "description": "24/7 kostenlose Beratung",
+        "telLink": "tel:08001110222"
+      },
+      "emergency": {
+        "name": "112 Notruf",
+        "number": "112",
+        "description": "Bei akuter Gefahr",
+        "telLink": "tel:112"
+      }
+    },
+    "feedback": {
+      "title": "Feedback senden",
+      "description": "Dein Feedback hilft uns, Anxiety Buddy für alle zu verbessern. Vielen Dank, dass du deine Gedanken teilst!",
+      "idea": "Idee",
+      "bug": "Fehlerbericht",
+      "ideaPlaceholder": "Teile deine Idee...",
+      "bugPlaceholder": "Beschreibe den Fehler...",
+      "submit": "Feedback senden",
+      "sending": "Wird gesendet..."
+    },
+    "disclaimer": {
+      "title": "Wichtiger Haftungsausschluss",
+      "notSubstitute": "Anxiety Buddy ist KEIN Ersatz für professionelle medizinische Beratung, Diagnose oder Behandlung.",
+      "description": "Diese App bietet evidenzbasierte Erdungstechniken und unterstützende Gespräche, kann aber keine qualifizierte psychische Gesundheitsversorgung ersetzen.",
+      "crisisTitle": "Wenn du eine psychische Krise erlebst:",
+      "call988": "Rufe die Telefonseelsorge an: 0800-1110111 oder 0800-1110222",
+      "call911": "Rufe 112 für medizinische Notfälle",
+      "contactTherapist": "Kontaktiere deinen Therapeuten oder Arzt",
+      "goToER": "Gehe zur nächsten Notaufnahme",
+      "acknowledgment": "Durch die Nutzung dieser App bestätigst du, dass sie ein Wellness-Tool ist, keine medizinische Behandlung.",
+      "understand": "Verstanden"
+    },
+    "appLikePrompt": {
+      "title": "Gefällt dir Anxiety Buddy?",
+      "yes": "Ja, ich liebe es!",
+      "no": "Nicht wirklich"
+    },
+    "dialogs": {
+      "confirmClearCache": "Cache leeren?",
+      "confirmClearCacheMessage": "Dies löscht zwischengespeicherte Audiodateien und temporäre Daten. Deine Gespräche bleiben erhalten.",
+      "confirmDeleteAllData": "Alle Daten löschen?",
+      "confirmDeleteAllDataMessage": "Dies löscht dauerhaft alle Gespräche, Nachrichten und Audiodateien. Diese Aktion kann nicht rückgängig gemacht werden.",
+      "confirmDeleteAccount": "Konto löschen?",
+      "confirmDeleteAccountMessage": "Dies löscht dauerhaft dein Konto, alle Gespräche und Einstellungen. Du wirst sofort abgemeldet. Diese Aktion kann nicht rückgängig gemacht werden.",
+      "confirm": "Bestätigen",
+      "cancel": "Abbrechen",
+      "delete": "Löschen",
+      "deleteAccount": "Konto löschen"
+    },
+    "toasts": {
+      "settingsChanged": "Einstellungen aktualisiert",
+      "languageChanged": "Sprache geändert",
+      "hapticsEnabled": "Haptik aktiviert",
+      "hapticsDisabled": "Haptik deaktiviert",
+      "analyticsEnabled": "Analysen aktiviert",
+      "analyticsDisabled": "Analysen deaktiviert",
+      "dataExported": "Daten erfolgreich exportiert",
+      "cacheCleared": "Cache erfolgreich geleert",
+      "dataDeleted": "Alle Daten gelöscht",
+      "accountDeleted": "Konto gelöscht. Auf Wiedersehen.",
+      "feedbackSubmitted": "Feedback gesendet. Vielen Dank!",
+      "feedbackFailed": "Übermittlung fehlgeschlagen. Bitte versuche es erneut.",
+      "exportFailed": "Export fehlgeschlagen. Bitte versuche es erneut.",
+      "clearCacheFailed": "Cache konnte nicht geleert werden",
+      "deleteFailed": "Löschen fehlgeschlagen. Bitte versuche es erneut.",
+      "ratingMobileOnly": "Bewertung ist nur in mobilen Apps verfügbar",
+      "crisisNumberCopied": "Krisenhotline-Nummer kopiert",
+      "ratingFallback": "Bewertungsdialog nicht angezeigt?",
+      "rateOnStore": "Im Store bewerten",
+      "notSignedIn": "Nicht angemeldet",
+      "tutorialReset": "Anleitung wird beim nächsten Start angezeigt",
+      "accountDeleteReauth": "Bitte melde dich erneut an, um dein Konto zu löschen"
+    },
+    "general": {
+      "version": "Version {{version}}",
+      "yes": "Ja",
+      "no": "Nein",
+      "ok": "OK",
+      "cancel": "Abbrechen",
+      "delete": "Löschen",
+      "confirm": "Bestätigen"
+    },
+    "languages": {
+      "en-US": "English",
+      "de-DE": "Deutsch"
+    },
+    "chat": {
+      "title": "Deep Talk",
+      "subtitle": "mit Anchor",
+      "newButton": "Neu",
+      "placeholder": "Nachricht eingeben...",
+      "thinking": "Anchor denkt nach...",
+      "errorConnection": "Verbindung zum Chat nicht möglich. Bitte überprüfe deine Internetverbindung.",
+      "errorNoConversation": "Kein aktives Gespräch",
+      "errorSendFailed": "Nachricht konnte nicht gesendet werden. Bitte versuche es erneut.",
+      "errorTimeout": "Antwort dauert länger als erwartet. Bitte versuche es erneut oder kontaktiere eine Krisenhotline.",
+      "emptyGreeting": "Hi, ich bin Anchor",
+      "emptyPrompt": "Was beschäftigt dich?",
+      "inputPlaceholder": "Was beschäftigt dich?",
+      "stopRecording": "Klicke, um zu stoppen und zu senden",
+      "startRecording": "Klicke, um Aufnahme zu starten"
+    },
+    "audio": {
+      "transcribing": "Transkribiere deine Nachricht...",
+      "transcriptionFailed": "Transkription fehlgeschlagen",
+      "transcriptionFailedDesc": "Audio konnte nicht transkribiert werden. Bitte versuche, deine Nachricht zu tippen.",
+      "retry": "Erneut versuchen",
+      "lowConfidenceWarning": "Audio war unklar. Transkription ist möglicherweise nicht genau.",
+      "confidenceLabel": "{{percent}}% sicher",
+      "waveformLabel": "Sprachnachricht"
+    },
+    "time": {
+      "justNow": "gerade eben",
+      "minutesAgo_one": "vor {{count}} Minute",
+      "minutesAgo_other": "vor {{count}} Minuten",
+      "hoursAgo_one": "vor {{count}} Stunde",
+      "hoursAgo_other": "vor {{count}} Stunden",
+      "daysAgo_one": "vor {{count}} Tag",
+      "daysAgo_other": "vor {{count}} Tagen",
+      "monthsAgo_one": "vor {{count}} Monat",
+      "monthsAgo_other": "vor {{count}} Monaten",
+      "yearsAgo_one": "vor {{count}} Jahr",
+      "yearsAgo_other": "vor {{count}} Jahren"
+    },
+    "navigation": {
+      "sos": "SOS",
+      "chat": "Chat",
+      "vault": "Tresor",
+      "profile": "Profil"
+    },
+    "archive": {
+      "title": "Archiv",
+      "savedConversations_zero": "Keine gespeicherten Gespräche",
+      "savedConversations_one": "{{count}} gespeichertes Gespräch",
+      "savedConversations_other": "{{count}} gespeicherte Gespräche",
+      "emptyTitle": "Keine archivierten Gespräche",
+      "emptyDescription": "Wenn du ein neues Gespräch startest, wird dein aktueller Chat automatisch hier archiviert.",
+      "deleteTitle": "Gespräch löschen?",
+      "deleteMessage": "Dies löscht dauerhaft alle Nachrichten in diesem Gespräch. Diese Aktion kann nicht rückgängig gemacht werden.",
+      "deleteButton": "Löschen",
+      "resumeButton": "Fortsetzen",
+      "noPreview": "Keine Vorschau verfügbar",
+      "messageCount_one": "{{count}} Nachricht",
+      "messageCount_other": "{{count}} Nachrichten",
+      "resumeConversation": "Gespräch fortsetzen"
+    },
+    "recording": {
+      "title": "Sprachnachricht wird aufgenommen",
+      "slideToCancel": "Nach links wischen zum Abbrechen",
+      "maxLengthReached": "Maximale Länge erreicht",
+      "timeRemaining": "Noch {{seconds}}s",
+      "cancel": "Abbrechen"
+    },
+    "conversation": {
+      "creating": "Gespräch wird erstellt...",
+      "errorCreate": "Gespräch konnte nicht erstellt werden. Bitte versuche es erneut."
+    },
+    "errors": {
+      "chat": {
+        "connection": "Verbindung zum Chat nicht möglich. Bitte überprüfe deine Internetverbindung.",
+        "noConversation": "Kein aktives Gespräch",
+        "sendFailed": "Nachricht konnte nicht gesendet werden. Bitte versuche es erneut.",
+        "timeout": "Antwort dauert länger als erwartet. Bitte versuche es erneut oder kontaktiere eine Krisenhotline.",
+        "voiceNotAuthenticated": "Nicht authentifiziert",
+        "voiceNoConversation": "Kein aktives Gespräch",
+        "voiceSendFailed": "Sprachnachricht konnte nicht gesendet werden. Bitte versuche es erneut."
+      },
+      "voice": {
+        "permissionFailed": "Mikrofon-Berechtigung konnte nicht angefordert werden",
+        "permissionRequired": "Mikrofon-Zugriff ist erforderlich, um Sprachnachrichten aufzunehmen",
+        "startFailed": "Aufnahme konnte nicht gestartet werden. Bitte versuche es erneut.",
+        "noData": "Aufnahme fehlgeschlagen - keine Audiodaten empfangen",
+        "saveFailed": "Aufnahme konnte nicht gespeichert werden",
+        "cancelFailed": "Aufnahme konnte nicht abgebrochen werden",
+        "pauseFailed": "Aufnahme konnte nicht pausiert werden",
+        "resumeFailed": "Aufnahme konnte nicht fortgesetzt werden"
+      },
+      "archive": {
+        "loadFailed": "Archivierte Gespräche konnten nicht geladen werden",
+        "deleteFailed": "Gespräch konnte nicht gelöscht werden",
+        "notAuthenticated": "Benutzer nicht authentifiziert"
+      },
+      "conversation": {
+        "loadFailed": "Gespräch konnte nicht geladen werden",
+        "createFailed": "Neues Gespräch konnte nicht erstellt werden",
+        "archiveFailed": "Gespräch konnte nicht archiviert werden",
+        "unarchiveFailed": "Archivierung des Gesprächs konnte nicht rückgängig gemacht werden",
+        "notAuthenticated": "Benutzer nicht authentifiziert"
+      }
+    }
+  }
+}

@@ -1,6 +1,7 @@
 {
   "name": "web",
   "private": true,
+  "license": "UNLICENSED",
   "version": "0.1.0",
   "type": "module",
   "description": "Optional separate web app (marketing site, admin panel, etc.)",

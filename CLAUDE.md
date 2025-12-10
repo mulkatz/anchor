@@ -1319,6 +1319,294 @@ npx cap open android # Open Android Studio
 
 ---
 
+## 🌍 INTERNATIONALIZATION (i18n) - CRITICAL
+
+### ⚠️ NEVER Hardcode User-Facing Strings
+
+**ABSOLUTE RULE**: ALL user-facing text MUST use i18n translation keys. Hardcoded strings are **STRICTLY FORBIDDEN**.
+
+**Why This Matters:**
+
+- Anxiety Buddy supports multiple languages (currently English and German)
+- Users expect 100% coverage in their language
+- Hardcoded strings break the localized experience
+- Every new feature must work in all supported languages
+
+---
+
+### Current Languages
+
+- **English (en-US)** - Primary language
+- **German (de-DE)** - 100% coverage required, informal 'du' tone
+
+---
+
+### Usage in Components
+
+```typescript
+import { useTranslation } from 'react-i18next';
+
+export const MyComponent: FC = () => {
+  const { t } = useTranslation();
+
+  return (
+    <div>
+      <h1>{t('namespace.key')}</h1>
+      <p>{t('namespace.description')}</p>
+      <button>{t('namespace.buttonLabel')}</button>
+    </div>
+  );
+};
+```
+
+---
+
+### Usage in Hooks & Utilities
+
+**Option 1: Import i18next directly (recommended for non-React contexts)**
+
+```typescript
+import i18next from 'i18next';
+
+export const myUtility = () => {
+  const errorMessage = i18next.t('errors.myError');
+  setError(errorMessage);
+};
+```
+
+**Option 2: Pass t function as parameter**
+
+```typescript
+import type { TFunction } from 'i18next';
+
+export const useMyHook = ({ t }: { t: TFunction }) => {
+  setError(t('errors.myError'));
+};
+```
+
+---
+
+### Translation Files
+
+**Location:**
+
+- `/app/src/assets/translations/en-US.json` - English translations
+- `/app/src/assets/translations/de-DE.json` - German translations
+
+**Namespaces:**
+
+- `home` - Home page content
+- `vault` - Vault/archive page content
+- `sos` - SOS flow (7-step panic de-escalation)
+- `crisis` - Crisis resources and hotlines
+- `chat` - Chat interface and messages
+- `archive` - Conversation archive
+- `audio` - Voice message states
+- `time` - Relative time formatting
+- `navigation` - Navigation labels
+- `errors` - Error messages (chat, voice, archive, conversation)
+- `toasts` - Toast notifications
+- `profile` - Profile/settings page
+- `general` - Shared UI text
+
+---
+
+### Before Committing Code
+
+**MANDATORY CHECKLIST:**
+
+1. **Search for hardcoded strings:**
+
+   ```bash
+   # Search for potential hardcoded user-facing strings
+   grep -r '"[A-Z]' app/src/components --include="*.tsx" | grep -v "import\|export\|const\|type\|interface"
+   grep -r '"[A-Z]' app/src/hooks --include="*.tsx" | grep -v "import\|export\|const\|type"
+   grep -r '"[A-Z]' app/src/pages --include="*.tsx" | grep -v "import\|export\|const\|type"
+   ```
+
+2. **Verify all use `t()` or `i18next.t()`:**
+   - Components must use `const { t } = useTranslation();`
+   - Hooks/utils must import `i18next` directly
+
+3. **Test in both languages:**
+   - Switch to German in Profile → Settings → Language
+   - Check all screens for missing translations, layout breaks, or English fallbacks
+   - Ensure German text doesn't truncate or overflow
+
+4. **Ensure 100% German coverage:**
+   - Every English key must have a German translation
+   - No missing keys in de-DE.json
+   - Use informal 'du' tone (not formal 'Sie')
+
+---
+
+### Special Cases
+
+**Pluralization:**
+
+```typescript
+// Translation keys
+"time.minutesAgo_one": "{{count}} min ago",
+"time.minutesAgo_other": "{{count}} mins ago"
+
+// Usage
+t('time.minutesAgo', { count: 5 }) // "5 mins ago"
+t('time.minutesAgo', { count: 1 }) // "1 min ago"
+```
+
+**Interpolation:**
+
+```typescript
+// Translation key
+"sos.exitBreath.cycleProgress": "Cycle {{current}} of {{total}}"
+
+// Usage
+t('sos.exitBreath.cycleProgress', { current: 2, total: 3 }) // "Cycle 2 of 3"
+```
+
+**Dynamic Language:**
+
+```typescript
+import { useTranslation } from 'react-i18next';
+
+const { i18n } = useTranslation();
+const currentLanguage = i18n.language; // 'en-US' or 'de-DE'
+
+// Change language
+await i18n.changeLanguage('de-DE');
+```
+
+---
+
+### What NOT To Translate
+
+✅ **DO translate:**
+
+- Button labels
+- Page titles and headings
+- Instructions and prompts
+- Error messages
+- Toast notifications
+- Placeholder text
+- Aria labels for accessibility
+- Alt text for images
+
+❌ **DO NOT translate:**
+
+- Variable names
+- Function names
+- CSS classes
+- Firebase collection names
+- API keys
+- Import/export statements
+- Type names
+- Console logs (debugging)
+
+---
+
+### Common Mistakes
+
+**❌ WRONG:**
+
+```typescript
+<button>Start Session</button>
+setError('Failed to load data');
+toast.success('Settings saved');
+```
+
+**✅ CORRECT:**
+
+```typescript
+<button>{t('home.startSession')}</button>
+setError(i18next.t('errors.loadFailed'));
+toast.success(i18next.t('toasts.settingsSaved'));
+```
+
+---
+
+### Crisis Resources Localization
+
+Crisis hotlines are **language-specific** and **critical for user safety**:
+
+**English (en-US):**
+
+- Primary: 988 (Crisis Hotline)
+- Emergency: 911
+
+**German (de-DE):**
+
+- Primary: Telefonseelsorge (0800-1110111)
+- Secondary: Telefonseelsorge (0800-1110222)
+- Emergency: 112
+
+See `/app/src/utils/crisisHotlines.ts` for implementation.
+
+---
+
+### Adding New Languages
+
+To add a new language (e.g., Spanish):
+
+1. Create `/app/src/assets/translations/es-ES.json`
+2. Copy en-US.json structure
+3. Translate all keys (use informal tone for Gen Z)
+4. Add crisis hotlines for that region
+5. Update `SupportedLanguage` type in `/app/src/models/index.ts`
+6. Test all screens in new language
+
+---
+
+### Testing i18n
+
+**Visual Testing:**
+
+```bash
+# 1. Start app
+npm run dev
+
+# 2. Go to Profile → Settings → Language
+# 3. Switch to German
+# 4. Navigate through all pages:
+#    - Home
+#    - SOS Flow (all 7 steps)
+#    - Chat (send message, test voice, check crisis card)
+#    - Vault
+#    - Profile
+
+# 5. Check for:
+#    - Missing translations (English fallback)
+#    - Layout breaks (German text is ~30% longer)
+#    - Proper pluralization
+#    - Crisis hotlines are German-specific
+```
+
+**Regression Testing:**
+
+```bash
+# Verify no hardcoded strings
+npm run test:i18n  # TODO: Create script to grep for hardcoded strings
+```
+
+---
+
+### Performance Considerations
+
+- Translations are loaded synchronously on app start
+- Both en-US.json and de-DE.json are small (~50KB combined)
+- No lazy loading needed
+- Language detection: localStorage → browser → fallback to en-US
+
+---
+
+### Resources
+
+- **i18next Documentation:** https://www.i18next.com/
+- **react-i18next Guide:** https://react.i18next.com/
+- **Pluralization Rules:** https://www.i18next.com/translation-function/plurals
+- **Interpolation:** https://www.i18next.com/translation-function/interpolation
+
+---
+
 ## ⚠️ CRITICAL IMPLEMENTATION NOTES
 
 ### Capacitor Haptics API

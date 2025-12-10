@@ -11,6 +11,7 @@ import {
   Timestamp,
   limit,
 } from 'firebase/firestore';
+import i18next from 'i18next';
 import { firestore, auth } from '../services/firebase.service';
 import type { Conversation } from '../models';
 
@@ -62,7 +63,7 @@ export const useConversation = () => {
       },
       (err) => {
         console.error('Error listening to conversations:', err);
-        setError('Failed to load conversation');
+        setError(i18next.t('errors.conversation.loadFailed'));
         setIsLoading(false);
       }
     );
@@ -73,7 +74,7 @@ export const useConversation = () => {
   // Create new conversation (and auto-archive current via Cloud Function)
   const createNewConversation = useCallback(async (): Promise<string> => {
     if (!userId) {
-      throw new Error('User not authenticated');
+      throw new Error(i18next.t('errors.conversation.notAuthenticated'));
     }
 
     try {
@@ -102,7 +103,7 @@ export const useConversation = () => {
       return newConversation.id;
     } catch (err) {
       console.error('Error creating conversation:', err);
-      throw new Error('Failed to create new conversation');
+      throw new Error(i18next.t('errors.conversation.createFailed'));
     }
   }, [userId, activeConversation]);
 
@@ -110,7 +111,7 @@ export const useConversation = () => {
   const archiveConversation = useCallback(
     async (conversationId: string) => {
       if (!userId) {
-        throw new Error('User not authenticated');
+        throw new Error(i18next.t('errors.conversation.notAuthenticated'));
       }
 
       try {
@@ -122,7 +123,7 @@ export const useConversation = () => {
         });
       } catch (err) {
         console.error('Error archiving conversation:', err);
-        throw new Error('Failed to archive conversation');
+        throw new Error(i18next.t('errors.conversation.archiveFailed'));
       }
     },
     [userId]
@@ -132,7 +133,7 @@ export const useConversation = () => {
   const unarchiveConversation = useCallback(
     async (conversationId: string) => {
       if (!userId) {
-        throw new Error('User not authenticated');
+        throw new Error(i18next.t('errors.conversation.notAuthenticated'));
       }
 
       try {
@@ -146,7 +147,7 @@ export const useConversation = () => {
         // Cloud function will auto-archive other active conversations
       } catch (err) {
         console.error('Error unarchiving conversation:', err);
-        throw new Error('Failed to unarchive conversation');
+        throw new Error(i18next.t('errors.conversation.unarchiveFailed'));
       }
     },
     [userId]

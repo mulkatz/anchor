@@ -1,4 +1,5 @@
 import { type FC } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Mic, ChevronLeft } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { cn } from '../../../utils/cn';
@@ -14,6 +15,7 @@ interface RecordingOverlayProps {
  * Features pulsing microphone icon, waveform, timer, and slide-to-cancel indicator
  */
 export const RecordingOverlay: FC<RecordingOverlayProps> = ({ duration, onCancel }) => {
+  const { t } = useTranslation();
   const minutes = Math.floor(duration / 60);
   const seconds = Math.floor(duration % 60);
   const formattedTime = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
@@ -76,7 +78,7 @@ export const RecordingOverlay: FC<RecordingOverlayProps> = ({ duration, onCancel
         transition={{ delay: 0.2, duration: 0.4 }}
         className="mb-3 text-xl font-light text-mist-white"
       >
-        Recording voice message
+        {t('recording.title')}
       </motion.div>
 
       {/* Timer display */}
@@ -127,7 +129,7 @@ export const RecordingOverlay: FC<RecordingOverlayProps> = ({ duration, onCancel
         className="flex items-center gap-2 text-sm text-mist-white/60"
       >
         <ChevronLeft size={20} className="animate-pulse" />
-        <span>Slide left to cancel</span>
+        <span>{t('recording.slideToCancel')}</span>
       </motion.div>
 
       {/* Max duration warning (appears after 50 seconds) */}
@@ -138,7 +140,9 @@ export const RecordingOverlay: FC<RecordingOverlayProps> = ({ duration, onCancel
           transition={{ duration: 0.3 }}
           className="absolute bottom-24 text-sm text-warm-ember"
         >
-          {duration >= 60 ? 'Maximum length reached' : `${60 - Math.floor(duration)}s remaining`}
+          {duration >= 60
+            ? t('recording.maxLengthReached')
+            : t('recording.timeRemaining', { seconds: 60 - Math.floor(duration) })}
         </motion.div>
       )}
 
@@ -147,7 +151,7 @@ export const RecordingOverlay: FC<RecordingOverlayProps> = ({ duration, onCancel
         onClick={onCancel}
         className="absolute right-8 top-8 text-sm text-mist-white/60 transition-colors hover:text-mist-white"
       >
-        Cancel
+        {t('recording.cancel')}
       </button>
     </motion.div>
   );

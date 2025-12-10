@@ -1,5 +1,6 @@
 import { type FC, useState, useEffect, useRef } from 'react';
 import { AlertCircle } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useHaptics } from '../../../hooks/useHaptics';
 
 interface BreachScreenProps {
@@ -7,6 +8,7 @@ interface BreachScreenProps {
 }
 
 export const BreachScreen: FC<BreachScreenProps> = ({ onComplete }) => {
+  const { t } = useTranslation();
   const { heavy } = useHaptics();
   const [isPressed, setIsPressed] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -68,7 +70,9 @@ export const BreachScreen: FC<BreachScreenProps> = ({ onComplete }) => {
       </div>
 
       {/* Instruction */}
-      <h2 className="mb-6 text-center text-2xl font-light text-mist-white">Hold to begin</h2>
+      <h2 className="mb-6 text-center text-2xl font-light text-mist-white">
+        {t('sos.breach.instruction')}
+      </h2>
 
       {/* Long-press button */}
       <div className="relative">
@@ -80,7 +84,7 @@ export const BreachScreen: FC<BreachScreenProps> = ({ onComplete }) => {
           onTouchEnd={() => setIsPressed(false)}
           className="relative rounded-full bg-biolum-cyan px-12 py-6 text-xl font-medium text-void-blue shadow-glow-lg transition-all duration-300 ease-viscous active:scale-95"
         >
-          <span className="relative z-10">Press & Hold</span>
+          <span className="relative z-10">{t('sos.breach.buttonText')}</span>
 
           {/* Progress indicator */}
           <div
@@ -92,15 +96,13 @@ export const BreachScreen: FC<BreachScreenProps> = ({ onComplete }) => {
         </button>
 
         <p className="mt-4 text-center text-sm text-mist-white/50">
-          {progress > 0 ? `${Math.floor(progress)}%` : '(2 seconds)'}
+          {progress > 0 ? `${Math.floor(progress)}%` : t('sos.breach.duration')}
         </p>
       </div>
 
       {/* Note */}
       <div className="absolute bottom-32 left-6 right-6">
-        <p className="text-center text-sm text-mist-white/40">
-          This will guide you through a 7-step grounding exercise
-        </p>
+        <p className="text-center text-sm text-mist-white/40">{t('sos.breach.note')}</p>
       </div>
     </div>
   );

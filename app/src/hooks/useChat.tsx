@@ -1,9 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
 import { collection, query, orderBy, onSnapshot, addDoc, Timestamp } from 'firebase/firestore';
 import { ref, uploadBytes } from 'firebase/storage';
+import i18next from 'i18next';
 import { firestore, auth, storage } from '../services/firebase.service';
 import { useHaptics } from './useHaptics';
-import type { Message } from '../models';
+import type { Message, SupportedLanguage } from '../models';
 import type { RecordingData } from './useVoiceRecorder';
 
 interface UseChatProps {
@@ -21,6 +22,12 @@ export const useChat = ({ conversationId }: UseChatProps) => {
   const { medium } = useHaptics();
 
   const userId = auth.currentUser?.uid;
+
+  // Get user's language from localStorage
+  const getUserLanguage = (): SupportedLanguage => {
+    const stored = localStorage.getItem('language') as SupportedLanguage | null;
+    return stored || 'en-US';
+  };
 
   // Real-time Firestore listener for messages in specific conversation
   useEffect(() => {
@@ -88,7 +95,7 @@ export const useChat = ({ conversationId }: UseChatProps) => {
       },
       (err) => {
         console.error('Error listening to messages:', err);
-        setError('Unable to connect to chat. Please check your connection.');
+        setError(i18next.t('errors.chat.connection'));
         setIsThinking(false);
       }
     );
@@ -100,12 +107,12 @@ export const useChat = ({ conversationId }: UseChatProps) => {
   const sendMessage = useCallback(
     async (text: string) => {
       if (!userId) {
-        setError('Not authenticated');
+        setError(i18next.t('errors.chat.voiceNotAuthenticated'));
         return;
       }
 
       if (!conversationId) {
-        setError('No active conversation');
+        setError(i18next.t('errors.chat.noConversation'));
         return;
       }
 
@@ -127,15 +134,16 @@ export const useChat = ({ conversationId }: UseChatProps) => {
           text: trimmedText,
           role: 'user',
           createdAt: Timestamp.now(),
+          metadata: {
+            language: getUserLanguage(), // Pass user language to backend
+          },
         });
 
         // Timeout: Show error if no response after 30 seconds
         setTimeout(() => {
           setIsThinking((thinking) => {
             if (thinking) {
-              setError(
-                'Response taking longer than expected. Please try again or reach out to a crisis line.'
-              );
+              setError(i18next.t('errors.chat.timeout'));
               return false;
             }
             return thinking;
@@ -143,7 +151,7 @@ export const useChat = ({ conversationId }: UseChatProps) => {
         }, 30000);
       } catch (err) {
         console.error('Error sending message:', err);
-        setError('Failed to send message. Please try again.');
+        setError(i18next.t('errors.chat.sendFailed'));
         setIsThinking(false);
       }
     },
@@ -154,12 +162,12 @@ export const useChat = ({ conversationId }: UseChatProps) => {
   const sendVoiceMessage = useCallback(
     async (recordingData: RecordingData) => {
       if (!userId) {
-        setError('Not authenticated');
+        setError(i18next.t('errors.chat.voiceNotAuthenticated'));
         return;
       }
 
       if (!conversationId) {
-        setError('No active conversation');
+        setError(i18next.t('errors.chat.voiceNoConversation'));
         return;
       }
 
@@ -196,6 +204,7 @@ export const useChat = ({ conversationId }: UseChatProps) => {
           createdAt: Timestamp.now(),
           metadata: {
             audioFormat: recordingData.mimeType, // Store full mimeType for backend
+            language: getUserLanguage(), // Pass user language for transcription
           },
         });
 
@@ -203,7 +212,7 @@ export const useChat = ({ conversationId }: UseChatProps) => {
         // isThinking will be set to false when transcription completes
       } catch (err) {
         console.error('Error sending voice message:', err);
-        setError('Failed to send voice message. Please try again.');
+        setError(i18next.t('errors.chat.voiceSendFailed'));
         setIsThinking(false);
       }
     },

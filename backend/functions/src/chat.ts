@@ -2,56 +2,7 @@ import * as logger from 'firebase-functions/logger';
 import * as admin from 'firebase-admin';
 import { onDocumentWritten } from 'firebase-functions/v2/firestore';
 import { VertexAI } from '@google-cloud/vertexai';
-
-/**
- * Crisis Detection Keywords
- * Detects explicit self-harm and suicidal ideation
- */
-const CRISIS_KEYWORDS = [
-  /\b(kill myself|suicide|end my life|want to die|better off dead)\b/i,
-  /\b(hurt myself|self harm|cut myself|self-harm)\b/i,
-  /\b(overdose|end it all)\b/i,
-];
-
-/**
- * Crisis Response Message
- * Shown when crisis keywords are detected
- */
-const CRISIS_RESPONSE = {
-  role: 'crisis',
-  isCrisisResponse: true,
-  text: `I'm deeply concerned about what you're sharing. You deserve immediate support from a trained professional.
-
-**Crisis Resources:**
-
-🆘 **988 Suicide & Crisis Lifeline**
-Call or text: 988
-Available 24/7
-
-💬 **Crisis Text Line**
-Text HOME to 741741
-
-🌐 **International Association for Suicide Prevention**
-findahelpline.com
-
-You matter. Please reach out to one of these services now.`,
-};
-
-/**
- * Therapeutic System Prompt for Gemini
- * UPDATED: Optimized for depth, empathy, and thorough CBT/ACT support.
- */
-const SYSTEM_PROMPT = `You are 'Anchor,' a compassionate, calm, and grounded mental health companion for a Gen Z user.
-
-Your Goal: Help the user de-escalate anxiety using CBT (Cognitive Behavioral Therapy) and ACT (Acceptance and Commitment Therapy) techniques.
-
-Guidelines:
-1. Tone: Warm, validating, and low-pressure. Speak like a wise, calm friend, not a clinical robot.
-2. Method: Use Socratic Questioning, but balance it with comforting explanations. Don't just ask questions—validate their feelings first.
-3. Length: **Prioritize depth and clarity.** You are free to provide comprehensive answers, analogies, and step-by-step guidance. Do not rush.
-4. Formatting: Use paragraphs, bullet points, and spacing to make long text easy to read.
-5. Safety: You are NOT a doctor. If the user mentions self-harm, direct them to professional help immediately.
-6. Context: The user is looking for a meaningful conversation. Be present with them.`;
+import { detectCrisisKeywords, getCrisisResponse, getSystemPrompt } from './languageConfig';
 
 /**
  * Cloud Function: onMessageCreate
@@ -100,18 +51,30 @@ export const onMessageCreate = onDocumentWritten(
     logger.info('Processing user message', { userId, conversationId, messageId: snap.id });
 
     try {
-      // 4. Crisis Detection: Check for self-harm keywords BEFORE AI call
-      const hasCrisisKeyword = CRISIS_KEYWORDS.some((regex) => regex.test(message.text));
+      // 4. Get user's language from message metadata (fallback to en-US)
+      const languageCode = message.metadata?.language || 'en-US';
+      logger.info('Using language for AI response', { languageCode });
+
+      // 5. Crisis Detection: Check for self-harm keywords BEFORE AI call
+      const hasCrisisKeyword = detectCrisisKeywords(message.text, languageCode);
 
       if (hasCrisisKeyword) {
-        logger.warn('Crisis keyword detected', { userId, conversationId, text: message.text });
+        logger.warn('Crisis keyword detected', {
+          userId,
+          conversationId,
+          languageCode,
+          text: message.text,
+        });
+
+        // Get language-specific crisis response
+        const crisisResponse = getCrisisResponse(languageCode);
 
         // Write crisis response immediately and exit
         await admin
           .firestore()
           .collection(`users/${userId}/conversations/${conversationId}/messages`)
           .add({
-            ...CRISIS_RESPONSE,
+            ...crisisResponse,
             userId,
             conversationId,
             createdAt: admin.firestore.FieldValue.serverTimestamp(),
@@ -130,7 +93,7 @@ export const onMessageCreate = onDocumentWritten(
         return;
       }
 
-      // 5. Fetch Context: Get last 10 messages for conversation history
+      // 6. Fetch Context: Get last 10 messages for conversation history
       const messagesSnapshot = await admin
         .firestore()
         .collection(`users/${userId}/conversations/${conversationId}/messages`)
@@ -152,13 +115,17 @@ export const onMessageCreate = onDocumentWritten(
         historyLength: conversationHistory.length,
       });
 
-      // 6. Build Gemini Conversation Format
+      // 7. Build Gemini Conversation Format
       const contents = conversationHistory.map((msg) => ({
         role: msg.role === 'user' ? 'user' : 'model',
         parts: [{ text: msg.text }],
       }));
 
-      // 7. Call Vertex AI (Gemini 2.5 Flash)
+      // 8. Get language-specific system prompt
+      const systemPrompt = getSystemPrompt(languageCode);
+      logger.info('Using system prompt for language', { languageCode });
+
+      // 9. Call Vertex AI (Gemini 2.5 Flash)
       const vertexAI = new VertexAI({
         project: process.env.GCLOUD_PROJECT,
         location: 'us-central1',
@@ -166,7 +133,7 @@ export const onMessageCreate = onDocumentWritten(
 
       const model = vertexAI.getGenerativeModel({
         model: 'gemini-2.5-flash',
-        systemInstruction: SYSTEM_PROMPT,
+        systemInstruction: systemPrompt, // Use dynamic language-specific prompt
       });
 
       const startTime = Date.now();
@@ -204,7 +171,7 @@ export const onMessageCreate = onDocumentWritten(
         actualText: responseText,
       });
 
-      // 8. Write Assistant Response to Firestore
+      // 10. Write Assistant Response to Firestore
       await admin
         .firestore()
         .collection(`users/${userId}/conversations/${conversationId}/messages`)
@@ -220,7 +187,7 @@ export const onMessageCreate = onDocumentWritten(
           },
         });
 
-      // 9. Update Conversation Metadata
+      // 11. Update Conversation Metadata
       await admin
         .firestore()
         .doc(`users/${userId}/conversations/${conversationId}`)

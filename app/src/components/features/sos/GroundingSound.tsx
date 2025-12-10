@@ -1,5 +1,6 @@
 import { type FC, useEffect, useState, useRef } from 'react';
 import { Volume2 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { usePinkNoise } from '../../../hooks/usePinkNoise';
 import { WaveVisualizer } from '../../ui/WaveVisualizer';
 
@@ -8,6 +9,7 @@ interface GroundingSoundProps {
 }
 
 export const GroundingSound: FC<GroundingSoundProps> = ({ onComplete }) => {
+  const { t } = useTranslation();
   const { isPlaying, start, stop, analyser } = usePinkNoise();
   const [timeLeft, setTimeLeft] = useState(20);
   const onCompleteRef = useRef(onComplete);
@@ -64,10 +66,10 @@ export const GroundingSound: FC<GroundingSoundProps> = ({ onComplete }) => {
       />
 
       {/* Instruction */}
-      <h2 className="mb-4 text-center text-2xl font-light text-mist-white">Just listen</h2>
-      <p className="mb-8 text-center text-sm text-mist-white/40">
-        Close your eyes if you feel safe
-      </p>
+      <h2 className="mb-4 text-center text-2xl font-light text-mist-white">
+        {t('sos.groundingSound.instruction')}
+      </h2>
+      <p className="mb-8 text-center text-sm text-mist-white/40">{t('sos.groundingSound.note')}</p>
 
       {/* Timer */}
       <div className="flex flex-col items-center">
