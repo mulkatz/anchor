@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 import type { DailyLog, WeatherType } from '../../../models';
 import { useHaptics } from '../../../hooks/useHaptics';
+import { MarineSnow } from './MarineSnow';
 
 interface ProgressReefProps {
   logs: DailyLog[];
@@ -108,6 +109,9 @@ export const ProgressReef: FC<ProgressReefProps> = ({ logs, onOrbClick, classNam
 
       {/* Reef Container - floating in void, no grey box */}
       <div className="relative h-80 w-full overflow-visible">
+        {/* Marine snow ambient particles (background layer) */}
+        <MarineSnow />
+
         {/* Center anchor point (visual reference) */}
         <div className="absolute left-1/2 top-1/2 h-1 w-1 -translate-x-1/2 -translate-y-1/2 rounded-full bg-biolum-cyan/10" />
 

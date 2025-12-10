@@ -13,3 +13,4 @@ export { LogStream } from './LogStream';
 export { LogDetailDialog } from './LogDetailDialog';
 export { ProgressReef } from './ProgressReef';
 export { ReleaseAnimation } from './ReleaseAnimation';
+export { MarineSnow } from './MarineSnow';

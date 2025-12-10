@@ -64,8 +64,8 @@ export const JournalInput: FC<JournalInputProps> = ({
           disabled={disabled}
           rows={8}
           className={cn(
-            'w-full rounded-2xl border border-white/20 bg-transparent px-4 py-3 text-mist-white placeholder-mist-white/40 backdrop-blur-glass transition-colors',
-            'focus:border-biolum-cyan focus:outline-none focus:ring-2 focus:ring-biolum-cyan/30',
+            'w-full bg-transparent px-4 py-3 text-mist-white transition-colors placeholder:italic placeholder:text-white/30',
+            'border-0 focus:outline-none',
             'disabled:cursor-not-allowed disabled:opacity-50',
             'resize-none'
           )}

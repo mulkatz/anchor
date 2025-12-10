@@ -42,6 +42,7 @@ export const LogDetailDialog: FC<LogDetailDialogProps> = ({ log, onClose }) => {
   const { deleteLog } = useDailyLogs();
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isResurfaced, setIsResurfaced] = useState(false);
 
   const Icon = weatherIcons[log.weather];
   const iconColor = weatherColors[log.weather];
@@ -49,6 +50,16 @@ export const LogDetailDialog: FC<LogDetailDialogProps> = ({ log, onClose }) => {
   const handleClose = () => {
     light();
     onClose();
+  };
+
+  const handleResurface = () => {
+    light();
+    setIsResurfaced(true);
+
+    // Auto-blur after 5 seconds
+    setTimeout(() => {
+      setIsResurfaced(false);
+    }, 5000);
   };
 
   const handleDeleteClick = () => {
@@ -144,21 +155,32 @@ export const LogDetailDialog: FC<LogDetailDialogProps> = ({ log, onClose }) => {
               <h3 className="mb-2 text-sm font-medium text-mist-white/70">
                 {t('tideLog.journal.title')}
               </h3>
-              {log.is_released ? (
-                <div className="relative rounded-xl border border-glass-border bg-glass-bg p-4">
+              {log.is_released && !isResurfaced ? (
+                <button
+                  onClick={handleResurface}
+                  className="group relative w-full rounded-xl border border-glass-border bg-glass-bg p-4 text-left transition-all hover:border-warm-ember/40"
+                >
                   <p className="select-none text-mist-white/70 blur-sm">
                     {log.note_text || t('tideLog.stream.noNote')}
                   </p>
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <span className="rounded-full bg-void-blue px-4 py-2 text-sm font-medium text-warm-ember shadow-glass">
+                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
+                    <span className="rounded-full bg-void-blue px-4 py-2 text-sm font-medium text-warm-ember shadow-glass transition-all group-hover:shadow-glow-md">
                       {t('tideLog.stream.dissolved')}
                     </span>
+                    <span className="text-xs text-mist-white/50">{t('tideLog.resurface')}</span>
                   </div>
-                </div>
+                </button>
               ) : (
-                <p className="whitespace-pre-wrap rounded-xl border border-glass-border bg-glass-bg p-4 text-mist-white/70">
-                  {log.note_text || t('tideLog.stream.noNote')}
-                </p>
+                <div className="rounded-xl border border-glass-border bg-glass-bg p-4">
+                  <p className="whitespace-pre-wrap text-mist-white/70">
+                    {log.note_text || t('tideLog.stream.noNote')}
+                  </p>
+                  {log.is_released && isResurfaced && (
+                    <p className="mt-2 text-xs italic text-warm-ember/60">
+                      {t('tideLog.resurfacing')}
+                    </p>
+                  )}
+                </div>
               )}
             </div>
 

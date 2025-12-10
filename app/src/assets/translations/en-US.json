@@ -303,7 +303,7 @@
       },
       "journal": {
         "title": "One thing to release...",
-        "placeholder": "What's on your mind?",
+        "placeholder": "Let it flow...",
         "keep": "Keep",
         "release": "Release",
         "charLimit": "{{count}}/1000 characters",
@@ -327,6 +327,8 @@
         "noEntries": "No check-ins yet",
         "noNote": "No note"
       },
+      "resurface": "Tap to Resurface",
+      "resurfacing": "Resurfacing... (will blur in 5s)",
       "deleteTitle": "Delete Entry?",
       "deleteMessage": "This will permanently delete this journal entry. This action cannot be undone.",
       "steps": {

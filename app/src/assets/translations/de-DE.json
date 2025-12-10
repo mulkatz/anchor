@@ -313,7 +313,7 @@
       },
       "journal": {
         "title": "Eine Sache loszulassen...",
-        "placeholder": "Was beschäftigt dich?",
+        "placeholder": "Lass es fließen...",
         "keep": "Behalten",
         "release": "Loslassen",
         "charLimit": "{{count}}/1000 Zeichen",
@@ -337,6 +337,8 @@
         "noEntries": "Noch keine Check-Ins",
         "noNote": "Keine Notiz"
       },
+      "resurface": "Tippen zum Auftauchen",
+      "resurfacing": "Taucht auf... (wird in 5s verschwommen)",
       "deleteTitle": "Eintrag löschen?",
       "deleteMessage": "Dies löscht diesen Tagebucheintrag dauerhaft. Diese Aktion kann nicht rückgängig gemacht werden.",
       "steps": {

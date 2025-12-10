@@ -167,7 +167,7 @@ export const DepthSlider: FC<DepthSliderProps> = ({ value, onChange, className }
       {/* Track */}
       <div
         ref={trackRef}
-        className="relative w-24 cursor-pointer rounded-full"
+        className="relative w-12 cursor-pointer rounded-full"
         style={{ height: `${TRACK_HEIGHT}px` }}
         onMouseDown={handleMouseDown}
         onTouchStart={handleTouchStart}

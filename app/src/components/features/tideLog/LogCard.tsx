@@ -55,8 +55,8 @@ export const LogCard: FC<LogCardProps> = ({ log, onClick, index = 0 }) => {
       transition={{ duration: 0.4, delay: index * 0.05, ease: [0.22, 1, 0.36, 1] as const }}
       whileTap={{ scale: 0.98 }}
       className={cn(
-        'bg-white/8 w-full rounded-3xl border border-white/10 p-5 text-left backdrop-blur-glass transition-all duration-300',
-        'hover:border-biolum-cyan/40 hover:bg-white/10 hover:shadow-[0_0_20px_rgba(100,255,218,0.1)]'
+        'w-full rounded-3xl border border-white/10 bg-black/20 p-5 text-left backdrop-blur-md transition-all duration-300',
+        'hover:border-biolum-cyan/40 hover:bg-black/30 hover:shadow-[0_0_20px_rgba(100,255,218,0.1)]'
       )}
     >
       <div className="flex items-start gap-4">
