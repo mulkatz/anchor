@@ -1,7 +1,6 @@
 import { type FC } from 'react';
 import { Clock, Plus, Edit2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { motion, AnimatePresence } from 'framer-motion';
 
 import {
   CheckInModal,
@@ -49,16 +48,13 @@ export const VaultPage: FC = () => {
         style={{ paddingBottom: `${Math.max(navbarBottom + 32, 96)}px` }}
       >
         {/* Check-In CTA Button - prominent placement */}
-        <motion.button
+        <button
           onClick={openCheckIn}
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
           className="active:scale-98 mb-10 flex w-full items-center justify-center gap-3 rounded-2xl border border-biolum-cyan/30 bg-biolum-cyan/10 px-6 py-4 text-lg font-medium text-biolum-cyan shadow-glow-sm transition-all duration-300 ease-viscous"
         >
           {todayLog ? <Edit2 size={22} /> : <Plus size={22} />}
           <span>{todayLog ? t('tideLog.updateCheckIn') : t('tideLog.checkIn')}</span>
-        </motion.button>
+        </button>
 
         {/* Empty State or Content */}
         {loading ? (

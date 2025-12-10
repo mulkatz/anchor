@@ -256,7 +256,7 @@ export const ProfilePage: FC = () => {
 
       {/* Scrollable Content */}
       <div
-        className="flex-1 overflow-y-auto px-4 sm:px-6"
+        className="flex-1 overflow-y-auto px-4 pt-6 sm:px-6"
         style={{ paddingBottom: `${navbarBottom + 32}px` }}
       >
         {/* App Preferences */}
