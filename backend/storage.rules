@@ -27,6 +27,26 @@ service firebase.storage {
                   && request.auth.uid == userId;
     }
 
+    // Profile photos: User-scoped access for profile pictures
+    match /profile-photos/{userId}/{fileName} {
+
+      // Allow write (upload) only if:
+      // 1. User is authenticated
+      // 2. User is uploading to their own folder (userId matches auth.uid)
+      // 3. File size is under 2MB
+      // 4. Content type is image (jpeg, png, webp)
+      allow write: if request.auth != null
+                   && request.auth.uid == userId
+                   && request.resource.size < 2 * 1024 * 1024
+                   && request.resource.contentType.matches('image/.*');
+
+      // Allow read only if:
+      // 1. User is authenticated
+      // 2. User is reading from their own folder (userId matches auth.uid)
+      allow read: if request.auth != null
+                  && request.auth.uid == userId;
+    }
+
     // Deny all other access to any files not explicitly allowed above
     match /{allPaths=**} {
       allow read, write: if false;

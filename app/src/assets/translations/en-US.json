@@ -1,0 +1,123 @@
+{
+  "translation": {
+    "profile": {
+      "title": "Profile",
+      "subtitle": "Settings & preferences"
+    },
+    "settings": {
+      "appPreferences": "App Preferences",
+      "dataPrivacy": "Data & Privacy",
+      "supportResources": "Support & Resources",
+      "legalInfo": "Legal & Information",
+
+      "haptics": "Therapeutic Haptics",
+      "hapticsDesc": "Grounding touch feedback during sessions",
+      "analytics": "Anonymous Analytics",
+      "analyticsDesc": "Help improve the app (no personal data)",
+      "pinkNoiseVolume": "Pink Noise Volume",
+      "pinkNoiseVolumeDesc": "Background sound during breathing exercises",
+      "soundEffects": "Sound Effects",
+      "soundEffectsDesc": "UI interaction sounds",
+
+      "exportData": "Export My Data",
+      "exportDataDesc": "Download all conversations and sessions",
+      "clearCache": "Clear Cache",
+      "clearCacheDesc": "Free up space (keeps conversations)",
+      "deleteAllData": "Delete All Data",
+      "deleteAllDataDesc": "Permanently delete all conversations and sessions",
+      "deleteAccount": "Delete Account",
+      "deleteAccountDesc": "Permanently delete your account and all data",
+
+      "crisisHotline": "Call Crisis Hotline",
+      "crisisHotlineDesc": "24/7 Mental Health Support (988)",
+      "resetTutorial": "Reset Tutorial",
+      "resetTutorialDesc": "Show the onboarding guide again",
+      "visitWebsite": "Visit Website",
+      "visitWebsiteDesc": "Learn more about Anxiety Buddy",
+      "giveFeedback": "Give Feedback",
+      "giveFeedbackDesc": "Share ideas or report bugs",
+      "rateApp": "Rate Anxiety Buddy",
+      "rateAppDesc": "Love the app? Leave a review",
+
+      "disclaimer": "Disclaimer",
+      "disclaimerDesc": "Important information about this app",
+      "privacyPolicy": "Privacy Policy",
+      "privacyPolicyDesc": "How we handle your data",
+      "termsOfService": "Terms of Service",
+      "termsOfServiceDesc": "Terms and conditions of use"
+    },
+    "crisis": {
+      "title": "Crisis Resources",
+      "description": "If you're in immediate danger, please reach out to professionals.",
+      "hotline988": "988 Crisis Hotline",
+      "hotline988Desc": "24/7 Mental Health Support",
+      "emergency911": "911 Emergency",
+      "emergency911Desc": "For Immediate Danger"
+    },
+    "feedback": {
+      "title": "Send Feedback",
+      "description": "Your feedback helps us improve Anxiety Buddy for everyone. Thank you for sharing your thoughts!",
+      "idea": "Idea",
+      "bug": "Bug Report",
+      "ideaPlaceholder": "Share your idea...",
+      "bugPlaceholder": "Describe the bug...",
+      "submit": "Send Feedback",
+      "sending": "Sending..."
+    },
+    "disclaimer": {
+      "title": "Important Disclaimer",
+      "notSubstitute": "Anxiety Buddy is NOT a substitute for professional medical advice, diagnosis, or treatment.",
+      "description": "This app provides evidence-based grounding techniques and supportive conversations, but it cannot replace qualified mental health care.",
+      "crisisTitle": "If you are experiencing a mental health crisis:",
+      "call988": "Call 988 (Crisis Hotline) immediately",
+      "call911": "Call 911 for emergency medical assistance",
+      "contactTherapist": "Contact your therapist or doctor",
+      "goToER": "Go to your nearest emergency room",
+      "acknowledgment": "By using this app, you acknowledge that it is a wellness tool, not medical treatment.",
+      "understand": "I Understand"
+    },
+    "appLikePrompt": {
+      "title": "Are you enjoying Anxiety Buddy?",
+      "yes": "Yes, I love it!",
+      "no": "Not really"
+    },
+    "dialogs": {
+      "confirmClearCache": "Clear Cache?",
+      "confirmClearCacheMessage": "This will clear cached audio files and temporary data. Your conversations will be preserved.",
+      "confirmDeleteAllData": "Delete All Data?",
+      "confirmDeleteAllDataMessage": "This will permanently delete all conversations, messages, and audio files. This action cannot be undone.",
+      "confirmDeleteAccount": "Delete Account?",
+      "confirmDeleteAccountMessage": "This will permanently delete your account, all conversations, and settings. You will be signed out immediately. This action cannot be undone.",
+      "confirm": "Confirm",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "deleteAccount": "Delete Account"
+    },
+    "toasts": {
+      "settingsChanged": "Settings updated",
+      "hapticsEnabled": "Haptics enabled",
+      "hapticsDisabled": "Haptics disabled",
+      "analyticsEnabled": "Analytics enabled",
+      "analyticsDisabled": "Analytics disabled",
+      "dataExported": "Data exported successfully",
+      "cacheCleared": "Cache cleared successfully",
+      "dataDeleted": "All data deleted",
+      "accountDeleted": "Account deleted. Goodbye.",
+      "feedbackSubmitted": "Feedback submitted. Thank you!",
+      "feedbackFailed": "Submission failed. Please try again.",
+      "exportFailed": "Export failed. Please try again.",
+      "clearCacheFailed": "Failed to clear cache",
+      "deleteFailed": "Deletion failed. Please try again.",
+      "ratingMobileOnly": "Rating is only available on mobile apps",
+      "crisisNumberCopied": "Crisis hotline number copied",
+      "ratingFallback": "Didn't see the rating dialog?",
+      "rateOnStore": "Rate on Store"
+    },
+    "general": {
+      "version": "Version {{version}}",
+      "yes": "Yes",
+      "no": "No",
+      "ok": "OK"
+    }
+  }
+}

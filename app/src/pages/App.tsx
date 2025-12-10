@@ -3,6 +3,9 @@ import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { signInAnonymously } from 'firebase/auth';
 import { auth } from '../services/firebase.service';
+import { AppProvider } from '../contexts/AppContext';
+import { DialogProvider } from '../contexts/DialogContext';
+import { UIProvider } from '../contexts/UIContext';
 import { MainLayout } from '../components/layouts/MainLayout';
 import { HomePage } from './HomePage';
 import { SOSPage } from './SOSPage';
@@ -146,11 +149,17 @@ const App: FC = () => {
   }, []);
 
   return (
-    <BrowserRouter>
-      <MainLayout>
-        <AnimatedRoutes />
-      </MainLayout>
-    </BrowserRouter>
+    <AppProvider>
+      <UIProvider>
+        <DialogProvider>
+          <BrowserRouter>
+            <MainLayout>
+              <AnimatedRoutes />
+            </MainLayout>
+          </BrowserRouter>
+        </DialogProvider>
+      </UIProvider>
+    </AppProvider>
   );
 };
 

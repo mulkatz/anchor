@@ -65,4 +65,35 @@ export interface Message {
   };
 }
 
+// Profile and Settings models
+export interface AppSettings {
+  hapticsEnabled: boolean;
+  analyticsEnabled: boolean;
+  soundEffectsEnabled: boolean;
+  pinkNoiseVolume: number; // 0-100
+}
+
+export interface UserProfile {
+  displayName: string;
+  photoURL: string | null; // Cloud Storage URL
+  createdAt: Date;
+  updatedAt: Date;
+  settings: AppSettings;
+  crisisContacts?: Array<{
+    name: string;
+    phone: string;
+    relationship: string;
+  }>;
+}
+
+export interface Feedback {
+  userId: string;
+  kind: 'idea' | 'bug';
+  text: string;
+  timestamp: Date;
+  platform: string; // 'ios' | 'android' | 'web'
+  appVersion: string;
+  resolved: boolean; // Admin field
+}
+
 // Add more models as needed

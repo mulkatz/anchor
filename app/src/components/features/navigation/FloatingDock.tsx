@@ -1,12 +1,31 @@
-import { type FC } from 'react';
+import { type FC, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { AlertCircle, MessageCircle, Archive, User } from 'lucide-react';
 import { Haptics, ImpactStyle } from '@capacitor/haptics';
 import { cn } from '../../../utils/cn';
+import { useUI } from '../../../contexts/UIContext';
 
 export const FloatingDock: FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { setNavbarDimensions } = useUI();
+  const navRef = useRef<HTMLDivElement>(null);
+
+  // Measure navbar dimensions and provide to UIContext
+  useEffect(() => {
+    const measureNavbar = () => {
+      if (navRef.current) {
+        const rect = navRef.current.getBoundingClientRect();
+        const height = rect.height;
+        const bottom = window.innerHeight - rect.top;
+        setNavbarDimensions(height, bottom);
+      }
+    };
+
+    measureNavbar();
+    window.addEventListener('resize', measureNavbar);
+    return () => window.removeEventListener('resize', measureNavbar);
+  }, [setNavbarDimensions]);
 
   const handleNavigation = async (path: string) => {
     // Light haptic feedback on tap
@@ -23,6 +42,7 @@ export const FloatingDock: FC = () => {
 
   return (
     <div
+      ref={navRef}
       data-floating-dock
       className="safe-area-margin-bottom fixed bottom-6 left-0 right-0 z-50 flex justify-center px-6"
     >

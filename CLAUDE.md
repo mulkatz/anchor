@@ -55,9 +55,10 @@ Imagine the deep ocean at night. Viscous, slow-moving, calming darkness punctuat
   "@capacitor/haptics": "^7.0.0", // CRITICAL - Therapeutic haptic feedback
   "@capacitor/status-bar": "^7.0.0", // CRITICAL - Dark mode, overlay styling
   "@capacitor/app": "^7.0.0", // App lifecycle hooks
-  "@capacitor/camera": "^7.0.1", // Future: Photo journaling
-  "@capacitor/filesystem": "^7.0.1", // Future: Local data persistence
-  "capacitor-voice-recorder": "^7.0.6" // CRITICAL - Voice message recording
+  "@capacitor/camera": "^7.0.1", // Photo journaling, profile pictures
+  "@capacitor/filesystem": "^7.0.1", // Local data persistence
+  "capacitor-voice-recorder": "^7.0.6", // CRITICAL - Voice message recording
+  "@capacitor-community/in-app-review": "^7.0.0" // In-app rating flow
 }
 ```
 
@@ -66,6 +67,8 @@ Imagine the deep ocean at night. Viscous, slow-moving, calming darkness punctuat
 - **Icons:** `lucide-react` (Consistent, minimal icon set)
 - **Utilities:** `clsx`, `tailwind-merge` (Conditional styling)
 - **Animation:** `framer-motion` (Viscous animations, page transitions)
+- **Internationalization:** `react-i18next`, `i18next` (Multi-language support)
+- **Notifications:** `react-hot-toast` (Toast messages with custom styling)
 
 ### Backend (Production)
 
@@ -290,6 +293,14 @@ anxiety-buddy/
 - [x] **AI Chat** - Therapeutic conversations powered by Gemini 2.5 Flash with CBT/ACT techniques
 - [x] **Message System** - Real-time Firestore-based chat with crisis detection
 - [x] **Haptics Integration** - Therapeutic touch feedback throughout the app
+- [x] **Profile/Settings Page** - Complete settings screen with 4 sections (see ProfilePage section below)
+- [x] **Crisis Resources** - Prominent 988/911 hotline access with haptic feedback
+- [x] **Data Management** - Export, clear cache, delete data, delete account
+- [x] **Feedback System** - Submit ideas/bugs directly to Firestore
+- [x] **In-App Rating** - Smart rating flow (like prompt → native dialog → store fallback)
+- [x] **Internationalization** - i18n infrastructure with English translations (ready for more languages)
+- [x] **Dialog Management** - Stack-based dialog system for modals
+- [x] **Analytics Service** - Comprehensive event tracking for all user interactions
 
 ### 🚧 In Progress
 
@@ -300,11 +311,12 @@ anxiety-buddy/
 
 - [ ] Home screen with quick access
 - [ ] Vault (session history, journal entries)
-- [ ] Profile (settings, preferences, crisis contacts)
-- [ ] Offline-first data sync
-- [ ] Firebase Auth integration
+- [ ] Profile photo upload feature
+- [ ] Crisis contacts management
+- [ ] Offline-first data sync with Firestore
 - [ ] Pink noise audio playback
 - [ ] Photo journaling
+- [ ] Tutorial/onboarding flow
 
 ---
 
@@ -709,6 +721,569 @@ This ensures crisis detection works identically for voice and text messages.
 
 ---
 
+## ⚙️ PROFILE/SETTINGS PAGE
+
+### Overview
+
+The ProfilePage is a comprehensive settings and preferences screen providing users with complete control over the app's behavior, data management, and access to critical resources. Built with the bioluminescent aesthetic and glass morphism design throughout.
+
+**Route:** `/profile`
+
+### Architecture
+
+**State Management:**
+
+- **DialogContext** - Stack-based dialog management for modals (push/pop/replace) with portal rendering
+- **UIContext** - UI measurements (navbar height/bottom) for proper content spacing
+- **AppContext** - Global state for version, user profile, settings
+- **useSettings Hook** - localStorage persistence with future Firestore sync ready
+- **i18n** - react-i18next for multi-language support (English implemented)
+
+**Key Dependencies:**
+
+- `react-i18next` - Internationalization
+- `react-hot-toast` - Toast notifications
+- `@capacitor-community/in-app-review` - Native rating dialogs
+
+### Settings Sections
+
+#### 1. App Preferences Section
+
+**Settings:**
+
+- **Therapeutic Haptics** - Toggle (default: ON)
+  - Light haptic test when enabled
+  - Persists to localStorage: `hapticsEnabled`
+
+- **Anonymous Analytics** - Toggle (default: ON)
+  - Privacy-focused, no PII collected
+  - Respects Do Not Track browser setting
+  - Persists to localStorage: `analyticsEnabled`
+
+- **Sound Effects** - Toggle (default: ON)
+  - UI interaction sounds
+  - Persists to localStorage: `soundEffectsEnabled`
+
+**Analytics Events:**
+
+- `HAPTICS_TOGGLED` - When haptics enabled/disabled
+- `ANALYTICS_TOGGLED` - When analytics enabled/disabled (always logs, even if disabled)
+- `SOUND_EFFECTS_TOGGLED` - Sound effects toggle
+
+#### 2. Data & Privacy Section
+
+**Features:**
+
+**Export My Data:**
+
+- Downloads JSON file with all user data
+- Includes: conversations, messages, settings, timestamps
+- Format: `anxiety-buddy-data-YYYY-MM-DD.json`
+- Requires authentication
+- Analytics: `DATA_EXPORTED`
+
+**Clear Cache:**
+
+- Clears temporary audio files
+- Shows confirmation dialog
+- Preserves conversations
+- Analytics: `CACHE_CLEARED`
+
+**Delete All Data:** (Destructive)
+
+- Deletes all conversations, messages, audio files
+- Shows destructive confirmation dialog
+- Heavy haptic warning
+- Preserves settings (haptics, analytics, etc.)
+- Analytics: `DATA_DELETED`
+
+**Delete Account:** (Critical Destructive)
+
+- Deletes Firebase Auth account
+- Deletes all user data
+- Signs out immediately
+- Shows destructive confirmation dialog
+- Requires recent authentication
+- Analytics: `ACCOUNT_DELETED`
+- Reloads app after 1 second
+
+**File:** `/app/src/utils/dataManagement.ts` (300 lines)
+
+#### 3. Support & Resources Section
+
+**Features:**
+
+**Call Crisis Hotline:**
+
+- Quick access to 988 (24/7 Mental Health Support)
+- Heavy haptic feedback
+- Opens tel:988 on native, copies on web
+- Analytics: `CRISIS_HOTLINE_CALLED`
+
+**Reset Tutorial:**
+
+- Sets `hasSeenOnboarding` to false
+- Toast: "Tutorial will show on next launch"
+- Analytics: `ONBOARDING_RESET`
+
+**Visit Website:**
+
+- Description: "Learn more about Anxiety Buddy"
+- Opens https://franz.cx/p/anxiety-buddy
+- Opens in new tab (\_blank)
+- Analytics: `WEBSITE_VISITED`
+
+**Give Feedback:**
+
+- Opens FeedbackDialog (modal)
+- Description: "Your feedback helps us improve Anxiety Buddy for everyone. Thank you for sharing your thoughts!"
+- Segmented control: "Idea" vs "Bug"
+- Textarea with 1000 char limit
+- Submits to Firestore: `feedback` collection
+- Includes metadata: platform, appVersion, timestamp
+- Close button positioned at top-right edge
+- Centered title
+- Analytics: `FEEDBACK_OPENED`, `FEEDBACK_SUBMITTED`
+
+**Rate Anxiety Buddy:** (Native only)
+
+- Shows AppLikePromptDialog first ("Are you enjoying Anxiety Buddy?")
+- If YES → Request native in-app review dialog
+- If NO → Show FeedbackDialog instead
+- Platform detection (iOS/Android only)
+- Fallback toast with "Rate on Store" button after 1.5s
+- Placeholder App Store URLs (update when published)
+- Analytics: Multiple events (see rating.service.ts)
+
+**File:** `/app/src/services/rating.service.ts` (70 lines)
+
+#### 4. Legal & Information Section
+
+**Features:**
+
+**Disclaimer:** (Critical for Mental Health App)
+
+- Shows DisclaimerDialog
+- Legal protection statement
+- "NOT a substitute for professional care"
+- Crisis resources reminder (988, 911, therapist, ER)
+- "I Understand" button
+- Sets localStorage flag: `hasSeenDisclaimer`
+- Shows on first app launch
+- Analytics: `DISCLAIMER_VIEWED`, `DISCLAIMER_ACCEPTED`
+
+**Privacy Policy:**
+
+- Opens https://franz.cx/p/anxiety-buddy/privacy
+- External link in new tab
+- Analytics: `PRIVACY_POLICY_VIEWED`
+
+**Terms of Service:**
+
+- Opens https://franz.cx/p/anxiety-buddy/terms
+- External link in new tab
+- Analytics: `TERMS_VIEWED`
+
+**Version Footer:**
+
+- Displays app version (v0.1.0)
+- Small, subtle text at bottom
+- Uses AppContext.version
+
+### Component Architecture
+
+**Reusable UI Components:**
+
+**SettingRow** (`/app/src/components/ui/SettingRow.tsx`)
+
+- Props: icon, label, description, value, onClick, toggle, checked, onChange, destructive, hideChevron, customRight
+- Glass morphism styling with active states
+- Toggle switch integration
+- Chevron right indicator
+- Destructive state (red text for dangerous actions)
+- Haptic feedback on interactions
+- ~100 lines
+
+**SettingSection** (`/app/src/components/ui/SettingSection.tsx`)
+
+- Glass card wrapper with rounded-3xl borders
+- backdrop-blur-glass effect
+- Optional title prop (section header)
+- Automatic dividers between children
+- ~50 lines
+
+**Toggle** (`/app/src/components/ui/Toggle.tsx`)
+
+- Custom toggle switch (not native checkbox)
+- ON state: bg-biolum-cyan track with shadow-glow-md, dark void-blue thumb
+- OFF state: bg-mist-white/20 track with border-mist-white/30, white thumb (improved visibility)
+- Smooth 300ms transition with ease-viscous
+- Thumb translates 20px right when ON
+- Accessible (sr-only checkbox input)
+- ~60 lines
+
+**ConfirmDialog** (`/app/src/components/ui/ConfirmDialog.tsx`)
+
+- Title, message, confirm/cancel buttons
+- Destructive variant (red confirm button with AlertTriangle icon)
+- Callback-based actions
+- Framer Motion animations with scale and opacity
+- Properly centered using flexbox (fixed inset-0 with items-center justify-center)
+- Safe area support (pt-safe pb-safe)
+- High z-index (z-[9999]) to appear above navbar
+- Backdrop at z-[9998] with blur effect
+- Already existed, reused
+
+**Dialog Components:**
+
+**FeedbackDialog** (`/app/src/components/features/profile/FeedbackDialog.tsx`)
+
+- Segmented control: Idea vs Bug
+- Multi-line textarea (5 rows, 1000 char limit)
+- Submit to Firestore
+- Bioluminescent styling
+- ~100 lines
+
+**DisclaimerDialog** (`/app/src/components/features/profile/DisclaimerDialog.tsx`)
+
+- AlertCircle icon (warm-ember)
+- Critical mental health disclaimer
+- Crisis resources list
+- "I Understand" button
+- Sets localStorage flag
+- ~80 lines
+
+**AppLikePromptDialog** (`/app/src/components/features/profile/AppLikePromptDialog.tsx`)
+
+- Heart icon (Yes) vs Meh icon (No)
+- Pre-rating filter
+- onLike/onDislike callbacks
+- ~60 lines
+
+### Services
+
+**rating.service.ts** (`/app/src/services/rating.service.ts`)
+
+- `requestAppRating(showToastOnFallback)` - Main rating function
+- Platform detection (iOS/Android/Web)
+- `InAppReview.requestReview()` attempt
+- Fallback toast with "Rate on Store" button (1.5s delay)
+- `openAppStore()` - Opens App/Play Store directly
+- `isRatingAvailable()` - Checks if native rating available
+- Placeholder URLs for App/Play Store
+- ~70 lines
+
+**analytics.service.ts** (`/app/src/services/analytics.service.ts`)
+
+- Comprehensive enum of all analytics events
+- `logAnalyticsEvent(event, params?)` - Main logging function
+- Respects `analyticsEnabled` localStorage setting
+- Always logs `ANALYTICS_TOGGLED` (even if disabled)
+- Firebase Analytics integration
+- ~120 lines
+
+**dataManagement.ts** (`/app/src/utils/dataManagement.ts`)
+
+- `exportUserData(userId)` - JSON export of all data
+- `clearLocalStorage()` - Clear cache
+- `deleteAllUserData(userId)` - Delete Firestore + Storage + localStorage
+- `deleteUserAccount()` - Delete auth user + all data
+- Toast notifications for success/failure
+- Analytics tracking
+- ~300 lines
+
+### Hooks
+
+**useSettings** (`/app/src/hooks/useSettings.tsx`)
+
+- Returns: `{ settings, updateSetting }`
+- Loads from localStorage on mount
+- `updateSetting(key, value)` - Updates state + localStorage
+- Future: Debounced Firestore sync (2s delay) - structured but not implemented
+- ~50 lines
+
+### UIContext - Navbar Measurements
+
+**Purpose:** Provides UI measurements (navbar dimensions) to all components for proper content spacing
+
+**Context:** `/app/src/contexts/UIContext.tsx`
+
+- Stores `navbarHeight` and `navbarBottom` measurements
+- Provides `setNavbarDimensions(height, bottom)` function
+- Also includes `isScrolled` state for future use
+- ~50 lines
+
+**FloatingDock Integration:**
+
+- Measures navbar dimensions on mount and resize
+- Uses `useRef` for accurate DOM measurements
+- Calls `setNavbarDimensions()` with height and bottom position
+- `navbarBottom = window.innerHeight - rect.top`
+
+**Usage in Pages:**
+
+```typescript
+const { navbarBottom } = useUI();
+// Dynamic bottom padding to prevent navbar overlap
+style={{ paddingBottom: `${navbarBottom + 32}px` }}
+```
+
+**Provider Setup:**
+
+```typescript
+// In App.tsx
+<AppProvider>
+  <UIProvider>  {/* Added for navbar measurements */}
+    <DialogProvider>
+      {/* ... */}
+    </DialogProvider>
+  </UIProvider>
+</AppProvider>
+```
+
+### Internationalization (i18n)
+
+**Setup:** `/app/src/utils/i18n.ts`
+
+- react-i18next configuration
+- Language detection: localStorage → navigator
+- Fallback: en-US
+- ~30 lines
+
+**Translations:** `/app/src/assets/translations/en-US.json`
+
+- All ProfilePage strings
+- Settings labels and descriptions
+- Dialog titles and messages
+- Toast messages
+- ~200 lines of JSON
+
+**Usage in Components:**
+
+```typescript
+const { t } = useTranslation();
+<h1>{t('profile.title')}</h1>
+<p>{t('settings.hapticsDesc')}</p>
+```
+
+### Firebase Security Rules
+
+**Firestore Rules** (`/backend/firestore.rules`)
+
+Added:
+
+```javascript
+// Profile subcollection
+match /users/{userId}/profile/{profileId} {
+  allow read, write: if request.auth != null && request.auth.uid == userId;
+}
+
+// Feedback collection (write-only for users)
+match /feedback/{feedbackId} {
+  allow create: if request.auth != null
+                && request.resource.data.userId == request.auth.uid
+                && request.resource.data.text.size() <= 1000;
+  allow read, update, delete: if false; // Admin only
+}
+```
+
+**Cloud Storage Rules** (`/backend/storage.rules`)
+
+Added:
+
+```javascript
+// Profile photos
+match /profile-photos/{userId}/{fileName} {
+  allow write: if request.auth != null
+               && request.auth.uid == userId
+               && request.resource.size < 2 * 1024 * 1024
+               && request.resource.contentType.matches('image/.*');
+  allow read: if request.auth != null && request.auth.uid == userId;
+}
+```
+
+### App Integration
+
+**App.tsx** - Wrapped with providers:
+
+```typescript
+<AppProvider>
+  <UIProvider>  {/* Added for navbar measurements */}
+    <DialogProvider>
+      <BrowserRouter>
+        <MainLayout>
+          <AnimatedRoutes />
+        </MainLayout>
+      </BrowserRouter>
+    </DialogProvider>
+  </UIProvider>
+</AppProvider>
+```
+
+**main.tsx** - Initialize i18n:
+
+```typescript
+import { initI18n } from './utils/i18n';
+import { Toaster } from 'react-hot-toast';
+
+initI18n();
+
+// Toaster with custom styling and safe area support
+<Toaster
+  position="top-center"
+  containerStyle={{ top: 'env(safe-area-inset-top, 0px)' }}
+  toastOptions={{ duration: 2500, ...customStyles }}
+  gutter={8}
+/>
+```
+
+### TypeScript Types
+
+**Added to `/app/src/models/index.ts`:**
+
+```typescript
+interface AppSettings {
+  hapticsEnabled: boolean;
+  analyticsEnabled: boolean;
+  soundEffectsEnabled: boolean;
+}
+
+interface UserProfile {
+  displayName: string;
+  photoURL: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+  settings: AppSettings;
+  crisisContacts?: Array<{
+    name: string;
+    phone: string;
+    relationship: string;
+  }>;
+}
+
+interface Feedback {
+  userId: string;
+  kind: 'idea' | 'bug';
+  text: string;
+  timestamp: Date;
+  platform: string; // 'ios' | 'android' | 'web'
+  appVersion: string;
+  resolved: boolean; // Admin field
+}
+```
+
+### Testing Checklist
+
+**Settings Persistence:**
+
+- [ ] Toggle haptics → Reload app → Verify state persists
+- [ ] Change pink noise volume → Reload → Verify persists
+- [ ] Toggle analytics → Reload → Verify persists
+
+**Data Management:**
+
+- [ ] Export data → Verify JSON structure and content
+- [ ] Clear cache → Verify toast appears, cache cleared
+- [ ] Delete all data → Verify confirmation, data deleted
+- [ ] Delete account → Verify confirmation, user signed out
+
+**Crisis Resources:**
+
+- [ ] Tap 988 button → Verify phone dialer opens (native) or number copied (web)
+- [ ] Tap 911 button → Verify phone dialer opens (native) or number copied (web)
+- [ ] Verify heavy haptic feedback on tap
+
+**Feedback System:**
+
+- [ ] Open feedback dialog
+- [ ] Switch between Idea/Bug
+- [ ] Submit feedback → Verify Firestore document created
+- [ ] Verify analytics events fire
+
+**In-App Rating:**
+
+- [ ] Tap "Rate App" (native only)
+- [ ] Like → Verify native dialog attempts to show
+- [ ] Dislike → Verify feedback dialog shows
+- [ ] Verify fallback toast appears after 1.5s
+
+**Legal & Info:**
+
+- [ ] Tap Disclaimer → Verify dialog shows, content correct
+- [ ] Tap Privacy Policy → Verify opens in new tab
+- [ ] Tap Terms → Verify opens in new tab
+- [ ] Verify version number displays correctly
+
+**Animations & Styling:**
+
+- [ ] Verify glass morphism renders correctly
+- [ ] Verify bioluminescent toggle switch
+- [ ] Verify smooth animations (300ms ease-viscous)
+- [ ] Verify safe areas respected (notch, home indicator)
+
+**Haptics:**
+
+- [ ] Verify light haptic on all setting taps
+- [ ] Verify medium haptic on success actions
+- [ ] Verify heavy haptic on destructive confirmations
+- [ ] Verify heavy haptic on crisis resource taps
+
+### Known Limitations & Future Enhancements
+
+**Not Implemented:**
+
+- Profile photo upload (Camera API integration ready, upload logic pending)
+- Crisis contacts management (data model ready)
+- Firestore settings sync (debounced sync structured but not active)
+- Tutorial/onboarding flow (reset works, flow needs building)
+
+**Future Features:**
+
+- Multi-language support (infrastructure ready, add translations)
+- Notification preferences
+- Data storage preference (local-only vs cloud sync)
+- Export to PDF/CSV formats
+- Share data with therapist (HIPAA-compliant export)
+
+### Key Files Summary
+
+**Components:**
+
+- `/app/src/pages/ProfilePage.tsx` - Main page (380 lines)
+- `/app/src/components/ui/SettingRow.tsx` - Reusable row (100 lines)
+- `/app/src/components/ui/SettingSection.tsx` - Glass card wrapper (50 lines)
+- `/app/src/components/ui/Toggle.tsx` - Bioluminescent switch (50 lines)
+- `/app/src/components/features/profile/CrisisContactCard.tsx` (120 lines)
+- `/app/src/components/features/profile/FeedbackDialog.tsx` (100 lines)
+- `/app/src/components/features/profile/DisclaimerDialog.tsx` (80 lines)
+- `/app/src/components/features/profile/AppLikePromptDialog.tsx` (60 lines)
+
+**Services & Utilities:**
+
+- `/app/src/services/rating.service.ts` - In-app review (70 lines)
+- `/app/src/services/analytics.service.ts` - Event tracking (120 lines)
+- `/app/src/utils/dataManagement.ts` - Data export/delete (300 lines)
+- `/app/src/utils/i18n.ts` - i18n setup (30 lines)
+
+**Contexts & Hooks:**
+
+- `/app/src/contexts/DialogContext.tsx` - Dialog stack (120 lines)
+- `/app/src/contexts/AppContext.tsx` - Extended with profile/settings (70 lines)
+- `/app/src/hooks/useSettings.tsx` - Settings management (50 lines)
+
+**Translations:**
+
+- `/app/src/assets/translations/en-US.json` - English strings (200 lines)
+
+**Firebase:**
+
+- `/backend/firestore.rules` - Updated with profile/feedback rules
+- `/backend/storage.rules` - Updated with profile-photos rules
+
+**Total New/Modified Files:** ~20 files, ~2,000 lines of code
+
+---
+
 ## 🚀 DEVELOPMENT WORKFLOW
 
 ### Starting the App
@@ -798,9 +1373,43 @@ const pageTransition = {
 
 ### Safe Area Handling (Notch/Home Indicator)
 
+**Plugin:** `tailwindcss-safe-area` - Installed and configured in `tailwind.config.ts`
+
+**Generated Classes:**
+
+- `pt-safe` - Adds `padding-top: env(safe-area-inset-top)`
+- `pb-safe` - Adds `padding-bottom: env(safe-area-inset-bottom)`
+- `pt-safe-offset-6` - Adds `padding-top: calc(env(safe-area-inset-top) + 1.5rem)`
+- And more offset variants
+
+**Usage in Screens:**
+
 ```tsx
-// All screens must respect safe areas
-<div className="bg-void-blue safe-area-top safe-area-bottom h-screen w-full">{/* Content */}</div>
+// ProfilePage with safe areas and navbar spacing
+<div
+  className="bg-void-blue pt-safe flex h-full flex-col overflow-y-auto px-6 pb-8"
+  style={{ paddingBottom: `${navbarBottom + 32}px` }}
+>
+  {/* Content */}
+</div>
+```
+
+**Usage in Dialogs:**
+
+```tsx
+// DialogContext with safe areas
+<div className="pt-safe pb-safe fixed inset-0 z-[9999] flex items-center justify-center px-4">
+  {/* Dialog content */}
+</div>
+```
+
+**Toast Configuration:**
+
+```typescript
+<Toaster
+  containerStyle={{ top: 'env(safe-area-inset-top, 0px)' }}
+  // Respects notch on iPhone X+
+/>
 ```
 
 ### Prevent Overscroll Bounce (iOS)
@@ -812,6 +1421,49 @@ body {
   overscroll-behavior: none;
 }
 ```
+
+### Custom Scrollbar Styling
+
+**Location:** `/app/src/index.css`
+
+**Bioluminescent Aesthetic** - Scrollbars match the deep ocean theme:
+
+```css
+/* Firefox scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.2) rgba(10, 17, 40, 0.5);
+}
+
+/* Webkit scrollbar (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(10, 17, 40, 0.5); /* void-blue with transparency */
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2); /* semi-transparent white */
+  border-radius: 4px;
+  transition: background 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(100, 255, 218, 0.4); /* biolum-cyan glow on hover */
+}
+```
+
+**Design:**
+
+- Track: Dark void-blue with 50% opacity
+- Thumb: Glass morphism (20% white opacity)
+- Hover: Bioluminescent cyan glow (40% opacity)
+- Smooth transition on hover
+- Consistent across Firefox and Webkit browsers
 
 ---
 

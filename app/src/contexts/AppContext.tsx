@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, type FC, type PropsWithChildren } from 'react';
+import type { UserProfile, AppSettings } from '../models';
 
 /**
  * Global application state context
@@ -10,13 +11,25 @@ interface AppContextValue {
   user: User | null;
   setUser: (user: User | null) => void;
 
-  // Example: Theme
+  // Theme
   theme: 'light' | 'dark';
   setTheme: (theme: 'light' | 'dark') => void;
 
-  // Example: Loading state
+  // Loading state
   isLoading: boolean;
   setIsLoading: (loading: boolean) => void;
+
+  // User profile
+  userProfile: UserProfile | null;
+  setUserProfile: (profile: UserProfile | null) => void;
+
+  // App settings
+  settings: AppSettings | null;
+  setSettings: (settings: AppSettings | null) => void;
+  updateSetting: (key: keyof AppSettings, value: any) => void;
+
+  // App version
+  version: string;
 }
 
 interface User {
@@ -29,8 +42,17 @@ const AppContext = createContext<AppContextValue | undefined>(undefined);
 
 export const AppProvider: FC<PropsWithChildren> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+  const [theme, setTheme] = useState<'light' | 'dark'>('dark'); // Default to dark for anxiety-buddy
   const [isLoading, setIsLoading] = useState(false);
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [settings, setSettings] = useState<AppSettings | null>(null);
+
+  const updateSetting = (key: keyof AppSettings, value: any) => {
+    setSettings((prev) => {
+      if (!prev) return prev;
+      return { ...prev, [key]: value };
+    });
+  };
 
   const value: AppContextValue = {
     user,
@@ -39,6 +61,12 @@ export const AppProvider: FC<PropsWithChildren> = ({ children }) => {
     setTheme,
     isLoading,
     setIsLoading,
+    userProfile,
+    setUserProfile,
+    settings,
+    setSettings,
+    updateSetting,
+    version: '0.1.0',
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

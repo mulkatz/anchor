@@ -87,21 +87,30 @@ body {
   user-select: none;
 }
 
-/* Custom scrollbar */
+/* Custom scrollbar - matching bioluminescent aesthetic */
+* {
+  /* Firefox scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.2) rgba(10, 17, 40, 0.5);
+}
+
+/* Webkit scrollbar (Chrome, Safari, Edge) */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #888;
+  background: rgba(10, 17, 40, 0.5); /* void-blue with transparency */
   border-radius: 4px;
 }
 
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2); /* semi-transparent white */
+  border-radius: 4px;
+  transition: background 0.3s ease;
+}
+
 ::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  background: rgba(100, 255, 218, 0.4); /* biolum-cyan glow on hover */
 }

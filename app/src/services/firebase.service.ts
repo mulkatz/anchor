@@ -40,7 +40,7 @@ enableIndexedDbPersistence(firestore).catch((err) => {
 });
 
 // Analytics (only on web)
-let analytics: ReturnType<typeof getAnalytics> | null = null;
+export let analytics: ReturnType<typeof getAnalytics> | null = null;
 if (isWeb() && firebaseConfig.measurementId) {
   analytics = getAnalytics(app);
 }
