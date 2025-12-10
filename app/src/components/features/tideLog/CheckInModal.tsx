@@ -124,7 +124,7 @@ export const CheckInModal: FC<CheckInModalProps> = ({ existingLog, onClose }) =>
   };
 
   return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center px-4 pt-safe pb-safe">
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center px-4 py-4 pt-safe pb-safe">
       {/* Backdrop */}
       <motion.div
         initial={{ opacity: 0 }}
@@ -135,18 +135,19 @@ export const CheckInModal: FC<CheckInModalProps> = ({ existingLog, onClose }) =>
         onClick={handleClose}
       />
 
-      {/* Modal */}
+      {/* Modal - constrained to 90dvh for iPhone SE compatibility */}
       <motion.div
         initial={{ opacity: 0, scale: 0.95, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: 20 }}
         transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-        className="relative z-10 w-full max-w-lg"
+        className="relative z-10 flex w-full max-w-lg flex-col"
+        style={{ maxHeight: '90dvh' }}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="rounded-3xl border border-glass-border bg-glass-bg p-6 shadow-glass backdrop-blur-glass">
+        <div className="flex max-h-full flex-col overflow-hidden rounded-3xl border border-glass-border bg-glass-bg p-4 shadow-glass backdrop-blur-glass sm:p-6">
           {/* Header */}
-          <div className="mb-6 flex items-center justify-between">
+          <div className="mb-4 flex items-center justify-between sm:mb-6">
             <div className="flex-1">
               <h2 className="text-xl font-semibold text-mist-white">
                 {isEditing ? t('tideLog.checkIn') : t('tideLog.checkIn')}
@@ -167,7 +168,7 @@ export const CheckInModal: FC<CheckInModalProps> = ({ existingLog, onClose }) =>
           </div>
 
           {/* Step indicator dots */}
-          <div className="mb-6 flex justify-center gap-2">
+          <div className="mb-4 flex justify-center gap-2 sm:mb-6">
             {[1, 2, 3].map((s) => (
               <div
                 key={s}
@@ -183,8 +184,8 @@ export const CheckInModal: FC<CheckInModalProps> = ({ existingLog, onClose }) =>
             ))}
           </div>
 
-          {/* Step content */}
-          <div className="relative min-h-[400px]">
+          {/* Step content - flexible height that adapts to screen */}
+          <div className="relative flex min-h-0 flex-1 flex-col">
             <AnimatePresence mode="wait" custom={direction}>
               {step === 1 && (
                 <motion.div
@@ -195,12 +196,12 @@ export const CheckInModal: FC<CheckInModalProps> = ({ existingLog, onClose }) =>
                   animate="center"
                   exit="exit"
                   transition={stepTransition}
-                  className="flex flex-col gap-6"
+                  className="flex flex-col gap-2 sm:gap-4"
                 >
                   <h3 className="text-center text-lg font-medium text-mist-white">
                     {t('tideLog.depth.title')}
                   </h3>
-                  <p className="text-center text-sm text-mist-white/70">
+                  <p className="text-center text-xs text-mist-white/70 sm:text-sm">
                     {t('tideLog.depth.description')}
                   </p>
                   <DepthSlider
@@ -220,7 +221,7 @@ export const CheckInModal: FC<CheckInModalProps> = ({ existingLog, onClose }) =>
                   animate="center"
                   exit="exit"
                   transition={stepTransition}
-                  className="flex flex-col gap-6"
+                  className="flex flex-col gap-3 sm:gap-6"
                 >
                   <h3 className="text-center text-lg font-medium text-mist-white">
                     {t('tideLog.weather.title')}
@@ -241,7 +242,7 @@ export const CheckInModal: FC<CheckInModalProps> = ({ existingLog, onClose }) =>
                   animate="center"
                   exit="exit"
                   transition={stepTransition}
-                  className="flex flex-col gap-6"
+                  className="flex flex-col gap-3 sm:gap-6"
                 >
                   <h3 className="text-center text-lg font-medium text-mist-white">
                     {t('tideLog.journal.title')}
@@ -260,7 +261,7 @@ export const CheckInModal: FC<CheckInModalProps> = ({ existingLog, onClose }) =>
 
           {/* Navigation buttons (steps 1-2 only) */}
           {step < 3 && (
-            <div className="mt-6 flex gap-3">
+            <div className="mt-4 flex gap-3 sm:mt-6">
               {step > 1 && (
                 <button
                   onClick={handleBack}

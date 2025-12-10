@@ -30,6 +30,8 @@
       "pinkNoiseVolumeDesc": "Background sound during breathing exercises",
       "soundEffects": "Sound Effects",
       "soundEffectsDesc": "UI interaction sounds",
+      "language": "Language",
+      "languageDesc": "App language and AI responses",
 
       "exportData": "Export My Data",
       "exportDataDesc": "Download all conversations and sessions",
@@ -272,8 +274,9 @@
       "cancel": "Cancel"
     },
     "tideLog": {
-      "title": "The Tide Log",
+      "title": "Tide Log",
       "checkIn": "Check In",
+      "updateCheckIn": "Update Check-In",
       "saved": "Entry saved",
       "deleted": "Entry deleted",
       "releasing": "Releasing...",

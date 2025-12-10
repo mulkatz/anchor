@@ -100,21 +100,8 @@ export const DialogProvider: FC<PropsWithChildren> = ({ children }) => {
       {children}
 
       {/* Render all dialogs in the stack using portals */}
-      {stack.length > 0 &&
-        createPortal(
-          <div className="fixed inset-0 z-[9999] flex items-center justify-center px-4 pt-safe pb-safe">
-            {/* Backdrop - only show for top-most dialog */}
-            <div className="absolute inset-0 bg-void-blue/80 backdrop-blur-md" onClick={pop} />
-
-            {/* Dialog content - only show top-most */}
-            <div className="relative z-10 w-full max-w-lg">
-              <div className="rounded-3xl border border-glass-border bg-glass-bg shadow-glass backdrop-blur-glass">
-                {stack[stack.length - 1]}
-              </div>
-            </div>
-          </div>,
-          document.body
-        )}
+      {/* Dialogs are responsible for their own styling (backdrop, glass container, etc.) */}
+      {stack.length > 0 && createPortal(stack[stack.length - 1], document.body)}
     </DialogContext.Provider>
   );
 };

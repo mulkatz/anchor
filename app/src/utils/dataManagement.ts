@@ -1,9 +1,12 @@
 import { collection, getDocs, query, where, deleteDoc, doc } from 'firebase/firestore';
 import { ref, deleteObject, listAll } from 'firebase/storage';
+import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
+import { Share } from '@capacitor/share';
 import i18next from 'i18next';
 import { firestore, storage, auth } from '../services/firebase.service';
 import { logAnalyticsEvent, AnalyticsEvent } from '../services/analytics.service';
-import toast from 'react-hot-toast';
+import { isNativePlatform } from './platform';
+import { showToast } from './toast';
 
 /**
  * Data management utilities
@@ -74,25 +77,68 @@ export const exportUserData = async (userId: string): Promise<void> => {
       },
     };
 
-    // Create JSON blob and trigger download
-    const blob = new Blob([JSON.stringify(exportData, null, 2)], {
-      type: 'application/json',
-    });
+    const jsonString = JSON.stringify(exportData, null, 2);
+    const filename = `anxiety-buddy-data-${new Date().toISOString().split('T')[0]}.json`;
 
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `anxiety-buddy-data-${new Date().toISOString().split('T')[0]}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
+    if (isNativePlatform()) {
+      // Native: Save to cache and share
+      try {
+        const result = await Filesystem.writeFile({
+          path: filename,
+          data: jsonString,
+          directory: Directory.Cache,
+          encoding: Encoding.UTF8,
+        });
+
+        // Use Share API to let user save/share the file
+        await Share.share({
+          title: 'Anxiety Buddy Data Export',
+          text: i18next.t('toasts.dataExported'),
+          url: result.uri,
+          dialogTitle: 'Save your data',
+        });
+
+        // Clean up cache file after sharing (delayed)
+        setTimeout(async () => {
+          try {
+            await Filesystem.deleteFile({
+              path: filename,
+              directory: Directory.Cache,
+            });
+          } catch {
+            // Ignore cleanup errors
+          }
+        }, 60000); // Clean up after 1 minute
+      } catch (fsError) {
+        console.error('Native file save failed, falling back to web:', fsError);
+        // Fallback to web download
+        downloadAsWebFile(jsonString, filename);
+      }
+    } else {
+      // Web: Use browser download
+      downloadAsWebFile(jsonString, filename);
+    }
 
     logAnalyticsEvent(AnalyticsEvent.DATA_EXPORTED);
-    toast.success(i18next.t('toasts.dataExported'));
+    showToast.success(i18next.t('toasts.dataExported'));
   } catch (error) {
     console.error('Export failed:', error);
     logAnalyticsEvent(AnalyticsEvent.DATA_EXPORT_FAILED);
-    toast.error(i18next.t('toasts.exportFailed'));
+    showToast.error(i18next.t('toasts.exportFailed'));
   }
+};
+
+/**
+ * Helper function for web-based file download
+ */
+const downloadAsWebFile = (content: string, filename: string) => {
+  const blob = new Blob([content], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
 };
 
 export const clearLocalStorage = async (): Promise<void> => {
@@ -104,11 +150,11 @@ export const clearLocalStorage = async (): Promise<void> => {
     // This is a placeholder - actual implementation would need Cloud Function
 
     logAnalyticsEvent(AnalyticsEvent.CACHE_CLEARED);
-    toast.success(i18next.t('toasts.cacheCleared'));
+    showToast.success(i18next.t('toasts.cacheCleared'));
   } catch (error) {
     console.error('Clear cache failed:', error);
     logAnalyticsEvent(AnalyticsEvent.CACHE_CLEAR_FAILED);
-    toast.error(i18next.t('toasts.clearCacheFailed'));
+    showToast.error(i18next.t('toasts.clearCacheFailed'));
   }
 };
 
@@ -168,11 +214,11 @@ export const deleteAllUserData = async (userId: string): Promise<void> => {
     });
 
     logAnalyticsEvent(AnalyticsEvent.DATA_DELETED);
-    toast.success(i18next.t('toasts.dataDeleted'));
+    showToast.success(i18next.t('toasts.dataDeleted'));
   } catch (error) {
     console.error('Delete failed:', error);
     logAnalyticsEvent(AnalyticsEvent.DATA_DELETE_FAILED);
-    toast.error(i18next.t('toasts.deleteFailed'));
+    showToast.error(i18next.t('toasts.deleteFailed'));
   }
 };
 
@@ -188,18 +234,18 @@ export const deleteUserAccount = async (): Promise<void> => {
     await user.delete();
 
     logAnalyticsEvent(AnalyticsEvent.ACCOUNT_DELETED);
-    toast.success(i18next.t('toasts.accountDeleted'));
+    showToast.success(i18next.t('toasts.accountDeleted'));
 
     // 3. Reload app (clears all state)
     setTimeout(() => window.location.reload(), 1000);
   } catch (error: any) {
     if (error.code === 'auth/requires-recent-login') {
-      toast.error(i18next.t('toasts.accountDeleteReauth'));
+      showToast.error(i18next.t('toasts.accountDeleteReauth'));
       // TODO: Trigger re-authentication flow
     } else {
       console.error('Account deletion failed:', error);
       logAnalyticsEvent(AnalyticsEvent.ACCOUNT_DELETE_FAILED);
-      toast.error(i18next.t('toasts.deleteFailed'));
+      showToast.error(i18next.t('toasts.deleteFailed'));
     }
   }
 };

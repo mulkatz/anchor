@@ -1,5 +1,5 @@
 import { type FC, type ReactNode } from 'react';
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, Loader2 } from 'lucide-react';
 import { Toggle } from './Toggle';
 import { cn } from '../../utils/cn';
 
@@ -21,6 +21,7 @@ interface SettingRowProps {
   destructive?: boolean;
   hideChevron?: boolean;
   customRight?: ReactNode; // For custom right-side content (e.g., slider)
+  loading?: boolean; // Show spinner instead of chevron during async operations
 }
 
 export const SettingRow: FC<SettingRowProps> = ({
@@ -35,6 +36,7 @@ export const SettingRow: FC<SettingRowProps> = ({
   destructive = false,
   hideChevron = false,
   customRight,
+  loading = false,
 }) => {
   const isClickable = !toggle && onClick;
 
@@ -81,10 +83,15 @@ export const SettingRow: FC<SettingRowProps> = ({
         {/* Toggle switch */}
         {toggle && onChange && <Toggle checked={checked} onChange={onChange} aria-label={label} />}
 
-        {/* Chevron */}
-        {!toggle && !hideChevron && onClick && (
-          <ChevronRight size={20} className="text-mist-white/40" />
-        )}
+        {/* Chevron or Loading spinner */}
+        {!toggle &&
+          !hideChevron &&
+          onClick &&
+          (loading ? (
+            <Loader2 size={18} className="animate-spin text-biolum-cyan" />
+          ) : (
+            <ChevronRight size={20} className="text-mist-white/40" />
+          ))}
       </div>
     </button>
   );

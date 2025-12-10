@@ -37,7 +37,7 @@ import {
   deleteUserAccount,
 } from '../utils/dataManagement';
 import { auth } from '../services/firebase.service';
-import toast from 'react-hot-toast';
+import { showToast } from '../utils/toast';
 import type { SupportedLanguage } from '../models';
 import { getCrisisResources } from '../utils/crisisHotlines';
 
@@ -55,6 +55,9 @@ export const ProfilePage: FC = () => {
   const { settings, updateSetting } = useSettings();
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [confirmDialogProps, setConfirmDialogProps] = useState<any>({});
+  const [exporting, setExporting] = useState(false);
+  const [deletingData, setDeletingData] = useState(false);
+  const [deletingAccount, setDeletingAccount] = useState(false);
 
   useEffect(() => {
     logAnalyticsEvent(AnalyticsEvent.PROFILE_PAGE_VIEWED);
@@ -73,7 +76,7 @@ export const ProfilePage: FC = () => {
     const newLanguage: SupportedLanguage = settings.language === 'en-US' ? 'de-DE' : 'en-US';
     updateSetting('language', newLanguage);
     logAnalyticsEvent(AnalyticsEvent.LANGUAGE_CHANGED, { language: newLanguage });
-    toast.success(t('toasts.languageChanged'));
+    showToast.success(t('toasts.languageChanged'));
   };
 
   const getLanguageDisplay = () => {
@@ -84,21 +87,21 @@ export const ProfilePage: FC = () => {
     updateSetting('hapticsEnabled', enabled);
     if (enabled) await light(); // Test haptic
     logAnalyticsEvent(AnalyticsEvent.HAPTICS_TOGGLED, { enabled });
-    toast.success(enabled ? t('toasts.hapticsEnabled') : t('toasts.hapticsDisabled'));
+    showToast.success(enabled ? t('toasts.hapticsEnabled') : t('toasts.hapticsDisabled'));
   };
 
   const handleAnalyticsToggle = async (enabled: boolean) => {
     updateSetting('analyticsEnabled', enabled);
     await light();
     logAnalyticsEvent(AnalyticsEvent.ANALYTICS_TOGGLED, { enabled });
-    toast.success(enabled ? t('toasts.analyticsEnabled') : t('toasts.analyticsDisabled'));
+    showToast.success(enabled ? t('toasts.analyticsEnabled') : t('toasts.analyticsDisabled'));
   };
 
   const handleSoundEffectsToggle = async (enabled: boolean) => {
     updateSetting('soundEffectsEnabled', enabled);
     await light();
     logAnalyticsEvent(AnalyticsEvent.SOUND_EFFECTS_TOGGLED, { enabled });
-    toast.success(t('toasts.settingsChanged'));
+    showToast.success(t('toasts.settingsChanged'));
   };
 
   // Data management handlers
@@ -106,11 +109,16 @@ export const ProfilePage: FC = () => {
     await light();
     const userId = auth.currentUser?.uid;
     if (!userId) {
-      toast.error('Not signed in');
+      showToast.error(t('toasts.notSignedIn'));
       return;
     }
-    await exportUserData(userId);
-    await medium();
+    setExporting(true);
+    try {
+      await exportUserData(userId);
+      await medium();
+    } finally {
+      setExporting(false);
+    }
   };
 
   const handleClearCache = async () => {
@@ -140,12 +148,18 @@ export const ProfilePage: FC = () => {
       onConfirm: async () => {
         const userId = auth.currentUser?.uid;
         if (!userId) {
-          toast.error('Not signed in');
+          showToast.error(t('toasts.notSignedIn'));
           return;
         }
-        await deleteAllUserData(userId);
-        await medium();
+        // Close dialog immediately so user can see the loading spinner
         setConfirmDialogOpen(false);
+        setDeletingData(true);
+        try {
+          await deleteAllUserData(userId);
+          await medium();
+        } finally {
+          setDeletingData(false);
+        }
       },
     });
   };
@@ -159,9 +173,15 @@ export const ProfilePage: FC = () => {
       cancelText: t('dialogs.cancel'),
       destructive: true,
       onConfirm: async () => {
-        await deleteUserAccount();
-        await heavy();
+        // Close dialog immediately so user can see the loading spinner
         setConfirmDialogOpen(false);
+        setDeletingAccount(true);
+        try {
+          await deleteUserAccount();
+          await heavy();
+        } finally {
+          setDeletingAccount(false);
+        }
       },
     });
   };
@@ -171,7 +191,7 @@ export const ProfilePage: FC = () => {
     await light();
     localStorage.setItem('hasSeenOnboarding', 'false');
     logAnalyticsEvent(AnalyticsEvent.ONBOARDING_RESET);
-    toast.success('Tutorial will show on next launch');
+    showToast.success(t('toasts.tutorialReset'));
   };
 
   const handleVisitWebsite = async () => {
@@ -280,6 +300,7 @@ export const ProfilePage: FC = () => {
           label={t('settings.exportData')}
           description={t('settings.exportDataDesc')}
           onClick={handleExportData}
+          loading={exporting}
         />
         <SettingRow
           icon={<Trash2 size={24} />}
@@ -293,6 +314,7 @@ export const ProfilePage: FC = () => {
           description={t('settings.deleteAllDataDesc')}
           onClick={handleDeleteAllData}
           destructive
+          loading={deletingData}
         />
         <SettingRow
           icon={<UserX size={24} />}
@@ -300,6 +322,7 @@ export const ProfilePage: FC = () => {
           description={t('settings.deleteAccountDesc')}
           onClick={handleDeleteAccount}
           destructive
+          loading={deletingAccount}
         />
       </SettingSection>
 

@@ -21,8 +21,9 @@ export const DepthSlider: FC<DepthSliderProps> = ({ value, onChange, className }
   const [isDragging, setIsDragging] = useState(false);
   const [lastHapticValue, setLastHapticValue] = useState<number>(value);
 
-  // Height of the slider track
-  const TRACK_HEIGHT = 400;
+  // Height of the slider track - compact for iPhone SE compatibility
+  // Using 180px to fit within 90dvh modal on small screens
+  const TRACK_HEIGHT = 180;
 
   // Snap to 5-unit increments
   const snapValue = (rawValue: number): number => {
@@ -155,10 +156,10 @@ export const DepthSlider: FC<DepthSliderProps> = ({ value, onChange, className }
   const thumbTop = getThumbTop(value);
 
   return (
-    <div className={cn('flex flex-col items-center gap-6', className)}>
+    <div className={cn('flex flex-col items-center gap-3 sm:gap-6', className)}>
       {/* Top label */}
-      <div className="flex flex-col items-center gap-1">
-        <span className="text-base font-medium text-mist-white">
+      <div className="flex flex-col items-center gap-0.5 sm:gap-1">
+        <span className="text-sm font-medium text-mist-white sm:text-base">
           {t('tideLog.depth.surfaceLabel')}
         </span>
         <span className="text-xs text-mist-white/50">{t('tideLog.depth.surfaceDesc')}</span>
@@ -224,8 +225,8 @@ export const DepthSlider: FC<DepthSliderProps> = ({ value, onChange, className }
       </div>
 
       {/* Bottom label */}
-      <div className="flex flex-col items-center gap-1">
-        <span className="text-base font-medium text-mist-white">
+      <div className="flex flex-col items-center gap-0.5 sm:gap-1">
+        <span className="text-sm font-medium text-mist-white sm:text-base">
           {t('tideLog.depth.deepLabel')}
         </span>
         <span className="text-xs text-mist-white/50">{t('tideLog.depth.deepDesc')}</span>

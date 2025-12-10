@@ -1,6 +1,6 @@
 import { FC, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { CloudRain, CloudFog, Sun, Sparkles, Wind } from 'lucide-react';
+import { CloudRain, CloudFog, Sun, Sparkles, Wind, Anchor } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useHaptics } from '../../../hooks/useHaptics';
 import type { WeatherType } from '../../../models';
@@ -19,6 +19,7 @@ interface WeatherOption {
   glowColor: string;
 }
 
+// Weather options ordered from challenging to positive states
 const weatherOptions: WeatherOption[] = [
   {
     type: 'stormy',
@@ -33,6 +34,12 @@ const weatherOptions: WeatherOption[] = [
     glowColor: 'shadow-[0_0_20px_rgba(176,176,176,0.4)]',
   },
   {
+    type: 'turbulent',
+    icon: Wind,
+    color: 'text-biolum-cyan',
+    glowColor: 'shadow-glow-md',
+  },
+  {
     type: 'clear',
     icon: Sun,
     color: 'text-[#FFD93D]',
@@ -45,15 +52,15 @@ const weatherOptions: WeatherOption[] = [
     glowColor: 'shadow-glow-md',
   },
   {
-    type: 'turbulent',
-    icon: Wind,
-    color: 'text-biolum-cyan',
-    glowColor: 'shadow-glow-md',
+    type: 'calm',
+    icon: Anchor,
+    color: 'text-[#7DD3FC]',
+    glowColor: 'shadow-[0_0_20px_rgba(125,211,252,0.4)]',
   },
 ];
 
 /**
- * Weather selector with 5 atmospheric icons
+ * Weather selector with 6 atmospheric icons in a 2x3 grid
  * Each icon has a unique color and glow effect
  */
 export const WeatherSelector: FC<WeatherSelectorProps> = ({ value, onChange, className }) => {
@@ -76,9 +83,9 @@ export const WeatherSelector: FC<WeatherSelectorProps> = ({ value, onChange, cla
   };
 
   return (
-    <div className={cn('flex flex-col gap-6', className)}>
+    <div className={cn('flex flex-col gap-3 sm:gap-6', className)}>
       {/* Weather grid - 2 columns for balanced layout */}
-      <div className="mx-auto grid w-full max-w-sm grid-cols-2 gap-4">
+      <div className="mx-auto grid w-full max-w-sm grid-cols-2 gap-2 sm:gap-4">
         {weatherOptions.map((option) => {
           const Icon = option.icon;
           const isSelected = value === option.type;
@@ -89,7 +96,7 @@ export const WeatherSelector: FC<WeatherSelectorProps> = ({ value, onChange, cla
               key={option.type}
               onClick={() => handleSelect(option.type)}
               className={cn(
-                'duration-400 relative flex flex-col items-center justify-center gap-2 rounded-2xl p-6 transition-all',
+                'duration-400 relative flex flex-col items-center justify-center gap-1 rounded-2xl p-3 transition-all sm:gap-2 sm:p-6',
                 'border border-white/10 backdrop-blur-glass',
                 isSelected
                   ? `scale-105 bg-white/10 ${option.glowColor}`
@@ -100,14 +107,13 @@ export const WeatherSelector: FC<WeatherSelectorProps> = ({ value, onChange, cla
               aria-label={`${t(`tideLog.weather.${option.type}`)} - ${t(`tideLog.weather.${option.type}_desc`)}`}
               aria-pressed={isSelected}
             >
-              {/* Icon - w-12 h-12 (48px) */}
+              {/* Icon - responsive size */}
               <Icon
-                size={48}
-                strokeWidth={2.5}
                 className={cn(
-                  'duration-400 transition-all',
+                  'duration-400 h-8 w-8 transition-all sm:h-12 sm:w-12',
                   isSelected ? option.color : 'text-mist-white/60'
                 )}
+                strokeWidth={2.5}
               />
 
               {/* Label */}
@@ -137,17 +143,10 @@ export const WeatherSelector: FC<WeatherSelectorProps> = ({ value, onChange, cla
         })}
       </div>
 
-      {/* Description */}
-      {value && (
-        <motion.p
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-          className="text-center text-sm text-mist-white/70"
-        >
-          {t(`tideLog.weather.${value}_desc`)}
-        </motion.p>
-      )}
+      {/* Description - always reserve space to prevent layout shift */}
+      <p className="h-5 text-center text-sm text-mist-white/70">
+        {value ? t(`tideLog.weather.${value}_desc`) : '\u00A0'}
+      </p>
     </div>
   );
 };

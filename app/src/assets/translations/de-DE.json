@@ -282,8 +282,9 @@
       "cancel": "Abbrechen"
     },
     "tideLog": {
-      "title": "Das Gezeiten-Tagebuch",
+      "title": "Gezeiten-Tagebuch",
       "checkIn": "Check-In",
+      "updateCheckIn": "Check-In aktualisieren",
       "saved": "Eintrag gespeichert",
       "deleted": "Eintrag gelöscht",
       "releasing": "Wird losgelassen...",

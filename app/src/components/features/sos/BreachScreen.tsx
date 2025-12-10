@@ -1,7 +1,8 @@
 import { type FC, useState, useEffect, useRef } from 'react';
-import { AlertCircle } from 'lucide-react';
+import { Anchor } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useHaptics } from '../../../hooks/useHaptics';
+import { useUI } from '../../../contexts/UIContext';
 
 interface BreachScreenProps {
   onComplete: () => void;
@@ -10,6 +11,7 @@ interface BreachScreenProps {
 export const BreachScreen: FC<BreachScreenProps> = ({ onComplete }) => {
   const { t } = useTranslation();
   const { heavy } = useHaptics();
+  const { navbarBottom } = useUI();
   const [isPressed, setIsPressed] = useState(false);
   const [progress, setProgress] = useState(0);
   const onCompleteRef = useRef(onComplete);
@@ -47,26 +49,26 @@ export const BreachScreen: FC<BreachScreenProps> = ({ onComplete }) => {
 
   return (
     <div className="flex h-full flex-col items-center justify-center bg-void-blue/50 px-6">
-      {/* Pulsing SOS Icon */}
+      {/* Pulsing Anchor Icon - represents grounding & stability */}
       <div className="mb-8 flex items-center justify-center">
         <style>
           {`
             @keyframes iconGlowPulse {
               0%, 100% {
-                filter: drop-shadow(0 0 10px rgba(100, 255, 218, 0.4));
+                filter: drop-shadow(0 0 15px rgba(100, 255, 218, 0.5));
                 transform: scale(1);
               }
               50% {
-                filter: drop-shadow(0 0 30px rgba(100, 255, 218, 0.9));
-                transform: scale(1.05);
+                filter: drop-shadow(0 0 35px rgba(100, 255, 218, 0.8));
+                transform: scale(1.03);
               }
             }
             .icon-glow-pulse {
-              animation: iconGlowPulse 2s ease-in-out infinite;
+              animation: iconGlowPulse 3s ease-in-out infinite;
             }
           `}
         </style>
-        <AlertCircle size={120} className="icon-glow-pulse text-biolum-cyan" strokeWidth={2} />
+        <Anchor size={120} className="icon-glow-pulse text-biolum-cyan" strokeWidth={1.5} />
       </div>
 
       {/* Instruction */}
@@ -100,8 +102,11 @@ export const BreachScreen: FC<BreachScreenProps> = ({ onComplete }) => {
         </p>
       </div>
 
-      {/* Note */}
-      <div className="absolute bottom-32 left-6 right-6">
+      {/* Note - positioned above navbar */}
+      <div
+        className="absolute left-6 right-6"
+        style={{ bottom: `${Math.max(navbarBottom + 16, 96)}px` }}
+      >
         <p className="text-center text-sm text-mist-white/40">{t('sos.breach.note')}</p>
       </div>
     </div>

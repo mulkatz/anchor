@@ -1,4 +1,5 @@
 import { type FC } from 'react';
+import { motion } from 'framer-motion';
 import { AlertCircle } from 'lucide-react';
 import { useHaptics } from '../../../hooks/useHaptics';
 import { logAnalyticsEvent, AnalyticsEvent } from '../../../services/analytics.service';
@@ -27,51 +28,72 @@ export const DisclaimerDialog: FC<DisclaimerDialogProps> = ({ onClose }) => {
   };
 
   return (
-    <div className="p-6">
-      {/* Icon */}
-      <div className="mb-4 flex justify-center">
-        <AlertCircle className="text-warm-ember" size={48} />
-      </div>
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center px-4 pt-safe pb-safe">
+      {/* Backdrop */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.2 }}
+        className="absolute inset-0 bg-void-blue/80 backdrop-blur-md"
+      />
 
-      {/* Title */}
-      <h2 className="mb-4 text-center text-xl font-semibold text-mist-white">
-        {t('disclaimer.title')}
-      </h2>
-
-      {/* Content */}
-      <div className="mb-6 space-y-3 text-sm text-mist-white/80">
-        <p>
-          <strong>{t('disclaimer.notSubstitute')}</strong>
-        </p>
-
-        <p>{t('disclaimer.description')}</p>
-
-        <p>
-          <strong>{t('disclaimer.crisisTitle')}</strong>
-        </p>
-
-        <ul className="ml-2 list-inside list-disc space-y-1">
-          <li>{t('disclaimer.call988')}</li>
-          <li>{t('disclaimer.call911')}</li>
-          <li>{t('disclaimer.contactTherapist')}</li>
-          <li>{t('disclaimer.goToER')}</li>
-        </ul>
-
-        <p>{t('disclaimer.acknowledgment')}</p>
-      </div>
-
-      {/* Accept button */}
-      <button
-        onClick={handleAccept}
-        className={cn(
-          'w-full rounded-full px-6 py-3',
-          'bg-biolum-cyan font-semibold text-void-blue',
-          'transition-all duration-300 ease-viscous active:scale-95',
-          'shadow-glow-md'
-        )}
+      {/* Dialog */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.95, y: 20 }}
+        transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+        className="relative z-10 w-full max-w-lg"
+        onClick={(e) => e.stopPropagation()}
       >
-        {t('disclaimer.understand')}
-      </button>
+        <div className="rounded-3xl border border-glass-border bg-glass-bg p-6 shadow-glass backdrop-blur-glass">
+          {/* Icon */}
+          <div className="mb-4 flex justify-center">
+            <AlertCircle className="text-warm-ember" size={48} />
+          </div>
+
+          {/* Title */}
+          <h2 className="mb-4 text-center text-xl font-semibold text-mist-white">
+            {t('disclaimer.title')}
+          </h2>
+
+          {/* Content */}
+          <div className="mb-6 space-y-3 text-sm text-mist-white/80">
+            <p>
+              <strong>{t('disclaimer.notSubstitute')}</strong>
+            </p>
+
+            <p>{t('disclaimer.description')}</p>
+
+            <p>
+              <strong>{t('disclaimer.crisisTitle')}</strong>
+            </p>
+
+            <ul className="ml-2 list-inside list-disc space-y-1">
+              <li>{t('disclaimer.call988')}</li>
+              <li>{t('disclaimer.call911')}</li>
+              <li>{t('disclaimer.contactTherapist')}</li>
+              <li>{t('disclaimer.goToER')}</li>
+            </ul>
+
+            <p>{t('disclaimer.acknowledgment')}</p>
+          </div>
+
+          {/* Accept button */}
+          <button
+            onClick={handleAccept}
+            className={cn(
+              'w-full rounded-full px-6 py-3',
+              'bg-biolum-cyan font-semibold text-void-blue',
+              'transition-all duration-300 ease-viscous active:scale-95',
+              'shadow-glow-md'
+            )}
+          >
+            {t('disclaimer.understand')}
+          </button>
+        </div>
+      </motion.div>
     </div>
   );
 };

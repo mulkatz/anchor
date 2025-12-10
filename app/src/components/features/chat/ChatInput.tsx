@@ -88,18 +88,21 @@ export const ChatInput: FC<ChatInputProps> = ({ onSend, onSendVoice, disabled })
         'px-6 pb-4 pt-3',
         'bg-void-blue/95 backdrop-blur-glass',
         'border-t border-glass-border',
-        'pointer-events-auto'
+        'pointer-events-auto',
+        'touch-manipulation' // Improves touch handling on Android
       )}
       style={{
         marginBottom: navbarOffset > 0 ? `${navbarOffset + 8}px` : '96px', // +8px for gap
       }}
     >
       <div
+        onClick={() => textareaRef.current?.focus()}
         className={cn(
           'flex items-center gap-3',
           'bg-glass-bg backdrop-blur-glass',
           'rounded-3xl border border-glass-border',
-          'px-4 py-3 shadow-glass'
+          'px-4 py-3 shadow-glass',
+          'cursor-text' // Visual hint that clicking focuses input
         )}
       >
         <textarea
@@ -107,15 +110,21 @@ export const ChatInput: FC<ChatInputProps> = ({ onSend, onSendVoice, disabled })
           value={text}
           onChange={(e) => setText(e.target.value)}
           onKeyPress={handleKeyPress}
+          onTouchStart={() => textareaRef.current?.focus()}
           placeholder={t('chat.inputPlaceholder')}
           disabled={disabled}
+          inputMode="text"
+          enterKeyHint="send"
+          autoComplete="off"
+          autoCorrect="on"
           className={cn(
             'flex-1 bg-transparent text-mist-white',
             'placeholder:text-mist-white/40',
             'resize-none outline-none',
             'max-h-32 min-h-[24px]',
             'py-1 leading-6',
-            'disabled:opacity-50'
+            'disabled:opacity-50',
+            'touch-manipulation'
           )}
           rows={1}
         />

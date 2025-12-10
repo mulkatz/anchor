@@ -102,7 +102,7 @@ export interface Feedback {
 }
 
 // Tide Log (Journaling) models
-export type WeatherType = 'stormy' | 'foggy' | 'clear' | 'sunny' | 'turbulent';
+export type WeatherType = 'stormy' | 'foggy' | 'turbulent' | 'clear' | 'sunny' | 'calm';
 
 export interface DailyLog {
   id: string;

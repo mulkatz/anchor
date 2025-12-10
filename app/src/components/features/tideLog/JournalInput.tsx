@@ -54,7 +54,7 @@ export const JournalInput: FC<JournalInputProps> = ({
   };
 
   return (
-    <div className={cn('flex flex-col gap-4', className)}>
+    <div className={cn('flex flex-col gap-3 sm:gap-4', className)}>
       {/* Text area */}
       <div className="relative">
         <textarea
@@ -62,7 +62,7 @@ export const JournalInput: FC<JournalInputProps> = ({
           onChange={handleChange}
           placeholder={t('tideLog.journal.placeholder')}
           disabled={disabled}
-          rows={8}
+          rows={5}
           className={cn(
             'w-full bg-transparent px-4 py-3 text-mist-white transition-colors placeholder:italic placeholder:text-white/30',
             'border-0 focus:outline-none',
