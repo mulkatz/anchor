@@ -2,7 +2,9 @@
   "name": "anxiety-buddy",
   "version": "0.1.0",
   "private": true,
-  "description": "Modern monorepo starter for building cross-platform apps with React, TypeScript, and Firebase",
+  "license": "UNLICENSED",
+  "description": "Anxiety Buddy - A therapeutic mobile application for immediate anxiety relief",
+  "author": "Franz Benthin",
   "workspaces": [
     "app",
     "backend/functions",
