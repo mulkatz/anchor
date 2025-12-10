@@ -35,15 +35,15 @@ export const VaultPage: FC = () => {
   return (
     <div
       className="flex h-full flex-col overflow-y-auto bg-void-blue px-6 py-8 pt-safe"
-      style={{ paddingBottom: `${navbarBottom + 32}px` }}
+      style={{ paddingBottom: `${Math.max(navbarBottom + 32, 96)}px` }}
     >
-      {/* Header */}
-      <div className="mb-8">
-        <div className="mb-2 flex items-center gap-3">
-          <Archive size={32} className="text-biolum-cyan" />
-          <h1 className="text-3xl font-light text-mist-white">{t('tideLog.title')}</h1>
+      {/* Header - floating in void */}
+      <div className="mb-12">
+        <div className="mb-3 flex items-center gap-3">
+          <Archive size={36} className="text-biolum-cyan drop-shadow-glow" />
+          <h1 className="text-3xl font-light text-white">{t('tideLog.title')}</h1>
         </div>
-        <p className="text-mist-white/60">
+        <p className="text-sm text-mist-white/50">
           {logs.length > 0
             ? t('tideLog.reef.entriesCount', { count: logs.length })
             : t('vault.subtitle')}
@@ -53,28 +53,30 @@ export const VaultPage: FC = () => {
       {/* Empty State or Content */}
       {loading ? (
         <div className="flex flex-1 flex-col items-center justify-center">
-          <div className="h-12 w-12 animate-spin rounded-full border-4 border-biolum-cyan border-t-transparent" />
+          <div className="h-12 w-12 animate-spin rounded-full border-4 border-biolum-cyan border-t-transparent shadow-glow-md" />
           <p className="mt-4 text-sm text-mist-white/50">Loading...</p>
         </div>
       ) : logs.length === 0 ? (
         <div className="flex flex-1 flex-col items-center justify-center">
-          <Clock size={64} className="mb-4 text-mist-white/30" />
-          <p className="text-center text-lg text-mist-white/50">{t('tideLog.reef.emptyTitle')}</p>
-          <p className="mt-2 text-center text-sm text-mist-white/40">
+          <Clock size={64} className="mb-4 text-mist-white/20" />
+          <p className="text-center text-xl font-light text-mist-white/60">
+            {t('tideLog.reef.emptyTitle')}
+          </p>
+          <p className="mt-3 text-center text-sm text-mist-white/40">
             {t('tideLog.reef.emptyDescription')}
           </p>
         </div>
       ) : (
-        <div className="space-y-8">
+        <div className="space-y-12">
           {/* Encouragement message */}
           {logs.length < 7 && (
-            <p className="text-center text-sm text-mist-white/70">{t('tideLog.reef.keepGoing')}</p>
+            <p className="text-center text-sm text-biolum-cyan/70">{t('tideLog.reef.keepGoing')}</p>
           )}
 
-          {/* Progress Reef (30-day visualization) */}
+          {/* Progress Reef (30-day visualization) - floating in void */}
           <ProgressReef logs={logs} onOrbClick={handleLogClick} />
 
-          {/* Log Stream */}
+          {/* Log Stream - minimal glass cards */}
           <LogStream logs={logs} onLogClick={handleLogClick} loading={loading} />
         </div>
       )}

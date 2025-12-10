@@ -280,8 +280,12 @@
       "depth": {
         "title": "How deep are you?",
         "surface": "Surface",
+        "surfaceLabel": "Turbulent",
+        "surfaceDesc": "High Energy",
         "anchored": "Anchored",
         "deep": "Deep",
+        "deepLabel": "Still",
+        "deepDesc": "Deep Calm",
         "description": "Move the slider to match your emotional depth"
       },
       "weather": {

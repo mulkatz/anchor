@@ -152,34 +152,22 @@ export const DepthSlider: FC<DepthSliderProps> = ({ value, onChange, className }
     }
   }, [isDragging, handleMouseMove, handleMouseUp, handleTouchMove, handleTouchEnd]);
 
-  // Get gradient color based on value
-  const getGradientColor = (val: number): string => {
-    // 0-33: Deep (void-blue → dark purple)
-    // 34-66: Middle (purple → teal)
-    // 67-100: Surface (teal → biolum-cyan)
-    if (val <= 33) {
-      return 'from-void-blue via-[#1a1a4e] to-[#2d2d6e]';
-    } else if (val <= 66) {
-      return 'from-[#2d2d6e] via-[#4a4a8e] to-[#4ECDC4]';
-    } else {
-      return 'from-[#4ECDC4] via-[#54D7CE] to-biolum-cyan';
-    }
-  };
-
   const thumbTop = getThumbTop(value);
 
   return (
-    <div className={cn('flex flex-col items-center gap-4', className)}>
-      {/* Labels */}
-      <div className="flex w-full items-center justify-between px-2 text-sm text-mist-white/70">
-        <span>{t('tideLog.depth.surface')}</span>
-        <span className="text-xs text-mist-white/50">{value}</span>
+    <div className={cn('flex flex-col items-center gap-6', className)}>
+      {/* Top label */}
+      <div className="flex flex-col items-center gap-1">
+        <span className="text-base font-medium text-mist-white">
+          {t('tideLog.depth.surfaceLabel')}
+        </span>
+        <span className="text-xs text-mist-white/50">{t('tideLog.depth.surfaceDesc')}</span>
       </div>
 
       {/* Track */}
       <div
         ref={trackRef}
-        className="relative w-20 cursor-pointer rounded-full border border-glass-border bg-glass-bg backdrop-blur-glass"
+        className="relative w-24 cursor-pointer rounded-full"
         style={{ height: `${TRACK_HEIGHT}px` }}
         onMouseDown={handleMouseDown}
         onTouchStart={handleTouchStart}
@@ -192,58 +180,55 @@ export const DepthSlider: FC<DepthSliderProps> = ({ value, onChange, className }
         aria-valuetext={`${value}, ${value > 66 ? t('tideLog.depth.surface') : value < 34 ? t('tideLog.depth.deep') : t('tideLog.depth.anchored')}`}
         tabIndex={0}
       >
-        {/* Gradient fill from bottom up based on value */}
-        <div
-          className={cn(
-            'absolute inset-x-0 bottom-0 rounded-full bg-gradient-to-t transition-all duration-300',
-            getGradientColor(value)
-          )}
-          style={{
-            height: `${value}%`,
-          }}
-        />
+        {/* Continuous gradient track (cyan at top → deep blue at bottom) */}
+        <div className="absolute inset-0 rounded-full bg-gradient-to-b from-biolum-cyan via-[#3d8fb5] to-void-blue opacity-80" />
 
-        {/* Tick marks */}
+        {/* Subtle tick marks */}
         <div className="absolute inset-0 flex flex-col justify-between py-2">
           {[100, 75, 50, 25, 0].map((tick) => (
             <div
               key={tick}
               className={cn(
-                'h-[2px] w-full',
-                tick === 50
-                  ? 'bg-mist-white/40' // Anchored line
-                  : 'bg-mist-white/20'
+                'h-[1px] w-full',
+                tick === 50 ? 'bg-mist-white/30' : 'bg-mist-white/10'
               )}
             />
           ))}
         </div>
 
-        {/* Thumb */}
+        {/* Glowing orb thumb */}
         <div
           className={cn(
             'absolute left-1/2 -translate-x-1/2 -translate-y-1/2',
-            'h-10 w-10 rounded-full border-4 transition-all duration-100',
-            isDragging
-              ? 'border-biolum-cyan bg-biolum-cyan/30 shadow-glow-md'
-              : 'border-mist-white bg-void-blue shadow-glass',
+            'h-12 w-12 rounded-full transition-all duration-150',
+            'border-2 border-biolum-cyan/50 bg-biolum-cyan',
+            'shadow-[0_0_20px_rgba(100,255,218,0.6),0_0_40px_rgba(100,255,218,0.3)]',
+            isDragging ? 'shadow-glow-strong scale-110' : 'scale-100',
             'cursor-grab active:cursor-grabbing'
           )}
           style={{
             top: `${thumbTop}px`,
           }}
-        />
+        >
+          {/* Inner glow */}
+          <div className="absolute inset-1 rounded-full bg-biolum-cyan/40" />
+        </div>
+
+        {/* Current value indicator */}
+        <div
+          className="absolute right-full mr-4 -translate-y-1/2 rounded-lg bg-biolum-cyan/20 px-2 py-1 text-xs font-medium text-biolum-cyan backdrop-blur-sm"
+          style={{ top: `${thumbTop}px` }}
+        >
+          {value}
+        </div>
       </div>
 
       {/* Bottom label */}
-      <div className="flex w-full items-center justify-between px-2 text-sm text-mist-white/70">
-        <span>{t('tideLog.depth.deep')}</span>
-        <span className="text-xs text-mist-white/50">
-          {value > 66
-            ? t('tideLog.depth.surface')
-            : value < 34
-              ? t('tideLog.depth.deep')
-              : t('tideLog.depth.anchored')}
+      <div className="flex flex-col items-center gap-1">
+        <span className="text-base font-medium text-mist-white">
+          {t('tideLog.depth.deepLabel')}
         </span>
+        <span className="text-xs text-mist-white/50">{t('tideLog.depth.deepDesc')}</span>
       </div>
     </div>
   );

@@ -290,8 +290,12 @@
       "depth": {
         "title": "Wie tief bist du?",
         "surface": "Oberfläche",
+        "surfaceLabel": "Turbulent",
+        "surfaceDesc": "Hohe Energie",
         "anchored": "Verankert",
         "deep": "Tief",
+        "deepLabel": "Ruhig",
+        "deepDesc": "Tiefe Ruhe",
         "description": "Bewege den Regler, um deine emotionale Tiefe anzuzeigen"
       },
       "weather": {

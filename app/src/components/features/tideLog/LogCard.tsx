@@ -24,11 +24,11 @@ const weatherIcons: Record<WeatherType, typeof CloudRain> = {
 };
 
 const weatherColors: Record<WeatherType, string> = {
-  stormy: 'text-[#9B7DFF]',
-  foggy: 'text-[#B0B0B0]',
-  clear: 'text-[#FFD93D]',
-  sunny: 'text-warm-ember',
-  turbulent: 'text-biolum-cyan',
+  stormy: '#9B7DFF',
+  foggy: '#B0B0B0',
+  clear: '#FFD93D',
+  sunny: '#FFB38A',
+  turbulent: '#64FFDA',
 };
 
 /**
@@ -40,7 +40,7 @@ export const LogCard: FC<LogCardProps> = ({ log, onClick, index = 0 }) => {
   const { light } = useHaptics();
 
   const Icon = weatherIcons[log.weather];
-  const iconColor = weatherColors[log.weather];
+  const weatherColor = weatherColors[log.weather];
 
   const handleClick = () => {
     light();
@@ -52,21 +52,27 @@ export const LogCard: FC<LogCardProps> = ({ log, onClick, index = 0 }) => {
       onClick={handleClick}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, delay: index * 0.05, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.4, delay: index * 0.05, ease: [0.22, 1, 0.36, 1] as const }}
       whileTap={{ scale: 0.98 }}
       className={cn(
-        'w-full rounded-2xl border border-glass-border bg-glass-bg p-4 text-left backdrop-blur-glass transition-all',
-        'hover:border-biolum-cyan/50 hover:bg-glass-bg-hover'
+        'bg-white/8 w-full rounded-3xl border border-white/10 p-5 text-left backdrop-blur-glass transition-all duration-300',
+        'hover:border-biolum-cyan/40 hover:bg-white/10 hover:shadow-[0_0_20px_rgba(100,255,218,0.1)]'
       )}
     >
       <div className="flex items-start gap-4">
-        {/* Weather icon */}
-        <div className="flex-shrink-0">
-          <Icon size={32} className={iconColor} />
+        {/* Weather icon with glow */}
+        <div
+          className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-full"
+          style={{
+            backgroundColor: `${weatherColor}20`,
+            boxShadow: `0 0 12px ${weatherColor}40`,
+          }}
+        >
+          <Icon size={28} color={weatherColor} strokeWidth={2} />
         </div>
 
         {/* Content */}
-        <div className="flex-1 space-y-2">
+        <div className="flex-1 space-y-3">
           {/* Date and time */}
           <div className="flex items-baseline justify-between gap-2">
             <span className="text-sm font-medium text-mist-white">
@@ -75,8 +81,8 @@ export const LogCard: FC<LogCardProps> = ({ log, onClick, index = 0 }) => {
             <span className="text-xs text-mist-white/50">{getRelativeTime(log.createdAt, t)}</span>
           </div>
 
-          {/* Mood depth bar */}
-          <div className="space-y-1">
+          {/* Horizontal depth bar */}
+          <div className="space-y-1.5">
             <div className="flex items-center justify-between text-xs text-mist-white/60">
               <span>
                 {log.mood_depth > 66
@@ -85,11 +91,12 @@ export const LogCard: FC<LogCardProps> = ({ log, onClick, index = 0 }) => {
                     ? t('tideLog.depth.deep')
                     : t('tideLog.depth.anchored')}
               </span>
-              <span>{log.mood_depth}</span>
+              <span className="font-medium text-mist-white/80">{log.mood_depth}</span>
             </div>
-            <div className="h-2 w-full overflow-hidden rounded-full bg-mist-white/10">
+            {/* Gradient track matching DepthSlider aesthetic */}
+            <div className="relative h-2 w-full overflow-hidden rounded-full bg-gradient-to-r from-void-blue via-[#3d8fb5] to-biolum-cyan opacity-60">
               <div
-                className="h-full bg-biolum-cyan transition-all duration-300"
+                className="absolute inset-y-0 left-0 rounded-full bg-biolum-cyan/40 backdrop-blur-sm transition-all duration-300"
                 style={{ width: `${log.mood_depth}%` }}
               />
             </div>
@@ -98,15 +105,15 @@ export const LogCard: FC<LogCardProps> = ({ log, onClick, index = 0 }) => {
           {/* Note preview or "Released" label */}
           {log.is_released ? (
             <div className="relative">
-              <p className="line-clamp-2 select-none text-sm text-mist-white/70 blur-sm">
+              <p className="line-clamp-2 select-none text-sm text-mist-white/60 blur-sm">
                 {log.note_text || t('tideLog.stream.noNote')}
               </p>
-              <span className="absolute inset-0 flex items-center justify-center text-xs font-medium text-warm-ember">
+              <span className="absolute inset-0 flex items-center justify-center text-xs font-medium text-warm-ember drop-shadow-glow">
                 {t('tideLog.stream.dissolved')}
               </span>
             </div>
           ) : (
-            <p className="line-clamp-2 text-sm text-mist-white/70">
+            <p className="line-clamp-2 text-sm text-mist-white">
               {log.note_text || t('tideLog.stream.noNote')}
             </p>
           )}

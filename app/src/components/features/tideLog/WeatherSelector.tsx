@@ -77,8 +77,8 @@ export const WeatherSelector: FC<WeatherSelectorProps> = ({ value, onChange, cla
 
   return (
     <div className={cn('flex flex-col gap-6', className)}>
-      {/* Weather grid */}
-      <div className="grid grid-cols-3 gap-4">
+      {/* Weather grid - 2 columns for balanced layout */}
+      <div className="mx-auto grid w-full max-w-sm grid-cols-2 gap-4">
         {weatherOptions.map((option) => {
           const Icon = option.icon;
           const isSelected = value === option.type;
@@ -89,31 +89,32 @@ export const WeatherSelector: FC<WeatherSelectorProps> = ({ value, onChange, cla
               key={option.type}
               onClick={() => handleSelect(option.type)}
               className={cn(
-                'relative flex flex-col items-center justify-center gap-2 rounded-2xl p-6 transition-all duration-300',
-                'border backdrop-blur-glass',
+                'duration-400 relative flex flex-col items-center justify-center gap-2 rounded-2xl p-6 transition-all',
+                'border border-white/10 backdrop-blur-glass',
                 isSelected
-                  ? `border-current ${option.color} ${option.glowColor} scale-110`
-                  : 'border-glass-border bg-glass-bg hover:bg-glass-bg-hover'
+                  ? `scale-105 bg-white/10 ${option.glowColor}`
+                  : 'hover:bg-white/8 bg-white/5 hover:scale-[1.02]'
               )}
               whileTap={{ scale: 0.95 }}
-              transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] as const }}
               aria-label={`${t(`tideLog.weather.${option.type}`)} - ${t(`tideLog.weather.${option.type}_desc`)}`}
               aria-pressed={isSelected}
             >
-              {/* Icon */}
+              {/* Icon - w-12 h-12 (48px) */}
               <Icon
                 size={48}
+                strokeWidth={2.5}
                 className={cn(
-                  'transition-all duration-300',
-                  isSelected ? option.color : 'text-mist-white/70'
+                  'duration-400 transition-all',
+                  isSelected ? option.color : 'text-mist-white/60'
                 )}
               />
 
               {/* Label */}
               <span
                 className={cn(
-                  'text-xs font-medium transition-colors duration-300',
-                  isSelected ? option.color : 'text-mist-white/70'
+                  'duration-400 text-xs font-medium transition-colors',
+                  isSelected ? option.color : 'text-mist-white/60'
                 )}
               >
                 {t(`tideLog.weather.${option.type}`)}
@@ -128,7 +129,7 @@ export const WeatherSelector: FC<WeatherSelectorProps> = ({ value, onChange, cla
                   )}
                   initial={{ scale: 0.8, opacity: 0.6 }}
                   animate={{ scale: 1.5, opacity: 0 }}
-                  transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                  transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] as const }}
                 />
               )}
             </motion.button>

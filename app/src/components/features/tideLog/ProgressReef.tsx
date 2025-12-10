@@ -57,11 +57,13 @@ const calculateOrbPosition = (
   const entryDate = new Date(log.date);
   const daysSince = Math.floor((today.getTime() - entryDate.getTime()) / (1000 * 60 * 60 * 24));
 
-  // Size: newer entries are larger (48px max, decreasing by 0.5px per day)
-  const size = Math.max(32, 48 - daysSince * 0.5);
+  // Size variation: 12-24px with random offset for organic feel
+  const baseSize = Math.max(12, 24 - daysSince * 0.3);
+  const sizeVariation = (seed % 8) - 4; // -4 to +4px variation
+  const size = Math.max(12, Math.min(24, baseSize + sizeVariation));
 
   // Opacity: brighter when closer to surface (higher mood_depth)
-  const opacity = 0.4 + (log.mood_depth / 100) * 0.6;
+  const opacity = 0.5 + (log.mood_depth / 100) * 0.5;
 
   // Color based on weather
   const color = weatherColors[log.weather];
@@ -89,10 +91,10 @@ export const ProgressReef: FC<ProgressReefProps> = ({ logs, onOrbClick, classNam
 
   if (orbData.length === 0) {
     return (
-      <div className={`flex flex-col items-center justify-center py-12 ${className}`}>
-        <div className="mb-3 text-5xl">🪸</div>
-        <p className="text-lg font-medium text-mist-white">{t('tideLog.reef.emptyTitle')}</p>
-        <p className="mt-2 text-center text-sm text-mist-white/60">
+      <div className={`flex flex-col items-center justify-center py-16 ${className}`}>
+        <div className="mb-4 text-6xl">🪸</div>
+        <p className="text-xl font-light text-mist-white">{t('tideLog.reef.emptyTitle')}</p>
+        <p className="mt-3 text-center text-sm text-mist-white/50">
           {t('tideLog.reef.emptyDescription')}
         </p>
       </div>
@@ -102,37 +104,41 @@ export const ProgressReef: FC<ProgressReefProps> = ({ logs, onOrbClick, classNam
   return (
     <div className={className}>
       {/* Title */}
-      <h2 className="mb-6 text-xl font-semibold text-mist-white">{t('tideLog.reef.title')}</h2>
+      <h2 className="mb-6 text-2xl font-light text-white">{t('tideLog.reef.title')}</h2>
 
-      {/* Reef Container */}
-      <div className="relative aspect-square w-full overflow-hidden rounded-3xl border border-glass-border bg-glass-bg/30 backdrop-blur-glass">
+      {/* Reef Container - floating in void, no grey box */}
+      <div className="relative h-80 w-full overflow-visible">
         {/* Center anchor point (visual reference) */}
-        <div className="absolute left-1/2 top-1/2 h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-biolum-cyan/20" />
+        <div className="absolute left-1/2 top-1/2 h-1 w-1 -translate-x-1/2 -translate-y-1/2 rounded-full bg-biolum-cyan/10" />
 
-        {/* Orbs */}
+        {/* Pulsing orbs with mandatory glows */}
         {orbData.map(({ log, position }, index) => (
           <motion.button
             key={log.id}
-            className="absolute rounded-full will-change-transform"
+            className="absolute cursor-pointer rounded-full will-change-transform"
             style={{
               left: `${position.x}%`,
               top: `${position.y}%`,
               width: `${position.size}px`,
               height: `${position.size}px`,
               backgroundColor: position.color,
-              opacity: position.opacity,
-              boxShadow: `0 0 ${position.size / 2}px ${position.color}`,
+              // MANDATORY GLOW: layered boxShadow for bioluminescent effect
+              boxShadow: `0 0 ${position.size * 0.5}px ${position.color}, 0 0 ${position.size}px ${position.color}40, 0 0 ${position.size * 1.5}px ${position.color}20`,
               transform: 'translate(-50%, -50%)', // Center the orb on its position
             }}
             initial={{ scale: 0, opacity: 0 }}
-            animate={{ scale: 1, opacity: position.opacity }}
-            transition={{
-              duration: 0.6,
-              delay: index * 0.05,
-              ease: [0.22, 1, 0.36, 1],
+            animate={{
+              scale: [1, 1.1, 1],
+              opacity: [position.opacity, position.opacity * 1.2, position.opacity],
             }}
-            whileHover={{ scale: 1.2, opacity: 1 }}
-            whileTap={{ scale: 0.9 }}
+            transition={{
+              duration: 4,
+              delay: index * 0.05,
+              repeat: Infinity,
+              ease: [0.22, 1, 0.36, 1] as const,
+            }}
+            whileHover={{ scale: 1.3, opacity: 1 }}
+            whileTap={{ scale: 0.85 }}
             onClick={() => handleOrbClick(log)}
             aria-label={t('tideLog.reef.orbLabel', {
               date: new Date(log.date).toLocaleDateString(),
@@ -142,15 +148,15 @@ export const ProgressReef: FC<ProgressReefProps> = ({ logs, onOrbClick, classNam
         ))}
 
         {/* Info text */}
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-center">
-          <p className="text-xs text-mist-white/40">
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 text-center">
+          <p className="text-xs text-mist-white/30">
             {t('tideLog.reef.orbCount', { count: orbData.length })}
           </p>
         </div>
       </div>
 
       {/* Description */}
-      <p className="mt-4 text-center text-sm text-mist-white/60">{t('tideLog.reef.description')}</p>
+      <p className="mt-6 text-center text-sm text-mist-white/50">{t('tideLog.reef.description')}</p>
     </div>
   );
 };

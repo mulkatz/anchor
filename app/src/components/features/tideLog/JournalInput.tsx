@@ -64,7 +64,7 @@ export const JournalInput: FC<JournalInputProps> = ({
           disabled={disabled}
           rows={8}
           className={cn(
-            'w-full rounded-2xl border border-glass-border bg-glass-bg px-4 py-3 text-mist-white placeholder-mist-white/50 backdrop-blur-glass transition-colors',
+            'w-full rounded-2xl border border-white/20 bg-transparent px-4 py-3 text-mist-white placeholder-mist-white/40 backdrop-blur-glass transition-colors',
             'focus:border-biolum-cyan focus:outline-none focus:ring-2 focus:ring-biolum-cyan/30',
             'disabled:cursor-not-allowed disabled:opacity-50',
             'resize-none'
@@ -105,15 +105,15 @@ export const JournalInput: FC<JournalInputProps> = ({
           <span>{t('tideLog.journal.keep')}</span>
         </motion.button>
 
-        {/* Release button */}
+        {/* Release button - warm gradient for magical feel */}
         <motion.button
           onClick={handleRelease}
           disabled={disabled}
           whileTap={{ scale: 0.97 }}
-          transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] as const }}
           className={cn(
-            'flex items-center justify-center gap-2 rounded-xl border border-warm-ember bg-warm-ember/10 px-6 py-3 text-warm-ember backdrop-blur-glass transition-all',
-            'hover:bg-warm-ember/20 hover:shadow-[0_0_20px_rgba(255,179,138,0.3)]',
+            'flex items-center justify-center gap-2 rounded-xl border border-warm-ember/40 bg-gradient-to-r from-orange-400/20 to-pink-400/20 px-6 py-3 text-warm-ember backdrop-blur-glass transition-all',
+            'hover:from-orange-400/30 hover:to-pink-400/30 hover:shadow-[0_0_20px_rgba(255,179,138,0.4)]',
             'disabled:cursor-not-allowed disabled:opacity-50',
             'font-medium'
           )}
