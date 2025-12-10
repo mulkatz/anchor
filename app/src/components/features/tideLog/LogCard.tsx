@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
-import { CloudRain, CloudFog, Sun, Sparkles, Wind } from 'lucide-react';
+import { CloudRain, CloudFog, Sun, Sparkles, Wind, Anchor } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { format } from 'date-fns';
 
@@ -18,17 +18,19 @@ interface LogCardProps {
 const weatherIcons: Record<WeatherType, typeof CloudRain> = {
   stormy: CloudRain,
   foggy: CloudFog,
+  turbulent: Wind,
   clear: Sun,
   sunny: Sparkles,
-  turbulent: Wind,
+  calm: Anchor,
 };
 
 const weatherColors: Record<WeatherType, string> = {
   stormy: '#9B7DFF',
   foggy: '#B0B0B0',
+  turbulent: '#64FFDA',
   clear: '#FFD93D',
   sunny: '#FFB38A',
-  turbulent: '#64FFDA',
+  calm: '#7DD3FC',
 };
 
 /**

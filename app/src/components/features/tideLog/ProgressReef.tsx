@@ -17,9 +17,10 @@ interface ProgressReefProps {
 const weatherColors: Record<WeatherType, string> = {
   stormy: '#9B7DFF', // Purple
   foggy: '#B0B0B0', // Gray
+  turbulent: '#64FFDA', // Biolum cyan
   clear: '#FFD93D', // Yellow
   sunny: '#FFB38A', // Warm ember
-  turbulent: '#64FFDA', // Biolum cyan
+  calm: '#7DD3FC', // Light blue
 };
 
 // Simple hash function for deterministic positioning

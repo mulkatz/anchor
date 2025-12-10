@@ -297,12 +297,14 @@
         "stormy_desc": "Overwhelmed",
         "foggy": "Foggy",
         "foggy_desc": "Confused",
+        "turbulent": "Turbulent",
+        "turbulent_desc": "Restless",
         "clear": "Clear",
         "clear_desc": "Focused",
         "sunny": "Sunny",
         "sunny_desc": "Happy",
-        "turbulent": "Turbulent",
-        "turbulent_desc": "Restless"
+        "calm": "Calm",
+        "calm_desc": "Grounded"
       },
       "journal": {
         "title": "One thing to release...",

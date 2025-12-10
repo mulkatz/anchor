@@ -1,6 +1,6 @@
 import { FC, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { X, Trash2, CloudRain, CloudFog, Sun, Sparkles, Wind } from 'lucide-react';
+import { X, Trash2, CloudRain, CloudFog, Sun, Sparkles, Wind, Anchor } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { format } from 'date-fns';
 
@@ -19,17 +19,19 @@ interface LogDetailDialogProps {
 const weatherIcons: Record<WeatherType, typeof CloudRain> = {
   stormy: CloudRain,
   foggy: CloudFog,
+  turbulent: Wind,
   clear: Sun,
   sunny: Sparkles,
-  turbulent: Wind,
+  calm: Anchor,
 };
 
 const weatherColors: Record<WeatherType, string> = {
   stormy: 'text-[#9B7DFF]',
   foggy: 'text-[#B0B0B0]',
+  turbulent: 'text-biolum-cyan',
   clear: 'text-[#FFD93D]',
   sunny: 'text-warm-ember',
-  turbulent: 'text-biolum-cyan',
+  calm: 'text-[#7DD3FC]',
 };
 
 /**

@@ -305,12 +305,14 @@
         "stormy_desc": "Überwältigt",
         "foggy": "Neblig",
         "foggy_desc": "Verwirrt",
+        "turbulent": "Turbulent",
+        "turbulent_desc": "Unruhig",
         "clear": "Klar",
         "clear_desc": "Fokussiert",
         "sunny": "Sonnig",
         "sunny_desc": "Glücklich",
-        "turbulent": "Turbulent",
-        "turbulent_desc": "Unruhig"
+        "calm": "Ruhig",
+        "calm_desc": "Geerdet"
       },
       "journal": {
         "title": "Eine Sache loszulassen...",

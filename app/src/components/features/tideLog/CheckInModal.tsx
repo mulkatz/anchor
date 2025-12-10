@@ -135,19 +135,19 @@ export const CheckInModal: FC<CheckInModalProps> = ({ existingLog, onClose }) =>
         onClick={handleClose}
       />
 
-      {/* Modal - constrained to 90dvh for iPhone SE compatibility */}
+      {/* Modal - responsive height: min 500px or 70dvh, max 90dvh */}
       <motion.div
         initial={{ opacity: 0, scale: 0.95, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: 20 }}
         transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-        className="relative z-10 flex w-full max-w-lg flex-col"
-        style={{ maxHeight: '90dvh' }}
+        className="relative z-10 w-full max-w-lg"
+        style={{ height: 'clamp(500px, 70dvh, 90dvh)' }}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex max-h-full flex-col overflow-hidden rounded-3xl border border-glass-border bg-glass-bg p-4 shadow-glass backdrop-blur-glass sm:p-6">
-          {/* Header */}
-          <div className="mb-4 flex items-center justify-between sm:mb-6">
+        <div className="flex h-full flex-col overflow-hidden rounded-3xl border border-glass-border bg-glass-bg p-4 shadow-glass backdrop-blur-glass sm:p-6">
+          {/* Header - fixed, doesn't shrink */}
+          <div className="mb-4 flex flex-shrink-0 items-center justify-between sm:mb-6">
             <div className="flex-1">
               <h2 className="text-xl font-semibold text-mist-white">
                 {isEditing ? t('tideLog.checkIn') : t('tideLog.checkIn')}
@@ -167,8 +167,8 @@ export const CheckInModal: FC<CheckInModalProps> = ({ existingLog, onClose }) =>
             </button>
           </div>
 
-          {/* Step indicator dots */}
-          <div className="mb-4 flex justify-center gap-2 sm:mb-6">
+          {/* Step indicator dots - fixed, doesn't shrink */}
+          <div className="mb-4 flex flex-shrink-0 justify-center gap-2 sm:mb-6">
             {[1, 2, 3].map((s) => (
               <div
                 key={s}
@@ -184,8 +184,8 @@ export const CheckInModal: FC<CheckInModalProps> = ({ existingLog, onClose }) =>
             ))}
           </div>
 
-          {/* Step content - flexible height that adapts to screen */}
-          <div className="relative flex min-h-0 flex-1 flex-col">
+          {/* Step content - fills remaining space, content centered via absolute positioning */}
+          <div className="relative min-h-0 flex-1">
             <AnimatePresence mode="wait" custom={direction}>
               {step === 1 && (
                 <motion.div
@@ -196,19 +196,20 @@ export const CheckInModal: FC<CheckInModalProps> = ({ existingLog, onClose }) =>
                   animate="center"
                   exit="exit"
                   transition={stepTransition}
-                  className="flex flex-col gap-2 sm:gap-4"
+                  className="absolute inset-0 flex items-center justify-center"
                 >
-                  <h3 className="text-center text-lg font-medium text-mist-white">
-                    {t('tideLog.depth.title')}
-                  </h3>
-                  <p className="text-center text-xs text-mist-white/70 sm:text-sm">
-                    {t('tideLog.depth.description')}
-                  </p>
-                  <DepthSlider
-                    value={data.mood_depth}
-                    onChange={(value) => updateData({ mood_depth: value })}
-                    className="mx-auto"
-                  />
+                  <div className="flex w-full flex-col items-center gap-2 sm:gap-4">
+                    <h3 className="text-center text-lg font-medium text-mist-white">
+                      {t('tideLog.depth.title')}
+                    </h3>
+                    <p className="text-center text-xs text-mist-white/70 sm:text-sm">
+                      {t('tideLog.depth.description')}
+                    </p>
+                    <DepthSlider
+                      value={data.mood_depth}
+                      onChange={(value) => updateData({ mood_depth: value })}
+                    />
+                  </div>
                 </motion.div>
               )}
 
@@ -221,15 +222,17 @@ export const CheckInModal: FC<CheckInModalProps> = ({ existingLog, onClose }) =>
                   animate="center"
                   exit="exit"
                   transition={stepTransition}
-                  className="flex flex-col gap-3 sm:gap-6"
+                  className="absolute inset-0 flex items-center justify-center"
                 >
-                  <h3 className="text-center text-lg font-medium text-mist-white">
-                    {t('tideLog.weather.title')}
-                  </h3>
-                  <WeatherSelector
-                    value={data.weather}
-                    onChange={(weather) => updateData({ weather })}
-                  />
+                  <div className="flex w-full flex-col items-center gap-3 sm:gap-6">
+                    <h3 className="text-center text-lg font-medium text-mist-white">
+                      {t('tideLog.weather.title')}
+                    </h3>
+                    <WeatherSelector
+                      value={data.weather}
+                      onChange={(weather) => updateData({ weather })}
+                    />
+                  </div>
                 </motion.div>
               )}
 
@@ -242,26 +245,28 @@ export const CheckInModal: FC<CheckInModalProps> = ({ existingLog, onClose }) =>
                   animate="center"
                   exit="exit"
                   transition={stepTransition}
-                  className="flex flex-col gap-3 sm:gap-6"
+                  className="absolute inset-0 flex items-center justify-center"
                 >
-                  <h3 className="text-center text-lg font-medium text-mist-white">
-                    {t('tideLog.journal.title')}
-                  </h3>
-                  <JournalInput
-                    value={data.note_text}
-                    onChange={(note_text) => updateData({ note_text })}
-                    onKeep={() => handleSave(false)}
-                    onRelease={() => handleSave(true)}
-                    disabled={isSaving}
-                  />
+                  <div className="flex w-full flex-col items-center gap-3 sm:gap-6">
+                    <h3 className="text-center text-lg font-medium text-mist-white">
+                      {t('tideLog.journal.title')}
+                    </h3>
+                    <JournalInput
+                      value={data.note_text}
+                      onChange={(note_text) => updateData({ note_text })}
+                      onKeep={() => handleSave(false)}
+                      onRelease={() => handleSave(true)}
+                      disabled={isSaving}
+                    />
+                  </div>
                 </motion.div>
               )}
             </AnimatePresence>
           </div>
 
-          {/* Navigation buttons (steps 1-2 only) */}
+          {/* Navigation buttons (steps 1-2 only) - fixed, doesn't shrink */}
           {step < 3 && (
-            <div className="mt-4 flex gap-3 sm:mt-6">
+            <div className="mt-4 flex flex-shrink-0 gap-3 sm:mt-6">
               {step > 1 && (
                 <button
                   onClick={handleBack}

@@ -405,7 +405,7 @@ export const ProfilePage: FC = () => {
       </SettingSection>
 
       {/* Version Footer */}
-      <div className="mt-4 pb-4 text-center">
+      <div className="mt-4 text-center">
         <p className="text-xs text-mist-white/30">{t('general.version', { version })}</p>
       </div>
 
