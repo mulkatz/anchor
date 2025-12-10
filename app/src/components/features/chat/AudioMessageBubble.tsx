@@ -26,7 +26,7 @@ export const AudioMessageBubble: FC<AudioMessageBubbleProps> = ({ message, onRet
   const showLowConfidenceWarning = message.metadata?.lowConfidenceWarning && isCompleted;
 
   return (
-    <div className="mb-4 flex justify-end px-6">
+    <div className="mb-4 flex justify-end px-4 sm:px-6">
       <div
         className={cn(
           'max-w-[90%] rounded-3xl',

@@ -14,7 +14,7 @@ interface AssistantMessageProps {
  */
 export const AssistantMessage: FC<AssistantMessageProps> = ({ text }) => {
   return (
-    <div className="mb-4 flex justify-start px-6">
+    <div className="mb-4 flex justify-start px-4 sm:px-6">
       <div
         className={cn(
           'max-w-[90%] rounded-3xl rounded-tl-lg px-5 py-3',

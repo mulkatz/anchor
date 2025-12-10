@@ -21,7 +21,7 @@ export const HomePage: FC = () => {
   );
 
   return (
-    <div className="relative flex h-full flex-col items-center justify-center overflow-hidden bg-void-blue/60 px-6">
+    <div className="relative flex h-full flex-col items-center justify-center overflow-hidden bg-void-blue/60 px-4 sm:px-6">
       {/* Ambient particles */}
       {ambientParticles.map((particle) => (
         <motion.div

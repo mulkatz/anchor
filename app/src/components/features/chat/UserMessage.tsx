@@ -11,7 +11,7 @@ interface UserMessageProps {
  */
 export const UserMessage: FC<UserMessageProps> = ({ text }) => {
   return (
-    <div className="mb-4 flex justify-end px-6">
+    <div className="mb-4 flex justify-end px-4 sm:px-6">
       <div
         className={cn(
           'max-w-[90%] rounded-3xl rounded-tr-lg px-5 py-3',

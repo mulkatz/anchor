@@ -32,7 +32,7 @@ export const CrisisCard: FC = () => {
   };
 
   return (
-    <div className="mb-6 px-6">
+    <div className="mb-6 px-4 sm:px-6">
       <div
         className={cn(
           'rounded-3xl p-6',

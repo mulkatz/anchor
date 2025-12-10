@@ -46,7 +46,7 @@ export const FloatingDock: FC = () => {
     <div
       ref={navRef}
       data-floating-dock
-      className="safe-area-margin-bottom fixed bottom-6 left-0 right-0 z-50 flex justify-center px-6"
+      className="safe-area-margin-bottom fixed bottom-6 left-0 right-0 z-50 flex justify-center px-4 sm:px-6"
     >
       <nav
         className={cn(

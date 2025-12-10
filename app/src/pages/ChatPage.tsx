@@ -58,7 +58,7 @@ export const ChatPage: FC = () => {
   return (
     <div className="flex h-screen w-full flex-col bg-void-blue/85">
       {/* Header */}
-      <header className="safe-area-top flex shrink-0 items-center justify-between border-b border-glass-border px-6 py-4">
+      <header className="safe-area-top flex shrink-0 items-center justify-between border-b border-glass-border px-4 py-4 sm:px-6">
         <div>
           <h1 className="text-2xl font-light text-mist-white">{t('chat.title')}</h1>
           <p className="text-sm text-mist-white/60">{t('chat.subtitle')}</p>
@@ -97,7 +97,7 @@ export const ChatPage: FC = () => {
 
       {/* Error Banner (if any) */}
       {(error || conversationError) && (
-        <div className="shrink-0 border-b border-danger/50 bg-danger/20 px-6 py-3">
+        <div className="shrink-0 border-b border-danger/50 bg-danger/20 px-4 py-3 sm:px-6">
           <p className="text-sm text-mist-white">{error || conversationError}</p>
         </div>
       )}

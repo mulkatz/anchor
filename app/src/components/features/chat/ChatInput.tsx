@@ -93,7 +93,7 @@ export const ChatInput: FC<ChatInputProps> = ({ onSend, onSendVoice, disabled })
     <div
       className={cn(
         'absolute bottom-0 left-0 right-0 z-40',
-        'px-6 pb-4 pt-3',
+        'px-4 pb-4 pt-3 sm:px-6',
         'bg-void-blue/95 backdrop-blur-glass',
         'border-t border-glass-border',
         'pointer-events-auto',

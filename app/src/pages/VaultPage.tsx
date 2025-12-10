@@ -33,7 +33,7 @@ export const VaultPage: FC = () => {
 
   return (
     <div
-      className="flex h-full flex-col overflow-y-auto bg-void-blue/70 px-6 py-8 pt-safe"
+      className="flex h-full flex-col overflow-y-auto bg-void-blue/70 px-4 py-8 pt-safe sm:px-6"
       style={{ paddingBottom: `${Math.max(navbarBottom + 32, 96)}px` }}
     >
       {/* Header - matches Profile page spacing */}

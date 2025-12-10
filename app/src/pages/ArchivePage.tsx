@@ -53,7 +53,7 @@ export const ArchivePage: FC = () => {
   return (
     <div className="flex h-full flex-col bg-void-blue/85">
       {/* Header */}
-      <header className="safe-area-top border-b border-glass-border px-6 py-4">
+      <header className="safe-area-top border-b border-glass-border px-4 py-4 sm:px-6">
         <div className="mb-4 flex items-center gap-4">
           <button
             onClick={handleBack}
@@ -87,7 +87,7 @@ export const ArchivePage: FC = () => {
       </header>
 
       {/* Content */}
-      <div className="flex-1 overflow-y-auto px-6 py-6">
+      <div className="flex-1 overflow-y-auto px-4 py-6 sm:px-6">
         {isLoading ? (
           <div className="flex items-center justify-center py-12">
             <div className="h-8 w-8 animate-pulse rounded-full bg-biolum-cyan/30" />
