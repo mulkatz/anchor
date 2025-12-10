@@ -82,7 +82,9 @@ Imagine the deep ocean at night. Viscous, slow-moving, calming darkness punctuat
   "@google-cloud/storage": "^7.0.0", // Cloud Storage for audio files
   "@google-cloud/vertexai": "latest", // Gemini AI integration
   "firebase-admin": "latest", // Firebase Admin SDK
-  "firebase-functions": "latest" // Cloud Functions runtime
+  "firebase-functions": "latest", // Cloud Functions runtime
+  "fluent-ffmpeg": "^2.1.3", // Audio format conversion (AAC/MP4 → LINEAR16 WAV)
+  "@ffmpeg-installer/ffmpeg": "^1.1.0" // FFmpeg binary for Cloud Functions
 }
 ```
 
@@ -516,11 +518,31 @@ export const onAudioMessageCreate = onDocumentCreated(
   'users/{userId}/conversations/{conversationId}/messages/{messageId}',
   async (event) => {
     // 1. Download audio from Cloud Storage
-    // 2. Determine encoding from mimeType (WEBM_OPUS, OGG_OPUS, MP4, etc.)
-    // 3. Call Google Cloud Speech-to-Text API
-    // 4. Update Firestore message with transcription
+    // 2. Determine encoding from mimeType
+    // 3. CRITICAL: Convert AAC/MP4 to LINEAR16 WAV (Android/iOS compatibility)
+    //    - Google Speech-to-Text does NOT support AAC/MP4 directly
+    //    - Use fluent-ffmpeg to convert: AAC → LINEAR16 WAV (pcm_s16le, mono, 16kHz)
+    // 4. Call Google Cloud Speech-to-Text API
+    // 5. Update Firestore message with transcription
   }
 );
+```
+
+**Audio Format Conversion (Server-Side):**
+
+Android and iOS record audio in AAC/MP4 format, which Google Speech-to-Text API does NOT support. The transcription function automatically converts these files to LINEAR16 WAV format using `fluent-ffmpeg`:
+
+```typescript
+// Helper function in transcription.ts
+async function convertToLinear16Wav(inputBuffer: Buffer, inputFormat: string): Promise<Buffer> {
+  // Write to temp file → Convert with ffmpeg → Read output → Cleanup
+  ffmpeg(inputPath)
+    .toFormat('wav')
+    .audioCodec('pcm_s16le') // LINEAR16 codec
+    .audioChannels(1) // Mono
+    .audioFrequency(16000) // 16kHz sample rate
+    .save(outputPath);
+}
 ```
 
 **Speech-to-Text Configuration:**
@@ -528,8 +550,12 @@ export const onAudioMessageCreate = onDocumentCreated(
 - **API:** Google Cloud Speech-to-Text v2
 - **Model:** `latest_long` (enhanced for conversational speech)
 - **Language:** `en-US` (future: auto-detect with alternativeLanguageCodes)
-- **Sample Rate:** 48kHz (web audio standard)
-- **Encoding:** Dynamic based on mimeType (WEBM_OPUS, OGG_OPUS, MP4)
+- **Sample Rate:**
+  - 48kHz for web audio (WebM/Opus)
+  - 16kHz for mobile audio (converted LINEAR16 WAV)
+- **Encoding:** Dynamic based on platform
+  - Web: `WEBM_OPUS` or `OGG_OPUS`
+  - Android/iOS: `LINEAR16` (after server-side conversion from AAC/MP4)
 - **Features:** Automatic punctuation enabled, profanity filter OFF (preserves crisis keywords)
 
 **AI Response Trigger** (`/backend/functions/src/chat.ts`):

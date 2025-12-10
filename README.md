@@ -31,6 +31,7 @@ Anxiety Buddy is a mental health companion app designed specifically for Gen Z (
 
 - **WhatsApp-style voice messaging** for users who find typing difficult during anxiety
 - Click-to-record (60s max), automatic transcription via Google Cloud Speech-to-Text
+- **Server-side audio conversion:** AAC/MP4 (Android/iOS) → LINEAR16 WAV for compatibility
 - Transcribed text flows through AI for therapeutic response
 - ~$0.036/minute ($180/month for 1000 users with 10 msgs/month)
 
@@ -86,6 +87,7 @@ Anxiety Buddy is a mental health companion app designed specifically for Gen Z (
 - **Google Vertex AI** (Gemini 2.5 Flash)
 - **Firebase Cloud Storage** (Audio file hosting)
 - **Firestore** (Real-time message sync)
+- **FFmpeg** (Server-side audio conversion: AAC/MP4 → LINEAR16 WAV for Android/iOS compatibility)
 
 ### Key Dependencies
 
@@ -385,6 +387,9 @@ firebase deploy --only functions,storage
 - Verify Speech-to-Text API is enabled in GCP Console
 - Check IAM: Service account needs Cloud Speech Client role
 - Review Cloud Function logs in Firebase Console
+- **Android/iOS 0% confidence:** Ensure `fluent-ffmpeg` and `@ffmpeg-installer/ffmpeg` are installed in backend/functions
+  - These dependencies enable server-side audio conversion (AAC/MP4 → LINEAR16 WAV)
+  - Without them, Android/iOS recordings will fail to transcribe
 
 ### Build Errors
 
