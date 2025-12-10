@@ -17,7 +17,8 @@ import { format } from 'date-fns';
 import toast from 'react-hot-toast';
 import i18next from 'i18next';
 
-import { firestore, auth } from '../services/firebase.service';
+import { firestore } from '../services/firebase.service';
+import { useApp } from '../contexts/AppContext';
 import type { DailyLog, WeatherType } from '../models';
 import { logAnalyticsEvent, AnalyticsEvent } from '../services/analytics.service';
 
@@ -36,7 +37,8 @@ export interface UseDailyLogsReturn {
  * Provides real-time Firestore sync and CRUD operations
  */
 export const useDailyLogs = (): UseDailyLogsReturn => {
-  const userId = auth.currentUser?.uid;
+  // Get userId from context (reactive to auth state changes)
+  const { userId, isAuthLoading } = useApp();
   const [logs, setLogs] = useState<DailyLog[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -49,6 +51,11 @@ export const useDailyLogs = (): UseDailyLogsReturn => {
 
   // Set up real-time listener for daily logs
   useEffect(() => {
+    // Wait for auth to complete before trying to access logs
+    if (isAuthLoading) {
+      return;
+    }
+
     if (!userId) {
       setLogs([]);
       setLoading(false);
@@ -93,7 +100,7 @@ export const useDailyLogs = (): UseDailyLogsReturn => {
     );
 
     return () => unsubscribe();
-  }, [userId]);
+  }, [userId, isAuthLoading]);
 
   /**
    * Create a new daily log entry

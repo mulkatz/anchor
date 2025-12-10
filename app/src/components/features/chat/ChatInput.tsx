@@ -5,6 +5,8 @@ import { cn } from '../../../utils/cn';
 import { useHaptics } from '../../../hooks/useHaptics';
 import { useNavbarHeight } from '../../../hooks/useNavbarHeight';
 import { useVoiceRecorder, type RecordingData } from '../../../hooks/useVoiceRecorder';
+import { useDialog } from '../../../contexts/DialogContext';
+import { PermissionDenied } from '../dialogs/PermissionDenied';
 
 interface ChatInputProps {
   onSend: (text: string) => void;
@@ -26,6 +28,7 @@ export const ChatInput: FC<ChatInputProps> = ({ onSend, onSendVoice, disabled })
   const { light } = useHaptics();
   const navbarOffset = useNavbarHeight();
   const voiceRecorder = useVoiceRecorder();
+  const dialogs = useDialog();
 
   // Auto-resize textarea based on content
   useEffect(() => {
@@ -66,7 +69,12 @@ export const ChatInput: FC<ChatInputProps> = ({ onSend, onSendVoice, disabled })
 
     if (!voiceRecorder.isRecording) {
       // Start recording
-      await voiceRecorder.startRecording();
+      const result = await voiceRecorder.startRecording();
+
+      // Show permission denied dialog if permission was declined
+      if (result === 'permission_denied') {
+        dialogs.push(<PermissionDenied type="microphone" onClose={dialogs.pop} />);
+      }
     } else {
       // Stop recording and send
       const recordingData = await voiceRecorder.stopRecording();
@@ -133,7 +141,7 @@ export const ChatInput: FC<ChatInputProps> = ({ onSend, onSendVoice, disabled })
           <button
             ref={micButtonRef}
             onClick={handleMicClick}
-            disabled={disabled || voiceRecorder.permission === 'denied'}
+            disabled={disabled}
             className={cn(
               'flex items-center justify-center',
               'h-10 w-10 shrink-0 rounded-full',

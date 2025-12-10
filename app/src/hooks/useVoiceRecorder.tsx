@@ -5,6 +5,8 @@ import { useHaptics } from './useHaptics';
 
 export type RecordingPermission = 'granted' | 'denied' | 'prompt';
 
+export type StartRecordingResult = 'started' | 'permission_denied' | 'error';
+
 export interface RecordingData {
   blob: Blob;
   duration: number; // milliseconds
@@ -17,7 +19,7 @@ interface UseVoiceRecorderReturn {
   duration: number; // seconds
   permission: RecordingPermission;
   error: string | null;
-  startRecording: () => Promise<void>;
+  startRecording: () => Promise<StartRecordingResult>;
   stopRecording: () => Promise<RecordingData | null>;
   cancelRecording: () => Promise<void>;
   pauseRecording: () => Promise<void>;
@@ -84,8 +86,9 @@ export const useVoiceRecorder = (): UseVoiceRecorderReturn => {
 
   /**
    * Start recording audio
+   * Returns the result status so caller can handle permission denied UI
    */
-  const startRecording = useCallback(async (): Promise<void> => {
+  const startRecording = useCallback(async (): Promise<StartRecordingResult> => {
     try {
       setError(null);
 
@@ -95,7 +98,7 @@ export const useVoiceRecorder = (): UseVoiceRecorderReturn => {
         const granted = await requestPermission();
         if (!granted) {
           setError(i18next.t('errors.voice.permissionRequired'));
-          return;
+          return 'permission_denied';
         }
       }
 
@@ -119,10 +122,13 @@ export const useVoiceRecorder = (): UseVoiceRecorderReturn => {
           stopRecording();
         }
       }, 100);
+
+      return 'started';
     } catch (err) {
       console.error('Failed to start recording:', err);
       setError(i18next.t('errors.voice.startFailed'));
       setIsRecording(false);
+      return 'error';
     }
   }, [haptics, requestPermission]);
 

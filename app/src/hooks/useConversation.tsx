@@ -12,7 +12,8 @@ import {
   limit,
 } from 'firebase/firestore';
 import i18next from 'i18next';
-import { firestore, auth } from '../services/firebase.service';
+import { firestore } from '../services/firebase.service';
+import { useApp } from '../contexts/AppContext';
 import type { Conversation } from '../models';
 
 export const useConversation = () => {
@@ -20,10 +21,16 @@ export const useConversation = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const userId = auth.currentUser?.uid;
+  // Get userId from context (reactive to auth state changes)
+  const { userId, isAuthLoading } = useApp();
 
   // Listen to active conversation
   useEffect(() => {
+    // Wait for auth to complete before trying to access conversations
+    if (isAuthLoading) {
+      return;
+    }
+
     if (!userId) {
       setIsLoading(false);
       return;
@@ -69,7 +76,7 @@ export const useConversation = () => {
     );
 
     return () => unsubscribe();
-  }, [userId]);
+  }, [userId, isAuthLoading]);
 
   // Create new conversation (and auto-archive current via Cloud Function)
   const createNewConversation = useCallback(async (): Promise<string> => {

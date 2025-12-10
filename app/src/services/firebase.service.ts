@@ -1,8 +1,9 @@
 import { initializeApp } from 'firebase/app';
 import { getAnalytics, logEvent as firebaseLogEvent } from 'firebase/analytics';
-import { getAuth } from 'firebase/auth';
+import { getAuth, initializeAuth, indexedDBLocalPersistence } from 'firebase/auth';
 import { getFirestore, enableIndexedDbPersistence } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
+import { Capacitor } from '@capacitor/core';
 import { isWeb } from '../utils/platform';
 
 /**
@@ -23,8 +24,16 @@ const firebaseConfig = {
 // Initialize Firebase
 export const app = initializeApp(firebaseConfig);
 
-// Initialize services
-export const auth = getAuth(app);
+// Initialize auth with proper persistence for native platforms
+// CRITICAL: Use initializeAuth with indexedDBLocalPersistence for iOS/Android WKWebView
+const platform = Capacitor.getPlatform();
+export const auth =
+  platform === 'ios' || platform === 'android'
+    ? initializeAuth(app, {
+        persistence: indexedDBLocalPersistence,
+      })
+    : getAuth(app);
+
 export const firestore = getFirestore(app);
 export const storage = getStorage(app);
 

@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import { collection, query, where, orderBy, onSnapshot, deleteDoc, doc } from 'firebase/firestore';
 import i18next from 'i18next';
-import { firestore, auth } from '../services/firebase.service';
+import { firestore } from '../services/firebase.service';
+import { useApp } from '../contexts/AppContext';
 import type { Conversation } from '../models';
 
 export const useArchive = () => {
@@ -9,10 +10,16 @@ export const useArchive = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const userId = auth.currentUser?.uid;
+  // Get userId from context (reactive to auth state changes)
+  const { userId, isAuthLoading } = useApp();
 
   // Listen to archived conversations
   useEffect(() => {
+    // Wait for auth to complete before trying to access conversations
+    if (isAuthLoading) {
+      return;
+    }
+
     if (!userId) {
       setIsLoading(false);
       return;
@@ -58,7 +65,7 @@ export const useArchive = () => {
     );
 
     return () => unsubscribe();
-  }, [userId]);
+  }, [userId, isAuthLoading]);
 
   // Delete conversation permanently
   const deleteConversation = useCallback(

@@ -166,6 +166,11 @@
       "no": "Nicht wirklich"
     },
     "dialogs": {
+      "permissionDenied": {
+        "title": "Berechtigung erforderlich",
+        "microphoneAdvice": "Wir können keine Sprachnachrichten aufnehmen ohne Mikrofon-Zugriff. Erteile die Berechtigung in deinen Einstellungen, um diese Funktion zu nutzen.",
+        "toSettings": "Zu Einstellungen"
+      },
       "confirmClearCache": "Cache leeren?",
       "confirmClearCacheMessage": "Dies löscht zwischengespeicherte Audiodateien und temporäre Daten. Deine Gespräche bleiben erhalten.",
       "confirmDeleteAllData": "Alle Daten löschen?",

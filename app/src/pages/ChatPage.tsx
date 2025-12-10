@@ -7,8 +7,8 @@ import { ChatInput } from '../components/features/chat/ChatInput';
 import { useChat } from '../hooks/useChat';
 import { useConversation } from '../hooks/useConversation';
 import { useHaptics } from '../hooks/useHaptics';
+import { useApp } from '../contexts/AppContext';
 import { cn } from '../utils/cn';
-import { auth } from '../services/firebase.service';
 
 /**
  * Chat Page - "Deep Talk"
@@ -18,6 +18,7 @@ export const ChatPage: FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { light } = useHaptics();
+  const { userId, isAuthLoading } = useApp();
   const {
     activeConversation,
     isLoading: conversationLoading,
@@ -31,14 +32,13 @@ export const ChatPage: FC = () => {
 
   // Auto-create first conversation if none exists (only when authenticated)
   useEffect(() => {
-    const userId = auth.currentUser?.uid;
-    if (!conversationLoading && !activeConversation && userId) {
+    if (!isAuthLoading && !conversationLoading && !activeConversation && userId) {
       console.log('Auto-creating first conversation...');
       createNewConversation().catch((err) => {
         console.error('Failed to auto-create conversation:', err);
       });
     }
-  }, [conversationLoading, activeConversation, createNewConversation]);
+  }, [isAuthLoading, conversationLoading, activeConversation, createNewConversation, userId]);
 
   const handleNewChat = async () => {
     await light();

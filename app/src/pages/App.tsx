@@ -1,8 +1,6 @@
-import { type FC, useEffect } from 'react';
+import { type FC } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { signInAnonymously } from 'firebase/auth';
-import { auth } from '../services/firebase.service';
 import { AppProvider } from '../contexts/AppContext';
 import { DialogProvider } from '../contexts/DialogContext';
 import { UIProvider } from '../contexts/UIContext';
@@ -139,15 +137,7 @@ const AnimatedRoutes: FC = () => {
 };
 
 const App: FC = () => {
-  // Ensure user is signed in anonymously on app load
-  useEffect(() => {
-    if (!auth.currentUser) {
-      signInAnonymously(auth).catch((error) => {
-        console.error('Anonymous sign-in failed:', error);
-      });
-    }
-  }, []);
-
+  // Auth is now handled in AppContext with proper onAuthStateChanged tracking
   return (
     <AppProvider>
       <UIProvider>

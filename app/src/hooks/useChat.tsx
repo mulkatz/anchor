@@ -2,8 +2,9 @@ import { useState, useEffect, useCallback } from 'react';
 import { collection, query, orderBy, onSnapshot, addDoc, Timestamp } from 'firebase/firestore';
 import { ref, uploadBytes } from 'firebase/storage';
 import i18next from 'i18next';
-import { firestore, auth, storage } from '../services/firebase.service';
+import { firestore, storage } from '../services/firebase.service';
 import { useHaptics } from './useHaptics';
+import { useApp } from '../contexts/AppContext';
 import type { Message, SupportedLanguage } from '../models';
 import type { RecordingData } from './useVoiceRecorder';
 
@@ -21,7 +22,8 @@ export const useChat = ({ conversationId }: UseChatProps) => {
   const [error, setError] = useState<string | null>(null);
   const { medium } = useHaptics();
 
-  const userId = auth.currentUser?.uid;
+  // Get userId from context (reactive to auth state changes)
+  const { userId } = useApp();
 
   // Get user's language from localStorage
   const getUserLanguage = (): SupportedLanguage => {
