@@ -101,4 +101,20 @@ export interface Feedback {
   resolved: boolean; // Admin field
 }
 
+// Tide Log (Journaling) models
+export type WeatherType = 'stormy' | 'foggy' | 'clear' | 'sunny' | 'turbulent';
+
+export interface DailyLog {
+  id: string;
+  userId: string;
+  createdAt: Date;
+  updatedAt: Date;
+  date: string; // YYYY-MM-DD (local timezone)
+  mood_depth: number; // 0-100 (0=Deep/Calm, 100=Surface/Anxious)
+  weather: WeatherType;
+  note_text: string; // Max 1000 chars
+  is_released: boolean; // If true, blur in UI
+  timezone?: string; // User's timezone (e.g., "America/New_York")
+}
+
 // Add more models as needed

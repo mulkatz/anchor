@@ -271,6 +271,66 @@
       "timeRemaining": "{{seconds}}s remaining",
       "cancel": "Cancel"
     },
+    "tideLog": {
+      "title": "The Tide Log",
+      "checkIn": "Check In",
+      "saved": "Entry saved",
+      "deleted": "Entry deleted",
+      "releasing": "Releasing...",
+      "depth": {
+        "title": "How deep are you?",
+        "surface": "Surface",
+        "anchored": "Anchored",
+        "deep": "Deep",
+        "description": "Move the slider to match your emotional depth"
+      },
+      "weather": {
+        "title": "What's the weather?",
+        "stormy": "Stormy",
+        "stormy_desc": "Overwhelmed",
+        "foggy": "Foggy",
+        "foggy_desc": "Confused",
+        "clear": "Clear",
+        "clear_desc": "Focused",
+        "sunny": "Sunny",
+        "sunny_desc": "Happy",
+        "turbulent": "Turbulent",
+        "turbulent_desc": "Restless"
+      },
+      "journal": {
+        "title": "One thing to release...",
+        "placeholder": "What's on your mind?",
+        "keep": "Keep",
+        "release": "Release",
+        "charLimit": "{{count}}/1000 characters",
+        "releaseInfo": "Released entries are preserved but blurred for privacy"
+      },
+      "reef": {
+        "title": "Your Reef",
+        "emptyTitle": "Start building your reef",
+        "emptyDescription": "Check in today to add your first piece",
+        "entriesCount_one": "{{count}} entry",
+        "entriesCount_other": "{{count}} entries",
+        "keepGoing": "You're building something beautiful. Keep going!",
+        "orbLabel": "{{date}} - {{weather}}",
+        "orbCount_one": "{{count}} entry",
+        "orbCount_other": "{{count}} entries",
+        "description": "Each glowing orb represents a day you checked in. Tap to view details."
+      },
+      "stream": {
+        "title": "Recent Check-Ins",
+        "dissolved": "Dissolved",
+        "noEntries": "No check-ins yet",
+        "noNote": "No note"
+      },
+      "deleteTitle": "Delete Entry?",
+      "deleteMessage": "This will permanently delete this journal entry. This action cannot be undone.",
+      "steps": {
+        "next": "Next",
+        "back": "Back",
+        "stepOf": "Step {{current}} of {{total}}"
+      }
+    },
     "conversation": {
       "creating": "Creating conversation...",
       "errorCreate": "Failed to create conversation. Please try again."
@@ -306,6 +366,11 @@
         "archiveFailed": "Failed to archive conversation",
         "unarchiveFailed": "Failed to unarchive conversation",
         "notAuthenticated": "User not authenticated"
+      },
+      "tideLog": {
+        "loadFailed": "Failed to load journal entries",
+        "saveFailed": "Failed to save entry. Please try again.",
+        "deleteFailed": "Failed to delete entry"
       }
     }
   }

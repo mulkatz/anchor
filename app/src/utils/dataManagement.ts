@@ -44,12 +44,28 @@ export const exportUserData = async (userId: string): Promise<void> => {
       });
     }
 
+    // Fetch all daily logs (Tide Log journal entries)
+    const dailyLogsRef = collection(firestore, `users/${userId}/daily_logs`);
+    const dailyLogsSnapshot = await getDocs(dailyLogsRef);
+
+    const dailyLogs = dailyLogsSnapshot.docs.map((logDoc) => ({
+      id: logDoc.id,
+      date: logDoc.data().date,
+      mood_depth: logDoc.data().mood_depth,
+      weather: logDoc.data().weather,
+      note_text: logDoc.data().note_text,
+      is_released: logDoc.data().is_released,
+      createdAt: logDoc.data().createdAt?.toDate().toISOString(),
+      updatedAt: logDoc.data().updatedAt?.toDate().toISOString(),
+    }));
+
     // Build export JSON
     const exportData = {
       exportDate: new Date().toISOString(),
       userId,
       appVersion: '0.1.0',
       conversations,
+      dailyLogs,
       settings: {
         hapticsEnabled: localStorage.getItem('hapticsEnabled'),
         analyticsEnabled: localStorage.getItem('analyticsEnabled'),
@@ -118,7 +134,15 @@ export const deleteAllUserData = async (userId: string): Promise<void> => {
       await deleteDoc(convDoc.ref);
     }
 
-    // 2. Delete all audio files from Cloud Storage
+    // 2. Delete all daily logs
+    const dailyLogsRef = collection(firestore, `users/${userId}/daily_logs`);
+    const dailyLogsSnapshot = await getDocs(dailyLogsRef);
+
+    for (const logDoc of dailyLogsSnapshot.docs) {
+      await deleteDoc(logDoc.ref);
+    }
+
+    // 3. Delete all audio files from Cloud Storage
     const audioRef = ref(storage, `audio-messages/${userId}`);
     try {
       const audioList = await listAll(audioRef);
@@ -129,7 +153,7 @@ export const deleteAllUserData = async (userId: string): Promise<void> => {
       // Ignore if folder doesn't exist
     }
 
-    // 3. Clear localStorage (except settings)
+    // 4. Clear localStorage (except settings)
     const keysToKeep = [
       'hapticsEnabled',
       'analyticsEnabled',

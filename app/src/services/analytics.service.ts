@@ -73,6 +73,16 @@ export enum AnalyticsEvent {
   CONVERSATION_STARTED = 'conversation_started',
   MESSAGE_SENT = 'message_sent',
   VOICE_MESSAGE_SENT = 'voice_message_sent',
+
+  // Tide Log (Journaling) Events
+  TIDE_LOG_CREATED = 'tide_log_created', // { weather: string, mood_depth: number, has_note: boolean, is_released: boolean }
+  TIDE_LOG_UPDATED = 'tide_log_updated', // { weather: string, mood_depth: number, is_released: boolean }
+  TIDE_LOG_DELETED = 'tide_log_deleted',
+  TIDE_LOG_VIEWED = 'tide_log_viewed', // { log_id: string }
+  CHECK_IN_MODAL_OPENED = 'check_in_modal_opened',
+  CHECK_IN_MODAL_CLOSED = 'check_in_modal_closed',
+  RELEASE_ANIMATION_TRIGGERED = 'release_animation_triggered',
+  REEF_ORB_CLICKED = 'reef_orb_clicked',
 }
 
 /**

@@ -281,6 +281,66 @@
       "timeRemaining": "Noch {{seconds}}s",
       "cancel": "Abbrechen"
     },
+    "tideLog": {
+      "title": "Das Gezeiten-Tagebuch",
+      "checkIn": "Check-In",
+      "saved": "Eintrag gespeichert",
+      "deleted": "Eintrag gelöscht",
+      "releasing": "Wird losgelassen...",
+      "depth": {
+        "title": "Wie tief bist du?",
+        "surface": "Oberfläche",
+        "anchored": "Verankert",
+        "deep": "Tief",
+        "description": "Bewege den Regler, um deine emotionale Tiefe anzuzeigen"
+      },
+      "weather": {
+        "title": "Wie ist das Wetter?",
+        "stormy": "Stürmisch",
+        "stormy_desc": "Überwältigt",
+        "foggy": "Neblig",
+        "foggy_desc": "Verwirrt",
+        "clear": "Klar",
+        "clear_desc": "Fokussiert",
+        "sunny": "Sonnig",
+        "sunny_desc": "Glücklich",
+        "turbulent": "Turbulent",
+        "turbulent_desc": "Unruhig"
+      },
+      "journal": {
+        "title": "Eine Sache loszulassen...",
+        "placeholder": "Was beschäftigt dich?",
+        "keep": "Behalten",
+        "release": "Loslassen",
+        "charLimit": "{{count}}/1000 Zeichen",
+        "releaseInfo": "Losgelassene Einträge werden verwahrt, aber verschwommen angezeigt"
+      },
+      "reef": {
+        "title": "Dein Riff",
+        "emptyTitle": "Baue dein Riff auf",
+        "emptyDescription": "Mache heute einen Check-In, um dein erstes Stück hinzuzufügen",
+        "entriesCount_one": "{{count}} Eintrag",
+        "entriesCount_other": "{{count}} Einträge",
+        "keepGoing": "Du baust etwas Schönes auf. Mach weiter!",
+        "orbLabel": "{{date}} - {{weather}}",
+        "orbCount_one": "{{count}} Eintrag",
+        "orbCount_other": "{{count}} Einträge",
+        "description": "Jede leuchtende Kugel steht für einen Tag, an dem du eingecheckt hast. Tippe zum Anzeigen."
+      },
+      "stream": {
+        "title": "Letzte Check-Ins",
+        "dissolved": "Losgelassen",
+        "noEntries": "Noch keine Check-Ins",
+        "noNote": "Keine Notiz"
+      },
+      "deleteTitle": "Eintrag löschen?",
+      "deleteMessage": "Dies löscht diesen Tagebucheintrag dauerhaft. Diese Aktion kann nicht rückgängig gemacht werden.",
+      "steps": {
+        "next": "Weiter",
+        "back": "Zurück",
+        "stepOf": "Schritt {{current}} von {{total}}"
+      }
+    },
     "conversation": {
       "creating": "Gespräch wird erstellt...",
       "errorCreate": "Gespräch konnte nicht erstellt werden. Bitte versuche es erneut."
@@ -316,6 +376,11 @@
         "archiveFailed": "Gespräch konnte nicht archiviert werden",
         "unarchiveFailed": "Archivierung des Gesprächs konnte nicht rückgängig gemacht werden",
         "notAuthenticated": "Benutzer nicht authentifiziert"
+      },
+      "tideLog": {
+        "loadFailed": "Tagebucheinträge konnten nicht geladen werden",
+        "saveFailed": "Eintrag konnte nicht gespeichert werden. Bitte versuche es erneut.",
+        "deleteFailed": "Eintrag konnte nicht gelöscht werden"
       }
     }
   }

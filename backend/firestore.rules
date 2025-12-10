@@ -48,6 +48,27 @@ service cloud.firestore {
       match /profile/{profileId} {
         allow read, write: if request.auth != null && request.auth.uid == userId;
       }
+
+      // Daily logs (Tide Log journaling feature)
+      match /daily_logs/{logId} {
+        allow read: if request.auth != null && request.auth.uid == userId;
+
+        allow create: if request.auth != null
+                      && request.auth.uid == userId
+                      && request.resource.data.userId == userId
+                      && request.resource.data.mood_depth >= 0
+                      && request.resource.data.mood_depth <= 100
+                      && request.resource.data.note_text.size() <= 1000
+                      && request.resource.data.weather in ['stormy', 'foggy', 'clear', 'sunny', 'turbulent'];
+
+        allow update: if request.auth != null
+                      && request.auth.uid == userId
+                      && request.resource.data.mood_depth >= 0
+                      && request.resource.data.mood_depth <= 100
+                      && request.resource.data.note_text.size() <= 1000;
+
+        allow delete: if request.auth != null && request.auth.uid == userId;
+      }
     }
 
     // Feedback collection - write-only for users
