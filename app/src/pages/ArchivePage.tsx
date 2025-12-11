@@ -1,7 +1,7 @@
 import { type FC, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Archive, ArrowLeft } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useArchive } from '../hooks/useArchive';
 import { useConversation } from '../hooks/useConversation';
@@ -68,8 +68,7 @@ export const ArchivePage: FC = () => {
             <ArrowLeft size={20} />
           </button>
 
-          <div className="flex items-center gap-3">
-            <Archive size={28} className="text-biolum-cyan" />
+          <div>
             <h1 className="text-2xl font-light text-mist-white">{t('archive.title')}</h1>
           </div>
         </div>

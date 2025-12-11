@@ -59,6 +59,9 @@ export const ProfilePage: FC = () => {
   const [deletingData, setDeletingData] = useState(false);
   const [deletingAccount, setDeletingAccount] = useState(false);
 
+  // Check if developer mode is enabled
+  const isDeveloperMode = import.meta.env.VITE_DEVELOPER_MODE === 'true';
+
   useEffect(() => {
     logAnalyticsEvent(AnalyticsEvent.PROFILE_PAGE_VIEWED);
   }, []);
@@ -257,7 +260,7 @@ export const ProfilePage: FC = () => {
       {/* Scrollable Content */}
       <div
         className="flex-1 overflow-y-auto px-4 pt-6 sm:px-6"
-        style={{ paddingBottom: `${navbarBottom + 32}px` }}
+        style={{ paddingBottom: `${navbarBottom + 24}px` }}
       >
         {/* App Preferences */}
         <SettingSection title={t('settings.appPreferences')}>
@@ -304,12 +307,14 @@ export const ProfilePage: FC = () => {
             onClick={handleExportData}
             loading={exporting}
           />
-          <SettingRow
-            icon={<Trash2 size={24} />}
-            label={t('settings.clearCache')}
-            description={t('settings.clearCacheDesc')}
-            onClick={handleClearCache}
-          />
+          {isDeveloperMode && (
+            <SettingRow
+              icon={<Trash2 size={24} />}
+              label={t('settings.clearCache')}
+              description={t('settings.clearCacheDesc')}
+              onClick={handleClearCache}
+            />
+          )}
           <SettingRow
             icon={<Trash2 size={24} />}
             label={t('settings.deleteAllData')}
@@ -407,7 +412,7 @@ export const ProfilePage: FC = () => {
         </SettingSection>
 
         {/* Version Footer */}
-        <div className="mt-4 pb-8 text-center">
+        <div className="mt-4 text-center">
           <p className="text-xs text-mist-white/30">{t('general.version', { version })}</p>
         </div>
       </div>

@@ -1,6 +1,6 @@
 import { type FC, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { AlertCircle, MessageCircle, Feather, Archive, User } from 'lucide-react';
+import { Anchor, Shell, Feather, Waves, Compass } from 'lucide-react';
 import { Haptics, ImpactStyle } from '@capacitor/haptics';
 import { useTranslation } from 'react-i18next';
 import { cn } from '../../../utils/cn';
@@ -36,11 +36,11 @@ export const FloatingDock: FC = () => {
   };
 
   const navItems = [
-    { path: '/sos', icon: AlertCircle, label: t('navigation.sos') },
-    { path: '/chat', icon: MessageCircle, label: t('navigation.chat') },
+    { path: '/sos', icon: Anchor, label: t('navigation.sos') },
+    { path: '/chat', icon: Shell, label: t('navigation.chat') },
     { path: '/depths', icon: Feather, label: t('navigation.depths') },
-    { path: '/vault', icon: Archive, label: t('navigation.vault') },
-    { path: '/profile', icon: User, label: t('navigation.profile') },
+    { path: '/vault', icon: Waves, label: t('navigation.vault') },
+    { path: '/profile', icon: Compass, label: t('navigation.profile') },
   ];
 
   return (
@@ -68,9 +68,9 @@ export const FloatingDock: FC = () => {
                 'flex flex-col items-center justify-center',
                 'transition-all duration-300 ease-viscous',
                 'p-2 active:scale-95',
-                isActive && 'text-biolum-cyan drop-shadow-glow',
-                !isActive && 'text-mist-white/60'
+                isActive && 'drop-shadow-glow'
               )}
+              style={{ color: isActive ? '#64FFDA' : '#9A9FAC' }}
               aria-label={label}
             >
               <Icon size={24} className="transition-transform duration-300" />
