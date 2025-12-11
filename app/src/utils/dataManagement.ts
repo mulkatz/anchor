@@ -1,5 +1,5 @@
 import { collection, getDocs, query, where, deleteDoc, doc } from 'firebase/firestore';
-import { ref, deleteObject, listAll } from 'firebase/storage';
+import { ref, deleteObject, listAll, StorageReference } from 'firebase/storage';
 import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
 import { Share } from '@capacitor/share';
 import i18next from 'i18next';
@@ -14,6 +14,23 @@ import { db } from '../db/db';
  * Handles data export, cache clearing, and deletion
  * Adapted from cap2cal's dataManagement.ts
  */
+
+/**
+ * Recursively delete a Firebase Storage folder and all its contents
+ * Handles nested folder structures (e.g., audio-messages/userId/conversationId/files)
+ */
+const deleteStorageFolder = async (folderRef: StorageReference): Promise<void> => {
+  const list = await listAll(folderRef);
+
+  // Delete all files in this folder
+  const fileDeletePromises = list.items.map((itemRef) => deleteObject(itemRef));
+
+  // Recursively delete all subfolders
+  const folderDeletePromises = list.prefixes.map((prefixRef) => deleteStorageFolder(prefixRef));
+
+  // Wait for all deletions to complete
+  await Promise.all([...fileDeletePromises, ...folderDeletePromises]);
+};
 
 export const exportUserData = async (userId: string): Promise<void> => {
   try {
@@ -216,15 +233,14 @@ export const deleteAllUserData = async (userId: string): Promise<void> => {
       await deleteDoc(entryDoc.ref);
     }
 
-    // 4. Delete all audio files from Cloud Storage
+    // 4. Delete all audio files from Cloud Storage (recursive)
+    // Audio files are stored as: audio-messages/{userId}/{conversationId}/{messageId}.m4a
     const audioRef = ref(storage, `audio-messages/${userId}`);
     try {
-      const audioList = await listAll(audioRef);
-      for (const item of audioList.items) {
-        await deleteObject(item);
-      }
+      await deleteStorageFolder(audioRef);
     } catch (error) {
-      // Ignore if folder doesn't exist
+      console.warn('Failed to delete audio files:', error);
+      // Ignore if folder doesn't exist or permission errors
     }
 
     // 5. Clear localStorage (except settings)
