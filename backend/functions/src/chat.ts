@@ -3,6 +3,13 @@ import * as admin from 'firebase-admin';
 import { onDocumentWritten } from 'firebase-functions/v2/firestore';
 import { VertexAI } from '@google-cloud/vertexai';
 import { detectCrisisKeywords, getCrisisResponse, getSystemPrompt } from './languageConfig';
+import {
+  getRelativeTimeForAI,
+  detectSessionBreak,
+  getSessionBreakDescription,
+  getCurrentContextTimestamp,
+  getTimeOfDay,
+} from './temporal';
 
 /**
  * Cloud Function: onMessageCreate
@@ -93,20 +100,45 @@ export const onMessageCreate = onDocumentWritten(
         return;
       }
 
-      // 6. Fetch Context: Get last 50 messages for conversation history
+      // 6. Fetch Context: Get last 75 messages for conversation history
       const messagesSnapshot = await admin
         .firestore()
         .collection(`users/${userId}/conversations/${conversationId}/messages`)
         .where('role', 'in', ['user', 'assistant']) // Exclude crisis messages
         .orderBy('createdAt', 'desc')
-        .limit(50)
+        .limit(75)
         .get();
 
+      // Use user's local time (sent from frontend as epoch timestamp) instead of server time
+      // This ensures temporal context is accurate to the user's timezone (including DST)
+      let now = new Date();
+      const userTimezone = message.metadata?.userTimezone;
+
+      if (message.metadata?.userLocalTime) {
+        // userLocalTime is epoch timestamp (milliseconds since 1970)
+        now = new Date(message.metadata.userLocalTime);
+        logger.info('Using user local time for temporal context', {
+          userId,
+          userLocalTimeEpoch: message.metadata.userLocalTime,
+          userLocalTimeFormatted: now.toISOString(),
+          userTimezone,
+          userTimezoneOffset: message.metadata.userTimezoneOffset,
+          serverTime: new Date().toISOString(),
+        });
+      } else {
+        logger.warn('No user local time provided, falling back to server time', { userId });
+      }
       const conversationHistory = messagesSnapshot.docs
-        .map((doc) => ({
-          role: doc.data().role,
-          text: doc.data().text,
-        }))
+        .map((doc) => {
+          const data = doc.data();
+          const timestamp = data.createdAt?.toDate() || now;
+
+          return {
+            role: data.role,
+            text: data.text,
+            timestamp,
+          };
+        })
         .reverse(); // Oldest first for proper context
 
       logger.info('Fetched conversation history', {
@@ -115,17 +147,47 @@ export const onMessageCreate = onDocumentWritten(
         historyLength: conversationHistory.length,
       });
 
-      // 7. Build Gemini Conversation Format
-      const contents = conversationHistory.map((msg) => ({
-        role: msg.role === 'user' ? 'user' : 'model',
-        parts: [{ text: msg.text }],
-      }));
+      // 7. Build temporal context for system prompt (with timezone awareness)
+      const currentTime = getCurrentContextTimestamp(now, userTimezone);
+      const timeOfDay = getTimeOfDay(now, userTimezone);
 
-      // 8. Get language-specific system prompt
-      const systemPrompt = getSystemPrompt(languageCode);
-      logger.info('Using system prompt for language', { languageCode });
+      // Detect session breaks (>4 hours since last message)
+      let sessionBreakNote = '';
+      if (conversationHistory.length > 0) {
+        const lastMessage = conversationHistory[conversationHistory.length - 1];
+        if (detectSessionBreak(lastMessage.timestamp, now)) {
+          const breakDescription = getSessionBreakDescription(lastMessage.timestamp, now);
+          sessionBreakNote = `\n\nNote: The user is returning to this conversation ${breakDescription}. Acknowledge the time gap naturally if relevant (e.g., "hey, good to hear from you again" or "how've you been since we last talked?").`;
+        }
+      }
 
-      // 9. Call Vertex AI (Gemini 2.5 Flash)
+      const temporalContext = `${currentTime} (${timeOfDay})${sessionBreakNote}
+
+IMPORTANT: You can now reference when things happened in your conversation. Each message has a timestamp showing when it was sent relative to now. Use this to make your responses more natural and contextually aware (e.g., "you mentioned yesterday that...", "earlier today you said...", "I remember you talked about this last week...").`;
+
+      logger.info('Built temporal context', {
+        userId,
+        currentTime,
+        timeOfDay,
+        hasSessionBreak: sessionBreakNote !== '',
+      });
+
+      // 8. Build Gemini Conversation Format with temporal awareness (timezone-aware)
+      const contents = conversationHistory.map((msg) => {
+        const relativeTime = getRelativeTimeForAI(msg.timestamp, now, userTimezone);
+        const textWithTimestamp = `[${relativeTime}] ${msg.text}`;
+
+        return {
+          role: msg.role === 'user' ? 'user' : 'model',
+          parts: [{ text: textWithTimestamp }],
+        };
+      });
+
+      // 9. Get language-specific system prompt with temporal context
+      const systemPrompt = getSystemPrompt(languageCode, temporalContext);
+      logger.info('Using system prompt with temporal context', { languageCode });
+
+      // 10. Call Vertex AI (Gemini 2.5 Flash)
       const vertexAI = new VertexAI({
         project: process.env.GCLOUD_PROJECT,
         location: 'us-central1',
@@ -171,7 +233,7 @@ export const onMessageCreate = onDocumentWritten(
         actualText: responseText,
       });
 
-      // 10. Write Assistant Response to Firestore
+      // 11. Write Assistant Response to Firestore
       await admin
         .firestore()
         .collection(`users/${userId}/conversations/${conversationId}/messages`)
@@ -187,7 +249,7 @@ export const onMessageCreate = onDocumentWritten(
           },
         });
 
-      // 11. Update Conversation Metadata
+      // 12. Update Conversation Metadata
       await admin
         .firestore()
         .doc(`users/${userId}/conversations/${conversationId}`)

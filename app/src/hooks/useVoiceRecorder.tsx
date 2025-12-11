@@ -27,7 +27,7 @@ interface UseVoiceRecorderReturn {
   requestPermission: () => Promise<boolean>;
 }
 
-const MAX_DURATION = 60; // 60 seconds max recording
+const MAX_DURATION = 120; // 120 seconds max recording
 
 /**
  * Custom hook for voice recording with haptic feedback

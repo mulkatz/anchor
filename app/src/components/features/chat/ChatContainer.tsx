@@ -1,8 +1,10 @@
 import { type FC, useRef, useEffect } from 'react';
 import { MessageBubble } from './MessageBubble';
+import { DateDivider } from './DateDivider';
 import { ThinkingIndicator } from './ThinkingIndicator';
 import { EmptyState } from './EmptyState';
 import { useNavbarHeight } from '../../../hooks/useNavbarHeight';
+import { getDateDivider } from '../../../utils/temporal';
 import type { Message } from '../../../models';
 
 interface ChatContainerProps {
@@ -37,9 +39,18 @@ export const ChatContainer: FC<ChatContainerProps> = ({ messages, isThinking }) 
         <EmptyState />
       ) : (
         <>
-          {messages.map((message, index) => (
-            <MessageBubble key={message.id} message={message} index={index} />
-          ))}
+          {messages.map((message, index) => {
+            // Check if we need a date divider before this message
+            const showDateDivider =
+              index === 0 || !isSameDay(messages[index - 1].createdAt, message.createdAt);
+
+            return (
+              <div key={message.id}>
+                {showDateDivider && <DateDivider date={getDateDivider(message.createdAt)} />}
+                <MessageBubble message={message} index={index} />
+              </div>
+            );
+          })}
 
           {isThinking && <ThinkingIndicator />}
 
@@ -50,3 +61,14 @@ export const ChatContainer: FC<ChatContainerProps> = ({ messages, isThinking }) 
     </div>
   );
 };
+
+/**
+ * Helper: Check if two dates are the same day
+ */
+function isSameDay(date1: Date, date2: Date): boolean {
+  return (
+    date1.getDate() === date2.getDate() &&
+    date1.getMonth() === date2.getMonth() &&
+    date1.getFullYear() === date2.getFullYear()
+  );
+}

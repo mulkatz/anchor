@@ -35,10 +35,10 @@ export const MessageBubble: FC<MessageBubbleProps> = ({ message, index }) => {
         if (message.hasAudio) {
           return <AudioMessageBubble message={message} />;
         }
-        return <UserMessage text={message.text} />;
+        return <UserMessage text={message.text} timestamp={message.createdAt} />;
 
       case 'assistant':
-        return <AssistantMessage text={message.text} />;
+        return <AssistantMessage text={message.text} timestamp={message.createdAt} />;
 
       case 'crisis':
         return <CrisisCard />;

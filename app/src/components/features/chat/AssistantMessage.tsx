@@ -2,9 +2,11 @@ import { type FC } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { cn } from '../../../utils/cn';
+import { getFullTimestamp } from '../../../utils/temporal';
 
 interface AssistantMessageProps {
   text: string;
+  timestamp: Date;
 }
 
 /**
@@ -12,9 +14,11 @@ interface AssistantMessageProps {
  * Left-aligned, glass morphism styled bubble with bioluminescent border
  * Supports markdown formatting (bold, italic, lists, etc.)
  */
-export const AssistantMessage: FC<AssistantMessageProps> = ({ text }) => {
+export const AssistantMessage: FC<AssistantMessageProps> = ({ text, timestamp }) => {
+  const timeStr = getFullTimestamp(timestamp);
+
   return (
-    <div className="mb-4 flex justify-start px-4 sm:px-6">
+    <div className="group mb-4 flex flex-col items-start gap-1 px-4 sm:px-6">
       <div
         className={cn(
           'max-w-[90%] rounded-3xl rounded-tl-lg px-5 py-3',
@@ -70,6 +74,9 @@ export const AssistantMessage: FC<AssistantMessageProps> = ({ text }) => {
           </ReactMarkdown>
         </div>
       </div>
+      <span className="px-2 text-xs text-mist-white/30 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+        {timeStr}
+      </span>
     </div>
   );
 };

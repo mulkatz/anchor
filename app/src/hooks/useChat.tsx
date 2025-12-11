@@ -138,6 +138,9 @@ export const useChat = ({ conversationId }: UseChatProps) => {
           createdAt: Timestamp.now(),
           metadata: {
             language: getUserLanguage(), // Pass user language to backend
+            userLocalTime: Date.now(), // Epoch timestamp (ms) - timezone agnostic!
+            userTimezoneOffset: new Date().getTimezoneOffset(), // Timezone offset in minutes (for reference)
+            userTimezone: Intl.DateTimeFormat().resolvedOptions().timeZone, // e.g., "Europe/Berlin"
           },
         });
 
@@ -207,6 +210,9 @@ export const useChat = ({ conversationId }: UseChatProps) => {
           metadata: {
             audioFormat: recordingData.mimeType, // Store full mimeType for backend
             language: getUserLanguage(), // Pass user language for transcription
+            userLocalTime: Date.now(), // Epoch timestamp (ms) - timezone agnostic!
+            userTimezoneOffset: new Date().getTimezoneOffset(), // Timezone offset in minutes (for reference)
+            userTimezone: Intl.DateTimeFormat().resolvedOptions().timeZone, // e.g., "Europe/Berlin"
           },
         });
 

@@ -191,9 +191,16 @@ export function getCrisisResponse(languageCode: string) {
 /**
  * Get system prompt for AI responses in a given language
  */
-export function getSystemPrompt(languageCode: string): string {
+export function getSystemPrompt(languageCode: string, temporalContext?: string): string {
   const config = getLanguageConfig(languageCode);
-  return config.systemPrompt;
+  let prompt = config.systemPrompt;
+
+  // Add temporal context if provided
+  if (temporalContext) {
+    prompt = `${temporalContext}\n\n${prompt}`;
+  }
+
+  return prompt;
 }
 
 /**
