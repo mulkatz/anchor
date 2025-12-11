@@ -192,8 +192,7 @@
       "deleteFailed": "Deletion failed. Please try again.",
       "ratingMobileOnly": "Rating is only available on mobile apps",
       "crisisNumberCopied": "Crisis hotline number copied",
-      "ratingFallback": "Didn't see the rating dialog?",
-      "rateOnStore": "Rate on Store",
+      "ratingFallback": "Didn't see the rating dialog? Opening the app store...",
       "notSignedIn": "Not signed in",
       "tutorialReset": "Tutorial will show on next launch",
       "accountDeleteReauth": "Please sign in again to delete your account"

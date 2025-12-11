@@ -1,6 +1,7 @@
 import { InAppReview } from '@capacitor-community/in-app-review';
 import { Capacitor } from '@capacitor/core';
 import toast from 'react-hot-toast';
+import i18next from 'i18next';
 import { logAnalyticsEvent, AnalyticsEvent } from './analytics.service';
 
 /**
@@ -17,7 +18,7 @@ export const requestAppRating = async (showToastOnFallback: boolean = true): Pro
   const platform = Capacitor.getPlatform();
 
   if (platform === 'web') {
-    toast('Rating is only available on mobile apps');
+    toast(i18next.t('toasts.ratingMobileOnly'));
     return;
   }
 
@@ -30,7 +31,7 @@ export const requestAppRating = async (showToastOnFallback: boolean = true): Pro
 
     if (showToastOnFallback) {
       // Show simple toast with option to open store directly
-      toast.success("Didn't see the rating dialog? Opening the app store...", {
+      toast.success(i18next.t('toasts.ratingFallback'), {
         duration: 3000,
       });
 

@@ -200,8 +200,7 @@
       "deleteFailed": "Löschen fehlgeschlagen. Bitte versuche es erneut.",
       "ratingMobileOnly": "Bewertung ist nur in mobilen Apps verfügbar",
       "crisisNumberCopied": "Krisenhotline-Nummer kopiert",
-      "ratingFallback": "Bewertungsdialog nicht angezeigt?",
-      "rateOnStore": "Im Store bewerten",
+      "ratingFallback": "Bewertungsdialog nicht angezeigt? Öffne den App Store...",
       "notSignedIn": "Nicht angemeldet",
       "tutorialReset": "Anleitung wird beim nächsten Start angezeigt",
       "accountDeleteReauth": "Bitte melde dich erneut an, um dein Konto zu löschen"
