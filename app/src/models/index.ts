@@ -117,4 +117,20 @@ export interface DailyLog {
   timezone?: string; // User's timezone (e.g., "America/New_York")
 }
 
-// Add more models as needed
+// Depths (Free-form Journal) models
+export interface JournalSession {
+  id: string; // UUID for each session
+  text: string;
+  startedAt: Date; // When user started typing this session
+  fixedAt: Date | null; // When session became uneditable (null = still editable)
+  wordCount: number;
+}
+
+export interface JournalEntry {
+  id: string;
+  userId: string;
+  date: string; // YYYY-MM-DD (for grouping by day)
+  sessions: JournalSession[];
+  createdAt: Date;
+  updatedAt: Date;
+}

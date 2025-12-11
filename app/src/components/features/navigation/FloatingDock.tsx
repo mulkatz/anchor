@@ -1,6 +1,6 @@
 import { type FC, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { AlertCircle, MessageCircle, Archive, User } from 'lucide-react';
+import { AlertCircle, MessageCircle, Feather, Archive, User } from 'lucide-react';
 import { Haptics, ImpactStyle } from '@capacitor/haptics';
 import { useTranslation } from 'react-i18next';
 import { cn } from '../../../utils/cn';
@@ -38,6 +38,7 @@ export const FloatingDock: FC = () => {
   const navItems = [
     { path: '/sos', icon: AlertCircle, label: t('navigation.sos') },
     { path: '/chat', icon: MessageCircle, label: t('navigation.chat') },
+    { path: '/depths', icon: Feather, label: t('navigation.depths') },
     { path: '/vault', icon: Archive, label: t('navigation.vault') },
     { path: '/profile', icon: User, label: t('navigation.profile') },
   ];

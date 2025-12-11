@@ -69,6 +69,22 @@ service cloud.firestore {
 
         allow delete: if request.auth != null && request.auth.uid == userId;
       }
+
+      // Journal entries (Depths free-form journaling)
+      match /journal_entries/{entryId} {
+        allow read: if isOwner(userId);
+
+        allow create: if isOwner(userId)
+                      && request.resource.data.userId == userId
+                      && request.resource.data.date is string
+                      && request.resource.data.sessions is list;
+
+        allow update: if isOwner(userId)
+                      && request.resource.data.userId == userId;
+
+        // No delete allowed - therapeutic permanence
+        allow delete: if false;
+      }
     }
 
     // Feedback collection - write-only for users

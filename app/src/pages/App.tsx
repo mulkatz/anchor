@@ -8,6 +8,7 @@ import { MainLayout } from '../components/layouts/MainLayout';
 import { HomePage } from './HomePage';
 import { SOSPage } from './SOSPage';
 import { ChatPage } from './ChatPage';
+import { DepthsPage } from './DepthsPage';
 import { ArchivePage } from './ArchivePage';
 import { VaultPage } from './VaultPage';
 import { ProfilePage } from './ProfilePage';
@@ -83,6 +84,21 @@ const AnimatedRoutes: FC = () => {
               className="h-full w-full"
             >
               <ChatPage />
+            </motion.div>
+          }
+        />
+        <Route
+          path="/depths"
+          element={
+            <motion.div
+              variants={pageVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              transition={pageTransition}
+              className="h-full w-full"
+            >
+              <DepthsPage />
             </motion.div>
           }
         />

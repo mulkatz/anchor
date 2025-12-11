@@ -260,8 +260,25 @@
     "navigation": {
       "sos": "SOS",
       "chat": "Chat",
+      "depths": "Tiefen",
       "vault": "Tresor",
       "profile": "Profil"
+    },
+    "depths": {
+      "title": "Tiefen",
+      "subtitle": "Dein ungefilterter Geist",
+      "emptyState": {
+        "title": "Beginne deine Tiefen",
+        "description": "Fang an zu schreiben. Deine Worte werden nach 30 Minuten Stille dauerhaft."
+      },
+      "today": "Heute",
+      "yesterday": "Gestern",
+      "placeholder": "Schreibe frei...",
+      "weeklyInsight": {
+        "prompt": "Möchtest du Einblicke aus dieser Woche?",
+        "generate": "Einblicke generieren",
+        "dismiss": "Nicht jetzt"
+      }
     },
     "archive": {
       "title": "Archiv",

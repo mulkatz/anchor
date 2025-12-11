@@ -1,7 +1,7 @@
 import { initializeApp } from 'firebase/app';
 import { getAnalytics, logEvent as firebaseLogEvent } from 'firebase/analytics';
 import { getAuth, initializeAuth, indexedDBLocalPersistence } from 'firebase/auth';
-import { getFirestore, enableIndexedDbPersistence } from 'firebase/firestore';
+import { getFirestore } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 import { Capacitor } from '@capacitor/core';
 import { isWeb } from '../utils/platform';
@@ -37,16 +37,9 @@ export const auth =
 export const firestore = getFirestore(app);
 export const storage = getStorage(app);
 
-// Enable offline persistence
-enableIndexedDbPersistence(firestore).catch((err) => {
-  if (err.code === 'failed-precondition') {
-    console.warn('Offline persistence failed: Multiple tabs open');
-  } else if (err.code === 'unimplemented') {
-    console.warn('Offline persistence not available in this browser');
-  } else {
-    console.error('Offline persistence error:', err);
-  }
-});
+// Note: Firestore offline persistence (enableIndexedDbPersistence) is intentionally
+// disabled. It caused excessive WebChannel requests (~100/sec) likely due to
+// corrupted IndexedDB cache. The app uses Dexie for offline-first storage instead.
 
 // Analytics (only on web)
 export let analytics: ReturnType<typeof getAnalytics> | null = null;

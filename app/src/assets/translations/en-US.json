@@ -252,8 +252,25 @@
     "navigation": {
       "sos": "SOS",
       "chat": "Chat",
+      "depths": "Depths",
       "vault": "Vault",
       "profile": "Profile"
+    },
+    "depths": {
+      "title": "Depths",
+      "subtitle": "Your unfiltered mind",
+      "emptyState": {
+        "title": "Begin your depths",
+        "description": "Start writing. Your words settle into permanence after 30 minutes of stillness."
+      },
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "placeholder": "Write freely...",
+      "weeklyInsight": {
+        "prompt": "Would you like insights from this week's writing?",
+        "generate": "Generate insights",
+        "dismiss": "Not now"
+      }
     },
     "archive": {
       "title": "Archive",
