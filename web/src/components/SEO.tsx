@@ -61,7 +61,7 @@ export function SEO({
         {JSON.stringify({
           '@context': 'https://schema.org',
           '@type': 'MobileApplication',
-          name: 'Anchor: Your Anxiety Buddy',
+          name: 'Anchor: Anxiety Navigator',
           operatingSystem: 'iOS, Android',
           applicationCategory: 'HealthApplication',
           description: DEFAULT_DESCRIPTION,

@@ -1,13 +1,13 @@
 {
   "translation": {
     "meta": {
-      "title": "Anchor - Your Anxiety Buddy | Immediate Panic Attack Relief",
+      "title": "Anchor: Anxiety Navigator | Immediate Panic Attack Relief",
       "description": "Free anxiety relief app with 7-step panic de-escalation, 24/7 AI support, and privacy-first design. Download for iOS and Android.",
       "privacyTitle": "Privacy Policy - Anchor",
       "privacyDescription": "Learn how Anchor protects your privacy. We auto-delete voice recordings after 7 days, never sell your data, and give you full control over your information.",
       "termsTitle": "Terms of Service - Anchor",
       "termsDescription": "Terms of Service for Anchor app. Important mental health disclaimers, acceptable use policy, and user rights.",
-      "inviteTitle": "Download Anchor - Your Anxiety Buddy",
+      "inviteTitle": "Download Anchor: Anxiety Navigator",
       "inviteDescription": "Download Anchor for immediate relief during panic attacks. Available on iOS and Android."
     },
     "nav": {
@@ -17,7 +17,7 @@
       "download": "Download"
     },
     "hero": {
-      "tagline": "Your Anxiety Buddy",
+      "tagline": "Anxiety Navigator",
       "headline": "Anchor yourself in the storm",
       "subheadline": "Immediate relief during panic attacks. Evidence-based. Private. Always there.",
       "downloadApp": "Download App"
@@ -112,7 +112,7 @@
       "downloadOn": "Download on"
     },
     "footer": {
-      "tagline": "Your Anxiety Buddy",
+      "tagline": "Anxiety Navigator",
       "description": "Immediate relief during panic attacks. Evidence-based. Private. Always there.",
       "product": "Product",
       "legal": "Legal",
@@ -138,7 +138,7 @@
     },
     "invite": {
       "heading": "Anchor",
-      "tagline": "Your Anxiety Buddy",
+      "tagline": "Anxiety Navigator",
       "description": "Immediate relief during panic attacks.",
       "subDescription": "Evidence-based. Private. Always there.",
       "redirecting": "Taking you to the {{store}}...",

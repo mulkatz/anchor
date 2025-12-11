@@ -1,6 +1,6 @@
 # Anchor Landing Website
 
-Promotional landing website for **Anchor: Your Anxiety Buddy** - a therapeutic app providing immediate relief during panic attacks.
+Promotional landing website for **Anchor: Anxiety Navigator** - a therapeutic app providing immediate relief during panic attacks.
 
 ## Quick Start
 
