@@ -9,7 +9,7 @@ interface SEOProps {
   noindex?: boolean;
 }
 
-const DEFAULT_TITLE = 'Anchor - Your Anxiety Buddy | Immediate Panic Attack Relief';
+const DEFAULT_TITLE = 'Anchor: Anxiety Navigator | Immediate Panic Attack Relief';
 const DEFAULT_DESCRIPTION =
   'Free anxiety relief app with 7-step panic de-escalation, 24/7 AI support, and privacy-first design. Evidence-based techniques for immediate relief during panic attacks.';
 const DEFAULT_IMAGE = '/og-image.png';

@@ -6,7 +6,7 @@
 
 ## Overview
 
-The SOS Flow is the heart of Anxiety Buddy. A guided, multi-sensory experience designed to ground users during panic attacks. Built on evidence-based CBT and somatic grounding techniques.
+The SOS Flow is the heart of Anchor: Anxiety Navigator. A guided, multi-sensory experience designed to ground users during panic attacks. Built on evidence-based CBT and somatic grounding techniques.
 
 **Status:** 🚧 In Progress
 

@@ -4,7 +4,7 @@
 
 ---
 
-These 5 principles guide every design decision in Anxiety Buddy. When in doubt, return to these.
+These 5 principles guide every design decision in Anchor: Anxiety Navigator. When in doubt, return to these.
 
 ---
 

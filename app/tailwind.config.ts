@@ -18,7 +18,7 @@ const config = {
     },
     extend: {
       colors: {
-        // Anxiety Buddy Design Tokens
+        // Anchor: Anxiety Navigator Design Tokens
         'void-blue': '#0A1128',
         'biolum-cyan': '#64FFDA',
         'warm-ember': '#FFB38A',

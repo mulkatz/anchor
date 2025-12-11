@@ -129,7 +129,7 @@ export const exportUserData = async (userId: string): Promise<void> => {
 
         // Use Share API to let user save/share the file
         await Share.share({
-          title: 'Anxiety Buddy Data Export',
+          title: 'Anchor Data Export',
           text: i18next.t('toasts.dataExported'),
           url: result.uri,
           dialogTitle: 'Save your data',

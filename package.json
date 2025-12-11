@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "license": "UNLICENSED",
-  "description": "Anxiety Buddy - A therapeutic mobile application for immediate anxiety relief",
+  "description": "Anchor: Anxiety Navigator - A therapeutic mobile application for immediate anxiety relief",
   "author": "Franz Benthin",
   "workspaces": [
     "app",

@@ -2,7 +2,7 @@ import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
   appId: 'cx.franz.anxietybuddy',
-  appName: 'Anxiety Buddy',
+  appName: 'Anchor: Anxiety Navigator',
   webDir: 'dist',
   // Uncomment for local development with live reload
   // server: {

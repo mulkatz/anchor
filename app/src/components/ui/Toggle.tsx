@@ -3,7 +3,7 @@ import { cn } from '../../utils/cn';
 
 /**
  * Toggle Component
- * Bioluminescent toggle switch matching Anxiety Buddy's aesthetic
+ * Bioluminescent toggle switch matching Anchor's aesthetic
  * Adapted from cap2cal with cyan glow styling
  */
 

@@ -1,4 +1,4 @@
-# CLAUDE.md - Anxiety Buddy
+# CLAUDE.md - Anchor: Anxiety Navigator
 
 **AI Assistant Navigation Hub** | **Stage:** Polishing Phase
 
@@ -6,7 +6,7 @@
 
 ## Project Overview
 
-Anxiety Buddy is a **therapeutic interface** for immediate relief during anxiety and panic attacks. Built for Gen Z (18-26), it uses evidence-based CBT + Somatic Grounding techniques delivered through a bioluminescent deep-ocean aesthetic.
+Anchor: Anxiety Navigator is a **therapeutic interface** for immediate relief during anxiety and panic attacks. Built for Gen Z (18-26), it uses evidence-based CBT + Somatic Grounding techniques delivered through a bioluminescent deep-ocean aesthetic.
 
 **Core Stack:** React 18 + TypeScript + Vite + Capacitor + Firebase + Gemini AI
 

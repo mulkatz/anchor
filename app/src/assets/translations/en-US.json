@@ -1,7 +1,7 @@
 {
   "translation": {
     "home": {
-      "title": "Anxiety Buddy",
+      "title": "Anchor: Anxiety Navigator",
       "subtitle": "I'm here when you need me.",
       "startSOS": "Start SOS Session",
       "viewPastSessions": "View Past Sessions"
@@ -47,10 +47,10 @@
       "resetTutorial": "Reset Tutorial",
       "resetTutorialDesc": "Show the onboarding guide again",
       "visitWebsite": "Visit Website",
-      "visitWebsiteDesc": "Learn more about Anxiety Buddy",
+      "visitWebsiteDesc": "Learn more about Anchor",
       "giveFeedback": "Give Feedback",
       "giveFeedbackDesc": "Share ideas or report bugs",
-      "rateApp": "Rate Anxiety Buddy",
+      "rateApp": "Rate Anchor",
       "rateAppDesc": "Love the app? Leave a review",
 
       "disclaimer": "Disclaimer",
@@ -132,7 +132,7 @@
     },
     "feedback": {
       "title": "Send Feedback",
-      "description": "Your feedback helps us improve Anxiety Buddy for everyone. Thank you for sharing your thoughts!",
+      "description": "Your feedback helps us improve Anchor for everyone. Thank you for sharing your thoughts!",
       "idea": "Idea",
       "bug": "Bug Report",
       "ideaPlaceholder": "Share your idea...",
@@ -142,7 +142,7 @@
     },
     "disclaimer": {
       "title": "Important Disclaimer",
-      "notSubstitute": "Anxiety Buddy is NOT a substitute for professional medical advice, diagnosis, or treatment.",
+      "notSubstitute": "Anchor: Anxiety Navigator is NOT a substitute for professional medical advice, diagnosis, or treatment.",
       "description": "This app provides evidence-based grounding techniques and supportive conversations, but it cannot replace qualified mental health care.",
       "crisisTitle": "If you are experiencing a mental health crisis:",
       "call988": "Call 988 (Crisis Hotline) immediately",
@@ -153,7 +153,7 @@
       "understand": "I Understand"
     },
     "appLikePrompt": {
-      "title": "Are you enjoying Anxiety Buddy?",
+      "title": "Are you enjoying Anchor?",
       "yes": "Yes, I love it!",
       "no": "Not really"
     },

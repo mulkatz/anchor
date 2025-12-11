@@ -1,6 +1,6 @@
 # Planned Features
 
-**Read this when:** Planning future development, prioritizing roadmap items, or understanding what's coming next for Anxiety Buddy.
+**Read this when:** Planning future development, prioritizing roadmap items, or understanding what's coming next for Anchor: Anxiety Navigator.
 
 ---
 
@@ -109,7 +109,7 @@ Interactive tutorial introducing users to app features and therapeutic technique
 
 **Flow:**
 
-1. **Welcome Screen** - "Welcome to Anxiety Buddy"
+1. **Welcome Screen** - "Welcome to Anchor: Anxiety Navigator"
 2. **Purpose** - "Immediate relief for anxiety & panic attacks"
 3. **SOS Demo** - Interactive walkthrough of 7-step flow
 4. **Voice Chat** - Show how to send voice messages

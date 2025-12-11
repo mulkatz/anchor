@@ -1,7 +1,7 @@
 {
   "translation": {
     "home": {
-      "title": "Anxiety Buddy",
+      "title": "Anchor: Anxiety Navigator",
       "subtitle": "Ich bin für dich da, wenn du mich brauchst.",
       "startSOS": "SOS-Sitzung starten",
       "viewPastSessions": "Vergangene Sitzungen ansehen"
@@ -47,10 +47,10 @@
       "resetTutorial": "Anleitung zurücksetzen",
       "resetTutorialDesc": "Das Onboarding erneut anzeigen",
       "visitWebsite": "Website besuchen",
-      "visitWebsiteDesc": "Mehr über Anxiety Buddy erfahren",
+      "visitWebsiteDesc": "Mehr über Anchor erfahren",
       "giveFeedback": "Feedback geben",
       "giveFeedbackDesc": "Ideen teilen oder Fehler melden",
-      "rateApp": "Anxiety Buddy bewerten",
+      "rateApp": "Anchor bewerten",
       "rateAppDesc": "Gefällt dir die App? Hinterlasse eine Bewertung",
 
       "disclaimer": "Haftungsausschluss",
@@ -140,7 +140,7 @@
     },
     "feedback": {
       "title": "Feedback senden",
-      "description": "Dein Feedback hilft uns, Anxiety Buddy für alle zu verbessern. Vielen Dank, dass du deine Gedanken teilst!",
+      "description": "Dein Feedback hilft uns, Anchor für alle zu verbessern. Vielen Dank, dass du deine Gedanken teilst!",
       "idea": "Idee",
       "bug": "Fehlerbericht",
       "ideaPlaceholder": "Teile deine Idee...",
@@ -150,7 +150,7 @@
     },
     "disclaimer": {
       "title": "Wichtiger Haftungsausschluss",
-      "notSubstitute": "Anxiety Buddy ist KEIN Ersatz für professionelle medizinische Beratung, Diagnose oder Behandlung.",
+      "notSubstitute": "Anchor: Anxiety Navigator ist KEIN Ersatz für professionelle medizinische Beratung, Diagnose oder Behandlung.",
       "description": "Diese App bietet evidenzbasierte Erdungstechniken und unterstützende Gespräche, kann aber keine qualifizierte psychische Gesundheitsversorgung ersetzen.",
       "crisisTitle": "Wenn du eine psychische Krise erlebst:",
       "call988": "Rufe die Telefonseelsorge an: 0800-1110111 oder 0800-1110222",
@@ -161,7 +161,7 @@
       "understand": "Verstanden"
     },
     "appLikePrompt": {
-      "title": "Gefällt dir Anxiety Buddy?",
+      "title": "Gefällt dir Anchor?",
       "yes": "Ja, ich liebe es!",
       "no": "Nicht wirklich"
     },

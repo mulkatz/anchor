@@ -6,7 +6,7 @@
 
 ## Project Identity
 
-**Project Name:** Anxiety Buddy
+**Project Name:** Anchor: Anxiety Navigator
 **Internal Codename:** Project Anchor
 **Stage:** Polishing Phase (transitioning from Greenfield Development)
 **Target Audience:** Gen Z (18-26 years old)
