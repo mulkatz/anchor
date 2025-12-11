@@ -42,8 +42,8 @@
       "deleteAccount": "Konto löschen",
       "deleteAccountDesc": "Dein Konto und alle Daten dauerhaft löschen",
 
-      "crisisHotline": "Krisenhotline anrufen",
-      "crisisHotlineDesc": "24/7 Telefonseelsorge (0800-1110111)",
+      "crisisHotlines": "Krisenhotlines",
+      "crisisHotlinesDesc": "Notfall-Kontakte für psychische Gesundheit",
       "resetTutorial": "Anleitung zurücksetzen",
       "resetTutorialDesc": "Das Onboarding erneut anzeigen",
       "visitWebsite": "Website besuchen",

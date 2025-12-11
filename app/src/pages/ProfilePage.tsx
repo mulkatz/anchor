@@ -1,5 +1,6 @@
 import { type FC, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   Zap,
   BarChart3,
@@ -16,6 +17,8 @@ import {
   Shield,
   FileText,
   Languages,
+  ChevronRight,
+  Circle,
 } from 'lucide-react';
 import { useApp } from '../contexts/AppContext';
 import { useDialogContext } from '../contexts/DialogContext';
@@ -58,6 +61,7 @@ export const ProfilePage: FC = () => {
   const [exporting, setExporting] = useState(false);
   const [deletingData, setDeletingData] = useState(false);
   const [deletingAccount, setDeletingAccount] = useState(false);
+  const [crisisExpanded, setCrisisExpanded] = useState(false);
 
   // Check if developer mode is enabled
   const isDeveloperMode = import.meta.env.VITE_DEVELOPER_MODE === 'true';
@@ -227,6 +231,12 @@ export const ProfilePage: FC = () => {
     );
   };
 
+  // Crisis resources handler
+  const handleToggleCrisisExpanded = async () => {
+    await light();
+    setCrisisExpanded(!crisisExpanded);
+  };
+
   // Legal handlers
   const handleDisclaimer = async () => {
     await light();
@@ -335,32 +345,95 @@ export const ProfilePage: FC = () => {
 
         {/* Support & Resources */}
         <SettingSection title={t('settings.supportResources')}>
-          <SettingRow
-            icon={<Phone size={24} />}
-            label={crisisResources.primaryHotline.name}
-            description={crisisResources.primaryHotline.description}
-            onClick={async () => {
-              await heavy();
-              window.open(crisisResources.primaryHotline.telLink, '_system');
-              logAnalyticsEvent(AnalyticsEvent.CRISIS_HOTLINE_CALLED, {
-                number: crisisResources.primaryHotline.number,
-              });
-            }}
-          />
-          {crisisResources.secondaryHotline && (
-            <SettingRow
-              icon={<Phone size={24} />}
-              label={crisisResources.secondaryHotline.name}
-              description={crisisResources.secondaryHotline.description}
-              onClick={async () => {
-                await heavy();
-                window.open(crisisResources.secondaryHotline!.telLink, '_system');
-                logAnalyticsEvent(AnalyticsEvent.CRISIS_HOTLINE_CALLED, {
-                  number: crisisResources.secondaryHotline!.number,
-                });
-              }}
-            />
-          )}
+          {/* Expandable Crisis Hotlines Section */}
+          <div>
+            {/* Header Row - Clickable to expand/collapse */}
+            <button
+              onClick={handleToggleCrisisExpanded}
+              className="flex w-full cursor-pointer items-center justify-between p-4 text-left transition-all duration-300 ease-viscous active:bg-glass-bg-hover"
+            >
+              <div className="flex min-w-0 flex-1 items-center gap-3">
+                <div className="flex-shrink-0 text-biolum-cyan">
+                  <Phone size={24} />
+                </div>
+                <div className="flex min-w-0 flex-1 flex-col">
+                  <span className="text-base font-semibold text-mist-white">
+                    {t('settings.crisisHotlines')}
+                  </span>
+                  <span className="mt-0.5 text-xs text-mist-white/50">
+                    {t('settings.crisisHotlinesDesc')}
+                  </span>
+                </div>
+              </div>
+              <motion.div
+                className="ml-3 flex-shrink-0 text-mist-white/40"
+                animate={{ rotate: crisisExpanded ? 90 : 0 }}
+                transition={{
+                  duration: 0.4,
+                  ease: [0.22, 1, 0.36, 1], // ease-viscous
+                }}
+              >
+                <ChevronRight size={20} />
+              </motion.div>
+            </button>
+
+            {/* Expanded Content - Individual Crisis Resources */}
+            <AnimatePresence initial={false}>
+              {crisisExpanded && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{
+                    duration: 0.5,
+                    ease: [0.22, 1, 0.36, 1], // ease-viscous
+                  }}
+                  className="overflow-hidden border-t border-glass-border"
+                >
+                  <div className="bg-void-blue/20">
+                    <SettingRow
+                      icon={<Circle size={6} fill="currentColor" />}
+                      label={crisisResources.primaryHotline.name}
+                      description={crisisResources.primaryHotline.description}
+                      onClick={async () => {
+                        await heavy();
+                        window.open(crisisResources.primaryHotline.telLink, '_system');
+                        logAnalyticsEvent(AnalyticsEvent.CRISIS_HOTLINE_CALLED, {
+                          number: crisisResources.primaryHotline.number,
+                        });
+                      }}
+                    />
+                    {crisisResources.secondaryHotline && (
+                      <SettingRow
+                        icon={<Circle size={6} fill="currentColor" />}
+                        label={crisisResources.secondaryHotline.name}
+                        description={crisisResources.secondaryHotline.description}
+                        onClick={async () => {
+                          await heavy();
+                          window.open(crisisResources.secondaryHotline!.telLink, '_system');
+                          logAnalyticsEvent(AnalyticsEvent.CRISIS_HOTLINE_CALLED, {
+                            number: crisisResources.secondaryHotline!.number,
+                          });
+                        }}
+                      />
+                    )}
+                    <SettingRow
+                      icon={<Circle size={6} fill="currentColor" />}
+                      label={crisisResources.emergency.name}
+                      description={crisisResources.emergency.description}
+                      onClick={async () => {
+                        await heavy();
+                        window.open(crisisResources.emergency.telLink, '_system');
+                        logAnalyticsEvent(AnalyticsEvent.CRISIS_HOTLINE_CALLED, {
+                          number: crisisResources.emergency.number,
+                        });
+                      }}
+                    />
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
           <SettingRow
             icon={<RotateCcw size={24} />}
             label={t('settings.resetTutorial')}

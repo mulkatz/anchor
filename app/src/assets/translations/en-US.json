@@ -42,8 +42,8 @@
       "deleteAccount": "Delete Account",
       "deleteAccountDesc": "Permanently delete your account and all data",
 
-      "crisisHotline": "Call Crisis Hotline",
-      "crisisHotlineDesc": "24/7 Mental Health Support (988)",
+      "crisisHotlines": "Crisis Hotlines",
+      "crisisHotlinesDesc": "Emergency mental health support contacts",
       "resetTutorial": "Reset Tutorial",
       "resetTutorialDesc": "Show the onboarding guide again",
       "visitWebsite": "Visit Website",
