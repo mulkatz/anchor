@@ -62,6 +62,24 @@ export const exportUserData = async (userId: string): Promise<void> => {
       updatedAt: logDoc.data().updatedAt?.toDate().toISOString(),
     }));
 
+    // Fetch all journal entries (Depths free-form journal)
+    const journalEntriesRef = collection(firestore, `users/${userId}/journal_entries`);
+    const journalEntriesSnapshot = await getDocs(journalEntriesRef);
+
+    const journalEntries = journalEntriesSnapshot.docs.map((entryDoc) => ({
+      id: entryDoc.id,
+      date: entryDoc.data().date,
+      sessions: entryDoc.data().sessions?.map((session: any) => ({
+        id: session.id,
+        text: session.text,
+        wordCount: session.wordCount,
+        startedAt: session.startedAt?.toDate?.()?.toISOString() || session.startedAt,
+        fixedAt: session.fixedAt?.toDate?.()?.toISOString() || session.fixedAt,
+      })),
+      createdAt: entryDoc.data().createdAt?.toDate().toISOString(),
+      updatedAt: entryDoc.data().updatedAt?.toDate().toISOString(),
+    }));
+
     // Build export JSON
     const exportData = {
       exportDate: new Date().toISOString(),
@@ -69,6 +87,7 @@ export const exportUserData = async (userId: string): Promise<void> => {
       appVersion: '0.1.0',
       conversations,
       dailyLogs,
+      journalEntries,
       settings: {
         hapticsEnabled: localStorage.getItem('hapticsEnabled'),
         analyticsEnabled: localStorage.getItem('analyticsEnabled'),
