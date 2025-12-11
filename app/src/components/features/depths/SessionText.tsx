@@ -17,9 +17,9 @@ export const SessionText: FC<SessionTextProps> = ({ session, isActive }) => {
     <p
       className={cn(
         'whitespace-pre-wrap break-words font-light leading-relaxed transition-colors duration-[600ms] ease-viscous',
-        // Fixed text is more muted
-        isFixed && 'text-mist-white/60',
-        // Active text glows cyan
+        // Fixed text - settled sediment
+        isFixed && 'text-mist-white/70',
+        // Active text - bioluminescent glow
         !isFixed && 'text-biolum-cyan'
       )}
       style={{ overflowWrap: 'break-word', wordBreak: 'break-word' }}

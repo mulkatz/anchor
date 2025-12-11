@@ -24,13 +24,13 @@ export const DepthsPage: FC = () => {
 
   return (
     <div
-      className="flex h-full flex-col bg-void-blue/70"
+      className="flex h-full flex-col bg-void-blue/50"
       style={{ paddingBottom: `${bottomPadding}px` }}
     >
-      {/* Sticky Header */}
-      <header className="shrink-0 border-b border-glass-border px-4 py-4 pt-safe sm:px-6">
-        <h1 className="text-3xl font-light text-mist-white">{t('depths.title')}</h1>
-        <p className="text-sm text-mist-white/60">{t('depths.subtitle')}</p>
+      {/* Header */}
+      <header className="shrink-0 px-4 py-4 pt-safe sm:px-6">
+        <h1 className="text-3xl font-light tracking-tight text-mist-white">{t('depths.title')}</h1>
+        <p className="mt-1 text-sm text-mist-white/50">{t('depths.subtitle')}</p>
       </header>
 
       {/* Content */}

@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { format } from 'date-fns';
 
 import { DateDivider } from './DateDivider';
+import { cn } from '../../../utils/cn';
 import type { JournalEntry, JournalSession } from '../../../models';
 
 interface ActiveEditorProps {
@@ -10,6 +11,7 @@ interface ActiveEditorProps {
   todayEntry: JournalEntry | null;
   onTextChange: (text: string) => void;
   showDateDivider: boolean;
+  isFirstDateDivider?: boolean;
 }
 
 export const ActiveEditor: FC<ActiveEditorProps> = ({
@@ -17,6 +19,7 @@ export const ActiveEditor: FC<ActiveEditorProps> = ({
   todayEntry,
   onTextChange,
   showDateDivider,
+  isFirstDateDivider,
 }) => {
   const { t } = useTranslation();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -79,30 +82,54 @@ export const ActiveEditor: FC<ActiveEditorProps> = ({
   return (
     <>
       {/* Show today's date divider if needed */}
-      {showDateDivider && <DateDivider date={today} />}
+      {showDateDivider && <DateDivider date={today} isFirst={isFirstDateDivider} />}
 
       {/* Render fixed sessions from today */}
       {fixedTodaySessions.map((session) => (
         <p
           key={session.id}
-          className="whitespace-pre-wrap break-words font-light leading-relaxed text-mist-white/60"
+          className="whitespace-pre-wrap break-words font-light leading-relaxed text-mist-white/70"
           style={{ overflowWrap: 'break-word', wordBreak: 'break-word' }}
         >
           {session.text}
         </p>
       ))}
 
-      {/* Active writing area */}
-      <textarea
-        ref={textareaRef}
-        value={localText}
-        onChange={handleTextChange}
-        placeholder={t('depths.placeholder')}
-        className="min-h-[120px] w-full resize-none overflow-hidden break-words bg-transparent font-light leading-relaxed text-biolum-cyan placeholder-mist-white/30 caret-biolum-cyan outline-none transition-colors duration-[600ms] ease-viscous"
-        style={{ overflowWrap: 'break-word', wordBreak: 'break-word' }}
-        rows={1}
-        autoFocus
-      />
+      {/* Active writing area with subtle dashed border */}
+      {/* Sized and positioned for balanced spacing */}
+      <div
+        className={cn(
+          'relative mt-6 rounded-xl px-[10px] py-4',
+          'border border-dashed border-biolum-cyan/20'
+        )}
+        style={{ width: 'calc(100% + 20px)', marginLeft: '-10px' }}
+      >
+        {/* Subtle text glow animation styles */}
+        <style>{`
+          @keyframes textGlow {
+            0%, 100% { text-shadow: 0 0 4px rgba(100, 255, 218, 0.3); }
+            50% { text-shadow: 0 0 8px rgba(100, 255, 218, 0.5); }
+          }
+          .text-glow-pulse { animation: textGlow 3s ease-in-out infinite; }
+        `}</style>
+
+        <textarea
+          ref={textareaRef}
+          value={localText}
+          onChange={handleTextChange}
+          placeholder={t('depths.placeholder')}
+          className={cn(
+            'min-h-[100px] w-full resize-none overflow-hidden',
+            'break-words bg-transparent font-light leading-relaxed',
+            'text-biolum-cyan placeholder-mist-white/25',
+            'caret-biolum-cyan outline-none',
+            // Subtle pulsing text glow when has content
+            localText && 'text-glow-pulse'
+          )}
+          style={{ overflowWrap: 'break-word', wordBreak: 'break-word' }}
+          rows={1}
+        />
+      </div>
     </>
   );
 };

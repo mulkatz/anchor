@@ -14,6 +14,7 @@ import { VaultPage } from './VaultPage';
 import { ProfilePage } from './ProfilePage';
 
 // Animation variants for page transitions
+// Note: Using negative y for initial (starts above, slides down) to work with overflow-hidden parent
 const pageVariants = {
   initial: {
     opacity: 0,

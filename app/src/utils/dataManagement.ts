@@ -7,6 +7,7 @@ import { firestore, storage, auth } from '../services/firebase.service';
 import { logAnalyticsEvent, AnalyticsEvent } from '../services/analytics.service';
 import { isNativePlatform } from './platform';
 import { showToast } from './toast';
+import { db } from '../db/db';
 
 /**
  * Data management utilities
@@ -207,7 +208,15 @@ export const deleteAllUserData = async (userId: string): Promise<void> => {
       await deleteDoc(logDoc.ref);
     }
 
-    // 3. Delete all audio files from Cloud Storage
+    // 3. Delete all journal entries (Depths)
+    const journalEntriesRef = collection(firestore, `users/${userId}/journal_entries`);
+    const journalEntriesSnapshot = await getDocs(journalEntriesRef);
+
+    for (const entryDoc of journalEntriesSnapshot.docs) {
+      await deleteDoc(entryDoc.ref);
+    }
+
+    // 4. Delete all audio files from Cloud Storage
     const audioRef = ref(storage, `audio-messages/${userId}`);
     try {
       const audioList = await listAll(audioRef);
@@ -218,7 +227,7 @@ export const deleteAllUserData = async (userId: string): Promise<void> => {
       // Ignore if folder doesn't exist
     }
 
-    // 4. Clear localStorage (except settings)
+    // 5. Clear localStorage (except settings)
     const keysToKeep = [
       'hapticsEnabled',
       'analyticsEnabled',
@@ -231,6 +240,9 @@ export const deleteAllUserData = async (userId: string): Promise<void> => {
         localStorage.removeItem(key);
       }
     });
+
+    // 6. Clear IndexedDB (Dexie database)
+    await db.journalEntries.clear();
 
     logAnalyticsEvent(AnalyticsEvent.DATA_DELETED);
     showToast.success(i18next.t('toasts.dataDeleted'));
