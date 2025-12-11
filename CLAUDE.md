@@ -83,6 +83,7 @@ Every interaction needs appropriate haptic feedback. See [Haptics Guide](docs/05
 | **Any text changes**       | [i18n Guide](docs/05-implementation/i18n-guide.md) ⚠️                                                        | -                                                              |
 | **Working on SOS flow**    | [SOS Flow](docs/04-features/sos-flow.md), [Haptics](docs/05-implementation/haptics.md)                       | [Animations](docs/02-design-system/animations.md)              |
 | **Voice chat feature**     | [Voice Chat](docs/04-features/voice-chat.md), [Firebase](docs/05-implementation/firebase.md)                 | -                                                              |
+| **AI temporal awareness**  | [Temporal Awareness](docs/04-features/temporal-awareness.md)                                                 | -                                                              |
 | **Profile/settings**       | [Profile Settings](docs/04-features/profile-settings.md)                                                     | [State Management](docs/03-architecture/state-management.md)   |
 | **Fixing bug**             | [Troubleshooting](docs/06-development/troubleshooting.md)                                                    | -                                                              |
 | **Understanding codebase** | [Manifest](docs/01-vision/manifest.md), [Tech Stack](docs/03-architecture/tech-stack.md)                     | [Project Structure](docs/03-architecture/project-structure.md) |
@@ -113,6 +114,7 @@ docs/
 │   ├── sos-flow.md              # 🆘 7-step panic de-escalation
 │   ├── voice-chat.md            # 🎤 Recording, transcription
 │   ├── ai-chat.md               # 🤖 Therapeutic AI, crisis detection
+│   ├── temporal-awareness.md    # 🕐 Time-aware conversations, DST support
 │   ├── profile-settings.md      # ⚙️ Settings, data management
 │   └── planned-features.md      # 📋 Roadmap
 │
@@ -140,12 +142,14 @@ docs/
 
 ### ✅ Implemented
 
-- Voice Chat (recording, transcription, AI response)
+- Voice Chat (recording, transcription, AI response, 120s max)
 - AI Chat (Gemini 2.5 Flash, CBT/ACT techniques)
+- **Temporal Awareness (time-aware AI, 75 msg history, timezone/DST support)**
 - Message System (real-time Firestore, crisis detection)
 - Profile/Settings (haptics, analytics, data management)
 - Internationalization (English + German)
 - Haptics Integration
+- Journal/Depths (free-form journaling with sedimentation)
 
 ### 🚧 In Progress
 
