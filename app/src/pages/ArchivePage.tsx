@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useArchive } from '../hooks/useArchive';
 import { useConversation } from '../hooks/useConversation';
 import { useHaptics } from '../hooks/useHaptics';
+import { useUI } from '../contexts/UIContext';
 import { ConversationCard } from '../components/features/archive/ConversationCard';
 import { EmptyArchive } from '../components/features/archive/EmptyArchive';
 import { ConfirmDialog } from '../components/ui/ConfirmDialog';
@@ -15,6 +16,7 @@ export const ArchivePage: FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { light, medium } = useHaptics();
+  const { navbarBottom } = useUI();
   const { archivedConversations, isLoading, deleteConversation } = useArchive();
   const { unarchiveConversation } = useConversation();
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -86,10 +88,13 @@ export const ArchivePage: FC = () => {
       </header>
 
       {/* Content */}
-      <div className="flex-1 overflow-y-auto px-4 py-6 sm:px-6">
+      <div
+        className="flex flex-1 flex-col overflow-y-auto px-4 pt-6 sm:px-6"
+        style={{ paddingBottom: `${Math.max(navbarBottom + 32, 96)}px` }}
+      >
         {isLoading ? (
           <div className="flex items-center justify-center py-12">
-            <div className="h-8 w-8 animate-pulse rounded-full bg-biolum-cyan/30" />
+            <div className="h-12 w-12 animate-spin rounded-full border-4 border-biolum-cyan border-t-transparent shadow-glow-md" />
           </div>
         ) : archivedConversations.length === 0 ? (
           <EmptyArchive />

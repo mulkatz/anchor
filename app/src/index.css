@@ -86,6 +86,11 @@ body {
   margin-right: env(safe-area-inset-right);
 }
 
+/* Override pt-safe to add extra breathing room from status bar/edge */
+.pt-safe {
+  padding-top: calc(env(safe-area-inset-top) + 1rem) !important;
+}
+
 /* Prevent text selection on mobile */
 .no-select {
   -webkit-user-select: none;

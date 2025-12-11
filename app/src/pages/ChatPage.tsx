@@ -58,7 +58,7 @@ export const ChatPage: FC = () => {
   return (
     <div className="flex h-screen w-full flex-col bg-void-blue/85">
       {/* Header */}
-      <header className="safe-area-top flex shrink-0 items-center justify-between border-b border-glass-border px-4 py-4 sm:px-6">
+      <header className="flex shrink-0 items-center justify-between border-b border-glass-border px-4 py-4 pt-safe sm:px-6">
         <div>
           <h1 className="text-2xl font-light text-mist-white">{t('chat.title')}</h1>
           <p className="text-sm text-mist-white/60">{t('chat.subtitle')}</p>
@@ -72,11 +72,11 @@ export const ChatPage: FC = () => {
               'flex items-center gap-2 rounded-full px-4 py-2',
               'bg-glass-bg backdrop-blur-glass',
               'border border-glass-border',
-              'text-mist-white/80 transition-all duration-300 ease-viscous',
+              'transition-all duration-300 ease-viscous',
               'hover:bg-glass-bg-hover active:scale-95'
             )}
           >
-            <Archive size={18} />
+            <Archive size={18} style={{ color: '#9A9FAC' }} />
           </button>
 
           {/* New Chat Button */}

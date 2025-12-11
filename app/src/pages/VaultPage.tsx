@@ -51,11 +51,10 @@ export const VaultPage: FC = () => {
         {loading ? (
           <div className="flex flex-1 flex-col items-center justify-center">
             <div className="h-12 w-12 animate-spin rounded-full border-4 border-biolum-cyan border-t-transparent shadow-glow-md" />
-            <p className="mt-4 text-sm text-mist-white/50">Loading...</p>
           </div>
         ) : logs.length === 0 ? (
           <div className="flex flex-1 flex-col items-center justify-center px-8">
-            <Waves size={64} className="mb-6 text-mist-white/20" />
+            <Waves size={64} className="mb-6" style={{ color: '#3F4457' }} />
             <p className="text-center text-xl font-light text-mist-white/60">
               {t('tideLog.reef.emptyTitle')}
             </p>

@@ -263,7 +263,7 @@ export const ProfilePage: FC = () => {
     <div className="flex h-full flex-col bg-void-blue/80">
       {/* Sticky Header */}
       <header className="shrink-0 border-b border-glass-border px-4 py-4 pt-safe sm:px-6">
-        <h1 className="text-3xl font-light text-mist-white">{t('profile.title')}</h1>
+        <h1 className="text-2xl font-light text-mist-white">{t('profile.title')}</h1>
         <p className="text-sm text-mist-white/60">{t('profile.subtitle')}</p>
       </header>
 

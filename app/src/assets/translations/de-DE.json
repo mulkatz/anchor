@@ -268,7 +268,8 @@
       "subtitle": "Dein ungefilterter Geist",
       "emptyState": {
         "title": "Beginne deine Tiefen",
-        "description": "Fang an zu schreiben. Deine Worte werden nach 30 Minuten Stille dauerhaft."
+        "description": "Fang an zu schreiben. Deine Worte werden nach 30 Minuten Stille dauerhaft.",
+        "startButton": "Schreiben beginnen"
       },
       "today": "Heute",
       "yesterday": "Gestern",

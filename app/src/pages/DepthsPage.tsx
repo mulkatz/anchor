@@ -40,7 +40,7 @@ export const DepthsPage: FC = () => {
         </div>
       ) : entries.length === 0 && !todayEntry ? (
         <div className="flex flex-1 flex-col items-center justify-center px-8">
-          <Feather size={64} className="mb-6 text-mist-white/20" />
+          <Feather size={64} className="mb-6" style={{ color: '#3F4457' }} />
           <p className="text-center text-xl font-light text-mist-white/60">
             {t('depths.emptyState.title')}
           </p>
@@ -48,12 +48,12 @@ export const DepthsPage: FC = () => {
             {t('depths.emptyState.description')}
           </p>
 
-          {/* Start writing prompt */}
+          {/* Start writing button */}
           <button
             onClick={() => updateActiveSessionText('')}
             className="mt-8 rounded-2xl border border-biolum-cyan/30 bg-biolum-cyan/10 px-8 py-4 text-biolum-cyan shadow-glow-sm transition-all duration-300 ease-viscous active:scale-95"
           >
-            <span className="text-lg">{t('depths.placeholder')}</span>
+            <span className="text-lg">{t('depths.emptyState.startButton')}</span>
           </button>
         </div>
       ) : (

@@ -260,7 +260,8 @@
       "subtitle": "Your unfiltered mind",
       "emptyState": {
         "title": "Begin your depths",
-        "description": "Start writing. Your words settle into permanence after 30 minutes of stillness."
+        "description": "Start writing. Your words settle into permanence after 30 minutes of stillness.",
+        "startButton": "Start writing"
       },
       "today": "Today",
       "yesterday": "Yesterday",
