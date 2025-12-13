@@ -159,9 +159,6 @@ export const AudioMessageBubble: FC<AudioMessageBubbleProps> = ({ message, onRet
           </div>
         )}
       </div>
-      <span className="px-2 text-xs text-mist-white/30 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-        {timeStr}
-      </span>
     </div>
   );
 };

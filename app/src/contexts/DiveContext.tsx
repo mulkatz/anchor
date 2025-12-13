@@ -9,17 +9,26 @@ import {
   type PropsWithChildren,
 } from 'react';
 import { doc, onSnapshot, setDoc, getDoc, Timestamp } from 'firebase/firestore';
-import { firestore } from '../services/firebase.service';
+import { firestore, functions, httpsCallable } from '../services/firebase.service';
 import { useApp } from './AppContext';
+import { useSettings } from '../hooks/useSettings';
 import { diveLessons, getLessonById, getNextLesson, type DiveLesson } from '../data/dive-lessons';
-import type { DiveProgressSummary, DiveLessonStatus } from '../models';
+import type { DiveProgressSummary, DiveLessonStatus, SupportedLanguage } from '../models';
+import type { LocalizedLessonContent } from '../hooks/useDiveLesson';
 
 // localStorage key for caching progress
 const DIVE_PROGRESS_CACHE_KEY = 'dive_progress_cache';
+const DIVE_LESSONS_CACHE_KEY = 'dive_lessons_cache';
 
 interface CachedProgress {
   userId: string;
   progress: DiveProgressSummary;
+  cachedAt: number;
+}
+
+interface CachedLessons {
+  language: SupportedLanguage;
+  lessons: Record<string, LocalizedLessonContent>;
   cachedAt: number;
 }
 
@@ -33,6 +42,9 @@ interface DiveContextValue {
   getLessonStatus: (lessonId: string) => DiveLessonStatus;
   isLessonUnlocked: (lessonId: string) => boolean;
   isLessonCompleted: (lessonId: string) => boolean;
+
+  // Prefetched lesson content
+  getPrefetchedLesson: (lessonId: string) => LocalizedLessonContent | null;
 
   // Actions
   initializeProgress: () => Promise<void>;
@@ -90,8 +102,49 @@ function saveCachedProgress(userId: string, progress: DiveProgressSummary): void
 export function clearDiveProgressCache(): void {
   try {
     localStorage.removeItem(DIVE_PROGRESS_CACHE_KEY);
+    localStorage.removeItem(DIVE_LESSONS_CACHE_KEY);
   } catch (e) {
     console.warn('Failed to clear dive progress cache:', e);
+  }
+}
+
+/**
+ * Load cached lesson content from localStorage
+ */
+function loadCachedLessons(language: SupportedLanguage): Record<string, LocalizedLessonContent> {
+  try {
+    const cached = localStorage.getItem(DIVE_LESSONS_CACHE_KEY);
+    if (!cached) return {};
+
+    const parsed: CachedLessons = JSON.parse(cached);
+
+    // Only use cache if language matches and is less than 7 days old
+    const maxAge = 7 * 24 * 60 * 60 * 1000;
+    if (parsed.language === language && Date.now() - parsed.cachedAt < maxAge) {
+      return parsed.lessons;
+    }
+  } catch (e) {
+    console.warn('Failed to load dive lessons cache:', e);
+  }
+  return {};
+}
+
+/**
+ * Save lesson content to localStorage cache
+ */
+function saveCachedLessons(
+  language: SupportedLanguage,
+  lessons: Record<string, LocalizedLessonContent>
+): void {
+  try {
+    const cached: CachedLessons = {
+      language,
+      lessons,
+      cachedAt: Date.now(),
+    };
+    localStorage.setItem(DIVE_LESSONS_CACHE_KEY, JSON.stringify(cached));
+  } catch (e) {
+    console.warn('Failed to save dive lessons cache:', e);
   }
 }
 
@@ -132,9 +185,14 @@ async function initializeProgressInternal(userId: string): Promise<void> {
 
 export const DiveProvider: FC<PropsWithChildren> = ({ children }) => {
   const { userId } = useApp();
+  const { settings } = useSettings();
   const [progress, setProgress] = useState<DiveProgressSummary | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [prefetchedLessons, setPrefetchedLessons] = useState<
+    Record<string, LocalizedLessonContent>
+  >({});
   const hasInitialized = useRef(false);
+  const prefetchingRef = useRef<Set<string>>(new Set());
 
   // On mount or userId change, load cached progress immediately for fast display
   useEffect(() => {
@@ -200,6 +258,55 @@ export const DiveProvider: FC<PropsWithChildren> = ({ children }) => {
     return () => unsubscribe();
   }, [userId]);
 
+  // Prefetch lesson content for unlocked lessons
+  useEffect(() => {
+    const language = settings.language;
+
+    // Load cached lessons for current language
+    const cached = loadCachedLessons(language);
+    if (Object.keys(cached).length > 0) {
+      setPrefetchedLessons(cached);
+    }
+
+    // Get unlocked lessons to prefetch
+    const unlockedLessonIds = progress?.unlockedLessons || [diveLessons[0]?.id].filter(Boolean);
+    if (unlockedLessonIds.length === 0) return;
+
+    // Prefetch each unlocked lesson that isn't already cached
+    const prefetchLesson = async (lessonId: string) => {
+      // Skip if already prefetched or currently prefetching
+      if (prefetchedLessons[lessonId] || prefetchingRef.current.has(lessonId)) {
+        return;
+      }
+
+      prefetchingRef.current.add(lessonId);
+
+      try {
+        const getDiveLesson = httpsCallable<
+          { lessonId: string; language: SupportedLanguage },
+          { lesson: LocalizedLessonContent }
+        >(functions, 'getDiveLesson');
+
+        const result = await getDiveLesson({ lessonId, language });
+
+        setPrefetchedLessons((prev) => {
+          const updated = { ...prev, [lessonId]: result.data.lesson };
+          saveCachedLessons(language, updated);
+          return updated;
+        });
+      } catch (err) {
+        console.warn(`Failed to prefetch lesson ${lessonId}:`, err);
+      } finally {
+        prefetchingRef.current.delete(lessonId);
+      }
+    };
+
+    // Prefetch all unlocked lessons
+    unlockedLessonIds.forEach((lessonId) => {
+      if (lessonId) prefetchLesson(lessonId);
+    });
+  }, [progress?.unlockedLessons, settings.language]);
+
   // Initialize progress for first-time users (external API)
   const initializeProgress = useCallback(async () => {
     if (!userId) return;
@@ -245,6 +352,14 @@ export const DiveProvider: FC<PropsWithChildren> = ({ children }) => {
     // This is just a placeholder for manual refresh if needed
   }, []);
 
+  // Get prefetched lesson content
+  const getPrefetchedLesson = useCallback(
+    (lessonId: string): LocalizedLessonContent | null => {
+      return prefetchedLessons[lessonId] || null;
+    },
+    [prefetchedLessons]
+  );
+
   const value: DiveContextValue = {
     progress,
     isLoading,
@@ -252,6 +367,7 @@ export const DiveProvider: FC<PropsWithChildren> = ({ children }) => {
     getLessonStatus,
     isLessonUnlocked,
     isLessonCompleted,
+    getPrefetchedLesson,
     initializeProgress,
     refreshProgress,
   };

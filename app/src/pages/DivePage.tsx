@@ -1,7 +1,7 @@
 import { type FC, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Lock, CheckCircle } from 'lucide-react';
+import { Lock, CheckCircle, Circle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useDive } from '../contexts/DiveContext';
 import { useApp } from '../contexts/AppContext';
@@ -18,6 +18,9 @@ import { cn } from '../utils/cn';
 import { useUI } from '../contexts/UIContext.tsx';
 import { DiveEmptyState } from '../components/features/dive/DiveEmptyState';
 import { LoadingSpinner } from '../components/ui';
+
+// DEV: Set to true to unlock all lessons for testing
+const DEV_UNLOCK_ALL = false;
 
 /**
  * The Dive - Ocean Depth Map
@@ -126,7 +129,7 @@ export const DivePage: FC = () => {
               <div className="mb-4 flex items-center gap-3">
                 <div
                   className="h-3 w-3 rounded-full"
-                  style={{ backgroundColor: theme.primary, boxShadow: `0 0 12px ${theme.glow}` }}
+                  style={{ backgroundColor: theme.primary, boxShadow: `0 0 4px ${theme.glow}40` }}
                 />
                 <div>
                   <h2 className="font-medium text-mist-white">{t(getZoneTranslationKey(zone))}</h2>
@@ -138,7 +141,7 @@ export const DivePage: FC = () => {
               <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-5">
                 {zoneLessons.map((lesson) => {
                   const status = getLessonStatus(lesson.id);
-                  const isUnlocked = status !== 'locked';
+                  const isUnlocked = DEV_UNLOCK_ALL || status !== 'locked';
                   const isCompleted = status === 'completed';
                   const isCurrent = progress?.currentLessonId === lesson.id;
 
@@ -160,24 +163,20 @@ export const DivePage: FC = () => {
                       style={{
                         ...(isCurrent && {
                           ringColor: theme.primary,
-                          boxShadow: `0 0 20px ${theme.glow}`,
+                          boxShadow: `0 0 4px ${theme.glow}`,
                         }),
                       }}
                     >
                       {/* Status Icon */}
                       {isCompleted ? (
-                        <CheckCircle
-                          className="mb-1 h-5 w-5 text-green-400"
-                          strokeWidth={1.5}
-                          width={5}
-                          size={5}
-                        />
+                        <CheckCircle className="mb-2 h-5 w-5 text-green-400" strokeWidth={1.5} />
                       ) : !isUnlocked ? (
-                        <Lock className="mb-1 h-5 w-5 text-mist-white/30" />
+                        <Lock className="mb-2 h-5 w-5 text-mist-white/30" />
                       ) : (
-                        <div
-                          className="mb-1 h-5 w-5 rounded-full"
-                          style={{ backgroundColor: theme.primary }}
+                        <Circle
+                          className="mb-2 h-5 w-5"
+                          strokeWidth={1.5}
+                          style={{ color: theme.primary }}
                         />
                       )}
 

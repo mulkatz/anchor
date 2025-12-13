@@ -58,7 +58,7 @@ export const FloatingDock: FC = () => {
         )}
       >
         {navItems.map(({ path, icon: Icon, label }) => {
-          const isActive = location.pathname === path;
+          const isActive = location.pathname === path || location.pathname.startsWith(`${path}/`);
 
           return (
             <button

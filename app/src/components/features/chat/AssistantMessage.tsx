@@ -74,9 +74,6 @@ export const AssistantMessage: FC<AssistantMessageProps> = ({ text, timestamp })
           </ReactMarkdown>
         </div>
       </div>
-      <span className="px-2 text-xs text-mist-white/30 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-        {timeStr}
-      </span>
     </div>
   );
 };

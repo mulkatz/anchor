@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { functions, httpsCallable } from '../services/firebase.service';
 import { useApp } from '../contexts/AppContext';
+import { useDive } from '../contexts/DiveContext';
 import { useSettings } from './useSettings';
 import type { SupportedLanguage } from '../models';
 
@@ -31,21 +32,35 @@ interface UseDiveLessonReturn {
 
 /**
  * Hook to fetch localized lesson content from backend
- * Used to display translated lesson content in the intro card
+ * First checks for prefetched content from DiveContext, then falls back to fetching
  */
 export const useDiveLesson = ({ lessonId }: UseDiveLessonProps): UseDiveLessonReturn => {
-  const [lesson, setLesson] = useState<LocalizedLessonContent | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const { userId } = useApp();
   const { settings } = useSettings();
+  const { getPrefetchedLesson } = useDive();
+
+  // Check for prefetched content first
+  const prefetchedLesson = lessonId ? getPrefetchedLesson(lessonId) : null;
+
+  const [lesson, setLesson] = useState<LocalizedLessonContent | null>(prefetchedLesson);
+  const [isLoading, setIsLoading] = useState(!prefetchedLesson && !!lessonId);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!lessonId || !userId) {
-      setLesson(null);
+    // If we have prefetched content, use it immediately
+    if (prefetchedLesson) {
+      setLesson(prefetchedLesson);
+      setIsLoading(false);
       return;
     }
 
+    if (!lessonId || !userId) {
+      setLesson(null);
+      setIsLoading(false);
+      return;
+    }
+
+    // Fall back to fetching if not prefetched
     const fetchLesson = async () => {
       setIsLoading(true);
       setError(null);
@@ -68,7 +83,7 @@ export const useDiveLesson = ({ lessonId }: UseDiveLessonProps): UseDiveLessonRe
     };
 
     fetchLesson();
-  }, [lessonId, userId, settings.language]);
+  }, [lessonId, userId, settings.language, prefetchedLesson]);
 
   return { lesson, isLoading, error };
 };

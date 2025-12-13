@@ -12,6 +12,7 @@ import { DiveChatContainer } from '../components/features/dive/DiveChatContainer
 import { ChatInput } from '../components/features/chat/ChatInput';
 import { LoadingSpinner } from '../components/ui';
 import { cn } from '../utils/cn';
+import { useUI } from '../contexts/UIContext';
 
 type PageState = 'intro' | 'session';
 
@@ -23,6 +24,7 @@ export const DiveLessonPage: FC = () => {
   const { lessonId } = useParams<{ lessonId: string }>();
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { navbarBottom } = useUI();
   const { medium, light } = useHaptics();
   const { getLessonStatus } = useDive();
 
@@ -93,7 +95,11 @@ export const DiveLessonPage: FC = () => {
             </span>
           </div>
           <h1 className="font-medium text-mist-white">
-            {localizedLesson?.title || lessonBase.title}
+            {isLessonLoading ? (
+              <span className="inline-block h-5 w-32 animate-pulse rounded bg-mist-white/10" />
+            ) : (
+              localizedLesson?.title || lessonBase.title
+            )}
           </h1>
         </div>
         {isLessonComplete && <CheckCircle className="h-6 w-6 text-green-400" />}
@@ -109,6 +115,7 @@ export const DiveLessonPage: FC = () => {
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
             className="flex flex-1 flex-col items-center justify-center p-6"
+            style={{ paddingBottom: `${navbarBottom + 24}px` }}
           >
             <div
               className={cn(
@@ -116,8 +123,8 @@ export const DiveLessonPage: FC = () => {
                 'bg-glass-bg backdrop-blur-glass'
               )}
               style={{
-                borderColor: `${theme.primary}30`,
-                boxShadow: `0 0 40px ${theme.glow}`,
+                borderColor: `${theme.primary}20`,
+                boxShadow: `0 0 8px ${theme.glow}25`,
               }}
             >
               {isLessonLoading ? (
@@ -152,12 +159,11 @@ export const DiveLessonPage: FC = () => {
                     className={cn(
                       'flex w-full items-center justify-center gap-3 rounded-full py-4',
                       'font-medium transition-all duration-300 ease-viscous',
-                      'active:scale-95'
+                      'drop-shadow-glow active:scale-95'
                     )}
                     style={{
                       backgroundColor: theme.primary,
                       color: '#0A1128',
-                      boxShadow: `0 0 20px ${theme.glow}`,
                     }}
                   >
                     <Play className="h-5 w-5" />
