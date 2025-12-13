@@ -3,6 +3,7 @@ import { getAnalytics, logEvent as firebaseLogEvent } from 'firebase/analytics';
 import { getAuth, initializeAuth, indexedDBLocalPersistence } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
+import { getFunctions, httpsCallable } from 'firebase/functions';
 import { Capacitor } from '@capacitor/core';
 import { isWeb } from '../utils/platform';
 
@@ -36,6 +37,10 @@ export const auth =
 
 export const firestore = getFirestore(app);
 export const storage = getStorage(app);
+export const functions = getFunctions(app, 'us-central1');
+
+// Helper for calling Cloud Functions
+export { httpsCallable };
 
 // Note: Firestore offline persistence (enableIndexedDbPersistence) is intentionally
 // disabled. It caused excessive WebChannel requests (~100/sec) likely due to

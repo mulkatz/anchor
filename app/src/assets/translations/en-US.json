@@ -251,9 +251,68 @@
     "navigation": {
       "sos": "SOS",
       "chat": "Chat",
-      "depths": "Depths",
+      "dive": "The Dive",
       "vault": "Vault",
       "profile": "Profile"
+    },
+    "dive": {
+      "title": "The Dive",
+      "subtitle": "Explore your nervous system",
+      "noLessons": "No lessons available",
+      "lessonNotFound": "Lesson not found",
+      "beginDive": "Begin Dive",
+      "suggestedReading": "Further reading",
+      "reflectionPlaceholder": "What comes up for you?",
+      "lessonComplete": "Lesson Complete",
+      "nextLesson": "Continue to Next Lesson",
+      "returnToMap": "Return to Map",
+      "zones": {
+        "shallows": "The Shallows",
+        "shallowsDesc": "Ventral Vagal - Calm, Connected",
+        "twilight": "The Twilight Zone",
+        "twilightDesc": "Cognitive Patterns - Thoughts & Feelings",
+        "midnight": "The Midnight Zone",
+        "midnightDesc": "Shame & Values - Deep Identity Work",
+        "trench": "The Trench",
+        "trenchDesc": "Existential Depths - Meaning & Integration"
+      },
+      "lessons": {
+        "L01": "The Emergency Hatch",
+        "L02": "Mapping Your Waters",
+        "L03": "Checking the Gauges",
+        "L04": "The Dead Man's Float",
+        "L05": "Glimmers in the Reef",
+        "L06": "Refraction Errors",
+        "L07": "The Rip Current",
+        "L08": "Monsters on the Boat",
+        "L09": "The Beach Ball",
+        "L10": "The Ocean Floor",
+        "L11": "Hooked on the Line",
+        "L12": "Dropping Anchor",
+        "L13": "Sonar Pings",
+        "L14": "The Fog",
+        "L15": "Schools of Thought",
+        "L16": "Crush Depth",
+        "L17": "The Hermit Crab",
+        "L18": "The Pufferfish",
+        "L19": "The Schooling Fish",
+        "L20": "Bioluminescence",
+        "L21": "The Abyss Stares Back",
+        "L22": "Diving into the Fear",
+        "L23": "Amor Fati",
+        "L24": "Tragic Optimism",
+        "L25": "The Bends"
+      }
+    },
+    "errors": {
+      "dive": {
+        "sessionFailed": "Failed to start session. Please try again.",
+        "connection": "Connection lost. Please check your network.",
+        "noSession": "No active session",
+        "timeout": "Guide is taking longer than expected...",
+        "sendFailed": "Failed to send. Please try again.",
+        "voiceFailed": "Voice message failed. Please try again."
+      }
     },
     "depths": {
       "title": "Depths",

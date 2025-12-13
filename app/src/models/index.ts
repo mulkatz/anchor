@@ -134,3 +134,69 @@ export interface JournalEntry {
   createdAt: Date;
   updatedAt: Date;
 }
+
+// The Dive (Somatic Learning) models
+export type DiveZone = 'The Shallows' | 'The Twilight Zone' | 'The Midnight Zone' | 'The Trench';
+
+export type DiveLessonStatus = 'locked' | 'in-progress' | 'completed';
+
+export interface DiveReflection {
+  id: string;
+  text: string;
+  createdAt: Date;
+  isVoice?: boolean; // If transcribed from voice
+}
+
+export interface DiveLessonProgress {
+  lessonId: string;
+  status: DiveLessonStatus;
+  startedAt: Date | null;
+  completedAt: Date | null;
+  reflections: DiveReflection[];
+}
+
+export interface DiveProgressSummary {
+  userId: string;
+  currentLessonId: string;
+  unlockedLessons: string[];
+  completedLessons: string[];
+  totalReflections: number;
+  lastActivityAt: Date;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface DiveSession {
+  id: string;
+  lessonId: string;
+  userId: string;
+  status: 'active' | 'completed' | 'abandoned';
+  createdAt: Date;
+  updatedAt: Date;
+  completedAt: Date | null;
+  messageCount: number;
+}
+
+export interface DiveMessage {
+  id: string;
+  sessionId: string;
+  userId: string;
+  lessonId: string;
+  text: string;
+  role: 'user' | 'guide'; // 'guide' = Somatic Guide AI
+  createdAt: Date;
+
+  // Voice message fields (reuse existing patterns)
+  hasAudio?: boolean;
+  audioPath?: string;
+  audioDuration?: number;
+  transcriptionStatus?: 'pending' | 'completed' | 'failed';
+
+  metadata?: {
+    model?: string;
+    responseTime?: number;
+    isLessonComplete?: boolean; // AI marked lesson complete
+    transcriptionConfidence?: number;
+    language?: string;
+  };
+}

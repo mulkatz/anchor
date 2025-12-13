@@ -1,6 +1,6 @@
 import { type FC, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Anchor, Shell, Feather, Waves, Compass } from 'lucide-react';
+import { Anchor, Shell, Waves, Archive, Compass } from 'lucide-react';
 import { Haptics, ImpactStyle } from '@capacitor/haptics';
 import { useTranslation } from 'react-i18next';
 import { cn } from '../../../utils/cn';
@@ -38,8 +38,8 @@ export const FloatingDock: FC = () => {
   const navItems = [
     { path: '/sos', icon: Anchor, label: t('navigation.sos') },
     { path: '/chat', icon: Shell, label: t('navigation.chat') },
-    { path: '/depths', icon: Feather, label: t('navigation.depths') },
-    { path: '/vault', icon: Waves, label: t('navigation.vault') },
+    { path: '/dive', icon: Waves, label: t('navigation.dive') },
+    { path: '/vault', icon: Archive, label: t('navigation.vault') },
     { path: '/profile', icon: Compass, label: t('navigation.profile') },
   ];
 

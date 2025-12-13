@@ -259,9 +259,68 @@
     "navigation": {
       "sos": "SOS",
       "chat": "Chat",
-      "depths": "Tiefen",
+      "dive": "Der Tauchgang",
       "vault": "Tresor",
       "profile": "Profil"
+    },
+    "dive": {
+      "title": "Der Tauchgang",
+      "subtitle": "Erkunde dein Nervensystem",
+      "noLessons": "Keine Lektionen verfügbar",
+      "lessonNotFound": "Lektion nicht gefunden",
+      "beginDive": "Tauchgang beginnen",
+      "suggestedReading": "Weiterführende Lektüre",
+      "reflectionPlaceholder": "Was kommt bei dir hoch?",
+      "lessonComplete": "Lektion abgeschlossen",
+      "nextLesson": "Zur nächsten Lektion",
+      "returnToMap": "Zurück zur Karte",
+      "zones": {
+        "shallows": "Die Untiefen",
+        "shallowsDesc": "Ventral Vagal - Ruhig, Verbunden",
+        "twilight": "Die Dämmerungszone",
+        "twilightDesc": "Kognitive Muster - Gedanken & Gefühle",
+        "midnight": "Die Mitternachtszone",
+        "midnightDesc": "Scham & Werte - Tiefe Identitätsarbeit",
+        "trench": "Der Graben",
+        "trenchDesc": "Existentielle Tiefen - Sinn & Integration"
+      },
+      "lessons": {
+        "L01": "Die Notluke",
+        "L02": "Deine Gewässer kartieren",
+        "L03": "Die Anzeigen prüfen",
+        "L04": "Der Toter-Mann-Float",
+        "L05": "Schimmern im Riff",
+        "L06": "Brechungsfehler",
+        "L07": "Die Strömung",
+        "L08": "Monster an Bord",
+        "L09": "Der Wasserball",
+        "L10": "Der Meeresboden",
+        "L11": "Am Haken",
+        "L12": "Anker werfen",
+        "L13": "Sonar-Pings",
+        "L14": "Der Nebel",
+        "L15": "Gedankenschwärme",
+        "L16": "Erdrückende Tiefe",
+        "L17": "Der Einsiedlerkrebs",
+        "L18": "Der Kugelfisch",
+        "L19": "Der Schwarmfisch",
+        "L20": "Biolumineszenz",
+        "L21": "Der Abgrund blickt zurück",
+        "L22": "In die Angst tauchen",
+        "L23": "Amor Fati",
+        "L24": "Tragischer Optimismus",
+        "L25": "Die Taucherkrankheit"
+      }
+    },
+    "errors": {
+      "dive": {
+        "sessionFailed": "Sitzung konnte nicht gestartet werden. Bitte versuche es erneut.",
+        "connection": "Verbindung verloren. Bitte überprüfe dein Netzwerk.",
+        "noSession": "Keine aktive Sitzung",
+        "timeout": "Der Guide braucht länger als erwartet...",
+        "sendFailed": "Senden fehlgeschlagen. Bitte versuche es erneut.",
+        "voiceFailed": "Sprachnachricht fehlgeschlagen. Bitte versuche es erneut."
+      }
     },
     "depths": {
       "title": "Tiefen",

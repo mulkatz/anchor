@@ -85,6 +85,39 @@ service cloud.firestore {
         // No delete allowed - therapeutic permanence
         allow delete: if false;
       }
+
+      // The Dive - Progress tracking
+      match /dive_progress/{progressId} {
+        allow read: if isOwner(userId);
+
+        allow create: if isOwner(userId)
+                      && request.resource.data.userId == userId;
+
+        allow update: if isOwner(userId)
+                      && request.resource.data.userId == userId;
+
+        // Allow deletion for data management
+        allow delete: if isOwner(userId);
+      }
+
+      // The Dive - Sessions (lesson conversations)
+      match /dive_sessions/{sessionId} {
+        allow read: if isOwner(userId);
+
+        allow create: if isOwner(userId)
+                      && request.resource.data.userId == userId
+                      && request.resource.data.lessonId is string;
+
+        allow update: if isOwner(userId)
+                      && request.resource.data.userId == userId;
+
+        allow delete: if isOwner(userId);
+
+        // Messages within dive sessions
+        match /messages/{messageId} {
+          allow read, write: if isOwner(userId);
+        }
+      }
     }
 
     // Feedback collection - write-only for users

@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { AppProvider } from '../contexts/AppContext';
 import { DialogProvider } from '../contexts/DialogContext';
 import { UIProvider } from '../contexts/UIContext';
+import { DiveProvider } from '../contexts/DiveContext';
 import { MainLayout } from '../components/layouts/MainLayout';
 import { HomePage } from './HomePage';
 import { SOSPage } from './SOSPage';
@@ -12,6 +13,8 @@ import { DepthsPage } from './DepthsPage';
 import { ArchivePage } from './ArchivePage';
 import { VaultPage } from './VaultPage';
 import { ProfilePage } from './ProfilePage';
+import { DivePage } from './DivePage';
+import { DiveLessonPage } from './DiveLessonPage';
 
 // Animation variants for page transitions
 // Note: Using negative y for initial (starts above, slides down) to work with overflow-hidden parent
@@ -148,6 +151,36 @@ const AnimatedRoutes: FC = () => {
             </motion.div>
           }
         />
+        <Route
+          path="/dive"
+          element={
+            <motion.div
+              variants={pageVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              transition={pageTransition}
+              className="h-full w-full"
+            >
+              <DivePage />
+            </motion.div>
+          }
+        />
+        <Route
+          path="/dive/:lessonId"
+          element={
+            <motion.div
+              variants={pageVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              transition={pageTransition}
+              className="h-full w-full"
+            >
+              <DiveLessonPage />
+            </motion.div>
+          }
+        />
       </Routes>
     </AnimatePresence>
   );
@@ -158,13 +191,15 @@ const App: FC = () => {
   return (
     <AppProvider>
       <UIProvider>
-        <DialogProvider>
-          <BrowserRouter>
-            <MainLayout>
-              <AnimatedRoutes />
-            </MainLayout>
-          </BrowserRouter>
-        </DialogProvider>
+        <DiveProvider>
+          <DialogProvider>
+            <BrowserRouter>
+              <MainLayout>
+                <AnimatedRoutes />
+              </MainLayout>
+            </BrowserRouter>
+          </DialogProvider>
+        </DiveProvider>
       </UIProvider>
     </AppProvider>
   );
