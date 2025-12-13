@@ -11,6 +11,7 @@ import {
 import { useDailyLogs } from '../hooks/useDailyLogs';
 import { useDialog } from '../contexts/DialogContext';
 import { useUI } from '../contexts/UIContext';
+import { LoadingSpinner } from '../components/ui';
 import { logAnalyticsEvent, AnalyticsEvent } from '../services/analytics.service';
 import type { DailyLog } from '../models';
 
@@ -49,9 +50,7 @@ export const VaultPage: FC = () => {
       >
         {/* Empty State or Content */}
         {loading ? (
-          <div className="flex flex-1 flex-col items-center justify-center">
-            <div className="h-12 w-12 animate-spin rounded-full border-4 border-biolum-cyan border-t-transparent shadow-glow-md" />
-          </div>
+          <LoadingSpinner className="flex-1" />
         ) : logs.length === 0 ? (
           <div className="flex flex-1 flex-col items-center justify-center px-8">
             <Waves size={64} className="mb-6" style={{ color: '#3F4457' }} />

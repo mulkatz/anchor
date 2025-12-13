@@ -1,4 +1,4 @@
-import { type FC, useEffect } from 'react';
+import { type FC, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Lock, CheckCircle } from 'lucide-react';
@@ -16,6 +16,8 @@ import {
 } from '../data/dive-lessons';
 import { cn } from '../utils/cn';
 import { useUI } from '../contexts/UIContext.tsx';
+import { DiveEmptyState } from '../components/features/dive/DiveEmptyState';
+import { LoadingSpinner } from '../components/ui';
 
 /**
  * The Dive - Ocean Depth Map
@@ -28,6 +30,16 @@ export const DivePage: FC = () => {
   const { light } = useHaptics();
   const { userId } = useApp();
   const { progress, isLoading, getLessonStatus, initializeProgress } = useDive();
+
+  // Track if intro has been dismissed
+  const [introSeen, setIntroSeen] = useState(() => {
+    return localStorage.getItem('dive_intro_seen') === 'true';
+  });
+
+  const handleDismissIntro = () => {
+    localStorage.setItem('dive_intro_seen', 'true');
+    setIntroSeen(true);
+  };
 
   // Initialize progress for first-time users
   useEffect(() => {
@@ -59,7 +71,28 @@ export const DivePage: FC = () => {
   if (isLoading) {
     return (
       <div className="flex h-full items-center justify-center">
-        <div className="text-mist-white/60">{t('common.loading')}</div>
+        <LoadingSpinner />
+      </div>
+    );
+  }
+
+  // Show empty state for first-time users who haven't seen the intro
+  const hasStarted = progress && progress.completedLessons.length > 0;
+  const showIntro = !hasStarted && !introSeen;
+
+  if (showIntro) {
+    return (
+      <div className="flex h-full flex-col bg-void-blue/85">
+        <header className="shrink-0 border-b border-glass-border px-6 py-4 pt-safe">
+          <h1 className="font-display text-2xl font-medium text-mist-white">{t('dive.title')}</h1>
+          <p className="mt-1 text-sm text-mist-white/60">{t('dive.subtitle')}</p>
+        </header>
+        <div
+          className="flex flex-1 px-4 pt-6 sm:px-6"
+          style={{ paddingBottom: `${navbarBottom + 24}px` }}
+        >
+          <DiveEmptyState onBegin={handleDismissIntro} />
+        </div>
       </div>
     );
   }

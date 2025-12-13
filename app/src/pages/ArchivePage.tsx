@@ -10,6 +10,7 @@ import { useUI } from '../contexts/UIContext';
 import { ConversationCard } from '../components/features/archive/ConversationCard';
 import { EmptyArchive } from '../components/features/archive/EmptyArchive';
 import { ConfirmDialog } from '../components/ui/ConfirmDialog';
+import { LoadingSpinner } from '../components/ui';
 import { cn } from '../utils/cn';
 
 export const ArchivePage: FC = () => {
@@ -93,9 +94,7 @@ export const ArchivePage: FC = () => {
         style={{ paddingBottom: `${Math.max(navbarBottom + 32, 96)}px` }}
       >
         {isLoading ? (
-          <div className="flex items-center justify-center py-12">
-            <div className="h-12 w-12 animate-spin rounded-full border-4 border-biolum-cyan border-t-transparent shadow-glow-md" />
-          </div>
+          <LoadingSpinner className="py-12" />
         ) : archivedConversations.length === 0 ? (
           <EmptyArchive />
         ) : (

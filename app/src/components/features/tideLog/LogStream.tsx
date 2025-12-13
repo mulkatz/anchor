@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { FileText } from 'lucide-react';
 
 import { LogCard } from './LogCard';
+import { LoadingSpinner } from '../../ui';
 import type { DailyLog } from '../../../models';
 import { cn } from '../../../utils/cn';
 
@@ -21,12 +22,7 @@ export const LogStream: FC<LogStreamProps> = ({ logs, onLogClick, loading = fals
   const { t } = useTranslation();
 
   if (loading) {
-    return (
-      <div className={cn('flex flex-col items-center justify-center py-12', className)}>
-        <div className="h-12 w-12 animate-spin rounded-full border-4 border-biolum-cyan border-t-transparent" />
-        <p className="mt-4 text-sm text-mist-white/50">Loading entries...</p>
-      </div>
-    );
+    return <LoadingSpinner className={cn('py-12', className)} />;
   }
 
   if (logs.length === 0) {

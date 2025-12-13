@@ -1,7 +1,7 @@
 import { type FC, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, Play, CheckCircle, Loader2 } from 'lucide-react';
+import { ArrowLeft, Play, CheckCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useDiveSession } from '../hooks/useDiveSession';
 import { useDiveLesson } from '../hooks/useDiveLesson';
@@ -10,6 +10,7 @@ import { useHaptics } from '../hooks/useHaptics';
 import { getLessonById, zoneThemes, getZoneTranslationKey } from '../data/dive-lessons';
 import { DiveChatContainer } from '../components/features/dive/DiveChatContainer';
 import { ChatInput } from '../components/features/chat/ChatInput';
+import { LoadingSpinner } from '../components/ui';
 import { cn } from '../utils/cn';
 
 type PageState = 'intro' | 'session';
@@ -121,10 +122,7 @@ export const DiveLessonPage: FC = () => {
             >
               {isLessonLoading ? (
                 /* Loading State */
-                <div className="flex flex-col items-center justify-center py-8">
-                  <Loader2 className="h-8 w-8 animate-spin" style={{ color: theme.primary }} />
-                  <p className="mt-4 text-sm text-mist-white/60">{t('common.loading')}</p>
-                </div>
+                <LoadingSpinner className="py-8" />
               ) : (
                 <>
                   {/* Lesson Info */}

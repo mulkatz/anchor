@@ -275,6 +275,11 @@
       "title": "Der Tauchgang",
       "subtitle": "Erkunde dein Nervensystem",
       "noLessons": "Keine Lektionen verfügbar",
+      "emptyState": {
+        "title": "Beginne deinen Abstieg",
+        "description": "25 geführte Lektionen warten in der Tiefe. Jede beleuchtet einen anderen Teil von dir.",
+        "startButton": "Erkunde die Tiefen"
+      },
       "lessonNotFound": "Lektion nicht gefunden",
       "beginDive": "Tauchgang beginnen",
       "suggestedReading": "Weiterführende Lektüre",

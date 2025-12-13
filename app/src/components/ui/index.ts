@@ -7,5 +7,6 @@ export { Button } from './Button';
 export { Dialog } from './Dialog';
 export { Backdrop } from './Backdrop';
 export { LoaderAnimation } from './LoaderAnimation';
+export { LoadingSpinner } from './LoadingSpinner';
 export { CTAButton } from './buttons/CTAButton';
 export { IconButton, RoundIconButton } from './buttons/IconButton';

@@ -267,6 +267,11 @@
       "title": "The Dive",
       "subtitle": "Explore your nervous system",
       "noLessons": "No lessons available",
+      "emptyState": {
+        "title": "Begin your descent",
+        "description": "25 guided lessons await below. Each one illuminates a different part of who you are.",
+        "startButton": "Explore the depths"
+      },
       "lessonNotFound": "Lesson not found",
       "beginDive": "Begin Dive",
       "suggestedReading": "Further reading",

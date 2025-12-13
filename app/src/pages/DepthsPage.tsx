@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { DepthsDocument } from '../components/features/depths/DepthsDocument';
 import { useJournal } from '../hooks/useJournal';
 import { useUI } from '../contexts/UIContext';
+import { LoadingSpinner } from '../components/ui';
 
 export const DepthsPage: FC = () => {
   const { t } = useTranslation();
@@ -35,9 +36,7 @@ export const DepthsPage: FC = () => {
 
       {/* Content */}
       {loading ? (
-        <div className="flex flex-1 flex-col items-center justify-center">
-          <div className="h-12 w-12 animate-spin rounded-full border-4 border-biolum-cyan border-t-transparent shadow-glow-md" />
-        </div>
+        <LoadingSpinner className="flex-1" />
       ) : entries.length === 0 && !todayEntry ? (
         <div className="flex flex-1 flex-col items-center justify-center px-8">
           <Feather size={64} className="mb-6" style={{ color: '#3F4457' }} />
