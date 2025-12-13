@@ -38,6 +38,7 @@ export interface ConversationProfile {
 const MAX_SAMPLE_MESSAGES = 15;
 const FIRST_ANALYSIS_THRESHOLD = 10;
 const SUBSEQUENT_ANALYSIS_INTERVAL = 5;
+const SYNC_ANALYSIS_THRESHOLD = 3; // First N messages: wait for analysis before responding
 
 /**
  * Analysis prompt for Gemini to evaluate user communication style
@@ -110,6 +111,15 @@ export function shouldTriggerAnalysis(totalCount: number, lastAnalyzedAt: number
 }
 
 /**
+ * Check if analysis should be synchronous (wait for it before responding)
+ * First 3 messages: wait for analysis to complete
+ * After 3 messages: fire-and-forget (async)
+ */
+export function shouldWaitForAnalysis(totalCount: number): boolean {
+  return totalCount <= SYNC_ANALYSIS_THRESHOLD;
+}
+
+/**
  * Add message to rolling sample window
  * Maintains max size by removing oldest messages
  */
@@ -156,18 +166,15 @@ function extractMirroringIntensity(analysisText: string): number {
 
 /**
  * Analyze user's communication style and generate personalized profile
- * Called after threshold messages, runs asynchronously (fire-and-forget)
+ * Runs on every message for rapid adaptation
  */
 export async function analyzeUserStyle(
   userId: string,
   sampleMessages: SampleMessage[]
 ): Promise<void> {
-  if (sampleMessages.length < FIRST_ANALYSIS_THRESHOLD) {
-    logger.info('Not enough messages for style analysis', {
-      userId,
-      messageCount: sampleMessages.length,
-      required: FIRST_ANALYSIS_THRESHOLD,
-    });
+  // Need at least 1 message to analyze
+  if (sampleMessages.length < 1) {
+    logger.info('No messages to analyze', { userId });
     return;
   }
 
@@ -191,7 +198,7 @@ export async function analyzeUserStyle(
     const result = await model.generateContent({
       contents: [{ role: 'user', parts: [{ text: prompt }] }],
       generationConfig: {
-        maxOutputTokens: 2048,
+        maxOutputTokens: 4096,
         temperature: 0.3, // Lower temperature for consistent analysis
         topP: 0.8,
       },

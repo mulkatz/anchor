@@ -14,6 +14,7 @@ import {
   getConversationProfile,
   updateConversationProfile,
   analyzeUserStyle,
+  shouldWaitForAnalysis,
 } from './adaptiveLanguage';
 
 /**
@@ -177,8 +178,45 @@ IMPORTANT: You can now reference when things happened in your conversation. Each
         hasSessionBreak: sessionBreakNote !== '',
       });
 
-      // 7.5 Fetch adaptive language profile (if exists)
-      const conversationProfile = await getConversationProfile(userId);
+      // 7.5 Adaptive Language: Update profile and analyze BEFORE generating response
+      // This ensures the AI has the freshest style profile available
+      let conversationProfile: string | undefined;
+
+      try {
+        // Update profile with this message
+        const { shouldAnalyze, sampleMessages, totalCount } = await updateConversationProfile(
+          userId,
+          { text: message.text, conversationId }
+        );
+
+        if (shouldAnalyze && sampleMessages.length > 0) {
+          const waitForIt = shouldWaitForAnalysis(totalCount);
+
+          if (waitForIt) {
+            // First 3 messages: WAIT for analysis to complete before responding
+            logger.info('Running synchronous style analysis', { userId, totalCount });
+            await analyzeUserStyle(userId, sampleMessages);
+          } else {
+            // After 3 messages: fire-and-forget (don't block response)
+            logger.info('Triggering async style analysis', { userId, totalCount });
+            analyzeUserStyle(userId, sampleMessages).catch((err) => {
+              logger.error('Background style analysis failed', {
+                userId,
+                error: err instanceof Error ? err.message : String(err),
+              });
+            });
+          }
+        }
+
+        // Now fetch the (potentially freshly updated) profile
+        conversationProfile = await getConversationProfile(userId);
+      } catch (profileError) {
+        // Don't fail the main message flow if profile operations fail
+        logger.error('Failed in adaptive language processing', {
+          userId,
+          error: profileError instanceof Error ? profileError.message : String(profileError),
+        });
+      }
 
       // 8. Build Gemini Conversation Format with temporal awareness (timezone-aware)
       const contents = conversationHistory.map((msg) => {
@@ -269,32 +307,6 @@ IMPORTANT: You can now reference when things happened in your conversation. Each
           updatedAt: admin.firestore.FieldValue.serverTimestamp(),
           messageCount: admin.firestore.FieldValue.increment(1),
         });
-
-      // 13. Adaptive Language: Update profile and trigger analysis if needed
-      try {
-        const { shouldAnalyze, sampleMessages, totalCount } = await updateConversationProfile(
-          userId,
-          { text: message.text, conversationId }
-        );
-
-        if (shouldAnalyze && sampleMessages.length > 0) {
-          logger.info('Triggering style analysis', { userId, totalCount });
-
-          // Fire and forget - don't block response delivery
-          analyzeUserStyle(userId, sampleMessages).catch((err) => {
-            logger.error('Background style analysis failed', {
-              userId,
-              error: err instanceof Error ? err.message : String(err),
-            });
-          });
-        }
-      } catch (profileError) {
-        // Don't fail the main message flow if profile update fails
-        logger.error('Failed to update conversation profile', {
-          userId,
-          error: profileError instanceof Error ? profileError.message : String(profileError),
-        });
-      }
     } catch (error) {
       logger.error('Error processing message', { userId, conversationId, error });
 

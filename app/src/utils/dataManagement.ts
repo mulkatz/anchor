@@ -313,7 +313,15 @@ export const deleteAllUserData = async (userId: string): Promise<void> => {
       await deleteDoc(sessionDoc.ref);
     }
 
-    // 6. Delete all audio files from Cloud Storage (recursive)
+    // 6. Delete profile subcollection (includes conversationProfile for adaptive language)
+    const profileRef = collection(firestore, `users/${userId}/profile`);
+    const profileSnapshot = await getDocs(profileRef);
+
+    for (const profileDoc of profileSnapshot.docs) {
+      await deleteDoc(profileDoc.ref);
+    }
+
+    // 7. Delete all audio files from Cloud Storage (recursive)
     // Audio files are stored as: audio-messages/{userId}/{conversationId}/{messageId}.m4a
     const audioRef = ref(storage, `audio-messages/${userId}`);
     try {
@@ -323,7 +331,7 @@ export const deleteAllUserData = async (userId: string): Promise<void> => {
       // Ignore if folder doesn't exist or permission errors
     }
 
-    // 7. Delete Dive audio files from Cloud Storage
+    // 8. Delete Dive audio files from Cloud Storage
     const diveAudioRef = ref(storage, `dive-audio/${userId}`);
     try {
       await deleteStorageFolder(diveAudioRef);
@@ -332,7 +340,7 @@ export const deleteAllUserData = async (userId: string): Promise<void> => {
       // Ignore if folder doesn't exist or permission errors
     }
 
-    // 8. Clear localStorage (except settings)
+    // 9. Clear localStorage (except settings)
     const keysToKeep = [
       'hapticsEnabled',
       'analyticsEnabled',
@@ -347,10 +355,10 @@ export const deleteAllUserData = async (userId: string): Promise<void> => {
       }
     });
 
-    // 9. Clear dive progress cache specifically
+    // 10. Clear dive progress cache specifically
     clearDiveProgressCache();
 
-    // 10. Clear IndexedDB (Dexie database)
+    // 11. Clear IndexedDB (Dexie database)
     await db.journalEntries.clear();
 
     logAnalyticsEvent(AnalyticsEvent.DATA_DELETED);
