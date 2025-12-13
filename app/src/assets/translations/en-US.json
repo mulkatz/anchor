@@ -263,7 +263,12 @@
       "beginDive": "Begin Dive",
       "suggestedReading": "Further reading",
       "reflectionPlaceholder": "What comes up for you?",
-      "lessonComplete": "Lesson Complete",
+      "lessonComplete": {
+        "label": "Complete",
+        "title": "You surfaced safely",
+        "description": "You've explored something meaningful today. This insight is now part of you.",
+        "continue": "Return to Map"
+      },
       "nextLesson": "Continue to Next Lesson",
       "returnToMap": "Return to Map",
       "zones": {

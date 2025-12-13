@@ -9,8 +9,8 @@ export { onMessageCreate } from './chat';
 // Export conversation management functions
 export { generateConversationTitle, enforceSingleActiveConversation } from './conversations';
 
-// Export audio transcription function
-export { onAudioMessageCreate } from './transcription';
+// Export audio transcription functions
+export { onAudioMessageCreate, onDiveAudioMessageCreate } from './transcription';
 
 // Export The Dive somatic learning functions
 export { onDiveMessageCreate, onDiveSessionCreate, getDiveLesson } from './diveChat';

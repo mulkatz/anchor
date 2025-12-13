@@ -271,7 +271,12 @@
       "beginDive": "Tauchgang beginnen",
       "suggestedReading": "Weiterführende Lektüre",
       "reflectionPlaceholder": "Was kommt bei dir hoch?",
-      "lessonComplete": "Lektion abgeschlossen",
+      "lessonComplete": {
+        "label": "Abgeschlossen",
+        "title": "Du bist sicher aufgetaucht",
+        "description": "Du hast heute etwas Bedeutsames erkundet. Diese Erkenntnis ist jetzt ein Teil von dir.",
+        "continue": "Zurück zur Karte"
+      },
       "nextLesson": "Zur nächsten Lektion",
       "returnToMap": "Zurück zur Karte",
       "zones": {

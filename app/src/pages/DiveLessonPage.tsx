@@ -178,17 +178,22 @@ export const DiveLessonPage: FC = () => {
             </div>
           </motion.div>
         ) : (
-          /* Session Chat */
+          /* Session Chat - Same layout structure as ChatPage */
           <motion.div
             key="session"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            className="flex flex-1 flex-col overflow-hidden"
+            className="relative flex-1 overflow-hidden"
           >
             {/* Messages */}
-            <DiveChatContainer messages={messages} isThinking={isThinking} zone={lessonBase.zone} />
+            <DiveChatContainer
+              messages={messages}
+              isThinking={isThinking}
+              isLessonComplete={isLessonComplete}
+              onNavigateBack={handleBack}
+            />
 
             {/* Input - reuse ChatInput for consistent UX */}
             <ChatInput
