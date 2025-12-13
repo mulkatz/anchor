@@ -190,14 +190,25 @@ export function getCrisisResponse(languageCode: string) {
 
 /**
  * Get system prompt for AI responses in a given language
+ * Supports optional conversation profile for user-specific style adaptation
  */
-export function getSystemPrompt(languageCode: string, temporalContext?: string): string {
+export function getSystemPrompt(
+  languageCode: string,
+  temporalContext?: string,
+  conversationProfile?: string
+): string {
   const config = getLanguageConfig(languageCode);
   let prompt = config.systemPrompt;
 
-  // Add temporal context if provided
+  // Add temporal context if provided (prepended)
   if (temporalContext) {
     prompt = `${temporalContext}\n\n${prompt}`;
+  }
+
+  // Add user-specific conversation profile at the END
+  // Positioned as refinement to base therapeutic instructions, not override
+  if (conversationProfile) {
+    prompt = `${prompt}\n\n---\nUSER-SPECIFIC COMMUNICATION STYLE (apply these guidelines while maintaining therapeutic integrity):\n${conversationProfile}\n---`;
   }
 
   return prompt;

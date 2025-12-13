@@ -200,3 +200,24 @@ export interface DiveMessage {
     language?: string;
   };
 }
+
+// Adaptive Language (backend-managed, hidden from users)
+// These interfaces are for documentation/type safety reference
+// The actual data is managed entirely in the backend
+
+export interface AdaptiveLanguageSampleMessage {
+  text: string;
+  timestamp: Date;
+  conversationId: string;
+}
+
+export interface ConversationProfile {
+  styleDescription: string; // Natural language rules for AI
+  mirroringIntensity: number; // 1-5 (AI-detected)
+  sampleMessages: AdaptiveLanguageSampleMessage[]; // Rolling window of 15
+  totalUserMessageCount: number; // Total messages sent by user
+  lastAnalyzedAtMessageCount: number; // Count at last analysis
+  createdAt: Date;
+  updatedAt: Date;
+  lastAnalyzedAt: Date;
+}

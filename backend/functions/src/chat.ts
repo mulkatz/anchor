@@ -10,6 +10,11 @@ import {
   getCurrentContextTimestamp,
   getTimeOfDay,
 } from './temporal';
+import {
+  getConversationProfile,
+  updateConversationProfile,
+  analyzeUserStyle,
+} from './adaptiveLanguage';
 
 /**
  * Cloud Function: onMessageCreate
@@ -172,6 +177,9 @@ IMPORTANT: You can now reference when things happened in your conversation. Each
         hasSessionBreak: sessionBreakNote !== '',
       });
 
+      // 7.5 Fetch adaptive language profile (if exists)
+      const conversationProfile = await getConversationProfile(userId);
+
       // 8. Build Gemini Conversation Format with temporal awareness (timezone-aware)
       const contents = conversationHistory.map((msg) => {
         const relativeTime = getRelativeTimeForAI(msg.timestamp, now, userTimezone);
@@ -183,9 +191,13 @@ IMPORTANT: You can now reference when things happened in your conversation. Each
         };
       });
 
-      // 9. Get language-specific system prompt with temporal context
-      const systemPrompt = getSystemPrompt(languageCode, temporalContext);
-      logger.info('Using system prompt with temporal context', { languageCode });
+      // 9. Get language-specific system prompt with temporal context and adaptive language
+      const systemPrompt = getSystemPrompt(languageCode, temporalContext, conversationProfile);
+      logger.info('Using system prompt', {
+        languageCode,
+        hasTemporalContext: !!temporalContext,
+        hasConversationProfile: !!conversationProfile,
+      });
 
       // 10. Call Vertex AI (Gemini 2.5 Flash)
       const vertexAI = new VertexAI({
@@ -257,6 +269,32 @@ IMPORTANT: You can now reference when things happened in your conversation. Each
           updatedAt: admin.firestore.FieldValue.serverTimestamp(),
           messageCount: admin.firestore.FieldValue.increment(1),
         });
+
+      // 13. Adaptive Language: Update profile and trigger analysis if needed
+      try {
+        const { shouldAnalyze, sampleMessages, totalCount } = await updateConversationProfile(
+          userId,
+          { text: message.text, conversationId }
+        );
+
+        if (shouldAnalyze && sampleMessages.length > 0) {
+          logger.info('Triggering style analysis', { userId, totalCount });
+
+          // Fire and forget - don't block response delivery
+          analyzeUserStyle(userId, sampleMessages).catch((err) => {
+            logger.error('Background style analysis failed', {
+              userId,
+              error: err instanceof Error ? err.message : String(err),
+            });
+          });
+        }
+      } catch (profileError) {
+        // Don't fail the main message flow if profile update fails
+        logger.error('Failed to update conversation profile', {
+          userId,
+          error: profileError instanceof Error ? profileError.message : String(profileError),
+        });
+      }
     } catch (error) {
       logger.error('Error processing message', { userId, conversationId, error });
 
