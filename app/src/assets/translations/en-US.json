@@ -1,5 +1,13 @@
 {
   "translation": {
+    "common": {
+      "loading": "Loading...",
+      "error": "An error occurred",
+      "back": "Back",
+      "cancel": "Cancel",
+      "confirm": "Confirm",
+      "save": "Save"
+    },
     "home": {
       "title": "Anchor: Anxiety Navigator",
       "subtitle": "I'm here when you need me.",

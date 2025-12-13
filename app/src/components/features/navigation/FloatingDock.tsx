@@ -38,8 +38,8 @@ export const FloatingDock: FC = () => {
   const navItems = [
     { path: '/sos', icon: Anchor, label: t('navigation.sos') },
     { path: '/chat', icon: Shell, label: t('navigation.chat') },
-    { path: '/dive', icon: Waves, label: t('navigation.dive') },
     { path: '/vault', icon: Archive, label: t('navigation.vault') },
+    { path: '/dive', icon: Waves, label: t('navigation.dive') },
     { path: '/profile', icon: Compass, label: t('navigation.profile') },
   ];
 

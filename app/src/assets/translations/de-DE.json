@@ -1,5 +1,13 @@
 {
   "translation": {
+    "common": {
+      "loading": "Lädt...",
+      "error": "Ein Fehler ist aufgetreten",
+      "back": "Zurück",
+      "cancel": "Abbrechen",
+      "confirm": "Bestätigen",
+      "save": "Speichern"
+    },
     "home": {
       "title": "Anchor: Anxiety Navigator",
       "subtitle": "Ich bin für dich da, wenn du mich brauchst.",

@@ -1,7 +1,7 @@
 import { type FC, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Waves, Lock, CheckCircle } from 'lucide-react';
+import { Lock, CheckCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useDive } from '../contexts/DiveContext';
 import { useApp } from '../contexts/AppContext';
@@ -15,6 +15,7 @@ import {
   type DiveZone,
 } from '../data/dive-lessons';
 import { cn } from '../utils/cn';
+import { useUI } from '../contexts/UIContext.tsx';
 
 /**
  * The Dive - Ocean Depth Map
@@ -23,6 +24,7 @@ import { cn } from '../utils/cn';
 export const DivePage: FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { navbarBottom } = useUI();
   const { light } = useHaptics();
   const { userId } = useApp();
   const { progress, isLoading, getLessonStatus, initializeProgress } = useDive();
@@ -63,18 +65,18 @@ export const DivePage: FC = () => {
   }
 
   return (
-    <div className="flex h-full flex-col overflow-hidden">
+    <div className="flex h-full flex-col overflow-hidden bg-void-blue/85">
       {/* Header */}
-      <header className="safe-area-padding-top flex items-center justify-between px-6 pb-4 pt-4">
-        <div>
-          <h1 className="font-display text-2xl font-medium text-mist-white">{t('dive.title')}</h1>
-          <p className="mt-1 text-sm text-mist-white/60">{t('dive.subtitle')}</p>
-        </div>
-        <Waves className="h-8 w-8 text-biolum-cyan" />
+      <header className="shrink-0 border-b border-glass-border px-6 py-4 pt-safe">
+        <h1 className="font-display text-2xl font-medium text-mist-white">{t('dive.title')}</h1>
+        <p className="mt-1 text-sm text-mist-white/60">{t('dive.subtitle')}</p>
       </header>
 
       {/* Ocean Depth Map */}
-      <div className="flex-1 overflow-y-auto px-4 pb-32">
+      <div
+        className="flex-1 overflow-y-auto px-4 pt-6 sm:px-6"
+        style={{ paddingBottom: `${navbarBottom + 24}px` }}
+      >
         {zones.map((zone, zoneIndex) => {
           const theme = zoneThemes[zone];
           const zoneLessons = lessonsByZone[zone] || [];
@@ -131,7 +133,12 @@ export const DivePage: FC = () => {
                     >
                       {/* Status Icon */}
                       {isCompleted ? (
-                        <CheckCircle className="mb-1 h-5 w-5 text-green-400" strokeWidth={2.5} />
+                        <CheckCircle
+                          className="mb-1 h-5 w-5 text-green-400"
+                          strokeWidth={1.5}
+                          width={5}
+                          size={5}
+                        />
                       ) : !isUnlocked ? (
                         <Lock className="mb-1 h-5 w-5 text-mist-white/30" />
                       ) : (
@@ -150,16 +157,6 @@ export const DivePage: FC = () => {
                       >
                         {lesson.id}
                       </span>
-
-                      {/* Current indicator */}
-                      {isCurrent && (
-                        <motion.div
-                          className="absolute -bottom-1 left-1/2 h-1.5 w-1.5 -translate-x-1/2 rounded-full"
-                          style={{ backgroundColor: theme.primary }}
-                          animate={{ scale: [1, 1.3, 1] }}
-                          transition={{ duration: 2, repeat: Infinity }}
-                        />
-                      )}
                     </motion.button>
                   );
                 })}
@@ -167,11 +164,9 @@ export const DivePage: FC = () => {
             </motion.section>
           );
         })}
-
         {/* Empty State */}
         {diveLessons.length === 0 && (
           <div className="flex flex-col items-center justify-center py-20 text-center">
-            <Waves className="mb-4 h-12 w-12 text-mist-white/30" />
             <p className="text-mist-white/60">{t('dive.noLessons')}</p>
           </div>
         )}

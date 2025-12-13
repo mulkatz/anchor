@@ -62,7 +62,7 @@ export const DiveLessonPage: FC = () => {
   // If no lesson found (base data)
   if (!lessonBase || !theme) {
     return (
-      <div className="flex h-full flex-col items-center justify-center p-6">
+      <div className="flex h-full flex-col items-center justify-center bg-void-blue/85 p-6">
         <p className="text-mist-white/60">{t('dive.lessonNotFound')}</p>
         <button onClick={handleBack} className="mt-4 text-biolum-cyan underline">
           {t('common.back')}
@@ -72,7 +72,7 @@ export const DiveLessonPage: FC = () => {
   }
 
   return (
-    <div className="flex h-full flex-col overflow-hidden">
+    <div className="flex h-full flex-col overflow-hidden bg-void-blue/85">
       {/* Header */}
       <header
         className="safe-area-padding-top flex items-center gap-4 px-4 pb-4 pt-4"

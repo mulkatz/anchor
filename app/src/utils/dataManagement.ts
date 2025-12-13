@@ -8,6 +8,7 @@ import { logAnalyticsEvent, AnalyticsEvent } from '../services/analytics.service
 import { isNativePlatform } from './platform';
 import { showToast } from './toast';
 import { db } from '../db/db';
+import { clearDiveProgressCache } from '../contexts/DiveContext';
 
 /**
  * Data management utilities
@@ -98,6 +99,51 @@ export const exportUserData = async (userId: string): Promise<void> => {
       updatedAt: entryDoc.data().updatedAt?.toDate().toISOString(),
     }));
 
+    // Fetch Dive progress
+    const diveProgressRef = collection(firestore, `users/${userId}/dive_progress`);
+    const diveProgressSnapshot = await getDocs(diveProgressRef);
+
+    const diveProgress = diveProgressSnapshot.docs.map((progressDoc) => ({
+      id: progressDoc.id,
+      ...progressDoc.data(),
+      lastActivityAt: progressDoc.data().lastActivityAt?.toDate().toISOString(),
+      createdAt: progressDoc.data().createdAt?.toDate().toISOString(),
+      updatedAt: progressDoc.data().updatedAt?.toDate().toISOString(),
+    }));
+
+    // Fetch Dive sessions with messages
+    const diveSessionsRef = collection(firestore, `users/${userId}/dive_sessions`);
+    const diveSessionsSnapshot = await getDocs(diveSessionsRef);
+
+    const diveSessions = [];
+    for (const sessionDoc of diveSessionsSnapshot.docs) {
+      const sessionData = sessionDoc.data();
+
+      // Fetch messages for this session
+      const messagesRef = collection(
+        firestore,
+        `users/${userId}/dive_sessions/${sessionDoc.id}/messages`
+      );
+      const messagesSnapshot = await getDocs(messagesRef);
+
+      const messages = messagesSnapshot.docs.map((msgDoc) => ({
+        role: msgDoc.data().role,
+        text: msgDoc.data().text,
+        createdAt: msgDoc.data().createdAt?.toDate().toISOString(),
+        hasAudio: msgDoc.data().hasAudio || false,
+      }));
+
+      diveSessions.push({
+        id: sessionDoc.id,
+        lessonId: sessionData.lessonId,
+        status: sessionData.status,
+        createdAt: sessionData.createdAt?.toDate().toISOString(),
+        completedAt: sessionData.completedAt?.toDate().toISOString(),
+        messageCount: messages.length,
+        messages,
+      });
+    }
+
     // Build export JSON
     const exportData = {
       exportDate: new Date().toISOString(),
@@ -106,11 +152,14 @@ export const exportUserData = async (userId: string): Promise<void> => {
       conversations,
       dailyLogs,
       journalEntries,
+      diveProgress,
+      diveSessions,
       settings: {
         hapticsEnabled: localStorage.getItem('hapticsEnabled'),
         analyticsEnabled: localStorage.getItem('analyticsEnabled'),
         soundEffectsEnabled: localStorage.getItem('soundEffectsEnabled'),
         pinkNoiseVolume: localStorage.getItem('pinkNoiseVolume'),
+        language: localStorage.getItem('language'),
       },
     };
 
@@ -183,6 +232,9 @@ export const clearLocalStorage = async (): Promise<void> => {
     // Clear audio cache
     localStorage.removeItem('audioCache');
 
+    // Clear dive progress cache
+    clearDiveProgressCache();
+
     // Delete old audio files from Cloud Storage (older than 7 days)
     // This is a placeholder - actual implementation would need Cloud Function
 
@@ -233,7 +285,35 @@ export const deleteAllUserData = async (userId: string): Promise<void> => {
       await deleteDoc(entryDoc.ref);
     }
 
-    // 4. Delete all audio files from Cloud Storage (recursive)
+    // 4. Delete Dive progress
+    const diveProgressRef = collection(firestore, `users/${userId}/dive_progress`);
+    const diveProgressSnapshot = await getDocs(diveProgressRef);
+
+    for (const progressDoc of diveProgressSnapshot.docs) {
+      await deleteDoc(progressDoc.ref);
+    }
+
+    // 5. Delete Dive sessions and their messages
+    const diveSessionsRef = collection(firestore, `users/${userId}/dive_sessions`);
+    const diveSessionsSnapshot = await getDocs(diveSessionsRef);
+
+    for (const sessionDoc of diveSessionsSnapshot.docs) {
+      // Delete messages within session
+      const messagesRef = collection(
+        firestore,
+        `users/${userId}/dive_sessions/${sessionDoc.id}/messages`
+      );
+      const messagesSnapshot = await getDocs(messagesRef);
+
+      for (const msgDoc of messagesSnapshot.docs) {
+        await deleteDoc(msgDoc.ref);
+      }
+
+      // Delete session
+      await deleteDoc(sessionDoc.ref);
+    }
+
+    // 6. Delete all audio files from Cloud Storage (recursive)
     // Audio files are stored as: audio-messages/{userId}/{conversationId}/{messageId}.m4a
     const audioRef = ref(storage, `audio-messages/${userId}`);
     try {
@@ -243,12 +323,22 @@ export const deleteAllUserData = async (userId: string): Promise<void> => {
       // Ignore if folder doesn't exist or permission errors
     }
 
-    // 5. Clear localStorage (except settings)
+    // 7. Delete Dive audio files from Cloud Storage
+    const diveAudioRef = ref(storage, `dive-audio/${userId}`);
+    try {
+      await deleteStorageFolder(diveAudioRef);
+    } catch (error) {
+      console.warn('Failed to delete dive audio files:', error);
+      // Ignore if folder doesn't exist or permission errors
+    }
+
+    // 8. Clear localStorage (except settings)
     const keysToKeep = [
       'hapticsEnabled',
       'analyticsEnabled',
       'soundEffectsEnabled',
       'pinkNoiseVolume',
+      'language',
       'i18nextLng',
     ];
     Object.keys(localStorage).forEach((key) => {
@@ -257,7 +347,10 @@ export const deleteAllUserData = async (userId: string): Promise<void> => {
       }
     });
 
-    // 6. Clear IndexedDB (Dexie database)
+    // 9. Clear dive progress cache specifically
+    clearDiveProgressCache();
+
+    // 10. Clear IndexedDB (Dexie database)
     await db.journalEntries.clear();
 
     logAnalyticsEvent(AnalyticsEvent.DATA_DELETED);

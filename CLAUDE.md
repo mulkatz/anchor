@@ -84,6 +84,7 @@ Every interaction needs appropriate haptic feedback. See [Haptics Guide](docs/05
 | **Working on SOS flow**    | [SOS Flow](docs/04-features/sos-flow.md), [Haptics](docs/05-implementation/haptics.md)                       | [Animations](docs/02-design-system/animations.md)              |
 | **Voice chat feature**     | [Voice Chat](docs/04-features/voice-chat.md), [Firebase](docs/05-implementation/firebase.md)                 | -                                                              |
 | **AI temporal awareness**  | [Temporal Awareness](docs/04-features/temporal-awareness.md)                                                 | -                                                              |
+| **The Dive feature**       | [The Dive](docs/04-features/the-dive.md) ⚠️                                                                  | [AI Chat](docs/04-features/ai-chat.md)                         |
 | **Profile/settings**       | [Profile Settings](docs/04-features/profile-settings.md)                                                     | [State Management](docs/03-architecture/state-management.md)   |
 | **Fixing bug**             | [Troubleshooting](docs/06-development/troubleshooting.md)                                                    | -                                                              |
 | **Understanding codebase** | [Manifest](docs/01-vision/manifest.md), [Tech Stack](docs/03-architecture/tech-stack.md)                     | [Project Structure](docs/03-architecture/project-structure.md) |
@@ -115,6 +116,7 @@ docs/
 │   ├── voice-chat.md            # 🎤 Recording, transcription
 │   ├── ai-chat.md               # 🤖 Therapeutic AI, crisis detection
 │   ├── temporal-awareness.md    # 🕐 Time-aware conversations, DST support
+│   ├── the-dive.md              # 🌊 Somatic learning (Polyvagal Theory)
 │   ├── profile-settings.md      # ⚙️ Settings, data management
 │   └── planned-features.md      # 📋 Roadmap
 │
@@ -146,20 +148,20 @@ docs/
 - AI Chat (Gemini 2.5 Flash, CBT/ACT techniques)
 - **Temporal Awareness (time-aware AI, 75 msg history, timezone/DST support)**
 - Message System (real-time Firestore, crisis detection)
-- Profile/Settings (haptics, analytics, data management)
+- Profile/Settings (haptics, analytics, data management, **cross-device sync**)
 - Internationalization (English + German)
 - Haptics Integration
 - Journal/Depths (free-form journaling with sedimentation)
+- **The Dive (25-lesson somatic learning, Polyvagal Theory, AI Somatic Guide)**
+- **Vault (session history browser)**
 
 ### 🚧 In Progress
 
 - SOS Flow (7-step panic de-escalation)
-- Base Layout (MainLayout + FloatingDock)
 
 ### 📋 Planned
 
 - Home screen
-- Vault (session history)
 - Offline-first sync
 - Pink noise audio
 - Tutorial/onboarding
@@ -184,20 +186,32 @@ docs/
 app/
 ├── src/
 │   ├── pages/           # Route-level screens
+│   │   ├── DivePage.tsx         # The Dive overview (Ocean Depth Map)
+│   │   └── DiveLessonPage.tsx   # Lesson intro + chat session
 │   ├── components/
 │   │   ├── ui/          # Atomic components (Button, Card)
-│   │   └── features/    # Feature-specific (chat/, profile/)
+│   │   └── features/    # Feature-specific (chat/, profile/, dive/)
 │   ├── hooks/           # Custom React hooks
-│   ├── contexts/        # Global state (App, UI, Dialog)
+│   │   ├── useDiveSession.tsx   # Dive session state
+│   │   └── useDiveLesson.tsx    # Localized lesson fetching
+│   ├── contexts/        # Global state (App, UI, Dialog, Dive)
+│   │   └── DiveContext.tsx      # Dive progress + localStorage cache
+│   ├── data/
+│   │   └── dive-lessons.ts      # Static lesson data (25 lessons)
 │   ├── services/        # External APIs (Firebase, analytics)
 │   ├── utils/           # Pure helpers
 │   └── assets/
 │       └── translations/  # i18n JSON files
 │
 backend/
-├── functions/src/       # Cloud Functions (transcription, chat)
+├── functions/src/
+│   ├── diveChat.ts      # Dive AI responses + completion
+│   ├── divePrompt.ts    # Somatic Guide persona
+│   ├── diveLessonData.ts # Localized lesson content
+│   ├── transcription.ts # Audio transcription (chat + dive)
+│   └── chat.ts          # Regular chat AI
 ├── firestore.rules      # Database security
-└── storage.rules        # Storage security
+└── storage.rules        # Storage security (incl. dive-audio/)
 ```
 
 ---
@@ -232,4 +246,4 @@ cd backend && firebase deploy
 
 ---
 
-**Last Updated:** December 10, 2024
+**Last Updated:** December 13, 2024
