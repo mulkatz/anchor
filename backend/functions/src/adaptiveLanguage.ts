@@ -44,7 +44,15 @@ const SYNC_ANALYSIS_THRESHOLD = 3; // First N messages: wait for analysis before
  * Analysis prompt for Gemini to evaluate user communication style
  * Outputs natural language profile with mirroring guidelines
  */
-const ANALYSIS_PROMPT = `You are analyzing a user's communication style for a therapeutic chatbot called Anchor. Based on these sample messages from the user, create a natural language profile describing how the AI should adapt its communication to match this specific person.
+const ANALYSIS_PROMPT = `You are analyzing a user's communication style for a therapeutic chatbot called Anchor.
+
+IMPORTANT CONTEXT: Anchor's BASE style is already friendly and casual - like a supportive friend. The AI already:
+- Uses warm, conversational language
+- Can use expressions like "that sucks", "ngl", casual phrases
+- Mirrors energy and validates feelings
+- Keeps responses concise
+
+Your job is to provide SUBTLE REFINEMENTS to this base style, NOT a complete overhaul. The profile should gently adjust the existing friendly tone, not replace it with something completely different.
 
 SAMPLE MESSAGES (from oldest to most recent):
 ---
@@ -53,39 +61,38 @@ SAMPLE MESSAGES (from oldest to most recent):
 
 Analyze these messages and output in this EXACT format:
 
-[2-3 paragraphs describing:
-- Their texting style (capitalization, punctuation, message length patterns)
-- Any slang, abbreviations, or linguistic patterns they use (tbh, idk, ngl, etc.)
-- Their emotional expression style (direct, hedged, metaphorical, understated)
-- How they seem to prefer being responded to based on their communication]
+[1-2 paragraphs describing:
+- Notable patterns in their texting style (only mention what's distinctive)
+- Any specific slang or linguistic patterns worth mirroring
+- How they express emotions
+- Keep it brief - only note what actually differs from a typical casual style]
 
-MIRRORING GUIDELINES:
-- [specific actionable guideline 1]
-- [specific actionable guideline 2]
-- [specific actionable guideline 3]
-- [specific actionable guideline 4]
-- [specific actionable guideline 5]
+REFINEMENT GUIDELINES (subtle adjustments to the base friendly style):
+- [specific small adjustment 1]
+- [specific small adjustment 2]
+- [specific small adjustment 3]
+- [specific small adjustment 4]
 
-MIRRORING INTENSITY: [1-5]/5 ([one sentence rationale])
+ADAPTATION LEVEL: [1-5]/5 ([one sentence rationale])
 
 ---
 
-INTENSITY SCALE DEFINITIONS:
-1 = Minimal mirroring - User seems to prefer professional, composed responses regardless of their own style. Keep therapeutic presence strong.
-2 = Light mirroring - Match general energy and tone but maintain structure and proper punctuation.
-3 = Moderate mirroring - Blend casual elements with therapeutic presence. Some abbreviations okay.
-4 = Strong mirroring - Closely match their communication patterns including case and abbreviations.
-5 = Full mirroring - Mirror their exact style including all casual elements, slang, and texting patterns.
+ADAPTATION SCALE (how much to adjust from the base friendly style):
+1 = Almost no change needed - user's style matches the base friendly tone well
+2 = Minor tweaks - small adjustments like emoji frequency or message length
+3 = Moderate refinement - adjust some vocabulary or formality level
+4 = Notable adjustment - user has a distinctly different style that needs more adaptation
+5 = Significant shift - user clearly prefers a very different communication style (e.g., very formal)
 
-SIGNALS TO LOOK FOR:
-- Consistent use of lowercase = they're comfortable with casual
-- Abbreviations like tbh, ngl, idk = Gen Z style, higher mirroring welcome
-- Proper punctuation and capitalization = may prefer more polished responses
-- Very short messages = keep responses concise too
-- Longer, detailed messages = they appreciate depth
-- Emoji usage = mirror emoji style appropriately
+IMPORTANT PRINCIPLES:
+- Default to LOWER adaptation levels (1-3) unless there's clear evidence for more
+- The base style is already good for most users - don't over-correct
+- Only suggest changes that are clearly supported by the user's messages
+- If the user writes casually, that MATCHES the base style - no major changes needed
+- Only push toward formal/professional if the user CONSISTENTLY writes that way
+- Never completely abandon the warm, supportive friend vibe
 
-Remember: The goal is to make the AI feel like a friend who "gets" them, not a corporate chatbot. But some users genuinely prefer a more grounded, professional presence - detect that too.`;
+The goal is gentle personalization, not a personality transplant.`;
 
 // ============================================================================
 // Helper Functions
@@ -146,18 +153,21 @@ function formatMessagesForAnalysis(messages: SampleMessage[]): string {
 }
 
 /**
- * Extract mirroring intensity from analysis response
- * Falls back to 3 (moderate) if parsing fails
+ * Extract adaptation level from analysis response
+ * Falls back to 2 (minor tweaks) if parsing fails - conservative default
  */
-function extractMirroringIntensity(analysisText: string): number {
-  const match = analysisText.match(/MIRRORING INTENSITY:\s*(\d)\/5/i);
+function extractAdaptationLevel(analysisText: string): number {
+  // Try new format first, then old format for backwards compatibility
+  const match =
+    analysisText.match(/ADAPTATION LEVEL:\s*(\d)\/5/i) ||
+    analysisText.match(/MIRRORING INTENSITY:\s*(\d)\/5/i);
   if (match) {
-    const intensity = parseInt(match[1], 10);
-    if (intensity >= 1 && intensity <= 5) {
-      return intensity;
+    const level = parseInt(match[1], 10);
+    if (level >= 1 && level <= 5) {
+      return level;
     }
   }
-  return 3; // Default to moderate
+  return 2; // Default to minor tweaks (conservative)
 }
 
 // ============================================================================
@@ -211,8 +221,8 @@ export async function analyzeUserStyle(
       return;
     }
 
-    // Extract mirroring intensity
-    const mirroringIntensity = extractMirroringIntensity(analysisText);
+    // Extract adaptation level
+    const mirroringIntensity = extractAdaptationLevel(analysisText);
 
     // Update profile in Firestore
     const profileRef = admin.firestore().doc(`users/${userId}/profile/conversationProfile`);
