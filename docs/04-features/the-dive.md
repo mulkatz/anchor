@@ -122,6 +122,7 @@ interface DiveLesson {
   common_resistance: string;
   socratic_goal: string;
   suggested_reading?: string;
+  suggested_reading_isbn_link?: string; // Amazon search link by ISBN
   safety_notes?: string;
 }
 ```

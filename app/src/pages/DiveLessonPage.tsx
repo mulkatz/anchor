@@ -168,7 +168,18 @@ export const DiveLessonPage: FC = () => {
                   {(localizedLesson?.suggestedReading || lessonBase.suggested_reading) && (
                     <p className="mt-6 text-center text-xs text-mist-white/40">
                       {t('dive.suggestedReading')}:{' '}
-                      {localizedLesson?.suggestedReading || lessonBase.suggested_reading}
+                      {lessonBase.suggested_reading_isbn_link ? (
+                        <a
+                          href={lessonBase.suggested_reading_isbn_link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-mist-white/40 underline decoration-mist-white/20 underline-offset-2 transition-colors hover:text-mist-white/60 hover:decoration-mist-white/40"
+                        >
+                          {localizedLesson?.suggestedReading || lessonBase.suggested_reading}
+                        </a>
+                      ) : (
+                        localizedLesson?.suggestedReading || lessonBase.suggested_reading
+                      )}
                     </p>
                   )}
                 </>

@@ -20,6 +20,7 @@ export interface DiveLesson {
   common_resistance: string;
   socratic_goal: string;
   suggested_reading?: string;
+  suggested_reading_isbn_link?: string; // Amazon search link: https://www.amazon.com/s?k={ISBN}
   safety_notes?: string;
 }
 
@@ -82,6 +83,7 @@ export const diveLessons: DiveLesson[] = [
     safety_notes:
       "Avoid extreme cold shock if you have heart conditions or Raynaud's syndrome. Use a cool damp cloth instead of immersion.",
     suggested_reading: 'Stephen Porges: The Polyvagal Theory',
+    suggested_reading_isbn_link: 'https://www.amazon.com/s?k=9780393707007',
   },
   {
     id: 'L02',
@@ -95,6 +97,7 @@ export const diveLessons: DiveLesson[] = [
     socratic_goal:
       "To validate that your body reacts to 'threat' (Neuroception) faster than your mind can think. 'Story follows State.'",
     suggested_reading: 'Deb Dana: Anchored',
+    suggested_reading_isbn_link: 'https://www.amazon.com/s?k=9781683647065',
   },
   {
     id: 'L03',
@@ -108,6 +111,7 @@ export const diveLessons: DiveLesson[] = [
     socratic_goal:
       "To differentiate between 'calming breath' (long exhale) and 'panic breath' (gasping), addressing the 'Air Hunger' illusion.",
     suggested_reading: 'James Nestor: Breath',
+    suggested_reading_isbn_link: 'https://www.amazon.com/s?k=9780735213616',
   },
   {
     id: 'L04',
@@ -121,6 +125,7 @@ export const diveLessons: DiveLesson[] = [
     socratic_goal:
       "To experience the physical difference between 'bracing' against life and 'resting' in it.",
     suggested_reading: 'Bessel van der Kolk: The Body Keeps the Score',
+    suggested_reading_isbn_link: 'https://www.amazon.com/s?k=9780143127741',
   },
   {
     id: 'L05',
@@ -134,6 +139,7 @@ export const diveLessons: DiveLesson[] = [
     socratic_goal:
       "To reframe 'glimmers' not as ignoring the bad, but as biologically necessary cues to keep the nervous system regulated.",
     suggested_reading: 'Deb Dana: Polyvagal Card Deck',
+    suggested_reading_isbn_link: 'https://www.amazon.com/s?k=9781324019763',
   },
   {
     id: 'L06',
@@ -147,6 +153,7 @@ export const diveLessons: DiveLesson[] = [
     socratic_goal:
       "To validate the threat is real, but challenge the *perception* of its size and immediacy due to the 'water' (anxiety).",
     suggested_reading: 'David Burns: Feeling Good',
+    suggested_reading_isbn_link: 'https://www.amazon.com/s?k=9780380731763',
   },
   {
     id: 'L07',
@@ -160,6 +167,7 @@ export const diveLessons: DiveLesson[] = [
     socratic_goal:
       'To show that the struggle *against* anxiety is often more dangerous than the anxiety itself. Control is the problem.',
     suggested_reading: 'Steven Hayes: Get Out of Your Mind and Into Your Life',
+    suggested_reading_isbn_link: 'https://www.amazon.com/s?k=9781572244252',
   },
   {
     id: 'L08',
@@ -173,6 +181,7 @@ export const diveLessons: DiveLesson[] = [
     socratic_goal:
       "To practice 'willingness'—sailing *with* the monsters rather than rotting in the harbor to avoid them.",
     suggested_reading: 'Russ Harris: The Happiness Trap',
+    suggested_reading_isbn_link: 'https://www.amazon.com/s?k=9781645471165',
   },
   {
     id: 'L09',
@@ -186,6 +195,7 @@ export const diveLessons: DiveLesson[] = [
     socratic_goal:
       "To demonstrate that suppression requires more effort than feeling. The ball floats gently if you don't fight it.",
     suggested_reading: 'Susan David: Emotional Agility',
+    suggested_reading_isbn_link: 'https://www.amazon.com/s?k=9781592409495',
   },
   {
     id: 'L10',
@@ -199,6 +209,7 @@ export const diveLessons: DiveLesson[] = [
     socratic_goal:
       'To access the part of the self that can watch the pain without *being* the pain. Disidentifying from the symptom.',
     suggested_reading: 'Eckhart Tolle: The Power of Now',
+    suggested_reading_isbn_link: 'https://www.amazon.com/s?k=9781577314806',
   },
   {
     id: 'L11',
@@ -212,6 +223,7 @@ export const diveLessons: DiveLesson[] = [
     socratic_goal:
       "To create a gap between 'having a thought' and 'buying the thought'. Thoughts are events, not facts.",
     suggested_reading: 'Russ Harris: ACT Made Simple',
+    suggested_reading_isbn_link: 'https://www.amazon.com/s?k=9781684033010',
   },
   {
     id: 'L12',
@@ -225,6 +237,7 @@ export const diveLessons: DiveLesson[] = [
     socratic_goal:
       'To teach a rapid stabilization technique (ACE: Acknowledge, Connect, Engage) for emotional flooding.',
     suggested_reading: 'Russ Harris: The Reality Slap',
+    suggested_reading_isbn_link: 'https://www.amazon.com/s?k=9781472146366',
   },
   {
     id: 'L13',
@@ -238,6 +251,7 @@ export const diveLessons: DiveLesson[] = [
     socratic_goal:
       "To reduce limbic arousal by engaging the prefrontal cortex through labeling. 'To name is to contain.'",
     suggested_reading: 'Dan Siegel: Mindsight',
+    suggested_reading_isbn_link: 'https://www.amazon.com/s?k=9780553386394',
   },
   {
     id: 'L14',
@@ -250,6 +264,7 @@ export const diveLessons: DiveLesson[] = [
     common_resistance: '"I need to think my way out of this."',
     socratic_goal: 'To practice moving forward despite lack of clarity. Tolerating ambiguity.',
     suggested_reading: 'Pema Chödrön: When Things Fall Apart',
+    suggested_reading_isbn_link: 'https://www.amazon.com/s?k=9781611803433',
   },
   {
     id: 'L15',
@@ -263,6 +278,7 @@ export const diveLessons: DiveLesson[] = [
     socratic_goal:
       "To recognize the *pattern* of thinking rather than the *content* of individual thoughts. 'Oh, here is the Not-Good-Enough school again.'",
     suggested_reading: 'Daniel Goleman: Emotional Intelligence',
+    suggested_reading_isbn_link: 'https://www.amazon.com/s?k=9781526633620',
   },
   {
     id: 'L16',
@@ -275,6 +291,7 @@ export const diveLessons: DiveLesson[] = [
     common_resistance: '"I really am just broken/defective. It\'s not the pressure."',
     socratic_goal: 'To externalize shame as an environmental force rather than an internal defect.',
     suggested_reading: 'Brené Brown: I Thought It Was Just Me',
+    suggested_reading_isbn_link: 'https://www.amazon.com/s?k=9781592403356',
   },
   {
     id: 'L17',
@@ -288,6 +305,7 @@ export const diveLessons: DiveLesson[] = [
     socratic_goal:
       'To distinguish between *solitude* (restorative/choice) and *isolation* (fear-based/shame).',
     suggested_reading: 'Brené Brown: Daring Greatly',
+    suggested_reading_isbn_link: 'https://www.amazon.com/s?k=9781592408412',
   },
   {
     id: 'L18',
@@ -301,6 +319,7 @@ export const diveLessons: DiveLesson[] = [
     socratic_goal:
       "To identify when 'boundaries' are actually 'armor' preventing connection. Real strength doesn't need spikes.",
     suggested_reading: 'Kristin Neff: Self-Compassion',
+    suggested_reading_isbn_link: 'https://www.amazon.com/s?k=9780061733529',
   },
   {
     id: 'L19',
@@ -314,6 +333,7 @@ export const diveLessons: DiveLesson[] = [
     socratic_goal:
       "To explore the cost of blending in: the loss of the authentic self. 'Fitting in is the opposite of Belonging.'",
     suggested_reading: 'Gabor Maté: The Myth of Normal',
+    suggested_reading_isbn_link: 'https://www.amazon.com/s?k=9781785042737',
   },
   {
     id: 'L20',
@@ -327,6 +347,7 @@ export const diveLessons: DiveLesson[] = [
     socratic_goal:
       "To identify 2-3 core values that shine even when 'happiness' is absent. 'What would you stand for if no one was watching?'",
     suggested_reading: "Viktor Frankl: Man's Search for Meaning",
+    suggested_reading_isbn_link: 'https://www.amazon.com/s?k=9780807014271',
   },
   {
     id: 'L21',
@@ -340,6 +361,7 @@ export const diveLessons: DiveLesson[] = [
     socratic_goal:
       "To pivot from 'Passive Nihilism' (despair) to 'Optimistic Nihilism' (freedom). If nothing matters, you are free.",
     suggested_reading: 'Irvin Yalom: Staring at the Sun',
+    suggested_reading_isbn_link: 'https://www.amazon.com/s?k=9780470401811',
   },
   {
     id: 'L22',
@@ -353,6 +375,7 @@ export const diveLessons: DiveLesson[] = [
     socratic_goal:
       'To prove that the *anticipation* of fear is worse than the fear itself. Taking control of the symptom destroys the anxiety loop.',
     suggested_reading: 'Viktor Frankl: The Will to Meaning',
+    suggested_reading_isbn_link: 'https://www.amazon.com/s?k=9780142181263',
   },
   {
     id: 'L23',
@@ -366,6 +389,7 @@ export const diveLessons: DiveLesson[] = [
     socratic_goal:
       "To move from 'resignation' (giving up) to 'affirmation' (saying yes to life, including the pain). 'This is my life, and I will not wish it away.'",
     suggested_reading: 'Friedrich Nietzsche: The Gay Science',
+    suggested_reading_isbn_link: 'https://www.amazon.com/s?k=9780394719856',
   },
   {
     id: 'L24',
@@ -379,6 +403,7 @@ export const diveLessons: DiveLesson[] = [
     socratic_goal:
       "To find meaning *despite* the lack of a silver lining. We don't need the suffering to be 'good' to survive it.",
     suggested_reading: "Viktor Frankl: Man's Search for Meaning",
+    suggested_reading_isbn_link: 'https://www.amazon.com/s?k=9780807014271',
   },
   {
     id: 'L25',
@@ -392,6 +417,7 @@ export const diveLessons: DiveLesson[] = [
     socratic_goal:
       'To understand that the ocean is always there; we just get better at diving. The cycle continues.',
     suggested_reading: 'Irvin Yalom: Existential Psychotherapy',
+    suggested_reading_isbn_link: 'https://www.amazon.com/s?k=9780465021475',
   },
 ];
 
