@@ -3,15 +3,6 @@
  * Export all your models from this file
  */
 
-export interface User {
-  id: string;
-  email?: string;
-  displayName?: string;
-  photoURL?: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
 export interface ApiResponse<T> {
   success: boolean;
   data?: T;
@@ -91,16 +82,6 @@ export interface UserProfile {
   }>;
 }
 
-export interface Feedback {
-  userId: string;
-  kind: 'idea' | 'bug';
-  text: string;
-  timestamp: Date;
-  platform: string; // 'ios' | 'android' | 'web'
-  appVersion: string;
-  resolved: boolean; // Admin field
-}
-
 // Tide Log (Journaling) models
 export type WeatherType = 'stormy' | 'foggy' | 'turbulent' | 'clear' | 'sunny' | 'calm';
 
@@ -136,24 +117,7 @@ export interface JournalEntry {
 }
 
 // The Dive (Somatic Learning) models
-export type DiveZone = 'The Shallows' | 'The Twilight Zone' | 'The Midnight Zone' | 'The Trench';
-
 export type DiveLessonStatus = 'locked' | 'in-progress' | 'completed';
-
-export interface DiveReflection {
-  id: string;
-  text: string;
-  createdAt: Date;
-  isVoice?: boolean; // If transcribed from voice
-}
-
-export interface DiveLessonProgress {
-  lessonId: string;
-  status: DiveLessonStatus;
-  startedAt: Date | null;
-  completedAt: Date | null;
-  reflections: DiveReflection[];
-}
 
 export interface DiveProgressSummary {
   userId: string;
@@ -164,17 +128,6 @@ export interface DiveProgressSummary {
   lastActivityAt: Date;
   createdAt: Date;
   updatedAt: Date;
-}
-
-export interface DiveSession {
-  id: string;
-  lessonId: string;
-  userId: string;
-  status: 'active' | 'completed' | 'abandoned';
-  createdAt: Date;
-  updatedAt: Date;
-  completedAt: Date | null;
-  messageCount: number;
 }
 
 export interface DiveMessage {
@@ -199,25 +152,4 @@ export interface DiveMessage {
     transcriptionConfidence?: number;
     language?: string;
   };
-}
-
-// Adaptive Language (backend-managed, hidden from users)
-// These interfaces are for documentation/type safety reference
-// The actual data is managed entirely in the backend
-
-export interface AdaptiveLanguageSampleMessage {
-  text: string;
-  timestamp: Date;
-  conversationId: string;
-}
-
-export interface ConversationProfile {
-  styleDescription: string; // Natural language rules for AI
-  mirroringIntensity: number; // 1-5 (AI-detected)
-  sampleMessages: AdaptiveLanguageSampleMessage[]; // Rolling window of 15
-  totalUserMessageCount: number; // Total messages sent by user
-  lastAnalyzedAtMessageCount: number; // Count at last analysis
-  createdAt: Date;
-  updatedAt: Date;
-  lastAnalyzedAt: Date;
 }
