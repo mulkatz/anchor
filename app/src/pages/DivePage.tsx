@@ -20,7 +20,7 @@ import { DiveEmptyState } from '../components/features/dive/DiveEmptyState';
 import { LoadingSpinner } from '../components/ui';
 
 // DEV: Set to true to unlock all lessons for testing
-const DEV_UNLOCK_ALL = false;
+const DEV_UNLOCK_ALL = true;
 
 /**
  * The Dive - Ocean Depth Map
@@ -123,7 +123,7 @@ export const DivePage: FC = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: zoneIndex * 0.15, duration: 0.6 }}
-              className="mb-8"
+              className={zoneIndex === zones.length - 1 ? 'mb-2' : 'mb-8'}
             >
               {/* Zone Header */}
               <div className="mb-4 flex items-center gap-3">
