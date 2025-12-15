@@ -54,9 +54,9 @@ export const ArchivePage: FC = () => {
   };
 
   return (
-    <div className="flex h-full flex-col bg-void-blue/85">
+    <div className="flex h-full flex-col bg-void-blue/75">
       {/* Header */}
-      <header className="shrink-0 border-b border-glass-border px-4 py-4 pt-safe sm:px-6">
+      <header className="shrink-0 border-b border-glass-border bg-void-blue px-4 py-4 pt-safe sm:px-6">
         <div className="mb-4 flex items-center gap-4">
           <button
             onClick={handleBack}
