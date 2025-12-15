@@ -203,7 +203,7 @@ export const ProfilePage: FC = () => {
 
   const handleVisitWebsite = async () => {
     await light();
-    window.open('https://franz.cx/p/anxiety-buddy', '_blank');
+    window.open('https://anchor.franz.cx', '_blank');
     logAnalyticsEvent(AnalyticsEvent.WEBSITE_VISITED);
   };
 
@@ -246,13 +246,13 @@ export const ProfilePage: FC = () => {
 
   const handlePrivacyPolicy = async () => {
     await light();
-    window.open('https://franz.cx/p/anxiety-buddy/privacy', '_blank');
+    window.open('https://anchor.franz.cx/privacy', '_blank');
     logAnalyticsEvent(AnalyticsEvent.PRIVACY_POLICY_VIEWED);
   };
 
   const handleTerms = async () => {
     await light();
-    window.open('https://franz.cx/p/anxiety-buddy/terms', '_blank');
+    window.open('https://anchor.franz.cx/terms', '_blank');
     logAnalyticsEvent(AnalyticsEvent.TERMS_VIEWED);
   };
 

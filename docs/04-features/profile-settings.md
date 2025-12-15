@@ -304,7 +304,7 @@ const callCrisisHotline = async () => {
 
 **Description:** "Learn more about Anxiety Buddy"
 
-**URL:** `https://franz.cx/p/anxiety-buddy`
+**URL:** `https://anchor.franz.cx`
 
 **Flow:**
 
@@ -490,7 +490,7 @@ For ongoing support, please consult a licensed mental health professional.
 
 **Description:** "How we handle your data"
 
-**URL:** `https://franz.cx/p/anxiety-buddy/privacy`
+**URL:** `https://anchor.franz.cx/privacy`
 
 **Flow:**
 
@@ -505,7 +505,7 @@ For ongoing support, please consult a licensed mental health professional.
 
 **Description:** "Terms and conditions"
 
-**URL:** `https://franz.cx/p/anxiety-buddy/terms`
+**URL:** `https://anchor.franz.cx/terms`
 
 **Flow:**
 

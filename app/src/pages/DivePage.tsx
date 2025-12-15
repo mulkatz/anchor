@@ -86,9 +86,9 @@ export const DivePage: FC = () => {
   if (showIntro) {
     return (
       <div className="flex h-full flex-col bg-void-blue/85">
-        <header className="shrink-0 border-b border-glass-border px-6 py-4 pt-safe">
-          <h1 className="font-display text-2xl font-medium text-mist-white">{t('dive.title')}</h1>
-          <p className="mt-1 text-sm text-mist-white/60">{t('dive.subtitle')}</p>
+        <header className="shrink-0 border-b border-glass-border px-4 py-4 pt-safe sm:px-6">
+          <h1 className="text-2xl font-light text-mist-white">{t('dive.title')}</h1>
+          <p className="text-sm text-mist-white/60">{t('dive.subtitle')}</p>
         </header>
         <div
           className="flex flex-1 px-4 pt-6 sm:px-6"
@@ -103,9 +103,9 @@ export const DivePage: FC = () => {
   return (
     <div className="flex h-full flex-col overflow-hidden bg-void-blue/85">
       {/* Header */}
-      <header className="shrink-0 border-b border-glass-border px-6 py-4 pt-safe">
-        <h1 className="font-display text-2xl font-medium text-mist-white">{t('dive.title')}</h1>
-        <p className="mt-1 text-sm text-mist-white/60">{t('dive.subtitle')}</p>
+      <header className="shrink-0 border-b border-glass-border px-4 py-4 pt-safe sm:px-6">
+        <h1 className="text-2xl font-light text-mist-white">{t('dive.title')}</h1>
+        <p className="text-sm text-mist-white/60">{t('dive.subtitle')}</p>
       </header>
 
       {/* Ocean Depth Map */}
