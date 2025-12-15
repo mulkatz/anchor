@@ -25,16 +25,16 @@ Step 6: The Reframe     → Balanced perspective selection
 
 ### Step 1: The Situation
 
-- Single focused textarea
+- Single focused textarea with **speech-to-text** microphone button
 - Placeholder: "What situation brought up these feelings?"
-- Character limit: 500
+- No character limit (encourages detailed reflection)
 - Minimum 10 characters to proceed
 
 ### Step 2: The Thoughts
 
-- Single focused textarea for automatic thoughts
+- Single focused textarea with **speech-to-text** microphone button
 - Placeholder: "What did you tell yourself? What thoughts came up?"
-- Character limit: 1000
+- No character limit (encourages detailed reflection)
 - Minimum 10 characters to proceed
 
 ### Step 3: The Feelings
@@ -47,7 +47,7 @@ Step 6: The Reframe     → Balanced perspective selection
   - **Anger**: angry, frustrated, irritated
   - **Shame**: ashamed, guilty, embarrassed
   - **Other**: restless, numb
-- Select up to 3 emotions
+- Select up to 5 emotions
 - Optional - can proceed without selection
 
 ### Step 4: The Intensity
@@ -154,7 +154,15 @@ app/src/components/features/illuminate/
 app/src/hooks/
 ├── useIlluminateFlow.tsx    # Wizard state management
 ├── useIlluminate.tsx        # Firestore CRUD operations
-└── useInsight.tsx           # Weekly AI insights
+├── useInsight.tsx           # Weekly AI insights
+└── useSpeechToText.tsx      # Speech-to-text for textareas
+```
+
+### Shared UI Components
+
+```
+app/src/components/ui/
+└── TextareaWithMic.tsx      # Textarea with speech-to-text mic button
 ```
 
 ### Backend Functions
@@ -164,7 +172,8 @@ backend/functions/src/
 ├── illuminate.ts            # analyzeDistortions, generateReframes
 ├── illuminatePrompt.ts      # AI prompts for distortion detection & reframing
 ├── insight.ts               # generateWeeklyInsight, markInsightViewed, rateInsight
-└── insightPrompt.ts         # AI prompts for weekly insights
+├── insightPrompt.ts         # AI prompts for weekly insights
+└── transcription.ts         # transcribeAudioCallable (speech-to-text)
 ```
 
 ### Pages
@@ -201,6 +210,17 @@ app/src/pages/
 - Analyzes patterns across the week
 - Provides personalized recommendations
 - Identifies common triggers
+
+### Speech-to-Text
+
+Steps 1 (Situation) and 2 (Thoughts) include a microphone button for voice input:
+
+- **Backend Function**: `transcribeAudioCallable` (callable Cloud Function)
+- **API**: Google Cloud Speech-to-Text
+- **Audio format**: AAC/M4A from mobile devices, converted to LINEAR16 WAV
+- **Flow**: Record → Upload base64 → Transcribe → Return text directly
+- **UI States**: Idle (mic icon) → Recording (pulsing red) → Transcribing (spinner)
+- Transcribed text is **appended** to existing textarea content
 
 ---
 

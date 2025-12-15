@@ -1,4 +1,5 @@
 import { onDocumentCreated } from 'firebase-functions/v2/firestore';
+import { onCall, HttpsError } from 'firebase-functions/v2/https';
 import { SpeechClient } from '@google-cloud/speech';
 import { Storage } from '@google-cloud/storage';
 import * as admin from 'firebase-admin';
@@ -304,5 +305,140 @@ export const onDiveAudioMessageCreate = onDocumentCreated(
       sessionId,
       messageId,
     });
+  }
+);
+
+/**
+ * Transcription response interface
+ */
+interface TranscriptionResponse {
+  text: string;
+  confidence: number;
+}
+
+/**
+ * Cloud Function: Transcribe Audio (Callable)
+ * Direct transcription without persistence - returns text immediately
+ * Used for speech-to-text in textareas (Illuminate, etc.)
+ */
+export const transcribeAudioCallable = onCall(
+  {
+    region: 'us-central1',
+    memory: '512MiB',
+    timeoutSeconds: 60,
+  },
+  async (request): Promise<TranscriptionResponse> => {
+    if (!request.auth) {
+      throw new HttpsError('unauthenticated', 'User must be authenticated');
+    }
+
+    const { audioBase64, mimeType, language } = request.data || {};
+
+    if (!audioBase64) {
+      throw new HttpsError('invalid-argument', 'audioBase64 is required');
+    }
+
+    const userId = request.auth.uid;
+    const startTime = Date.now();
+
+    logger.info('Starting direct audio transcription', {
+      userId,
+      mimeType,
+      language,
+      audioSize: audioBase64.length,
+    });
+
+    try {
+      // 1. Convert base64 to buffer
+      let audioBuffer: Buffer = Buffer.from(audioBase64, 'base64') as Buffer;
+
+      // 2. Determine encoding and convert if needed
+      const audioMimeType = mimeType || 'audio/m4a';
+      let encoding: string;
+      let sampleRateHertz: number;
+
+      if (audioMimeType.includes('webm') || audioMimeType.includes('opus')) {
+        encoding = 'WEBM_OPUS';
+        sampleRateHertz = 48000;
+      } else if (audioMimeType.includes('ogg')) {
+        encoding = 'OGG_OPUS';
+        sampleRateHertz = 48000;
+      } else if (
+        audioMimeType.includes('aac') ||
+        audioMimeType.includes('mp4') ||
+        audioMimeType.includes('m4a') ||
+        audioMimeType.includes('audio/mpeg')
+      ) {
+        // AAC/MP4/M4A needs conversion to LINEAR16
+        encoding = 'LINEAR16';
+        sampleRateHertz = 16000;
+
+        logger.info('Converting AAC/MP4 to LINEAR16 WAV');
+        const inputFormat = audioMimeType.includes('mp4') ? 'mp4' : 'm4a';
+        audioBuffer = await convertToLinear16Wav(audioBuffer, inputFormat);
+      } else {
+        // Unknown format - try LINEAR16 conversion
+        logger.warn('Unknown audio format, attempting LINEAR16 conversion', {
+          mimeType: audioMimeType,
+        });
+        encoding = 'LINEAR16';
+        sampleRateHertz = 16000;
+        audioBuffer = await convertToLinear16Wav(audioBuffer, 'm4a');
+      }
+
+      // 3. Prepare audio content
+      const audioContent = audioBuffer.toString('base64');
+      const languageCode = language || 'en-US';
+
+      logger.info('Calling Speech-to-Text API', {
+        encoding,
+        sampleRateHertz,
+        languageCode,
+        bufferSize: audioBuffer.length,
+      });
+
+      // 4. Call Google Cloud Speech-to-Text API
+      const [response] = await speechClient.recognize({
+        config: {
+          encoding: encoding as any,
+          sampleRateHertz,
+          languageCode,
+          model: 'latest_long',
+          enableAutomaticPunctuation: true,
+          useEnhanced: true,
+          profanityFilter: false,
+        },
+        audio: {
+          content: audioContent,
+        },
+      });
+
+      // 5. Extract transcription and confidence
+      const text =
+        response.results
+          ?.map((result) => result.alternatives?.[0]?.transcript)
+          .join(' ')
+          .trim() || '';
+
+      const confidence = response.results?.[0]?.alternatives?.[0]?.confidence || 0;
+
+      logger.info('Direct transcription completed', {
+        userId,
+        textLength: text.length,
+        confidence,
+        duration: Date.now() - startTime,
+      });
+
+      return { text, confidence };
+    } catch (error: any) {
+      logger.error('Direct transcription failed', {
+        userId,
+        errorMessage: error.message,
+        errorCode: error.code,
+        stack: error.stack,
+      });
+
+      throw new HttpsError('internal', 'Transcription failed: ' + error.message);
+    }
   }
 );

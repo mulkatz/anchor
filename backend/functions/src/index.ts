@@ -10,7 +10,11 @@ export { onMessageCreate } from './chat';
 export { generateConversationTitle, enforceSingleActiveConversation } from './conversations';
 
 // Export audio transcription functions
-export { onAudioMessageCreate, onDiveAudioMessageCreate } from './transcription';
+export {
+  onAudioMessageCreate,
+  onDiveAudioMessageCreate,
+  transcribeAudioCallable,
+} from './transcription';
 
 // Export The Dive somatic learning functions
 export { onDiveMessageCreate, onDiveSessionCreate, getDiveLesson } from './diveChat';

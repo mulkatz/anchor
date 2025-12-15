@@ -58,8 +58,8 @@ export const FeelingsStep: FC<FeelingsStepProps> = ({ primaryEmotions, onEmotion
     if (primaryEmotions.includes(emotion)) {
       onEmotionsChange(primaryEmotions.filter((e) => e !== emotion));
     } else {
-      // Max 3 emotions
-      if (primaryEmotions.length < 3) {
+      // Max 5 emotions
+      if (primaryEmotions.length < 5) {
         onEmotionsChange([...primaryEmotions, emotion]);
       }
     }
@@ -81,7 +81,7 @@ export const FeelingsStep: FC<FeelingsStepProps> = ({ primaryEmotions, onEmotion
         {/* Selection count indicator */}
         <div className="mb-4 flex justify-center">
           <div className="flex items-center gap-1.5">
-            {[0, 1, 2].map((index) => (
+            {[0, 1, 2, 3, 4].map((index) => (
               <div
                 key={index}
                 className={cn(
@@ -93,7 +93,7 @@ export const FeelingsStep: FC<FeelingsStepProps> = ({ primaryEmotions, onEmotion
               />
             ))}
             <span className="ml-2 text-xs text-mist-white/50">
-              {primaryEmotions.length}/3 {t('illuminate.feelings.selected', 'selected')}
+              {primaryEmotions.length}/5 {t('illuminate.feelings.selected', 'selected')}
             </span>
           </div>
         </div>
@@ -110,13 +110,13 @@ export const FeelingsStep: FC<FeelingsStepProps> = ({ primaryEmotions, onEmotion
                 transition={{ delay: index * 0.02, duration: 0.2 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => toggleEmotion(type)}
-                disabled={!isSelected && primaryEmotions.length >= 3}
+                disabled={!isSelected && primaryEmotions.length >= 5}
                 className={cn(
                   'flex flex-col items-center gap-1 rounded-xl px-2 py-3 transition-all duration-200',
                   isSelected
                     ? 'border-2 border-biolum-cyan bg-biolum-cyan/15 shadow-glow-sm'
                     : 'border border-glass-border bg-glass-bg',
-                  !isSelected && primaryEmotions.length >= 3
+                  !isSelected && primaryEmotions.length >= 5
                     ? 'opacity-40'
                     : 'hover:border-biolum-cyan/30 hover:bg-glass-bg-hover active:scale-95'
                 )}
@@ -139,7 +139,7 @@ export const FeelingsStep: FC<FeelingsStepProps> = ({ primaryEmotions, onEmotion
         <p className="mt-5 text-center text-xs text-mist-white/50">
           {t(
             'illuminate.feelings.tip',
-            'You can select up to 3 emotions that best describe how you feel'
+            'You can select up to 5 emotions that best describe how you feel'
           )}
         </p>
       </div>

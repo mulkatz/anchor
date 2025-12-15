@@ -259,6 +259,7 @@
     "navigation": {
       "sos": "SOS",
       "chat": "Chat",
+      "lighthouse": "Lighthouse",
       "dive": "The Dive",
       "vault": "Vault",
       "profile": "Profile"
@@ -401,6 +402,13 @@
         "avgIntensity": "7-day Average",
         "topPattern": "Top Pattern"
       }
+    },
+    "speechToText": {
+      "recording": "Recording...",
+      "transcribing": "Transcribing...",
+      "tapToRecord": "Tap to record",
+      "tapToStop": "Tap to stop",
+      "transcriptionFailed": "Could not transcribe audio. Please try again or type manually."
     },
     "illuminate": {
       "saved": "Reflection saved",

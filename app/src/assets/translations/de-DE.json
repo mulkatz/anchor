@@ -267,6 +267,7 @@
     "navigation": {
       "sos": "SOS",
       "chat": "Chat",
+      "lighthouse": "Leuchtturm",
       "dive": "Der Tauchgang",
       "vault": "Tresor",
       "profile": "Profil"
@@ -372,6 +373,13 @@
         "avgIntensity": "7-Tage Durchschnitt",
         "topPattern": "Häufigstes Muster"
       }
+    },
+    "speechToText": {
+      "recording": "Aufnahme...",
+      "transcribing": "Transkribiere...",
+      "tapToRecord": "Tippen zum Aufnehmen",
+      "tapToStop": "Tippen zum Stoppen",
+      "transcriptionFailed": "Konnte Audio nicht transkribieren. Bitte erneut versuchen oder manuell eingeben."
     },
     "illuminate": {
       "saved": "Reflexion gespeichert",

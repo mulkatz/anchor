@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
+import { TextareaWithMic } from '../../ui/TextareaWithMic';
 
 interface ThoughtsStepProps {
   automaticThoughts: string;
@@ -9,15 +10,16 @@ interface ThoughtsStepProps {
 /**
  * Step 2: The Thoughts
  * Single focused textarea for automatic thoughts
+ * With speech-to-text microphone button
  */
 export const ThoughtsStep: FC<ThoughtsStepProps> = ({ automaticThoughts, onThoughtsChange }) => {
   const { t } = useTranslation();
 
   return (
-    <div className="flex h-full w-full flex-col items-center justify-center px-2">
-      <div className="w-full max-w-md">
+    <div className="flex h-full w-full flex-col px-2">
+      <div className="flex flex-1 flex-col">
         {/* Title */}
-        <div className="mb-6 text-center">
+        <div className="mb-4 text-center">
           <h3 className="text-xl font-medium text-mist-white">
             {t('illuminate.thoughts.title', 'What went through your mind?')}
           </h3>
@@ -29,26 +31,20 @@ export const ThoughtsStep: FC<ThoughtsStepProps> = ({ automaticThoughts, onThoug
           </p>
         </div>
 
-        {/* Single focused textarea */}
-        <textarea
+        {/* Textarea with mic - fills available space */}
+        <TextareaWithMic
           value={automaticThoughts}
-          onChange={(e) => onThoughtsChange(e.target.value)}
+          onChange={onThoughtsChange}
           placeholder={t(
             'illuminate.thoughts.placeholder',
             'What did you tell yourself? What thoughts came up?'
           )}
-          className="h-48 w-full resize-none rounded-2xl border border-glass-border bg-glass-bg p-4 text-base text-mist-white placeholder:text-mist-white/40 focus:border-biolum-cyan/50 focus:outline-none focus:ring-2 focus:ring-biolum-cyan/20"
-          maxLength={1000}
+          className="min-h-[200px] flex-1"
           autoFocus
         />
 
-        {/* Character count */}
-        <div className="mt-2 text-right text-xs text-mist-white/40">
-          {automaticThoughts.length}/1000
-        </div>
-
         {/* Helper tip */}
-        <p className="mt-4 text-center text-xs text-mist-white/50">
+        <p className="mt-3 text-center text-xs text-mist-white/50">
           {t('illuminate.thoughts.tip', 'Write exactly what went through your mind - no filtering')}
         </p>
       </div>
