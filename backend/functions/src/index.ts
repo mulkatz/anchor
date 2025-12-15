@@ -14,3 +14,9 @@ export { onAudioMessageCreate, onDiveAudioMessageCreate } from './transcription'
 
 // Export The Dive somatic learning functions
 export { onDiveMessageCreate, onDiveSessionCreate, getDiveLesson } from './diveChat';
+
+// Export Illuminate (Lighthouse) AI functions
+export { analyzeDistortions, generateReframes } from './illuminate';
+
+// Export Insight (Beacon) AI functions
+export { generateWeeklyInsight, markInsightViewed, rateInsight } from './insight';

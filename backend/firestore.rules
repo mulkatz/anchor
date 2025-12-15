@@ -86,6 +86,63 @@ service cloud.firestore {
         allow delete: if false;
       }
 
+      // Illuminate entries (CBT thought records - Lighthouse feature)
+      match /illuminate_entries/{entryId} {
+        allow read: if isOwner(userId);
+
+        // Create: accept emotionalIntensity (new) or anxietyIntensity (legacy)
+        allow create: if isOwner(userId)
+                      && request.resource.data.userId == userId
+                      && request.resource.data.situation is string
+                      && request.resource.data.automaticThoughts is string
+                      && (
+                        (request.resource.data.emotionalIntensity >= 0
+                         && request.resource.data.emotionalIntensity <= 100)
+                        ||
+                        (request.resource.data.anxietyIntensity >= 0
+                         && request.resource.data.anxietyIntensity <= 100)
+                      );
+
+        // Update: accept either field name
+        allow update: if isOwner(userId)
+                      && request.resource.data.userId == userId;
+
+        // Allow deletion for data management
+        allow delete: if isOwner(userId);
+      }
+
+      // Anxiety assessments (optional periodic check-ins)
+      match /anxiety_assessments/{assessmentId} {
+        allow read: if isOwner(userId);
+
+        allow create: if isOwner(userId)
+                      && request.resource.data.userId == userId
+                      && request.resource.data.responses is list
+                      && request.resource.data.totalScore >= 0
+                      && request.resource.data.totalScore <= 21;
+
+        // Assessments are immutable once created
+        allow update: if false;
+        allow delete: if isOwner(userId);
+      }
+
+      // Weekly insights (AI-generated)
+      match /weekly_insights/{insightId} {
+        allow read: if isOwner(userId);
+
+        // Insights are created by backend functions only
+        allow create: if false;
+
+        // Users can mark as viewed and rate helpfulness
+        allow update: if isOwner(userId)
+                      && request.resource.data.viewed is bool
+                      && (request.resource.data.helpfulnessRating == null
+                          || (request.resource.data.helpfulnessRating >= 1
+                              && request.resource.data.helpfulnessRating <= 5));
+
+        allow delete: if isOwner(userId);
+      }
+
       // The Dive - Progress tracking
       match /dive_progress/{progressId} {
         allow read: if isOwner(userId);

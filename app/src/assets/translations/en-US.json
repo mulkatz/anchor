@@ -349,6 +349,204 @@
         "dismiss": "Not now"
       }
     },
+    "soundings": {
+      "title": "Need inspiration?",
+      "shuffle": "Get new prompts",
+      "dismiss": "Dismiss prompts",
+      "helperText": "Tap a prompt to start writing",
+      "prompts": {
+        "ax1": "What's weighing on my mind right now?",
+        "ax2": "If my anxiety could talk, what would it be trying to tell me?",
+        "ax3": "Where do I feel tension in my body right now?",
+        "ax4": "What thought keeps replaying in my mind?",
+        "cr1": "What evidence do I have for and against this worry?",
+        "cr2": "What would I tell a friend who had this same thought?",
+        "cr3": "Will this matter in a week? A month? A year?",
+        "cr4": "What's a more balanced way to look at this situation?",
+        "gr1": "What small thing brought me comfort today?",
+        "gr2": "Who or what made me feel supported recently?",
+        "gr3": "What went better than expected lately?",
+        "sc1": "What do I need to hear right now that I'm not telling myself?",
+        "sc2": "How can I be gentler with myself today?",
+        "sc3": "What would I say to comfort my younger self feeling this way?",
+        "pr1": "How have I grown in handling anxiety compared to before?",
+        "pr2": "What coping strategy worked well for me recently?",
+        "pr3": "What's one small victory I can acknowledge?",
+        "ta1": "What triggered my anxiety today? Was it a thought, event, or sensation?",
+        "ta2": "Do I notice any patterns in when I feel most anxious?",
+        "ta3": "What situations tend to make my anxiety better or worse?"
+      }
+    },
+    "beacon": {
+      "title": "Weekly Insight",
+      "loading": "Generating your insight...",
+      "noData": "Complete some reflections to get weekly insights",
+      "basedOn": "Based on {{count}} reflections",
+      "recommendations": "Recommendations",
+      "triggers": "Common Triggers",
+      "helpful": "Was this helpful?"
+    },
+    "lighthouse": {
+      "title": "Lighthouse",
+      "subtitle": "{{count}} reflections",
+      "subtitleEmpty": "Process challenging situations",
+      "emptyTitle": "Bring clarity to your thoughts",
+      "emptyDescription": "When difficult situations arise, use Illuminate to process your thoughts and find balanced perspectives.",
+      "startIlluminate": "Start Illuminate",
+      "newReflection": "New Reflection",
+      "recentReflections": "Recent Reflections",
+      "viewAll": "View all {{count}} reflections",
+      "viewProgress": "View Progress Dashboard",
+      "stats": {
+        "avgIntensity": "7-day Average",
+        "topPattern": "Top Pattern"
+      }
+    },
+    "illuminate": {
+      "saved": "Reflection saved",
+      "deleted": "Reflection deleted",
+      "stepOf": "Step {{current}} of {{total}}",
+      "back": "Back",
+      "next": "Next",
+      "analyzing": "Analyzing...",
+      "saving": "Saving...",
+      "complete": "Complete",
+      "steps": {
+        "situation": "The Situation",
+        "thoughts": "The Thoughts",
+        "feelings": "The Feelings",
+        "intensity": "The Intensity",
+        "pattern": "The Pattern",
+        "reframe": "The Reframe"
+      },
+      "situation": {
+        "title": "What happened?",
+        "description": "Describe the situation or event",
+        "placeholder": "What situation brought up these feelings?",
+        "tip": "Be specific about what happened, when, and where"
+      },
+      "thoughts": {
+        "title": "What went through your mind?",
+        "description": "Write your automatic thoughts exactly as they came",
+        "placeholder": "What did you tell yourself? What thoughts came up?",
+        "tip": "Write exactly what went through your mind - no filtering"
+      },
+      "feelings": {
+        "title": "How are you feeling?",
+        "description": "Select the emotions that resonate",
+        "selected": "selected",
+        "tip": "You can select up to 3 emotions that best describe how you feel"
+      },
+      "intensity": {
+        "title": "How intense is this feeling?",
+        "description": "Rate your current emotional intensity",
+        "low": "Low",
+        "high": "High",
+        "minimal": "Minimal",
+        "mild": "Mild",
+        "moderate": "Moderate",
+        "strong": "Strong",
+        "intense": "Intense",
+        "tip": "This helps track how strongly this situation is affecting you"
+      },
+      "pattern": {
+        "title": "Patterns Detected",
+        "description": "The AI identified these thinking patterns in your thoughts",
+        "noDistortions": "No clear thinking patterns detected",
+        "noDistortionsHint": "That's okay! Not all challenging thoughts contain cognitive distortions.",
+        "analyzing": "Analyzing your thoughts...",
+        "confirm": "Confirm",
+        "dismiss": "Dismiss",
+        "confirmed": "Confirmed",
+        "dismissed": "Dismissed"
+      },
+      "light": {
+        "title": "Find a balanced perspective",
+        "description": "Choose a reframe that feels true for you",
+        "aiSuggestion": "AI Suggestion",
+        "writeOwn": "Write your own",
+        "customPlaceholder": "Write a balanced thought that feels true for you...",
+        "customHint": "Tap to write your own balanced perspective",
+        "tips": "A good reframe is realistic, acknowledges your feelings, and introduces a balanced perspective."
+      },
+      "distortions": {
+        "catastrophizing": {
+          "name": "Catastrophizing",
+          "description": "Imagining the worst possible outcome"
+        },
+        "mind_reading": {
+          "name": "Mind Reading",
+          "description": "Assuming you know what others think"
+        },
+        "fortune_telling": {
+          "name": "Fortune Telling",
+          "description": "Predicting negative outcomes without evidence"
+        },
+        "all_or_nothing": {
+          "name": "All-or-Nothing",
+          "description": "Black-and-white thinking"
+        },
+        "emotional_reasoning": {
+          "name": "Emotional Reasoning",
+          "description": "Believing feelings equal facts"
+        },
+        "should_statements": {
+          "name": "Should Statements",
+          "description": "Rigid rules about how things should be"
+        },
+        "labeling": {
+          "name": "Labeling",
+          "description": "Attaching negative labels to self/others"
+        },
+        "personalization": {
+          "name": "Personalization",
+          "description": "Taking excessive responsibility"
+        },
+        "filtering": {
+          "name": "Mental Filtering",
+          "description": "Focusing only on negatives"
+        },
+        "overgeneralization": {
+          "name": "Overgeneralization",
+          "description": "Drawing broad conclusions from one event"
+        }
+      },
+      "emotions": {
+        "anxious": "Anxious",
+        "worried": "Worried",
+        "panicked": "Panicked",
+        "nervous": "Nervous",
+        "restless": "Restless",
+        "sad": "Sad",
+        "hopeless": "Hopeless",
+        "lonely": "Lonely",
+        "empty": "Empty",
+        "angry": "Angry",
+        "frustrated": "Frustrated",
+        "irritated": "Irritated",
+        "ashamed": "Ashamed",
+        "guilty": "Guilty",
+        "embarrassed": "Embarrassed",
+        "overwhelmed": "Overwhelmed",
+        "stressed": "Stressed",
+        "exhausted": "Exhausted",
+        "numb": "Numb"
+      }
+    },
+    "horizon": {
+      "title": "Horizon",
+      "subtitle": "Your progress at a glance",
+      "intensityTrend": "Intensity Trend",
+      "last7Days": "Last 7 days",
+      "last30Days": "Last 30 days",
+      "avgIntensity": "Average Intensity",
+      "totalEntries": "Total Entries",
+      "topDistortions": "Top Patterns",
+      "noData": "No data yet",
+      "noDataHint": "Complete some Illuminate reflections to see your progress",
+      "improvement": "{{percent}}% improvement",
+      "increase": "{{percent}}% increase"
+    },
     "archive": {
       "title": "Archive",
       "savedConversations_zero": "No saved conversations",

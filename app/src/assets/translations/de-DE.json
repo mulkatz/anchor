@@ -357,6 +357,204 @@
         "dismiss": "Nicht jetzt"
       }
     },
+    "lighthouse": {
+      "title": "Leuchtturm",
+      "subtitle": "{{count}} Reflexionen",
+      "subtitleEmpty": "Herausfordernde Situationen verarbeiten",
+      "emptyTitle": "Bringe Klarheit in deine Gedanken",
+      "emptyDescription": "Wenn schwierige Situationen aufkommen, nutze Illuminate, um deine Gedanken zu verarbeiten und ausgewogene Perspektiven zu finden.",
+      "startIlluminate": "Illuminate starten",
+      "newReflection": "Neue Reflexion",
+      "recentReflections": "Letzte Reflexionen",
+      "viewAll": "Alle {{count}} Reflexionen anzeigen",
+      "viewProgress": "Fortschritts-Dashboard anzeigen",
+      "stats": {
+        "avgIntensity": "7-Tage Durchschnitt",
+        "topPattern": "Häufigstes Muster"
+      }
+    },
+    "illuminate": {
+      "saved": "Reflexion gespeichert",
+      "deleted": "Reflexion gelöscht",
+      "stepOf": "Schritt {{current}} von {{total}}",
+      "back": "Zurück",
+      "next": "Weiter",
+      "analyzing": "Analysiere...",
+      "saving": "Speichere...",
+      "complete": "Fertig",
+      "steps": {
+        "situation": "Die Situation",
+        "thoughts": "Die Gedanken",
+        "feelings": "Die Gefühle",
+        "intensity": "Die Intensität",
+        "pattern": "Das Muster",
+        "reframe": "Der Reframe"
+      },
+      "situation": {
+        "title": "Was ist passiert?",
+        "description": "Beschreibe die Situation oder das Ereignis",
+        "placeholder": "Welche Situation hat diese Gefühle ausgelöst?",
+        "tip": "Sei konkret: Was ist passiert, wann und wo?"
+      },
+      "thoughts": {
+        "title": "Was ging dir durch den Kopf?",
+        "description": "Schreibe deine automatischen Gedanken genau so auf, wie sie kamen",
+        "placeholder": "Was hast du dir selbst gesagt? Welche Gedanken kamen auf?",
+        "tip": "Schreibe genau auf, was dir durch den Kopf ging - ungefiltert"
+      },
+      "feelings": {
+        "title": "Wie fühlst du dich?",
+        "description": "Wähle die Gefühle, die zutreffen",
+        "selected": "ausgewählt",
+        "tip": "Du kannst bis zu 3 Gefühle auswählen, die am besten beschreiben, wie du dich fühlst"
+      },
+      "intensity": {
+        "title": "Wie intensiv ist dieses Gefühl?",
+        "description": "Bewerte deine aktuelle emotionale Intensität",
+        "low": "Niedrig",
+        "high": "Hoch",
+        "minimal": "Minimal",
+        "mild": "Leicht",
+        "moderate": "Mäßig",
+        "strong": "Stark",
+        "intense": "Intensiv",
+        "tip": "Das hilft zu verfolgen, wie stark dich diese Situation beeinflusst"
+      },
+      "pattern": {
+        "title": "Erkannte Muster",
+        "description": "Die KI hat diese Denkmuster in deinen Gedanken erkannt",
+        "noDistortions": "Keine klaren Denkmuster erkannt",
+        "noDistortionsHint": "Das ist in Ordnung! Nicht alle herausfordernden Gedanken enthalten kognitive Verzerrungen.",
+        "analyzing": "Analysiere deine Gedanken...",
+        "confirm": "Bestätigen",
+        "dismiss": "Ablehnen",
+        "confirmed": "Bestätigt",
+        "dismissed": "Abgelehnt"
+      },
+      "light": {
+        "title": "Finde eine ausgewogene Perspektive",
+        "description": "Wähle einen Reframe, der sich für dich wahr anfühlt",
+        "aiSuggestion": "KI-Vorschlag",
+        "writeOwn": "Eigenen schreiben",
+        "customPlaceholder": "Schreibe einen ausgewogenen Gedanken, der sich für dich wahr anfühlt...",
+        "customHint": "Tippe, um deine eigene ausgewogene Perspektive zu schreiben",
+        "tips": "Ein guter Reframe ist realistisch, erkennt deine Gefühle an und führt eine ausgewogene Perspektive ein."
+      },
+      "distortions": {
+        "catastrophizing": {
+          "name": "Katastrophisieren",
+          "description": "Das schlimmstmögliche Ergebnis vorstellen"
+        },
+        "mind_reading": {
+          "name": "Gedankenlesen",
+          "description": "Annehmen zu wissen, was andere denken"
+        },
+        "fortune_telling": {
+          "name": "Wahrsagen",
+          "description": "Negative Ergebnisse ohne Beweise vorhersagen"
+        },
+        "all_or_nothing": {
+          "name": "Alles-oder-Nichts",
+          "description": "Schwarz-Weiß-Denken"
+        },
+        "emotional_reasoning": {
+          "name": "Emotionales Schlussfolgern",
+          "description": "Glauben, dass Gefühle gleich Fakten sind"
+        },
+        "should_statements": {
+          "name": "Sollte-Aussagen",
+          "description": "Starre Regeln, wie Dinge sein sollten"
+        },
+        "labeling": {
+          "name": "Etikettieren",
+          "description": "Negative Etiketten an sich selbst/andere heften"
+        },
+        "personalization": {
+          "name": "Personalisierung",
+          "description": "Übermäßige Verantwortung übernehmen"
+        },
+        "filtering": {
+          "name": "Mentales Filtern",
+          "description": "Nur auf Negatives fokussieren"
+        },
+        "overgeneralization": {
+          "name": "Übergeneralisierung",
+          "description": "Aus einem Ereignis breite Schlüsse ziehen"
+        }
+      },
+      "emotions": {
+        "anxious": "Ängstlich",
+        "worried": "Besorgt",
+        "panicked": "Panisch",
+        "nervous": "Nervös",
+        "restless": "Unruhig",
+        "sad": "Traurig",
+        "hopeless": "Hoffnungslos",
+        "lonely": "Einsam",
+        "empty": "Leer",
+        "angry": "Wütend",
+        "frustrated": "Frustriert",
+        "irritated": "Gereizt",
+        "ashamed": "Beschämt",
+        "guilty": "Schuldig",
+        "embarrassed": "Verlegen",
+        "overwhelmed": "Überwältigt",
+        "stressed": "Gestresst",
+        "exhausted": "Erschöpft",
+        "numb": "Taub"
+      }
+    },
+    "horizon": {
+      "title": "Horizont",
+      "subtitle": "Dein Fortschritt im Überblick",
+      "intensityTrend": "Intensitäts-Trend",
+      "last7Days": "Letzte 7 Tage",
+      "last30Days": "Letzte 30 Tage",
+      "avgIntensity": "Durchschnittliche Intensität",
+      "totalEntries": "Gesamte Einträge",
+      "topDistortions": "Häufigste Muster",
+      "noData": "Noch keine Daten",
+      "noDataHint": "Schließe einige Illuminate-Reflexionen ab, um deinen Fortschritt zu sehen",
+      "improvement": "{{percent}}% Verbesserung",
+      "increase": "{{percent}}% Anstieg"
+    },
+    "soundings": {
+      "title": "Brauchst du Inspiration?",
+      "shuffle": "Neue Anregungen",
+      "dismiss": "Anregungen ausblenden",
+      "helperText": "Tippe auf eine Anregung, um zu schreiben",
+      "prompts": {
+        "ax1": "Was belastet mich gerade?",
+        "ax2": "Wenn meine Angst sprechen könnte, was würde sie mir sagen wollen?",
+        "ax3": "Wo spüre ich gerade Anspannung in meinem Körper?",
+        "ax4": "Welcher Gedanke wiederholt sich ständig in meinem Kopf?",
+        "cr1": "Welche Beweise habe ich für und gegen diese Sorge?",
+        "cr2": "Was würde ich einem Freund sagen, der denselben Gedanken hätte?",
+        "cr3": "Wird das in einer Woche? Einem Monat? Einem Jahr noch wichtig sein?",
+        "cr4": "Was ist eine ausgewogenere Sichtweise auf diese Situation?",
+        "gr1": "Welche kleine Sache hat mir heute Trost gegeben?",
+        "gr2": "Wer oder was hat mich in letzter Zeit unterstützt gefühlt?",
+        "gr3": "Was ist in letzter Zeit besser gelaufen als erwartet?",
+        "sc1": "Was muss ich gerade hören, das ich mir nicht sage?",
+        "sc2": "Wie kann ich heute sanfter mit mir selbst sein?",
+        "sc3": "Was würde ich meinem jüngeren Ich sagen, das so fühlt?",
+        "pr1": "Wie bin ich gewachsen im Umgang mit Angst im Vergleich zu früher?",
+        "pr2": "Welche Bewältigungsstrategie hat in letzter Zeit gut für mich funktioniert?",
+        "pr3": "Was ist ein kleiner Sieg, den ich anerkennen kann?",
+        "ta1": "Was hat heute meine Angst ausgelöst? War es ein Gedanke, Ereignis oder Empfindung?",
+        "ta2": "Bemerke ich Muster, wann ich mich am ängstlichsten fühle?",
+        "ta3": "Welche Situationen machen meine Angst tendenziell besser oder schlechter?"
+      }
+    },
+    "beacon": {
+      "title": "Wöchentliche Erkenntnis",
+      "loading": "Generiere deine Erkenntnis...",
+      "noData": "Schließe einige Reflexionen ab, um wöchentliche Erkenntnisse zu erhalten",
+      "basedOn": "Basierend auf {{count}} Reflexionen",
+      "recommendations": "Empfehlungen",
+      "triggers": "Häufige Auslöser",
+      "helpful": "War das hilfreich?"
+    },
     "archive": {
       "title": "Archiv",
       "savedConversations_zero": "Keine gespeicherten Gespräche",

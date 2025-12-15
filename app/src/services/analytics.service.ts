@@ -83,6 +83,34 @@ export enum AnalyticsEvent {
   CHECK_IN_MODAL_CLOSED = 'check_in_modal_closed',
   RELEASE_ANIMATION_TRIGGERED = 'release_animation_triggered',
   REEF_ORB_CLICKED = 'reef_orb_clicked',
+
+  // Lighthouse (CBT Thought Record) Events
+  ILLUMINATE_STARTED = 'illuminate_started', // User opened the Illuminate wizard
+  ILLUMINATE_STEP_COMPLETED = 'illuminate_step_completed', // { step: number, step_name: string }
+  ILLUMINATE_ENTRY_CREATED = 'illuminate_entry_created', // { anxiety_intensity: number, distortion_count: number, used_ai_reframe: boolean }
+  ILLUMINATE_ENTRY_VIEWED = 'illuminate_entry_viewed', // { entry_id: string }
+  ILLUMINATE_ENTRY_DELETED = 'illuminate_entry_deleted',
+  ILLUMINATE_ABANDONED = 'illuminate_abandoned', // { step: number } - user left before completing
+
+  // Distortion Detection Events
+  DISTORTION_DETECTED = 'distortion_detected', // { distortion_type: string, confidence: number }
+  DISTORTION_CONFIRMED = 'distortion_confirmed', // { distortion_type: string }
+  DISTORTION_DISMISSED = 'distortion_dismissed', // { distortion_type: string }
+
+  // Reframe Events
+  AI_REFRAME_GENERATED = 'ai_reframe_generated', // { suggestion_count: number }
+  AI_REFRAME_SELECTED = 'ai_reframe_selected', // { reframe_index: number }
+  CUSTOM_REFRAME_WRITTEN = 'custom_reframe_written',
+  REFRAME_RATED = 'reframe_rated', // { rating: number }
+
+  // Horizon (Progress Dashboard) Events
+  HORIZON_VIEWED = 'horizon_viewed',
+  ASSESSMENT_STARTED = 'assessment_started',
+  ASSESSMENT_COMPLETED = 'assessment_completed', // { total_score: number, severity: string }
+
+  // Weekly Insight Events
+  INSIGHT_VIEWED = 'insight_viewed', // { week_start: string }
+  INSIGHT_RATED = 'insight_rated', // { rating: number }
 }
 
 /**

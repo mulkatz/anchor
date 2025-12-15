@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { format } from 'date-fns';
 
 import { DateDivider } from './DateDivider';
+import { PromptSuggestions } from './PromptSuggestions';
 import { cn } from '../../../utils/cn';
 import type { JournalEntry, JournalSession } from '../../../models';
 
@@ -24,6 +25,7 @@ export const ActiveEditor: FC<ActiveEditorProps> = ({
   const { t } = useTranslation();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [localText, setLocalText] = useState(activeSession?.text || '');
+  const [showPrompts, setShowPrompts] = useState(true);
   const debounceRef = useRef<NodeJS.Timeout | null>(null);
 
   // Sync local text with active session
@@ -74,6 +76,24 @@ export const ActiveEditor: FC<ActiveEditorProps> = ({
     };
   }, []);
 
+  // Handle prompt selection
+  const handleSelectPrompt = useCallback(
+    (promptText: string) => {
+      const newText = promptText + '\n\n';
+      setLocalText(newText);
+      onTextChange(newText);
+      setShowPrompts(false);
+      // Focus textarea after selecting prompt
+      setTimeout(() => {
+        if (textareaRef.current) {
+          textareaRef.current.focus();
+          textareaRef.current.setSelectionRange(newText.length, newText.length);
+        }
+      }, 100);
+    },
+    [onTextChange]
+  );
+
   const today = format(new Date(), 'yyyy-MM-dd');
 
   // Render fixed sessions from today first, then the active editor
@@ -104,6 +124,13 @@ export const ActiveEditor: FC<ActiveEditorProps> = ({
         )}
         style={{ width: 'calc(100% + 20px)', marginLeft: '-10px' }}
       >
+        {/* Prompt Suggestions (Soundings) - show when empty */}
+        <PromptSuggestions
+          visible={showPrompts && !localText.trim()}
+          onSelectPrompt={handleSelectPrompt}
+          onDismiss={() => setShowPrompts(false)}
+        />
+
         {/* Subtle text glow animation styles */}
         <style>{`
           @keyframes textGlow {

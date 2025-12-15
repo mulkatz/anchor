@@ -20,7 +20,7 @@ import { DiveEmptyState } from '../components/features/dive/DiveEmptyState';
 import { LoadingSpinner } from '../components/ui';
 
 // DEV: Set to true to unlock all lessons for testing
-const DEV_UNLOCK_ALL = true;
+const DEV_UNLOCK_ALL = false;
 
 /**
  * The Dive - Ocean Depth Map

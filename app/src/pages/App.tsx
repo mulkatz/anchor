@@ -15,6 +15,8 @@ import { VaultPage } from './VaultPage';
 import { ProfilePage } from './ProfilePage';
 import { DivePage } from './DivePage';
 import { DiveLessonPage } from './DiveLessonPage';
+import { LighthousePage } from './LighthousePage';
+import { HorizonPage } from './HorizonPage';
 
 // Animation variants for page transitions
 // Note: Using negative y for initial (starts above, slides down) to work with overflow-hidden parent
@@ -133,6 +135,36 @@ const AnimatedRoutes: FC = () => {
               className="h-full w-full"
             >
               <VaultPage />
+            </motion.div>
+          }
+        />
+        <Route
+          path="/lighthouse"
+          element={
+            <motion.div
+              variants={pageVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              transition={pageTransition}
+              className="h-full w-full"
+            >
+              <LighthousePage />
+            </motion.div>
+          }
+        />
+        <Route
+          path="/horizon"
+          element={
+            <motion.div
+              variants={pageVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              transition={pageTransition}
+              className="h-full w-full"
+            >
+              <HorizonPage />
             </motion.div>
           }
         />
