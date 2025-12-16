@@ -10,3 +10,4 @@ export { LoaderAnimation } from './LoaderAnimation';
 export { LoadingSpinner } from './LoadingSpinner';
 export { CTAButton } from './buttons/CTAButton';
 export { IconButton, RoundIconButton } from './buttons/IconButton';
+export { ConfirmDialog } from './ConfirmDialog';

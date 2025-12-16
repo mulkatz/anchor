@@ -16,6 +16,7 @@ import { ProfilePage } from './ProfilePage';
 import { DivePage } from './DivePage';
 import { DiveLessonPage } from './DiveLessonPage';
 import { LighthousePage } from './LighthousePage';
+import { IlluminateDetailPage } from './IlluminateDetailPage';
 import { HorizonPage } from './HorizonPage';
 
 // Animation variants for page transitions
@@ -150,6 +151,21 @@ const AnimatedRoutes: FC = () => {
               className="h-full w-full"
             >
               <LighthousePage />
+            </motion.div>
+          }
+        />
+        <Route
+          path="/lighthouse/:entryId"
+          element={
+            <motion.div
+              variants={pageVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              transition={pageTransition}
+              className="h-full w-full"
+            >
+              <IlluminateDetailPage />
             </motion.div>
           }
         />

@@ -519,6 +519,27 @@
         "numb": "Taub"
       }
     },
+    "illuminateDetail": {
+      "title": "Reflexion",
+      "notFound": "Reflexion nicht gefunden",
+      "sections": {
+        "situation": "Die Situation",
+        "thoughts": "Die Gedanken",
+        "feelings": "Die Gefühle",
+        "patterns": "Erkannte Muster",
+        "reframe": "Der Reframe"
+      },
+      "intensity": "Intensität",
+      "customReframe": "Dein eigener Reframe",
+      "suggestedReframe": "Vorgeschlagener Reframe",
+      "noPatterns": "Keine Denkmuster identifiziert",
+      "deleteButton": "Reflexion löschen",
+      "deleteConfirm": {
+        "title": "Reflexion löschen?",
+        "message": "Dies löscht diese Reflexion dauerhaft. Diese Aktion kann nicht rückgängig gemacht werden.",
+        "confirm": "Löschen"
+      }
+    },
     "horizon": {
       "title": "Horizont",
       "subtitle": "Dein Fortschritt über die Zeit",

@@ -548,6 +548,27 @@
         "numb": "Numb"
       }
     },
+    "illuminateDetail": {
+      "title": "Reflection",
+      "notFound": "Reflection not found",
+      "sections": {
+        "situation": "The Situation",
+        "thoughts": "The Thoughts",
+        "feelings": "The Feelings",
+        "patterns": "Patterns Identified",
+        "reframe": "The Reframe"
+      },
+      "intensity": "Intensity",
+      "customReframe": "Your own reframe",
+      "suggestedReframe": "Suggested reframe",
+      "noPatterns": "No thinking patterns identified",
+      "deleteButton": "Delete Reflection",
+      "deleteConfirm": {
+        "title": "Delete Reflection?",
+        "message": "This will permanently delete this reflection. This action cannot be undone.",
+        "confirm": "Delete"
+      }
+    },
     "horizon": {
       "title": "Horizon",
       "subtitle": "Your progress over time",

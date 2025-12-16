@@ -11,6 +11,7 @@ import {
 } from '../components/features/illuminate';
 import { useIlluminate } from '../hooks/useIlluminate';
 import { useInsight } from '../hooks/useInsight';
+import { useHaptics } from '../hooks/useHaptics';
 import { useDialog } from '../contexts/DialogContext';
 import { useUI } from '../contexts/UIContext';
 import { LoadingSpinner } from '../components/ui';
@@ -36,6 +37,7 @@ export const LighthousePage: FC = () => {
   } = useInsight();
   const { push, pop } = useDialog();
   const { navbarBottom } = useUI();
+  const { light } = useHaptics();
 
   // Calculate stats
   const avgIntensity = getAverageIntensity(7); // Last 7 days
@@ -50,9 +52,9 @@ export const LighthousePage: FC = () => {
   };
 
   const handleEntryClick = (entry: IlluminateEntry) => {
+    light();
     logAnalyticsEvent(AnalyticsEvent.ILLUMINATE_ENTRY_VIEWED, { entry_id: entry.id });
-    // For now, open the same entry view - can add detail modal later
-    // TODO: Create IlluminateDetailDialog
+    navigate(`/lighthouse/${entry.id}`);
   };
 
   const goToHorizon = () => {
