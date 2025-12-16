@@ -12,7 +12,91 @@ Illuminate is a 6-step guided wizard for processing challenging situations using
 
 ---
 
-## 6-Step Flow
+## User Flow
+
+```
+┌──────────────────────────────────────────────────────────────────┐
+│                          LIGHTHOUSE                              │
+│                      (Entry List Page)                           │
+│                                                                  │
+│  ┌────────────────────────────────────────────────────────────┐  │
+│  │  [+ New Reflection]                                        │  │
+│  └────────────────────────────────────────────────────────────┘  │
+│                              │                                   │
+│          Opens ──────────────┼────────────────────┐              │
+│                              │                    │              │
+│                              ▼                    │              │
+│  ┌────────────────────────────────────────────┐   │              │
+│  │        ILLUMINATE MODAL                    │   │              │
+│  │        (6-Step Wizard)                     │   │              │
+│  │                                            │   │              │
+│  │  Step 1: Situation (text + speech)         │   │              │
+│  │  Step 2: Thoughts (text + speech)          │   │              │
+│  │  Step 3: Feelings (emotion grid)           │   │              │
+│  │  Step 4: Intensity (slider)                │   │              │
+│  │  Step 5: Pattern (AI distortion)           │   │              │
+│  │  Step 6: Reframe (AI suggestions)          │   │              │
+│  │                                            │   │              │
+│  │  [Save] ───────────────────────────────────┼───┘              │
+│  └────────────────────────────────────────────┘                  │
+│                                                                  │
+│  ┌────────────────────────────────────────────────────────────┐  │
+│  │  Entry Card (Dec 15 • 13:30)                          [>]  │──┼──┐
+│  └────────────────────────────────────────────────────────────┘  │  │
+│  ┌────────────────────────────────────────────────────────────┐  │  │
+│  │  Entry Card (Dec 14 • 09:15)                          [>]  │──┼──┤
+│  └────────────────────────────────────────────────────────────┘  │  │
+│                                                                  │  │
+└──────────────────────────────────────────────────────────────────┘  │
+                                                                      │
+                       Click Entry ────────────────────────────────────┘
+                                                                      │
+                                                                      ▼
+┌──────────────────────────────────────────────────────────────────────┐
+│                     REFLECTION DETAIL PAGE                           │
+│                     /lighthouse/:entryId                             │
+│                                                                      │
+│  ← Back              Reflection                                      │
+│                      Dec 15 • 13:30                                  │
+│                                                                      │
+│  ┌────────────────────────────────────────────────────────────────┐  │
+│  │  THE SITUATION                                                 │  │
+│  │  "My boss criticized my work in front of the team..."          │  │
+│  └────────────────────────────────────────────────────────────────┘  │
+│                                                                      │
+│  ┌────────────────────────────────────────────────────────────────┐  │
+│  │  THE THOUGHTS                                                  │  │
+│  │  "I'm going to get fired. Everyone thinks I'm incompetent..."  │  │
+│  └────────────────────────────────────────────────────────────────┘  │
+│                                                                      │
+│  ┌────────────────────────────────────────────────────────────────┐  │
+│  │  THE FEELINGS                                                  │  │
+│  │  [anxious] [ashamed] [worried]                                 │  │
+│  │  Intensity: ████████████░░░░░░ 72% • Strong                    │  │
+│  └────────────────────────────────────────────────────────────────┘  │
+│                                                                      │
+│  ┌────────────────────────────────────────────────────────────────┐  │
+│  │  PATTERNS IDENTIFIED                                           │  │
+│  │  🔮 Catastrophizing - Imagining the worst possible outcome     │  │
+│  │  🧠 Mind Reading - Assuming you know what others think         │  │
+│  └────────────────────────────────────────────────────────────────┘  │
+│                                                                      │
+│  ┌────────────────────────────────────────────────────────────────┐  │
+│  │  THE REFRAME                                                   │  │
+│  │  💡 Your own reframe / Suggested reframe                       │  │
+│  │  "While the feedback was hard to hear, it doesn't mean..."     │  │
+│  └────────────────────────────────────────────────────────────────┘  │
+│                                                                      │
+│  ┌────────────────────────────────────────────────────────────────┐  │
+│  │  🗑️ Delete Reflection                                          │  │
+│  └────────────────────────────────────────────────────────────────┘  │
+│                                                                      │
+└──────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 6-Step Flow (Illuminate Wizard)
 
 ```
 Step 1: The Situation   → "What happened?" (single focused textarea)
@@ -70,6 +154,37 @@ Step 6: The Reframe     → Balanced perspective selection
 - AI generates 2-3 balanced reframe suggestions
 - User can select an AI suggestion or write their own
 - Good reframes are realistic, acknowledge feelings, introduce balance
+
+---
+
+## Reflection Detail Page
+
+After completing an Illuminate reflection, users can revisit past entries by tapping on entry cards in the Lighthouse list. This opens a full-screen detail page (`/lighthouse/:entryId`) that displays all 5 sections of the CBT thought record.
+
+### Features
+
+- **Read-only view** of completed reflections
+- **Localized date/time** in header (e.g., "Dec 15 • 13:30" or "15. Dez. • 13:30 Uhr")
+- **Emotion chips** with intensity bar (color-coded: green → cyan → yellow → orange → red)
+- **Pattern cards** showing confirmed cognitive distortions with emoji and description
+- **Reframe section** indicating whether it was user-written or AI-suggested
+- **Delete functionality** with confirmation dialog
+
+### Navigation
+
+- Back button returns to `/lighthouse`
+- Entry cards in Lighthouse list navigate to `/lighthouse/:entryId`
+- Light haptic feedback on entry tap
+
+---
+
+## Routes
+
+| Route             | Page                 | Description                   |
+| ----------------- | -------------------- | ----------------------------- |
+| `/lighthouse`     | LighthousePage       | Main entry list, stats, CTA   |
+| `/lighthouse/:id` | IlluminateDetailPage | Reflection detail (read-only) |
+| `/horizon`        | HorizonPage          | Progress dashboard, trends    |
 
 ---
 
@@ -158,6 +273,15 @@ app/src/hooks/
 └── useSpeechToText.tsx      # Speech-to-text for textareas
 ```
 
+### Utilities
+
+```
+app/src/utils/
+└── time.ts                  # formatShortDate(), formatTime() - localized date/time
+```
+
+Date/time formatting uses native `toLocaleDateString()` / `toLocaleTimeString()` with `i18n.language` for proper localization (e.g., "Dec 15 • 1:30 PM" in en-US, "15. Dez. • 13:30 Uhr" in de-DE).
+
 ### Shared UI Components
 
 ```
@@ -180,8 +304,9 @@ backend/functions/src/
 
 ```
 app/src/pages/
-├── LighthousePage.tsx       # Main Illuminate home
-└── HorizonPage.tsx          # Progress dashboard
+├── LighthousePage.tsx          # Main Illuminate home (entry list)
+├── IlluminateDetailPage.tsx    # Reflection detail view (read-only)
+└── HorizonPage.tsx             # Progress dashboard
 ```
 
 ---
@@ -232,9 +357,37 @@ All user-facing strings use i18n with keys under:
 - `illuminate.*` - Wizard and step translations
 - `illuminate.emotions.*` - Emotion labels
 - `illuminate.distortions.*` - Distortion names/descriptions
+- `illuminate.intensity.*` - Intensity level labels (minimal, mild, moderate, strong, intense)
+- `illuminateDetail.*` - Reflection detail page translations
 - `horizon.*` - Progress dashboard
 
 Supported languages: English (en-US), German (de-DE)
+
+### Detail Page Translation Keys
+
+```json
+"illuminateDetail": {
+  "title": "Reflection",
+  "notFound": "Reflection not found",
+  "sections": {
+    "situation": "The Situation",
+    "thoughts": "The Thoughts",
+    "feelings": "The Feelings",
+    "patterns": "Patterns Identified",
+    "reframe": "The Reframe"
+  },
+  "intensity": "Intensity",
+  "customReframe": "Your own reframe",
+  "suggestedReframe": "Suggested reframe",
+  "noPatterns": "No thinking patterns identified",
+  "deleteButton": "Delete Reflection",
+  "deleteConfirm": {
+    "title": "Delete Reflection?",
+    "message": "This will permanently delete this reflection...",
+    "confirm": "Delete"
+  }
+}
+```
 
 ---
 
@@ -263,11 +416,13 @@ Firestore rules accept both field names for create operations.
 | `ILLUMINATE_STARTED`        | Wizard opened                   |
 | `ILLUMINATE_STEP_COMPLETED` | Step transition                 |
 | `ILLUMINATE_ENTRY_CREATED`  | Entry saved                     |
+| `ILLUMINATE_ENTRY_VIEWED`   | Reflection detail page opened   |
 | `ILLUMINATE_ABANDONED`      | Wizard closed before completion |
 | `DISTORTION_CONFIRMED`      | User confirmed a distortion     |
 | `DISTORTION_DISMISSED`      | User dismissed a distortion     |
 | `AI_REFRAME_SELECTED`       | User selected AI suggestion     |
 | `CUSTOM_REFRAME_WRITTEN`    | User wrote own reframe          |
+| `HORIZON_VIEWED`            | Progress dashboard opened       |
 
 ---
 
