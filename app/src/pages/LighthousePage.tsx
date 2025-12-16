@@ -1,5 +1,5 @@
 import { type FC } from 'react';
-import { Lightbulb, Plus, TrendingUp, PieChart } from 'lucide-react';
+import { Lightbulb, Plus, PieChart, ChevronRight, TrendingUp } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -10,14 +10,13 @@ import {
   BeaconCard,
 } from '../components/features/illuminate';
 import { useIlluminate } from '../hooks/useIlluminate';
-import { useInsight } from '../hooks/useInsight';
+import { useInsightContext } from '../contexts/InsightContext';
 import { useHaptics } from '../hooks/useHaptics';
 import { useDialog } from '../contexts/DialogContext';
 import { useUI } from '../contexts/UIContext';
 import { LoadingSpinner } from '../components/ui';
 import { logAnalyticsEvent, AnalyticsEvent } from '../services/analytics.service';
 import type { IlluminateEntry } from '../models';
-import { cn } from '../utils/cn';
 
 /**
  * Lighthouse Page - CBT-based anxiety reflection home
@@ -26,21 +25,13 @@ import { cn } from '../utils/cn';
 export const LighthousePage: FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { entries, recentEntries, loading, getAverageIntensity, getDistortionCounts } =
-    useIlluminate();
-  const {
-    insight,
-    loading: insightLoading,
-    fetchInsight,
-    markAsViewed,
-    rateInsight,
-  } = useInsight();
+  const { entries, recentEntries, loading, getDistortionCounts } = useIlluminate();
+  const { insight, loading: insightLoading, markAsViewed } = useInsightContext();
   const { push, pop } = useDialog();
   const { navbarBottom } = useUI();
   const { light } = useHaptics();
 
   // Calculate stats
-  const avgIntensity = getAverageIntensity(7); // Last 7 days
   const distortionCounts = getDistortionCounts();
   const topDistortion = Object.entries(distortionCounts)
     .sort(([, a], [, b]) => b - a)
@@ -70,9 +61,7 @@ export const LighthousePage: FC = () => {
           {t('lighthouse.title', 'Lighthouse')}
         </h1>
         <p className="text-sm text-mist-white/60">
-          {entries.length > 0
-            ? t('lighthouse.subtitle', '{{count}} reflections', { count: entries.length })
-            : t('lighthouse.subtitleEmpty', 'Illuminate your anxious thoughts')}
+          {t('lighthouse.subtitleEmpty', 'Illuminate your thoughts')}
         </p>
       </header>
 
@@ -124,39 +113,18 @@ export const LighthousePage: FC = () => {
               <span>{t('lighthouse.newReflection', 'New Reflection')}</span>
             </button>
 
-            {/* Stats Cards (if we have entries) */}
+            {/* Top Pattern Card */}
             {entries.length >= 3 && (
-              <div className="grid grid-cols-2 gap-3">
-                {/* Average intensity */}
-                <div className="rounded-xl border border-glass-border bg-glass-bg p-4">
-                  <div className="mb-1 flex items-center gap-2 text-xs text-mist-white/50">
-                    <TrendingUp size={14} />
-                    <span>{t('lighthouse.stats.avgIntensity', '7-day avg')}</span>
-                  </div>
-                  <p
-                    className={cn(
-                      'text-2xl font-semibold',
-                      avgIntensity <= 40
-                        ? 'text-green-400'
-                        : avgIntensity <= 60
-                          ? 'text-yellow-400'
-                          : 'text-orange-400'
-                    )}
-                  >
-                    {avgIntensity}%
-                  </p>
-                </div>
-
-                {/* Top distortion */}
-                <button
-                  onClick={goToHorizon}
-                  className="rounded-xl border border-glass-border bg-glass-bg p-4 text-left transition-colors hover:bg-glass-bg-hover"
-                >
+              <button
+                onClick={goToHorizon}
+                className="flex w-full items-center justify-between rounded-xl border border-glass-border bg-glass-bg p-4 text-left transition-colors hover:bg-glass-bg-hover"
+              >
+                <div>
                   <div className="mb-1 flex items-center gap-2 text-xs text-mist-white/50">
                     <PieChart size={14} />
                     <span>{t('lighthouse.stats.topPattern', 'Top pattern')}</span>
                   </div>
-                  <p className="truncate text-lg font-medium text-biolum-cyan">
+                  <p className="text-lg font-medium text-biolum-cyan">
                     {topDistortion
                       ? t(
                           `illuminate.distortions.${topDistortion[0]}.name`,
@@ -164,8 +132,9 @@ export const LighthousePage: FC = () => {
                         )
                       : t('lighthouse.stats.noPatterns', 'None yet')}
                   </p>
-                </button>
-              </div>
+                </div>
+                <ChevronRight size={20} className="shrink-0 text-mist-white/40" />
+              </button>
             )}
 
             {/* View Horizon link */}
@@ -181,13 +150,7 @@ export const LighthousePage: FC = () => {
 
             {/* Weekly AI Insight (Beacon) */}
             {entries.length >= 3 && (
-              <BeaconCard
-                insight={insight}
-                loading={insightLoading}
-                onFetchInsight={fetchInsight}
-                onMarkViewed={markAsViewed}
-                onRate={rateInsight}
-              />
+              <BeaconCard insight={insight} loading={insightLoading} onMarkViewed={markAsViewed} />
             )}
 
             {/* Recent Entries */}

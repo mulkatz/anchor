@@ -5,6 +5,7 @@ import { AppProvider } from '../contexts/AppContext';
 import { DialogProvider } from '../contexts/DialogContext';
 import { UIProvider } from '../contexts/UIContext';
 import { DiveProvider } from '../contexts/DiveContext';
+import { InsightProvider } from '../contexts/InsightContext';
 import { MainLayout } from '../components/layouts/MainLayout';
 import { HomePage } from './HomePage';
 import { SOSPage } from './SOSPage';
@@ -240,13 +241,15 @@ const App: FC = () => {
     <AppProvider>
       <UIProvider>
         <DiveProvider>
-          <DialogProvider>
-            <BrowserRouter>
-              <MainLayout>
-                <AnimatedRoutes />
-              </MainLayout>
-            </BrowserRouter>
-          </DialogProvider>
+          <InsightProvider>
+            <DialogProvider>
+              <BrowserRouter>
+                <MainLayout>
+                  <AnimatedRoutes />
+                </MainLayout>
+              </BrowserRouter>
+            </DialogProvider>
+          </InsightProvider>
         </DiveProvider>
       </UIProvider>
     </AppProvider>

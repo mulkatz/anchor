@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronDown, ChevronUp, Star, Loader2, Lightbulb } from 'lucide-react';
+import { ChevronDown, ChevronUp, Loader2, Lightbulb } from 'lucide-react';
 import type { WeeklyInsight } from '../../../models';
 import { cn } from '../../../utils/cn';
 import { useHaptics } from '../../../hooks/useHaptics';
@@ -9,34 +9,16 @@ import { useHaptics } from '../../../hooks/useHaptics';
 interface BeaconCardProps {
   insight: WeeklyInsight | null;
   loading: boolean;
-  onFetchInsight: () => Promise<void>;
   onMarkViewed: () => Promise<void>;
-  onRate: (rating: number) => Promise<void>;
 }
 
 /**
  * BeaconCard - Displays weekly AI-generated insight
  */
-export const BeaconCard: FC<BeaconCardProps> = ({
-  insight,
-  loading,
-  onFetchInsight,
-  onMarkViewed,
-  onRate,
-}) => {
+export const BeaconCard: FC<BeaconCardProps> = ({ insight, loading, onMarkViewed }) => {
   const { t } = useTranslation();
-  const { light, medium } = useHaptics();
+  const { light } = useHaptics();
   const [expanded, setExpanded] = useState(false);
-  const [selectedRating, setSelectedRating] = useState<number | null>(
-    insight?.helpfulnessRating || null
-  );
-
-  // Fetch insight on mount if not already loaded
-  useEffect(() => {
-    if (!insight && !loading) {
-      onFetchInsight();
-    }
-  }, [insight, loading, onFetchInsight]);
 
   // Mark as viewed when expanded
   useEffect(() => {
@@ -48,12 +30,6 @@ export const BeaconCard: FC<BeaconCardProps> = ({
   const handleToggle = () => {
     light();
     setExpanded((prev) => !prev);
-  };
-
-  const handleRate = async (rating: number) => {
-    medium();
-    setSelectedRating(rating);
-    await onRate(rating);
   };
 
   // Loading state
@@ -157,7 +133,7 @@ export const BeaconCard: FC<BeaconCardProps> = ({
 
               {/* Identified triggers */}
               {insight.identifiedTriggers.length > 0 && (
-                <div className="mb-4">
+                <div>
                   <h4 className="mb-2 text-xs font-medium uppercase tracking-wide text-warm-ember/70">
                     {t('beacon.triggers', 'Common Triggers')}
                   </h4>
@@ -173,32 +149,6 @@ export const BeaconCard: FC<BeaconCardProps> = ({
                   </div>
                 </div>
               )}
-
-              {/* Rating */}
-              <div className="border-t border-warm-ember/20 pt-3">
-                <p className="mb-2 text-xs text-mist-white/50">
-                  {t('beacon.helpful', 'Was this helpful?')}
-                </p>
-                <div className="flex gap-1">
-                  {[1, 2, 3, 4, 5].map((rating) => (
-                    <button
-                      key={rating}
-                      onClick={() => handleRate(rating)}
-                      className={cn(
-                        'rounded-full p-1.5 transition-all',
-                        selectedRating && rating <= selectedRating
-                          ? 'text-warm-ember'
-                          : 'text-mist-white/30 hover:text-warm-ember/50'
-                      )}
-                    >
-                      <Star
-                        size={18}
-                        fill={selectedRating && rating <= selectedRating ? 'currentColor' : 'none'}
-                      />
-                    </button>
-                  ))}
-                </div>
-              </div>
             </div>
           </motion.div>
         )}
