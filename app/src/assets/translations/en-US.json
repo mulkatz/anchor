@@ -400,7 +400,8 @@
       "viewProgress": "View Progress Dashboard",
       "stats": {
         "avgIntensity": "7-day Average",
-        "topPattern": "Top Pattern"
+        "topPattern": "Top Pattern",
+        "noPatterns": "None yet"
       }
     },
     "speechToText": {
@@ -411,6 +412,7 @@
       "transcriptionFailed": "Could not transcribe audio. Please try again or type manually."
     },
     "illuminate": {
+      "noDistortions": "No patterns identified",
       "saved": "Reflection saved",
       "deleted": "Reflection deleted",
       "stepOf": "Step {{current}} of {{total}}",
@@ -443,7 +445,7 @@
         "title": "How are you feeling?",
         "description": "Select the emotions that resonate",
         "selected": "selected",
-        "tip": "You can select up to 3 emotions that best describe how you feel"
+        "tip": "You can select up to 5 emotions that best describe how you feel"
       },
       "intensity": {
         "title": "How intense is this feeling?",
@@ -458,20 +460,25 @@
         "tip": "This helps track how strongly this situation is affecting you"
       },
       "pattern": {
-        "title": "Patterns Detected",
-        "description": "The AI identified these thinking patterns in your thoughts",
+        "title": "Thinking patterns detected",
+        "description": "Do these resonate with you?",
+        "noneFound": "No obvious thinking patterns detected",
+        "noneFoundHint": "That's okay! Not all challenging thoughts contain cognitive distortions. You can still continue and write your own reframe.",
         "noDistortions": "No clear thinking patterns detected",
         "noDistortionsHint": "That's okay! Not all challenging thoughts contain cognitive distortions.",
         "analyzing": "Analyzing your thoughts...",
-        "confirm": "Confirm",
-        "dismiss": "Dismiss",
+        "analyzingHint": "Looking for thinking patterns",
+        "errorTitle": "Couldn't analyze patterns",
+        "errorHint": "That's okay - you can still continue and write your own reframe",
+        "confirm": "Yes, this resonates",
+        "dismiss": "No, doesn't fit",
         "confirmed": "Confirmed",
         "dismissed": "Dismissed"
       },
       "light": {
         "title": "Find a balanced perspective",
         "description": "Choose a reframe that feels true for you",
-        "aiSuggestion": "AI Suggestion",
+        "suggestion": "Suggestion",
         "writeOwn": "Write your own",
         "customPlaceholder": "Write a balanced thought that feels true for you...",
         "customHint": "Tap to write your own balanced perspective",
@@ -543,17 +550,29 @@
     },
     "horizon": {
       "title": "Horizon",
-      "subtitle": "Your progress at a glance",
-      "intensityTrend": "Intensity Trend",
-      "last7Days": "Last 7 days",
-      "last30Days": "Last 30 days",
-      "avgIntensity": "Average Intensity",
-      "totalEntries": "Total Entries",
-      "topDistortions": "Top Patterns",
-      "noData": "No data yet",
-      "noDataHint": "Complete some Illuminate reflections to see your progress",
-      "improvement": "{{percent}}% improvement",
-      "increase": "{{percent}}% increase"
+      "subtitle": "Your progress over time",
+      "empty": "Complete a few reflections to see your progress here.",
+      "stats": {
+        "streak": "Streak",
+        "days": "days",
+        "total": "Total"
+      },
+      "intensity": {
+        "title": "Emotional Intensity",
+        "7day": "7-day average",
+        "30day": "30-day average",
+        "improving": "Your emotional intensity is improving!"
+      },
+      "distortions": {
+        "title": "Common Thinking Patterns"
+      },
+      "milestones": {
+        "title": "Milestones",
+        "first": "First reflection",
+        "week": "7 reflections",
+        "month": "30 reflections",
+        "streak7": "7-day streak"
+      }
     },
     "archive": {
       "title": "Archive",

@@ -1,7 +1,7 @@
 import { FC, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { Check, Edit3, Sparkles } from 'lucide-react';
+import { Check, Edit3, Lightbulb } from 'lucide-react';
 import { cn } from '../../../utils/cn';
 import { useHaptics } from '../../../hooks/useHaptics';
 
@@ -78,11 +78,11 @@ export const LightStep: FC<LightStepProps> = ({
                   : 'border-glass-border bg-glass-bg hover:bg-glass-bg-hover'
               )}
             >
-              {/* AI badge */}
+              {/* Suggestion badge */}
               <div className="mb-2 flex items-center gap-1.5">
-                <Sparkles size={14} className="text-biolum-cyan" />
+                <Lightbulb size={14} className="text-biolum-cyan" />
                 <span className="text-xs text-biolum-cyan">
-                  {t('illuminate.light.aiSuggestion', 'AI Suggestion')}
+                  {t('illuminate.light.suggestion', 'Suggestion')}
                 </span>
               </div>
 

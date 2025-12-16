@@ -371,7 +371,8 @@
       "viewProgress": "Fortschritts-Dashboard anzeigen",
       "stats": {
         "avgIntensity": "7-Tage Durchschnitt",
-        "topPattern": "Häufigstes Muster"
+        "topPattern": "Häufigstes Muster",
+        "noPatterns": "Noch keine"
       }
     },
     "speechToText": {
@@ -382,6 +383,7 @@
       "transcriptionFailed": "Konnte Audio nicht transkribieren. Bitte erneut versuchen oder manuell eingeben."
     },
     "illuminate": {
+      "noDistortions": "Keine Muster identifiziert",
       "saved": "Reflexion gespeichert",
       "deleted": "Reflexion gelöscht",
       "stepOf": "Schritt {{current}} von {{total}}",
@@ -414,7 +416,7 @@
         "title": "Wie fühlst du dich?",
         "description": "Wähle die Gefühle, die zutreffen",
         "selected": "ausgewählt",
-        "tip": "Du kannst bis zu 3 Gefühle auswählen, die am besten beschreiben, wie du dich fühlst"
+        "tip": "Du kannst bis zu 5 Gefühle auswählen, die am besten beschreiben, wie du dich fühlst"
       },
       "intensity": {
         "title": "Wie intensiv ist dieses Gefühl?",
@@ -429,20 +431,25 @@
         "tip": "Das hilft zu verfolgen, wie stark dich diese Situation beeinflusst"
       },
       "pattern": {
-        "title": "Erkannte Muster",
-        "description": "Die KI hat diese Denkmuster in deinen Gedanken erkannt",
+        "title": "Denkmuster erkannt",
+        "description": "Treffen diese auf dich zu?",
+        "noneFound": "Keine offensichtlichen Denkmuster erkannt",
+        "noneFoundHint": "Das ist in Ordnung! Nicht alle herausfordernden Gedanken enthalten kognitive Verzerrungen. Du kannst trotzdem fortfahren und deinen eigenen Reframe schreiben.",
         "noDistortions": "Keine klaren Denkmuster erkannt",
         "noDistortionsHint": "Das ist in Ordnung! Nicht alle herausfordernden Gedanken enthalten kognitive Verzerrungen.",
         "analyzing": "Analysiere deine Gedanken...",
-        "confirm": "Bestätigen",
-        "dismiss": "Ablehnen",
+        "analyzingHint": "Suche nach Denkmustern",
+        "errorTitle": "Konnte Muster nicht analysieren",
+        "errorHint": "Das ist in Ordnung - du kannst trotzdem fortfahren und deinen eigenen Reframe schreiben",
+        "confirm": "Ja, das trifft zu",
+        "dismiss": "Nein, passt nicht",
         "confirmed": "Bestätigt",
         "dismissed": "Abgelehnt"
       },
       "light": {
         "title": "Finde eine ausgewogene Perspektive",
         "description": "Wähle einen Reframe, der sich für dich wahr anfühlt",
-        "aiSuggestion": "KI-Vorschlag",
+        "suggestion": "Vorschlag",
         "writeOwn": "Eigenen schreiben",
         "customPlaceholder": "Schreibe einen ausgewogenen Gedanken, der sich für dich wahr anfühlt...",
         "customHint": "Tippe, um deine eigene ausgewogene Perspektive zu schreiben",
@@ -514,17 +521,29 @@
     },
     "horizon": {
       "title": "Horizont",
-      "subtitle": "Dein Fortschritt im Überblick",
-      "intensityTrend": "Intensitäts-Trend",
-      "last7Days": "Letzte 7 Tage",
-      "last30Days": "Letzte 30 Tage",
-      "avgIntensity": "Durchschnittliche Intensität",
-      "totalEntries": "Gesamte Einträge",
-      "topDistortions": "Häufigste Muster",
-      "noData": "Noch keine Daten",
-      "noDataHint": "Schließe einige Illuminate-Reflexionen ab, um deinen Fortschritt zu sehen",
-      "improvement": "{{percent}}% Verbesserung",
-      "increase": "{{percent}}% Anstieg"
+      "subtitle": "Dein Fortschritt über die Zeit",
+      "empty": "Schließe ein paar Reflexionen ab, um hier deinen Fortschritt zu sehen.",
+      "stats": {
+        "streak": "Serie",
+        "days": "Tage",
+        "total": "Gesamt"
+      },
+      "intensity": {
+        "title": "Emotionale Intensität",
+        "7day": "7-Tage Durchschnitt",
+        "30day": "30-Tage Durchschnitt",
+        "improving": "Deine emotionale Intensität verbessert sich!"
+      },
+      "distortions": {
+        "title": "Häufige Denkmuster"
+      },
+      "milestones": {
+        "title": "Meilensteine",
+        "first": "Erste Reflexion",
+        "week": "7 Reflexionen",
+        "month": "30 Reflexionen",
+        "streak7": "7-Tage Serie"
+      }
     },
     "soundings": {
       "title": "Brauchst du Inspiration?",

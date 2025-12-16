@@ -1,5 +1,5 @@
 import { type FC } from 'react';
-import { Lightbulb, Plus, TrendingUp, Sparkles } from 'lucide-react';
+import { Lightbulb, Plus, TrendingUp, PieChart } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -151,7 +151,7 @@ export const LighthousePage: FC = () => {
                   className="rounded-xl border border-glass-border bg-glass-bg p-4 text-left transition-colors hover:bg-glass-bg-hover"
                 >
                   <div className="mb-1 flex items-center gap-2 text-xs text-mist-white/50">
-                    <Sparkles size={14} />
+                    <PieChart size={14} />
                     <span>{t('lighthouse.stats.topPattern', 'Top pattern')}</span>
                   </div>
                   <p className="truncate text-lg font-medium text-biolum-cyan">

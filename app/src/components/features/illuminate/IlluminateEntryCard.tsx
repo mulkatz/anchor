@@ -2,10 +2,11 @@ import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { ChevronRight, Calendar } from 'lucide-react';
-import { format, isToday, isYesterday } from 'date-fns';
+import { isToday, isYesterday } from 'date-fns';
 import type { IlluminateEntry } from '../../../models';
 import { DISTORTION_INFO } from '../../../services/illuminate.service';
 import { cn } from '../../../utils/cn';
+import { formatShortDate, formatTime } from '../../../utils/time';
 
 interface IlluminateEntryCardProps {
   entry: IlluminateEntry;
@@ -16,13 +17,13 @@ interface IlluminateEntryCardProps {
  * Card displaying an Illuminate entry in the list
  */
 export const IlluminateEntryCard: FC<IlluminateEntryCardProps> = ({ entry, onClick }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
-  // Format the date nicely
-  const formatDate = (date: Date) => {
+  // Format the date nicely with locale support
+  const getFormattedDate = (date: Date) => {
     if (isToday(date)) return t('common.today', 'Today');
     if (isYesterday(date)) return t('common.yesterday', 'Yesterday');
-    return format(date, 'MMM d');
+    return formatShortDate(date, i18n.language);
   };
 
   // Get intensity color
@@ -47,9 +48,9 @@ export const IlluminateEntryCard: FC<IlluminateEntryCardProps> = ({ entry, onCli
       <div className="mb-2 flex items-center justify-between">
         <div className="flex items-center gap-2 text-sm text-mist-white/60">
           <Calendar size={14} />
-          <span>{formatDate(entry.createdAt)}</span>
+          <span>{getFormattedDate(entry.createdAt)}</span>
           <span className="text-mist-white/30">•</span>
-          <span>{format(entry.createdAt, 'h:mm a')}</span>
+          <span>{formatTime(entry.createdAt, i18n.language)}</span>
         </div>
 
         {/* Intensity indicator */}

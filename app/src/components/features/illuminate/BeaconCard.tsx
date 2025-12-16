@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, ChevronDown, ChevronUp, Star, Loader2, Lightbulb } from 'lucide-react';
+import { ChevronDown, ChevronUp, Star, Loader2, Lightbulb } from 'lucide-react';
 import type { WeeklyInsight } from '../../../models';
 import { cn } from '../../../utils/cn';
 import { useHaptics } from '../../../hooks/useHaptics';
@@ -96,7 +96,7 @@ export const BeaconCard: FC<BeaconCardProps> = ({
       <button onClick={handleToggle} className="flex w-full items-center justify-between p-4">
         <div className="flex items-center gap-3">
           <div className="relative">
-            <Sparkles size={20} className="text-warm-ember" />
+            <Lightbulb size={20} className="text-warm-ember" />
             {!insight.viewed && (
               <motion.div
                 initial={{ scale: 0 }}

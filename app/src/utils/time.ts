@@ -76,3 +76,47 @@ export const formatDate = (date: Date, locale: string): string => {
     year: 'numeric',
   });
 };
+
+/**
+ * Format date to locale-aware short date (without year)
+ * Uses the current i18n locale for formatting
+ *
+ * @param date - The date to format
+ * @param locale - Current locale (e.g., 'en-US', 'de-DE')
+ * @returns Localized short date string (e.g., "Dec 9" or "9. Dez.")
+ *
+ * @example
+ * const formatted = formatShortDate(new Date(), 'en-US');
+ * // "Dec 9"
+ *
+ * const formattedDE = formatShortDate(new Date(), 'de-DE');
+ * // "9. Dez."
+ */
+export const formatShortDate = (date: Date, locale: string): string => {
+  return date.toLocaleDateString(locale, {
+    month: 'short',
+    day: 'numeric',
+  });
+};
+
+/**
+ * Format time to locale-aware time string
+ * Uses the current i18n locale for formatting (12h vs 24h)
+ *
+ * @param date - The date to format
+ * @param locale - Current locale (e.g., 'en-US', 'de-DE')
+ * @returns Localized time string (e.g., "1:30 PM" or "13:30")
+ *
+ * @example
+ * const formatted = formatTime(new Date(), 'en-US');
+ * // "1:30 PM"
+ *
+ * const formattedDE = formatTime(new Date(), 'de-DE');
+ * // "13:30"
+ */
+export const formatTime = (date: Date, locale: string): string => {
+  return date.toLocaleTimeString(locale, {
+    hour: 'numeric',
+    minute: '2-digit',
+  });
+};
