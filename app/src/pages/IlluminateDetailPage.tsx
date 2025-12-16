@@ -225,14 +225,11 @@ export const IlluminateDetailPage: FC = () => {
                   return (
                     <div
                       key={type}
-                      className="rounded-lg border border-warm-ember/20 bg-warm-ember/5 p-3"
+                      className="rounded-lg border border-biolum-cyan/20 bg-biolum-cyan/5 p-3"
                     >
-                      <div className="flex items-center gap-2">
-                        <span className="text-lg">{info?.emoji || '💭'}</span>
-                        <span className="font-medium text-mist-white">
-                          {t(`illuminate.distortions.${type}.name`, info?.name || type)}
-                        </span>
-                      </div>
+                      <span className="font-medium text-biolum-cyan">
+                        {t(`illuminate.distortions.${type}.name`, info?.name || type)}
+                      </span>
                       <p className="mt-1 text-sm text-mist-white/60">
                         {t(`illuminate.distortions.${type}.description`, info?.description || '')}
                       </p>

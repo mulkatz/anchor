@@ -6,7 +6,9 @@
       "back": "Back",
       "cancel": "Cancel",
       "confirm": "Confirm",
-      "save": "Save"
+      "save": "Save",
+      "today": "Today",
+      "yesterday": "Yesterday"
     },
     "home": {
       "title": "Anchor: Anxiety Navigator",

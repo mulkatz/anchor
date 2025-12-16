@@ -74,10 +74,9 @@ export const IlluminateEntryCard: FC<IlluminateEntryCardProps> = ({ entry, onCli
             return (
               <span
                 key={type}
-                className="flex items-center gap-1 rounded-full bg-biolum-cyan/10 px-2 py-0.5 text-xs text-biolum-cyan"
+                className="rounded-full bg-biolum-cyan/10 px-2 py-0.5 text-xs text-biolum-cyan"
               >
-                <span>{info?.emoji || '💭'}</span>
-                <span>{t(`illuminate.distortions.${type}.name`, info?.name || type)}</span>
+                {t(`illuminate.distortions.${type}.name`, info?.name || type)}
               </span>
             );
           })}

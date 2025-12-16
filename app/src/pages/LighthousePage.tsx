@@ -1,5 +1,5 @@
 import { type FC } from 'react';
-import { Lightbulb, Plus, PieChart, ChevronRight, TrendingUp } from 'lucide-react';
+import { Lightbulb, Plus, PieChart, ChevronRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -134,17 +134,6 @@ export const LighthousePage: FC = () => {
                   </p>
                 </div>
                 <ChevronRight size={20} className="shrink-0 text-mist-white/40" />
-              </button>
-            )}
-
-            {/* View Horizon link */}
-            {entries.length >= 5 && (
-              <button
-                onClick={goToHorizon}
-                className="flex w-full items-center justify-center gap-2 rounded-xl border border-warm-ember/30 bg-warm-ember/10 px-4 py-3 text-sm text-warm-ember transition-colors hover:bg-warm-ember/20"
-              >
-                <TrendingUp size={16} />
-                <span>{t('lighthouse.viewProgress', 'View Progress Dashboard')}</span>
               </button>
             )}
 
