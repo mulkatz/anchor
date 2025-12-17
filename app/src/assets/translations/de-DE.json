@@ -11,8 +11,9 @@
       "yesterday": "Gestern"
     },
     "home": {
-      "title": "Anchor: Anxiety Navigator",
-      "subtitle": "Ich bin für dich da, wenn du mich brauchst.",
+      "title": "Anchor",
+      "subtitle": "Anxiety Navigator",
+      "tagline": "Ich bin für dich da, wenn du mich brauchst.",
       "startSOS": "SOS-Sitzung starten",
       "viewPastSessions": "Vergangene Sitzungen ansehen"
     },
@@ -365,8 +366,8 @@
       "subtitle": "{{count}} Reflexionen",
       "subtitleEmpty": "Erhelle deine Gedanken",
       "emptyTitle": "Bringe Klarheit in deine Gedanken",
-      "emptyDescription": "Wenn schwierige Situationen aufkommen, nutze Illuminate, um deine Gedanken zu verarbeiten und ausgewogene Perspektiven zu finden.",
-      "startIlluminate": "Illuminate starten",
+      "emptyDescription": "Wenn deine Gedanken vernebelt sind, bringe Licht ins Dunkel und finde neue Perspektiven.",
+      "startIlluminate": "Licht ins Dunkel",
       "newReflection": "Neue Reflexion",
       "recentReflections": "Letzte Reflexionen",
       "viewAll": "Alle {{count}} Reflexionen anzeigen",

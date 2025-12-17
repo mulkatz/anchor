@@ -11,8 +11,9 @@
       "yesterday": "Yesterday"
     },
     "home": {
-      "title": "Anchor: Anxiety Navigator",
-      "subtitle": "I'm here when you need me.",
+      "title": "Anchor",
+      "subtitle": "Anxiety Navigator",
+      "tagline": "I'm here when you need me.",
       "startSOS": "Start SOS Session",
       "viewPastSessions": "View Past Sessions"
     },
@@ -394,8 +395,8 @@
       "subtitle": "{{count}} reflections",
       "subtitleEmpty": "Illuminate your thoughts",
       "emptyTitle": "Bring clarity to your thoughts",
-      "emptyDescription": "When difficult situations arise, use Illuminate to process your thoughts and find balanced perspectives.",
-      "startIlluminate": "Start Illuminate",
+      "emptyDescription": "When your mind feels foggy, shine a light on your thoughts to find clarity and balance.",
+      "startIlluminate": "Shine a Light",
       "newReflection": "New Reflection",
       "recentReflections": "Recent Reflections",
       "viewAll": "View all {{count}} reflections",

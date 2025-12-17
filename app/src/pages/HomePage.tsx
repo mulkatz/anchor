@@ -121,7 +121,7 @@ export const HomePage: FC = () => {
 
       {/* Title with staggered entrance */}
       <motion.h1
-        className="mb-5 text-center text-5xl font-light tracking-wider text-mist-white"
+        className="mb-2 text-center text-5xl font-light tracking-wider text-mist-white"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
@@ -129,14 +129,24 @@ export const HomePage: FC = () => {
         {t('home.title')}
       </motion.h1>
 
-      {/* Subtitle with elegant fade-in */}
+      {/* Subtitle - Anxiety Navigator */}
       <motion.p
-        className="text-center text-xl font-light tracking-wide text-biolum-cyan/80"
+        className="mb-6 text-center text-lg font-medium uppercase tracking-[0.3em] text-biolum-cyan"
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.6, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+        transition={{ delay: 0.5, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
       >
         {t('home.subtitle')}
+      </motion.p>
+
+      {/* Tagline with elegant fade-in */}
+      <motion.p
+        className="text-center text-base font-light tracking-wide text-mist-white/60"
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.7, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+      >
+        {t('home.tagline')}
       </motion.p>
     </div>
   );

@@ -1,8 +1,7 @@
 import { type FC } from 'react';
-import { Lightbulb, Plus, PieChart, ChevronRight } from 'lucide-react';
+import { Sun, Plus, PieChart, ChevronRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
 
 import {
   IlluminateModal,
@@ -75,14 +74,7 @@ export const LighthousePage: FC = () => {
         ) : entries.length === 0 ? (
           // Empty State
           <div className="flex flex-1 flex-col items-center justify-center px-8">
-            <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ type: 'spring', bounce: 0.5 }}
-              className="mb-6 rounded-full bg-biolum-cyan/10 p-6"
-            >
-              <Lightbulb size={48} className="text-biolum-cyan" />
-            </motion.div>
+            <Sun size={64} className="mb-6" style={{ color: '#3F4457' }} />
             <p className="text-center text-xl font-light text-mist-white/60">
               {t('lighthouse.emptyTitle', 'Bring clarity to your thoughts')}
             </p>

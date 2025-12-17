@@ -78,7 +78,7 @@ export const DiveLessonPage: FC = () => {
     <div className="flex h-full flex-col overflow-hidden bg-void-blue/85">
       {/* Header */}
       <header
-        className="safe-area-padding-top flex items-center gap-4 px-4 pb-4 pt-4"
+        className="flex shrink-0 items-center gap-4 px-4 pb-4 pt-safe"
         style={{ borderBottom: `1px solid ${theme.glow}` }}
       >
         <button
