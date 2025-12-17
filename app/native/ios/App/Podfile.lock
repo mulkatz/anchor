@@ -3,8 +3,6 @@ PODS:
     - CapacitorCordova
   - CapacitorApp (7.1.0):
     - Capacitor
-  - CapacitorCamera (7.0.2):
-    - Capacitor
   - CapacitorCommunityInAppReview (7.1.0):
     - Capacitor
   - CapacitorCordova (7.4.4)
@@ -24,7 +22,6 @@ PODS:
 DEPENDENCIES:
   - "Capacitor (from `../../../../node_modules/@capacitor/ios`)"
   - "CapacitorApp (from `../../../../node_modules/@capacitor/app`)"
-  - "CapacitorCamera (from `../../../../node_modules/@capacitor/camera`)"
   - "CapacitorCommunityInAppReview (from `../../../../node_modules/@capacitor-community/in-app-review`)"
   - "CapacitorCordova (from `../../../../node_modules/@capacitor/ios`)"
   - "CapacitorFilesystem (from `../../../../node_modules/@capacitor/filesystem`)"
@@ -42,8 +39,6 @@ EXTERNAL SOURCES:
     :path: "../../../../node_modules/@capacitor/ios"
   CapacitorApp:
     :path: "../../../../node_modules/@capacitor/app"
-  CapacitorCamera:
-    :path: "../../../../node_modules/@capacitor/camera"
   CapacitorCommunityInAppReview:
     :path: "../../../../node_modules/@capacitor-community/in-app-review"
   CapacitorCordova:
@@ -62,7 +57,6 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   Capacitor: 358dd1c3fdd71d969547b17e159fd8a7736cb45f
   CapacitorApp: 26587c2ce485d88ddb39adb21cac64f8e481afe3
-  CapacitorCamera: f9e54db0a18bb218a8dc360907d63aaefe9209ff
   CapacitorCommunityInAppReview: 3756d05524c5cf2eccbc8ed460f77f8f8db6c141
   CapacitorCordova: bf648a636f3c153f652d312ae145fb508b6ffced
   CapacitorFilesystem: 609d5cceca1ed93d7f25839dbfdfd224bfe78209
@@ -72,6 +66,6 @@ SPEC CHECKSUMS:
   CapacitorVoiceRecorder: 9158861be982f32d411769723a4d813d6ce46135
   IONFilesystemLib: 89258b8e3e85465da93127d25d7ce37f977e8a6f
 
-PODFILE CHECKSUM: baadbbf30b53abe4acf1e78369c6885653f4eed7
+PODFILE CHECKSUM: 3b24091e044be471a258f82a5944d1d55661212f
 
 COCOAPODS: 1.16.2
