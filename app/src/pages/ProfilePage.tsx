@@ -434,12 +434,12 @@ export const ProfilePage: FC = () => {
               )}
             </AnimatePresence>
           </div>
-          <SettingRow
-            icon={<RotateCcw size={24} />}
-            label={t('settings.resetTutorial')}
-            description={t('settings.resetTutorialDesc')}
-            onClick={handleResetTutorial}
-          />
+          {/*<SettingRow*/}
+          {/*  icon={<RotateCcw size={24} />}*/}
+          {/*  label={t('settings.resetTutorial')}*/}
+          {/*  description={t('settings.resetTutorialDesc')}*/}
+          {/*  onClick={handleResetTutorial}*/}
+          {/*/>*/}
           <SettingRow
             icon={<Globe size={24} />}
             label={t('settings.visitWebsite')}
