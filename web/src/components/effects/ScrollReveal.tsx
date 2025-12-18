@@ -1,4 +1,4 @@
-import { type ReactNode } from 'react';
+import { type ReactNode, useState, useEffect } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
@@ -19,6 +19,7 @@ interface ScrollRevealProps {
  * Scroll-triggered reveal animation wrapper
  * Uses Framer Motion's useInView for intersection observer behavior
  * Respects prefers-reduced-motion
+ * Includes Safari mobile fallback to ensure content visibility
  */
 export function ScrollReveal({
   children,
@@ -33,6 +34,21 @@ export function ScrollReveal({
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once, amount: threshold });
   const prefersReducedMotion = useReducedMotion();
+
+  // Safari mobile fallback: force visibility after a timeout if IntersectionObserver fails
+  const [forceVisible, setForceVisible] = useState(false);
+
+  useEffect(() => {
+    // Fallback timer to ensure content is visible on Safari mobile
+    // If isInView doesn't trigger within 1 second, force visibility
+    const fallbackTimer = setTimeout(() => {
+      if (!isInView) {
+        setForceVisible(true);
+      }
+    }, 1000);
+
+    return () => clearTimeout(fallbackTimer);
+  }, [isInView]);
 
   // Calculate initial offset based on direction
   const getInitialOffset = () => {
@@ -51,6 +67,7 @@ export function ScrollReveal({
   };
 
   const offset = getInitialOffset();
+  const shouldShow = isInView || forceVisible;
 
   // Skip animation for reduced motion
   if (prefersReducedMotion) {
@@ -66,9 +83,9 @@ export function ScrollReveal({
         ...offset,
       }}
       animate={{
-        opacity: isInView ? 1 : 0,
-        x: isInView ? 0 : offset.x,
-        y: isInView ? 0 : offset.y,
+        opacity: shouldShow ? 1 : 0,
+        x: shouldShow ? 0 : offset.x,
+        y: shouldShow ? 0 : offset.y,
       }}
       transition={{
         duration,
