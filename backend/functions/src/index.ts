@@ -24,3 +24,6 @@ export { analyzeDistortions, generateReframes } from './illuminate';
 
 // Export Insight (Beacon) AI functions
 export { generateWeeklyInsight, markInsightViewed, rateInsight } from './insight';
+
+// Export Psychological Profile functions
+export { createPsychologicalProfile } from './psychologicalProfile';

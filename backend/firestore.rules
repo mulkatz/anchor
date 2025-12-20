@@ -46,7 +46,20 @@ service cloud.firestore {
 
       // Profile subcollection (user settings, display name, etc.)
       match /profile/{profileId} {
-        allow read, write: if request.auth != null && request.auth.uid == userId;
+        // Special handling for psychologicalProfile - read only for users
+        allow read: if request.auth != null && request.auth.uid == userId;
+
+        // psychologicalProfile can only be written by backend functions
+        allow write: if request.auth != null
+                     && request.auth.uid == userId
+                     && profileId != 'psychologicalProfile';
+
+        // Archived notes subcollection for psychological profile
+        match /archivedNotes/{noteId} {
+          allow read: if request.auth != null && request.auth.uid == userId;
+          // Only backend functions can write
+          allow write: if false;
+        }
       }
 
       // Daily logs (Tide Log journaling feature)
