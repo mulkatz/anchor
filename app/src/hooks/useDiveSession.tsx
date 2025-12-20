@@ -7,6 +7,9 @@ import {
   addDoc,
   doc,
   setDoc,
+  getDocs,
+  where,
+  limit,
   Timestamp,
 } from 'firebase/firestore';
 import { ref, uploadBytes } from 'firebase/storage';
@@ -27,6 +30,8 @@ interface UseDiveSessionReturn {
   messages: DiveMessage[];
   isThinking: boolean;
   isLessonComplete: boolean;
+  isCheckingSession: boolean;
+  hasExistingSession: boolean;
   error: string | null;
   startSession: () => Promise<void>;
   sendReflection: (text: string) => Promise<void>;
@@ -42,6 +47,8 @@ export const useDiveSession = ({ lessonId }: UseDiveSessionProps): UseDiveSessio
   const [messages, setMessages] = useState<DiveMessage[]>([]);
   const [isThinking, setIsThinking] = useState(false);
   const [isLessonComplete, setIsLessonComplete] = useState(false);
+  const [isCheckingSession, setIsCheckingSession] = useState(true);
+  const [hasExistingSession, setHasExistingSession] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { medium } = useHaptics();
   const { userId } = useApp();
@@ -52,9 +59,58 @@ export const useDiveSession = ({ lessonId }: UseDiveSessionProps): UseDiveSessio
     return settings.language;
   };
 
+  // Check for existing active session on mount
+  useEffect(() => {
+    if (!userId || !lessonId) {
+      setIsCheckingSession(false);
+      return;
+    }
+
+    const checkExistingSession = async () => {
+      try {
+        const sessionsRef = collection(firestore, `users/${userId}/dive_sessions`);
+        // Simple query - just filter by lessonId (no orderBy to avoid index requirement)
+        const q = query(sessionsRef, where('lessonId', '==', lessonId));
+
+        const snapshot = await getDocs(q);
+
+        // Find the most recent active (not completed) session by sorting in code
+        let bestSession: { id: string; createdAt: Date } | null = null;
+
+        for (const doc of snapshot.docs) {
+          const sessionData = doc.data();
+          if (sessionData.status === 'active' && !sessionData.completedAt) {
+            const createdAt = sessionData.createdAt?.toDate() || new Date(0);
+            if (!bestSession || createdAt > bestSession.createdAt) {
+              bestSession = { id: doc.id, createdAt };
+            }
+          }
+        }
+
+        if (bestSession) {
+          console.log('Resuming existing dive session:', bestSession.id);
+          setSessionId(bestSession.id);
+          setHasExistingSession(true);
+        }
+      } catch (err) {
+        console.error('Error checking for existing session:', err);
+        // Don't set error - just proceed as if no session exists
+      } finally {
+        setIsCheckingSession(false);
+      }
+    };
+
+    checkExistingSession();
+  }, [userId, lessonId]);
+
   // Find or create active session for this lesson
   const startSession = useCallback(async () => {
     if (!userId || !lessonId) return;
+
+    // If we already have a session (from the check), just ensure messages load
+    if (sessionId) {
+      return;
+    }
 
     try {
       // Create a new session
@@ -78,7 +134,7 @@ export const useDiveSession = ({ lessonId }: UseDiveSessionProps): UseDiveSessio
       console.error('Error starting dive session:', err);
       setError(i18next.t('errors.dive.sessionFailed'));
     }
-  }, [userId, lessonId, settings.language]);
+  }, [userId, lessonId, sessionId, settings.language]);
 
   // Real-time Firestore listener for messages
   useEffect(() => {
@@ -278,6 +334,8 @@ export const useDiveSession = ({ lessonId }: UseDiveSessionProps): UseDiveSessio
     messages,
     isThinking,
     isLessonComplete,
+    isCheckingSession,
+    hasExistingSession,
     error,
     startSession,
     sendReflection,

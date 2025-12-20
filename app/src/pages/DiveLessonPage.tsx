@@ -1,4 +1,4 @@
-import { type FC, useState } from 'react';
+import { type FC, useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Play, CheckCircle } from 'lucide-react';
@@ -14,7 +14,7 @@ import { LoadingSpinner } from '../components/ui';
 import { cn } from '../utils/cn';
 import { useUI } from '../contexts/UIContext';
 
-type PageState = 'intro' | 'session';
+type PageState = 'loading' | 'intro' | 'session';
 
 /**
  * The Dive - Lesson Page
@@ -28,7 +28,7 @@ export const DiveLessonPage: FC = () => {
   const { medium, light } = useHaptics();
   const { getLessonStatus } = useDive();
 
-  const [pageState, setPageState] = useState<PageState>('intro');
+  const [pageState, setPageState] = useState<PageState>('loading');
 
   // Static lesson data for structure/theming
   const lessonBase = lessonId ? getLessonById(lessonId) : null;
@@ -43,11 +43,29 @@ export const DiveLessonPage: FC = () => {
     messages,
     isThinking,
     isLessonComplete,
+    isCheckingSession,
+    hasExistingSession,
     error,
     startSession,
     sendReflection,
     sendVoiceReflection,
   } = useDiveSession({ lessonId: lessonId || '' });
+
+  // Auto-transition based on session state
+  useEffect(() => {
+    if (isCheckingSession) {
+      setPageState('loading');
+      return;
+    }
+
+    // If there's an existing session, go directly to session view
+    if (hasExistingSession && sessionId) {
+      setPageState('session');
+    } else if (pageState === 'loading') {
+      // No existing session, show intro
+      setPageState('intro');
+    }
+  }, [isCheckingSession, hasExistingSession, sessionId, pageState]);
 
   // Handle back navigation
   const handleBack = async () => {
@@ -106,7 +124,21 @@ export const DiveLessonPage: FC = () => {
       </header>
 
       <AnimatePresence mode="wait">
-        {pageState === 'intro' ? (
+        {pageState === 'loading' && (
+          /* Loading State - Checking for existing session */
+          <motion.div
+            key="loading"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="flex flex-1 items-center justify-center"
+          >
+            <LoadingSpinner />
+          </motion.div>
+        )}
+
+        {pageState === 'intro' && (
           /* Intro Card */
           <motion.div
             key="intro"
@@ -192,7 +224,9 @@ export const DiveLessonPage: FC = () => {
               )}
             </div>
           </motion.div>
-        ) : (
+        )}
+
+        {pageState === 'session' && (
           /* Session Chat - Same layout structure as ChatPage */
           <motion.div
             key="session"

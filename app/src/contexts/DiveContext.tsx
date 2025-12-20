@@ -193,6 +193,7 @@ export const DiveProvider: FC<PropsWithChildren> = ({ children }) => {
   >({});
   const hasInitialized = useRef(false);
   const prefetchingRef = useRef<Set<string>>(new Set());
+  const previousLanguageRef = useRef<SupportedLanguage>(settings.language);
 
   // On mount or userId change, load cached progress immediately for fast display
   useEffect(() => {
@@ -262,20 +263,26 @@ export const DiveProvider: FC<PropsWithChildren> = ({ children }) => {
   useEffect(() => {
     const language = settings.language;
 
-    // Load cached lessons for current language
-    const cached = loadCachedLessons(language);
-    if (Object.keys(cached).length > 0) {
-      setPrefetchedLessons(cached);
+    // Detect language change and clear in-progress prefetches
+    if (previousLanguageRef.current !== language) {
+      prefetchingRef.current.clear();
+      previousLanguageRef.current = language;
     }
+
+    // Load cached lessons for current language
+    // ALWAYS update state to clear stale content from previous language
+    const cached = loadCachedLessons(language);
+    setPrefetchedLessons(cached);
 
     // Get unlocked lessons to prefetch
     const unlockedLessonIds = progress?.unlockedLessons || [diveLessons[0]?.id].filter(Boolean);
     if (unlockedLessonIds.length === 0) return;
 
     // Prefetch each unlocked lesson that isn't already cached
+    // Note: Check against fresh `cached` object, not stale `prefetchedLessons` state
     const prefetchLesson = async (lessonId: string) => {
-      // Skip if already prefetched or currently prefetching
-      if (prefetchedLessons[lessonId] || prefetchingRef.current.has(lessonId)) {
+      // Skip if already in cache or currently prefetching
+      if (cached[lessonId] || prefetchingRef.current.has(lessonId)) {
         return;
       }
 
