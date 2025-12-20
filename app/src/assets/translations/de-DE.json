@@ -246,6 +246,7 @@
       "startRecording": "Klicke, um Aufnahme zu starten"
     },
     "audio": {
+      "uploading": "Sprachnachricht wird gesendet...",
       "transcribing": "Transkribiere deine Nachricht...",
       "transcriptionFailed": "Transkription fehlgeschlagen",
       "transcriptionFailedDesc": "Audio konnte nicht transkribiert werden. Bitte versuche, deine Nachricht zu tippen.",

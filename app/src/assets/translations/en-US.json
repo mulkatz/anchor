@@ -238,6 +238,7 @@
       "startRecording": "Click to start recording"
     },
     "audio": {
+      "uploading": "Sending voice message...",
       "transcribing": "Transcribing your message...",
       "transcriptionFailed": "Transcription failed",
       "transcriptionFailedDesc": "Unable to transcribe audio. Please try typing your message instead.",

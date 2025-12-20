@@ -9,23 +9,27 @@ import type { Message } from '../../../models';
 interface MessageBubbleProps {
   message: Message;
   index: number;
+  skipAnimation?: boolean;
 }
 
 /**
  * Message Bubble Wrapper
  * Handles Framer Motion animations and routes to correct message component
  */
-export const MessageBubble: FC<MessageBubbleProps> = ({ message, index }) => {
+export const MessageBubble: FC<MessageBubbleProps> = ({ message, index, skipAnimation }) => {
   // Slide up + fade in animation
   const messageVariants = {
-    initial: { opacity: 0, y: 20, scale: 0.95 },
+    initial: skipAnimation ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: 20, scale: 0.95 },
     animate: { opacity: 1, y: 0, scale: 1 },
   };
 
+  // Cap stagger delay at 5 messages (0.25s max) so new messages appear quickly
+  const staggerDelay = skipAnimation ? 0 : Math.min(index, 5) * 0.05;
+
   const messageTransition = {
-    duration: 0.6,
+    duration: skipAnimation ? 0 : 0.6,
     ease: [0.22, 1, 0.36, 1] as [number, number, number, number], // Viscous easing
-    delay: index * 0.05, // Stagger delay
+    delay: staggerDelay,
   };
 
   const renderMessage = () => {

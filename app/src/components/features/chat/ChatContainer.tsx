@@ -10,6 +10,7 @@ import type { Message } from '../../../models';
 interface ChatContainerProps {
   messages: Message[];
   isThinking: boolean;
+  hasPendingVoice?: boolean;
 }
 
 /**
@@ -18,11 +19,17 @@ interface ChatContainerProps {
  * - Long messages: scroll to show the start so user can read from beginning
  * - Short messages: scroll to bottom as usual
  */
-export const ChatContainer: FC<ChatContainerProps> = ({ messages, isThinking }) => {
+export const ChatContainer: FC<ChatContainerProps> = ({
+  messages,
+  isThinking,
+  hasPendingVoice,
+}) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const lastMessageRef = useRef<HTMLDivElement>(null);
   const prevMessageCountRef = useRef(0);
+  // Track which real message ID has taken over the pending audio slot
+  const stableKeyMessageIdRef = useRef<string | null>(null);
   const navbarOffset = useNavbarHeight();
 
   /**
@@ -103,11 +110,32 @@ export const ChatContainer: FC<ChatContainerProps> = ({ messages, isThinking }) 
               index === 0 || !isSameDay(messages[index - 1].createdAt, message.createdAt);
             const isLastMessage = index === messages.length - 1;
 
+            // Use stable key for audio messages in "pending voice" flow
+            // This prevents re-animation when real message replaces pending
+            const isPendingAudio = message.id.startsWith('pending-voice-');
+
+            // When real audio message takes over pending slot, remember its ID
+            const isReplacingPending =
+              isLastMessage && message.hasAudio && hasPendingVoice && !isPendingAudio;
+            if (isReplacingPending) {
+              stableKeyMessageIdRef.current = message.id;
+            }
+
+            // Use stable key for pending audio OR for the message that replaced it
+            const usesStableSlot = isPendingAudio || message.id === stableKeyMessageIdRef.current;
+            const messageKey = usesStableSlot ? 'pending-audio-slot' : message.id;
+            const shouldSkipAnimation =
+              isReplacingPending || message.id === stableKeyMessageIdRef.current;
+
             return (
-              <div key={message.id}>
+              <div key={messageKey}>
                 {showDateDivider && <DateDivider date={getDateDivider(message.createdAt)} />}
                 <div ref={isLastMessage ? lastMessageRef : undefined}>
-                  <MessageBubble message={message} index={index} />
+                  <MessageBubble
+                    message={message}
+                    index={index}
+                    skipAnimation={shouldSkipAnimation && !isPendingAudio}
+                  />
                 </div>
               </div>
             );

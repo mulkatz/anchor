@@ -40,7 +40,7 @@ export interface Message {
   hasAudio?: boolean;
   audioPath?: string; // Cloud Storage path
   audioDuration?: number; // milliseconds
-  transcriptionStatus?: 'pending' | 'completed' | 'failed';
+  transcriptionStatus?: 'uploading' | 'pending' | 'completed' | 'failed';
 
   metadata?: {
     // Text message metadata
@@ -143,7 +143,7 @@ export interface DiveMessage {
   hasAudio?: boolean;
   audioPath?: string;
   audioDuration?: number;
-  transcriptionStatus?: 'pending' | 'completed' | 'failed';
+  transcriptionStatus?: 'uploading' | 'pending' | 'completed' | 'failed';
 
   metadata?: {
     model?: string;

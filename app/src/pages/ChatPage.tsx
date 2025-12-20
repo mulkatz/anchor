@@ -26,7 +26,7 @@ export const ChatPage: FC = () => {
     error: conversationError,
   } = useConversation();
 
-  const { messages, isThinking, error, sendMessage, sendVoiceMessage } = useChat({
+  const { messages, isThinking, hasPendingVoice, error, sendMessage, sendVoiceMessage } = useChat({
     conversationId: activeConversation?.id || null,
   });
 
@@ -104,7 +104,11 @@ export const ChatPage: FC = () => {
 
       {/* Message List (scrollable) - This is the ONLY scrollable area */}
       <div className="relative flex-1 overflow-hidden">
-        <ChatContainer messages={messages} isThinking={isThinking} />
+        <ChatContainer
+          messages={messages}
+          isThinking={isThinking}
+          hasPendingVoice={hasPendingVoice}
+        />
         {/* Input Area (absolute positioned within the flex container) */}
         <ChatInput
           onSend={sendMessage}

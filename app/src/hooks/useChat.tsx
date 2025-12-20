@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { collection, query, orderBy, onSnapshot, addDoc, Timestamp } from 'firebase/firestore';
 import { ref, uploadBytes } from 'firebase/storage';
 import i18next from 'i18next';
@@ -19,6 +19,7 @@ interface UseChatProps {
 export const useChat = ({ conversationId }: UseChatProps) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isThinking, setIsThinking] = useState(false);
+  const [pendingVoiceMessage, setPendingVoiceMessage] = useState<Message | null>(null);
   const [error, setError] = useState<string | null>(null);
   const { medium } = useHaptics();
 
@@ -31,11 +32,18 @@ export const useChat = ({ conversationId }: UseChatProps) => {
     return stored || 'en-US';
   };
 
+  // Track previous transcription statuses to detect completion
+  const prevTranscriptionStatuses = useRef<Map<string, string>>(new Map());
+  // Ref to track pending voice message for use in listener callback
+  const pendingVoiceRef = useRef<Message | null>(null);
+  pendingVoiceRef.current = pendingVoiceMessage;
+
   // Real-time Firestore listener for messages in specific conversation
   useEffect(() => {
     // If no userId or conversationId, clear messages
     if (!userId || !conversationId) {
       setMessages([]);
+      prevTranscriptionStatuses.current.clear();
       return;
     }
 
@@ -52,15 +60,38 @@ export const useChat = ({ conversationId }: UseChatProps) => {
       (snapshot) => {
         const newMessages: Message[] = [];
         let hasNewAssistantMessage = false;
+        let transcriptionJustCompleted = false;
+        let realAudioMessageArrived = false;
 
         snapshot.docChanges().forEach((change) => {
-          if (change.type === 'added') {
-            const data = change.doc.data();
+          const data = change.doc.data();
+          const docId = change.doc.id;
 
+          if (change.type === 'added') {
             // Detect new assistant response (including crisis messages)
             if (data.role === 'assistant' || data.role === 'crisis') {
               hasNewAssistantMessage = true;
-              setIsThinking(false);
+            }
+
+            // Detect when real audio message arrives from Firestore
+            if (data.hasAudio && data.role === 'user') {
+              realAudioMessageArrived = true;
+            }
+
+            // Track initial transcription status for new voice messages
+            if (data.hasAudio && data.transcriptionStatus) {
+              prevTranscriptionStatuses.current.set(docId, data.transcriptionStatus);
+            }
+          }
+
+          if (change.type === 'modified') {
+            // Detect transcription completion: pending → completed
+            if (data.hasAudio && data.role === 'user') {
+              const prevStatus = prevTranscriptionStatuses.current.get(docId);
+              if (prevStatus === 'pending' && data.transcriptionStatus === 'completed') {
+                transcriptionJustCompleted = true;
+              }
+              prevTranscriptionStatuses.current.set(docId, data.transcriptionStatus);
             }
           }
         });
@@ -86,6 +117,19 @@ export const useChat = ({ conversationId }: UseChatProps) => {
         });
 
         setMessages(newMessages);
+
+        // Clear pending voice message after real one arrives (with delay to allow animation)
+        if (realAudioMessageArrived && pendingVoiceRef.current) {
+          // Small delay so the real message renders with skipAnimation before we clear pending
+          setTimeout(() => setPendingVoiceMessage(null), 100);
+        }
+
+        if (hasNewAssistantMessage) {
+          setIsThinking(false);
+        }
+        if (transcriptionJustCompleted) {
+          setIsThinking(true);
+        }
 
         // Haptic feedback when AI responds (but not on initial load)
         if (hasNewAssistantMessage && previousMessageCount > 0) {
@@ -177,8 +221,23 @@ export const useChat = ({ conversationId }: UseChatProps) => {
       }
 
       try {
-        setIsThinking(true);
+        // Don't set isThinking here - wait for transcription to complete first
+        // The listener will set isThinking when transcriptionStatus changes to 'completed'
         setError(null);
+
+        // Show "Transcribing..." message immediately when recording stops
+        const pendingMessage: Message = {
+          id: 'pending-voice-' + Date.now(),
+          userId,
+          conversationId,
+          text: '',
+          role: 'user',
+          createdAt: new Date(),
+          hasAudio: true,
+          audioDuration: recordingData.duration,
+          transcriptionStatus: 'pending',
+        };
+        setPendingVoiceMessage(pendingMessage);
 
         // Generate unique message ID
         const messageId = crypto.randomUUID();
@@ -217,19 +276,38 @@ export const useChat = ({ conversationId }: UseChatProps) => {
         });
 
         // Note: Backend Cloud Function will handle transcription
+        // uploadingVoice is cleared by the Firestore listener when the message arrives
         // isThinking will be set to false when transcription completes
       } catch (err) {
         console.error('Error sending voice message:', err);
         setError(i18next.t('errors.chat.voiceSendFailed'));
+        setPendingVoiceMessage(null);
         setIsThinking(false);
       }
     },
     [userId, conversationId]
   );
 
+  // Combine real messages with pending voice message (shows "Transcribing..." immediately)
+  // Once real audio message arrives from Firestore, don't include the pending one
+  const allMessages = (() => {
+    if (!pendingVoiceMessage) return messages;
+
+    // Check if real audio message has arrived (last message is audio from user)
+    const lastMessage = messages[messages.length - 1];
+    if (lastMessage?.hasAudio && lastMessage?.role === 'user') {
+      // Real message exists, don't show pending
+      return messages;
+    }
+
+    // Still waiting for real message, show pending
+    return [...messages, pendingVoiceMessage];
+  })();
+
   return {
-    messages,
+    messages: allMessages,
     isThinking,
+    hasPendingVoice: !!pendingVoiceMessage,
     error,
     sendMessage,
     sendVoiceMessage,
