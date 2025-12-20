@@ -272,4 +272,68 @@ The profile tracks these 10 CBT cognitive distortions:
 
 ---
 
+## Testing
+
+### Test Script
+
+A test script is provided to generate and view profiles locally:
+
+```bash
+cd backend/scripts
+
+# Set your Firebase credentials
+export GOOGLE_APPLICATION_CREDENTIALS=~/path/to/service-account-key.json
+
+# Run for a specific user
+npx ts-node test-profile.ts USER_ID en-US
+```
+
+### Getting a Service Account Key
+
+1. Go to [Firebase Console](https://console.firebase.google.com) → Project Settings → Service Accounts
+2. Click "Generate new private key"
+3. Save the JSON file and set `GOOGLE_APPLICATION_CREDENTIALS` to its path
+
+### Sample Output
+
+The script produces a nicely formatted console output:
+
+```
+════════════════════════════════════════════════════════════
+ 🔬 DR. MULDER - PSYCHOLOGICAL PROFILE
+════════════════════════════════════════════════════════════
+  User ID: abc123
+  Language: en-US
+
+⏳ Generating profile...
+✓ Profile generated in 4.23s
+
+▸ DOCUMENT METADATA
+────────────────────────────────────
+  Version: 1
+  Created: Fri, Dec 20, 2024, 10:30 AM
+
+════════════════════════════════════════════════════════════
+ 🧠 CORE IDENTITY
+════════════════════════════════════════════════════════════
+
+▸ Presenting Concerns
+  Primary: Generalized anxiety with work-related triggers
+  Secondary:
+    • Sleep disturbances
+    • Social anxiety in professional settings
+
+▸ CBT Formulation
+  Cognitive Patterns:
+  "Shows tendency toward catastrophizing..."
+
+... (full profile continues)
+```
+
+### Finding a User ID
+
+Check Firestore Console → `users` collection → copy any document ID that has data (messages, illuminate_entries, daily_logs, etc.)
+
+---
+
 **Last Updated:** December 2024
