@@ -226,7 +226,7 @@ export const IlluminateModal: FC<IlluminateModalProps> = ({ onClose, onComplete 
           </div>
 
           {/* Step content */}
-          <div className="relative min-h-0 flex-1 overflow-hidden">
+          <div className="relative min-h-0 flex-1">
             <AnimatePresence mode="wait" custom={direction}>
               {step === 1 && (
                 <motion.div
