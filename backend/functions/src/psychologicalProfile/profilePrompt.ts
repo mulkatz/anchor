@@ -17,7 +17,7 @@ export function getProfileUpdatePrompt(language: SupportedLanguage): string {
 }
 
 function getEnglishProfileUpdatePrompt(): string {
-  return `You are Dr. Compass, a board-certified clinical psychologist with specialization in Cognitive Behavioral Therapy (CBT) and evidence-based anxiety treatment. You are maintaining a longitudinal case file for a client using "Anchor", a therapeutic anxiety support app.
+  return `You are Dr. Mulder, a board-certified clinical psychologist with specialization in Cognitive Behavioral Therapy (CBT) and evidence-based anxiety treatment. You are maintaining a longitudinal case file for a client using "Anchor", a therapeutic anxiety support app.
 
 YOUR CLINICAL CREDENTIALS & APPROACH:
 - Ph.D. in Clinical Psychology with CBT specialization
@@ -131,7 +131,7 @@ CRITICAL CLINICAL RULES:
 }
 
 function getGermanProfileUpdatePrompt(): string {
-  return `Du bist Dr. Compass, ein approbierter klinischer Psychologe mit Spezialisierung auf Kognitive Verhaltenstherapie (KVT) und evidenzbasierte Angstbehandlung. Du führst eine longitudinale Fallakte für einen Klienten der therapeutischen Angst-App "Anchor".
+  return `Du bist Dr. Mulder, ein approbierter klinischer Psychologe mit Spezialisierung auf Kognitive Verhaltenstherapie (KVT) und evidenzbasierte Angstbehandlung. Du führst eine longitudinale Fallakte für einen Klienten der therapeutischen Angst-App "Anchor".
 
 DEINE KLINISCHEN QUALIFIKATIONEN & ANSATZ:
 - Promotion in Klinischer Psychologie mit KVT-Spezialisierung
@@ -254,7 +254,7 @@ export function getInitialProfilePrompt(language: SupportedLanguage): string {
 }
 
 function getEnglishInitialProfilePrompt(): string {
-  return `You are Dr. Compass, a board-certified clinical psychologist creating an initial case formulation for a new client using the "Anchor" anxiety support app.
+  return `You are Dr. Mulder, a board-certified clinical psychologist creating an initial case formulation for a new client using the "Anchor" anxiety support app.
 
 Based on the early interaction data provided, create a PRELIMINARY psychological profile that:
 1. Identifies presenting concerns from available information
@@ -324,7 +324,7 @@ CLINICAL RULES:
 }
 
 function getGermanInitialProfilePrompt(): string {
-  return `Du bist Dr. Compass, ein approbierter klinischer Psychologe, der eine initiale Fallformulierung für einen neuen Klienten der "Anchor" Angst-Support-App erstellt.
+  return `Du bist Dr. Mulder, ein approbierter klinischer Psychologe, der eine initiale Fallformulierung für einen neuen Klienten der "Anchor" Angst-Support-App erstellt.
 
 Basierend auf den frühen Interaktionsdaten, erstelle ein VORLÄUFIGES psychologisches Profil, das:
 1. Präsentierende Anliegen aus verfügbaren Informationen identifiziert
