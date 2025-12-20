@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Check, Edit3, Lightbulb } from 'lucide-react';
 import { cn } from '../../../utils/cn';
 import { useHaptics } from '../../../hooks/useHaptics';
+import { ChatInput } from '../chat/ChatInput';
 
 interface LightStepProps {
   aiSuggestedReframes: string[];
@@ -134,16 +135,15 @@ export const LightStep: FC<LightStepProps> = ({
           </button>
 
           {showCustomInput ? (
-            <textarea
+            <ChatInput
+              variant="form"
               value={customText}
-              onChange={(e) => handleCustomChange(e.target.value)}
+              onChange={handleCustomChange}
               placeholder={t(
                 'illuminate.light.customPlaceholder',
                 'Write a balanced thought that feels true to you...'
               )}
-              className="w-full resize-none rounded-lg border border-glass-border bg-void-blue/50 p-3 text-sm text-mist-white placeholder:text-mist-white/40 focus:border-warm-ember/50 focus:outline-none"
-              rows={3}
-              autoFocus
+              className="min-h-[120px]"
             />
           ) : (
             <p className="text-sm text-mist-white/50">

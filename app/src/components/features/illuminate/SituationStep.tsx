@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
-import { TextareaWithMic } from '../../ui/TextareaWithMic';
+import { ChatInput } from '../chat/ChatInput';
 
 interface SituationStepProps {
   situation: string;
@@ -29,7 +29,8 @@ export const SituationStep: FC<SituationStepProps> = ({ situation, onSituationCh
         </div>
 
         {/* Textarea with mic - fills available space */}
-        <TextareaWithMic
+        <ChatInput
+          variant="form"
           value={situation}
           onChange={onSituationChange}
           placeholder={t(
@@ -37,7 +38,6 @@ export const SituationStep: FC<SituationStepProps> = ({ situation, onSituationCh
             'What situation brought up these feelings?'
           )}
           className="min-h-[200px] flex-1"
-          autoFocus
         />
 
         {/* Helper tip */}

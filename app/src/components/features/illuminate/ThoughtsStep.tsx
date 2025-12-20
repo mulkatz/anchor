@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
-import { TextareaWithMic } from '../../ui/TextareaWithMic';
+import { ChatInput } from '../chat/ChatInput';
 
 interface ThoughtsStepProps {
   automaticThoughts: string;
@@ -32,7 +32,8 @@ export const ThoughtsStep: FC<ThoughtsStepProps> = ({ automaticThoughts, onThoug
         </div>
 
         {/* Textarea with mic - fills available space */}
-        <TextareaWithMic
+        <ChatInput
+          variant="form"
           value={automaticThoughts}
           onChange={onThoughtsChange}
           placeholder={t(
@@ -40,7 +41,6 @@ export const ThoughtsStep: FC<ThoughtsStepProps> = ({ automaticThoughts, onThoug
             'What did you tell yourself? What thoughts came up?'
           )}
           className="min-h-[200px] flex-1"
-          autoFocus
         />
 
         {/* Helper tip */}
