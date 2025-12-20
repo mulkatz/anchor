@@ -25,31 +25,41 @@ export const ChatContainer: FC<ChatContainerProps> = ({ messages, isThinking }) 
   const prevMessageCountRef = useRef(0);
   const navbarOffset = useNavbarHeight();
 
-  // Smart scroll: show start of new long messages, scroll to bottom for short ones
+  /**
+   * Smart scroll behavior:
+   * - User messages: scroll to bottom (they just sent something, show it)
+   * - AI messages: scroll to show the message START with padding from top
+   *   This way user can read from the beginning without scrolling up
+   */
   const scrollToNewMessage = useCallback(() => {
-    if (!containerRef.current || !lastMessageRef.current) {
-      // Fallback to bottom scroll
+    if (!containerRef.current) {
       messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
       return;
     }
 
     const container = containerRef.current;
+    const lastMsgData = messages[messages.length - 1];
+
+    // For user messages or if ref not available, scroll to bottom
+    if (lastMsgData?.role === 'user' || !lastMessageRef.current) {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+      return;
+    }
+
+    // For AI messages, scroll to position message start near top of visible area
     const lastMessage = lastMessageRef.current;
     const containerRect = container.getBoundingClientRect();
     const messageRect = lastMessage.getBoundingClientRect();
 
-    // If the message is taller than 60% of the visible container, scroll to show its top
-    const visibleHeight = containerRect.height;
-    const messageHeight = messageRect.height;
+    // Calculate scroll position to place message top ~24px from container top
+    const topPadding = 24;
+    const scrollTarget = container.scrollTop + (messageRect.top - containerRect.top) - topPadding;
 
-    if (messageHeight > visibleHeight * 0.6) {
-      // Long message: scroll to show the start with some padding
-      lastMessage.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    } else {
-      // Short message: scroll to bottom as usual
-      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, []);
+    container.scrollTo({
+      top: Math.max(0, scrollTarget),
+      behavior: 'smooth',
+    });
+  }, [messages]);
 
   // Handle scroll when messages change
   useEffect(() => {
@@ -94,9 +104,11 @@ export const ChatContainer: FC<ChatContainerProps> = ({ messages, isThinking }) 
             const isLastMessage = index === messages.length - 1;
 
             return (
-              <div key={message.id} ref={isLastMessage ? lastMessageRef : undefined}>
+              <div key={message.id}>
                 {showDateDivider && <DateDivider date={getDateDivider(message.createdAt)} />}
-                <MessageBubble message={message} index={index} />
+                <div ref={isLastMessage ? lastMessageRef : undefined}>
+                  <MessageBubble message={message} index={index} />
+                </div>
               </div>
             );
           })}
