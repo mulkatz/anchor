@@ -313,11 +313,23 @@ export const deleteAllUserData = async (userId: string): Promise<void> => {
       await deleteDoc(sessionDoc.ref);
     }
 
-    // 6. Delete profile subcollection (includes conversationProfile for adaptive language)
+    // 6. Delete profile subcollection (includes conversationProfile and psychologicalProfile)
     const profileRef = collection(firestore, `users/${userId}/profile`);
     const profileSnapshot = await getDocs(profileRef);
 
     for (const profileDoc of profileSnapshot.docs) {
+      // Delete archivedNotes subcollection if this is the psychologicalProfile
+      if (profileDoc.id === 'psychologicalProfile') {
+        const archivedNotesRef = collection(
+          firestore,
+          `users/${userId}/profile/psychologicalProfile/archivedNotes`
+        );
+        const archivedNotesSnapshot = await getDocs(archivedNotesRef);
+        for (const noteDoc of archivedNotesSnapshot.docs) {
+          await deleteDoc(noteDoc.ref);
+        }
+      }
+
       await deleteDoc(profileDoc.ref);
     }
 
