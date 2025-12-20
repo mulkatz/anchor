@@ -122,6 +122,7 @@ export const DiveChatContainer: FC<DiveChatContainerProps> = ({
       {messages.map((message, index) => {
         const mappedMessage = mapToMessage(message);
         const isLastMessage = index === messages.length - 1;
+        const isCompletionMessage = message.metadata?.isLessonComplete === true;
 
         return (
           <motion.div
@@ -140,14 +141,14 @@ export const DiveChatContainer: FC<DiveChatContainerProps> = ({
             ) : (
               <UserMessage text={message.text} timestamp={message.createdAt} />
             )}
+
+            {/* Show lesson complete card inline after the completion message */}
+            {isCompletionMessage && <LessonCompleteCard onNavigateBack={onNavigateBack} />}
           </motion.div>
         );
       })}
 
       {isThinking && <ThinkingIndicator />}
-
-      {/* Lesson Complete Card */}
-      {isLessonComplete && !isThinking && <LessonCompleteCard onNavigateBack={onNavigateBack} />}
 
       {/* Scroll anchor */}
       <div ref={messagesEndRef} />
