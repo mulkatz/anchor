@@ -143,7 +143,7 @@ export const ChatInput: FC<ChatInputProps> = ({ onSend, onSendVoice, disabled })
             onClick={handleMicClick}
             disabled={disabled}
             className={cn(
-              'flex items-center justify-center',
+              'flex items-center justify-center self-end',
               'h-10 w-10 shrink-0 rounded-full',
               'bg-biolum-cyan text-void-blue',
               'transition-all duration-300 ease-viscous',
@@ -166,8 +166,8 @@ export const ChatInput: FC<ChatInputProps> = ({ onSend, onSendVoice, disabled })
             onClick={handleSend}
             disabled={disabled || !text.trim()}
             className={cn(
-              'flex items-center justify-center',
-              'h-10 w-10 rounded-full',
+              'flex items-center justify-center self-end',
+              'h-10 w-10 shrink-0 rounded-full',
               'bg-biolum-cyan text-void-blue',
               'transition-all duration-300 ease-viscous',
               'active:scale-90',
