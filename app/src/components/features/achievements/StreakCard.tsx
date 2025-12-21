@@ -90,22 +90,13 @@ export const StreakCard: FC<StreakCardProps> = ({ currentStreak, longestStreak }
         <div className="flex items-center justify-between">
           {/* Left side - Streak info */}
           <div className="flex items-center gap-3">
-            {/* Flame icon with glow */}
+            {/* Flame icon with subtle pulse */}
             <motion.div
-              className="relative"
+              className="relative flex h-12 w-12 items-center justify-center rounded-full bg-warm-ember/25"
               animate={{ scale: [1, 1.05, 1] }}
               transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
             >
-              {/* Glow ring */}
-              <motion.div
-                className="absolute inset-0 rounded-full bg-warm-ember/30"
-                animate={{ scale: [1, 1.4], opacity: [0.4, 0] }}
-                transition={{ duration: 1.5, repeat: Infinity }}
-              />
-
-              <div className="relative flex h-12 w-12 items-center justify-center rounded-full bg-warm-ember/25">
-                <Flame size={24} className="text-warm-ember" fill="rgba(255, 179, 138, 0.4)" />
-              </div>
+              <Flame size={24} className="text-warm-ember" fill="rgba(255, 179, 138, 0.4)" />
             </motion.div>
 
             {/* Streak numbers */}

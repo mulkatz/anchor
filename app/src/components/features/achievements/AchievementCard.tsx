@@ -29,7 +29,7 @@ function getLucideIcon(name: string): LucideIcons.LucideIcon {
  * - Elegant glow effect for unlocked achievements
  */
 export const AchievementCard: FC<AchievementCardProps> = ({ achievement }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const Icon = getLucideIcon(achievement.iconName);
 
   // Calculate the circular progress (for the ring)
@@ -106,13 +106,15 @@ export const AchievementCard: FC<AchievementCardProps> = ({ achievement }) => {
         </div>
       </div>
 
-      {/* Name - fixed 2 lines for consistent height */}
+      {/* Name - fixed 2 lines for consistent height, with proper hyphenation */}
       <span
         className={cn(
           'w-full text-center text-[9px] font-medium leading-tight',
           'line-clamp-2 min-h-[24px] px-0.5',
+          'hyphens-auto break-words',
           isUnlocked ? 'text-mist-white' : 'text-mist-white/40'
         )}
+        lang={i18n.language}
       >
         {t(`treasures.names.${achievement.id}`)}
       </span>
