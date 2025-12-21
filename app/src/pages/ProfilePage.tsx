@@ -284,6 +284,65 @@ export const ProfilePage: FC = () => {
         className="flex-1 overflow-y-auto px-4 pt-6 sm:px-6"
         style={{ paddingBottom: `${navbarBottom + 24}px` }}
       >
+        {/* Treasures Hero Card */}
+        <motion.button
+          onClick={handleViewAchievements}
+          className="relative mb-6 w-full overflow-hidden rounded-2xl text-left"
+          whileTap={{ scale: 0.98 }}
+        >
+          {/* Background gradient */}
+          <div className="absolute inset-0 bg-gradient-to-br from-biolum-cyan/20 via-biolum-cyan/10 to-transparent" />
+
+          {/* Subtle animated glow */}
+          <motion.div
+            className="absolute inset-0"
+            animate={{
+              background: [
+                'radial-gradient(circle at 30% 50%, rgba(100, 255, 218, 0.15) 0%, transparent 50%)',
+                'radial-gradient(circle at 70% 50%, rgba(100, 255, 218, 0.15) 0%, transparent 50%)',
+                'radial-gradient(circle at 30% 50%, rgba(100, 255, 218, 0.15) 0%, transparent 50%)',
+              ],
+            }}
+            transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+          />
+
+          {/* Border */}
+          <div className="absolute inset-0 rounded-2xl border border-biolum-cyan/30" />
+
+          {/* Content */}
+          <div className="relative flex items-center gap-4 p-4">
+            {/* Icon */}
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-biolum-cyan/20">
+              <Shell size={24} className="text-biolum-cyan" />
+            </div>
+
+            {/* Text & Progress */}
+            <div className="flex-1">
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-semibold text-mist-white">{t('settings.treasures')}</h3>
+                <span className="text-sm font-medium text-biolum-cyan">
+                  {unlockedCount}
+                  <span className="text-mist-white/40">/{totalCount}</span>
+                </span>
+              </div>
+              <p className="mt-0.5 text-xs text-mist-white/50">{t('settings.treasuresDesc')}</p>
+
+              {/* Progress bar */}
+              <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-mist-white/10">
+                <motion.div
+                  className="h-full rounded-full bg-gradient-to-r from-biolum-cyan/70 to-biolum-cyan"
+                  initial={{ width: 0 }}
+                  animate={{ width: `${(unlockedCount / totalCount) * 100}%` }}
+                  transition={{ duration: 0.8, ease: 'easeOut', delay: 0.2 }}
+                />
+              </div>
+            </div>
+
+            {/* Chevron */}
+            <ChevronRight size={20} className="text-mist-white/40" />
+          </div>
+        </motion.button>
+
         {/* App Preferences */}
         <SettingSection title={t('settings.appPreferences')}>
           <SettingRow
@@ -352,17 +411,6 @@ export const ProfilePage: FC = () => {
             onClick={handleDeleteAccount}
             destructive
             loading={deletingAccount}
-          />
-        </SettingSection>
-
-        {/* Progress */}
-        <SettingSection title={t('settings.progress')}>
-          <SettingRow
-            icon={<Shell size={24} />}
-            label={t('settings.treasures')}
-            description={t('settings.treasuresDesc')}
-            value={`${unlockedCount}/${totalCount}`}
-            onClick={handleViewAchievements}
           />
         </SettingSection>
 
