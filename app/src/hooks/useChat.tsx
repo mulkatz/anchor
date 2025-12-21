@@ -18,6 +18,7 @@ interface UseChatProps {
  */
 export const useChat = ({ conversationId }: UseChatProps) => {
   const [messages, setMessages] = useState<Message[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [isThinking, setIsThinking] = useState(false);
   const [pendingVoiceMessage, setPendingVoiceMessage] = useState<Message | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -38,11 +39,17 @@ export const useChat = ({ conversationId }: UseChatProps) => {
   const pendingVoiceRef = useRef<Message | null>(null);
   pendingVoiceRef.current = pendingVoiceMessage;
 
+  // Reset loading state when conversation changes
+  useEffect(() => {
+    setIsLoading(true);
+  }, [conversationId]);
+
   // Real-time Firestore listener for messages in specific conversation
   useEffect(() => {
     // If no userId or conversationId, clear messages
     if (!userId || !conversationId) {
       setMessages([]);
+      setIsLoading(false);
       prevTranscriptionStatuses.current.clear();
       return;
     }
@@ -117,6 +124,7 @@ export const useChat = ({ conversationId }: UseChatProps) => {
         });
 
         setMessages(newMessages);
+        setIsLoading(false);
 
         // Clear pending voice message after real one arrives (with delay to allow animation)
         if (realAudioMessageArrived && pendingVoiceRef.current) {
@@ -306,6 +314,7 @@ export const useChat = ({ conversationId }: UseChatProps) => {
 
   return {
     messages: allMessages,
+    isLoading,
     isThinking,
     hasPendingVoice: !!pendingVoiceMessage,
     error,

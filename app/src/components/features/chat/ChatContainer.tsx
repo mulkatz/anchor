@@ -1,4 +1,4 @@
-import { type FC, useRef, useEffect, useCallback } from 'react';
+import { type FC, useRef, useEffect, useLayoutEffect, useCallback } from 'react';
 import { MessageBubble } from './MessageBubble';
 import { DateDivider } from './DateDivider';
 import { ThinkingIndicator } from './ThinkingIndicator';
@@ -9,6 +9,7 @@ import type { Message } from '../../../models';
 
 interface ChatContainerProps {
   messages: Message[];
+  isLoading: boolean;
   isThinking: boolean;
   hasPendingVoice?: boolean;
 }
@@ -21,6 +22,7 @@ interface ChatContainerProps {
  */
 export const ChatContainer: FC<ChatContainerProps> = ({
   messages,
+  isLoading,
   isThinking,
   hasPendingVoice,
 }) => {
@@ -28,9 +30,19 @@ export const ChatContainer: FC<ChatContainerProps> = ({
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const lastMessageRef = useRef<HTMLDivElement>(null);
   const prevMessageCountRef = useRef(0);
+  // Track if this is the initial load (to skip animation and scroll instantly)
+  const isInitialLoadRef = useRef(true);
+  // Track message IDs that existed on initial load (skip their animation)
+  const initialMessageIdsRef = useRef<Set<string>>(new Set());
   // Track which real message ID has taken over the pending audio slot
   const stableKeyMessageIdRef = useRef<string | null>(null);
   const navbarOffset = useNavbarHeight();
+
+  // Capture initial message IDs synchronously during render (before effects run)
+  // This ensures we know which messages to skip animation for
+  if (isInitialLoadRef.current && messages.length > 0 && initialMessageIdsRef.current.size === 0) {
+    messages.forEach((msg) => initialMessageIdsRef.current.add(msg.id));
+  }
 
   /**
    * Smart scroll behavior:
@@ -68,14 +80,26 @@ export const ChatContainer: FC<ChatContainerProps> = ({
     });
   }, [messages]);
 
-  // Handle scroll when messages change
+  // Initial scroll: use useLayoutEffect to scroll before browser paints
+  // This prevents the visible "jump" when navigating back to the chat
+  useLayoutEffect(() => {
+    if (isInitialLoadRef.current && messages.length > 0 && containerRef.current) {
+      isInitialLoadRef.current = false;
+      containerRef.current.scrollTop = containerRef.current.scrollHeight;
+      prevMessageCountRef.current = messages.length;
+    }
+  }, [messages.length]);
+
+  // Handle scroll for new messages during conversation
   useEffect(() => {
     const messageCount = messages.length;
-    const isNewMessage = messageCount > prevMessageCountRef.current;
+    const prevCount = prevMessageCountRef.current;
+    const isNewMessage = messageCount > prevCount;
 
     if (isNewMessage && messageCount > 0) {
-      // Small delay to ensure the DOM has updated with the new message
+      // New message during conversation: use smooth scroll
       const timer = setTimeout(scrollToNewMessage, 100);
+      prevMessageCountRef.current = messageCount;
       return () => clearTimeout(timer);
     }
 
@@ -100,7 +124,7 @@ export const ChatContainer: FC<ChatContainerProps> = ({
         bottom: `${inputAreaHeight}px`,
       }}
     >
-      {messages.length === 0 && !isThinking ? (
+      {messages.length === 0 && !isThinking && !isLoading ? (
         <EmptyState />
       ) : (
         <>
@@ -124,8 +148,12 @@ export const ChatContainer: FC<ChatContainerProps> = ({
             // Use stable key for pending audio OR for the message that replaced it
             const usesStableSlot = isPendingAudio || message.id === stableKeyMessageIdRef.current;
             const messageKey = usesStableSlot ? 'pending-audio-slot' : message.id;
+            // Skip animation for: messages from initial load, or audio message replacements
+            const isInitialMessage = initialMessageIdsRef.current.has(message.id);
             const shouldSkipAnimation =
-              isReplacingPending || message.id === stableKeyMessageIdRef.current;
+              isInitialMessage ||
+              isReplacingPending ||
+              message.id === stableKeyMessageIdRef.current;
 
             return (
               <div key={messageKey}>
