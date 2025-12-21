@@ -59,6 +59,15 @@ export const AchievementsPage: FC = () => {
   // Categories to display (excluding streak which is shown in StreakCard)
   const displayCategories = categoryOrder.filter((category) => category !== 'streak');
 
+  // Loading state - centered spinner
+  if (isLoading) {
+    return (
+      <div className="flex h-full items-center justify-center bg-void-blue">
+        <LoadingSpinner />
+      </div>
+    );
+  }
+
   return (
     <div className="flex h-full flex-col bg-void-blue">
       {/* Header - matching ChatPage style */}
@@ -100,27 +109,21 @@ export const AchievementsPage: FC = () => {
         className="flex-1 overflow-y-auto px-4 pt-6"
         style={{ paddingBottom: `${navbarBottom + 24}px` }}
       >
-        {isLoading ? (
-          <LoadingSpinner className="flex-1" />
-        ) : (
-          <>
-            {/* Streak Card - Prominent at top */}
-            <StreakCard
-              currentStreak={summary?.stats.current_streak || 0}
-              longestStreak={summary?.stats.longest_streak || 0}
-            />
+        {/* Streak Card - Prominent at top */}
+        <StreakCard
+          currentStreak={summary?.stats.current_streak || 0}
+          longestStreak={summary?.stats.longest_streak || 0}
+        />
 
-            {/* Achievement Sections - Following category order with staggered delays */}
-            {displayCategories.map((category, index) => (
-              <AchievementSection
-                key={category}
-                title={t(`treasures.categories.${category}`)}
-                achievements={grouped[category]}
-                delay={index * 0.1}
-              />
-            ))}
-          </>
-        )}
+        {/* Achievement Sections - Following category order with staggered delays */}
+        {displayCategories.map((category, index) => (
+          <AchievementSection
+            key={category}
+            title={t(`treasures.categories.${category}`)}
+            achievements={grouped[category]}
+            delay={index * 0.1}
+          />
+        ))}
       </div>
     </div>
   );
