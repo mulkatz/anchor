@@ -205,7 +205,7 @@ export const ProfilePage: FC = () => {
     await light();
     resetOnboarding();
     logAnalyticsEvent(AnalyticsEvent.ONBOARDING_RESET);
-    showToast.success(t('toasts.tutorialReset'));
+    navigate('/onboarding');
   };
 
   const handleViewAchievements = async () => {
