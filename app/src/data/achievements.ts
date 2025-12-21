@@ -42,7 +42,7 @@ export const achievements: AchievementDefinition[] = [
   {
     id: 'first_descent',
     category: 'dive',
-    iconName: 'ArrowDownToLine',
+    iconName: 'Sailboat',
     requirement: { type: 'count', target: 1, metric: 'dive_lessons' },
     order: 1,
   },

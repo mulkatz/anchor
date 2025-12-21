@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import * as LucideIcons from 'lucide-react';
-import { Lock, Check } from 'lucide-react';
+import { Lock, Star } from 'lucide-react';
 import { cn } from '../../../utils/cn';
 import type { Achievement } from '../../../models';
 
@@ -122,7 +122,7 @@ export const AchievementCard: FC<AchievementCardProps> = ({ achievement }) => {
               animate={{ scale: 1 }}
               transition={{ type: 'spring', stiffness: 500, damping: 25 }}
             >
-              <Check size={8} className="text-void-blue" strokeWidth={3} />
+              <Star size={8} className="fill-void-blue text-void-blue" />
             </motion.div>
           ) : (
             <div className="absolute -bottom-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full border border-mist-white/20 bg-void-blue">
