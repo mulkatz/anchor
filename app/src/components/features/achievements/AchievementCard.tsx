@@ -49,10 +49,7 @@ export const AchievementCard: FC<AchievementCardProps> = ({ achievement }) => {
       )}
       whileTap={{ scale: 0.95 }}
     >
-      {/* Border - only for unlocked items */}
-      {isUnlocked && (
-        <div className="pointer-events-none absolute inset-0 rounded-xl border border-biolum-cyan/40" />
-      )}
+      {/* No borders - clean borderless design */}
 
       {/* Glow for unlocked */}
       {isUnlocked && (
@@ -116,6 +113,22 @@ export const AchievementCard: FC<AchievementCardProps> = ({ achievement }) => {
               isUnlocked ? 'text-biolum-cyan' : 'text-mist-white/25'
             )}
           />
+
+          {/* Bottom-right badge on icon: Checkmark for unlocked, Lock for locked */}
+          {isUnlocked ? (
+            <motion.div
+              className="absolute -bottom-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-biolum-cyan"
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ type: 'spring', stiffness: 500, damping: 25 }}
+            >
+              <Check size={10} className="text-void-blue" strokeWidth={3} />
+            </motion.div>
+          ) : (
+            <div className="absolute -bottom-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-void-blue">
+              <Lock size={8} className="text-mist-white/40" strokeWidth={2.5} />
+            </div>
+          )}
         </div>
       </div>
 
@@ -135,22 +148,6 @@ export const AchievementCard: FC<AchievementCardProps> = ({ achievement }) => {
         <span className="text-[8px] font-semibold text-biolum-cyan/70">
           {Math.round(achievement.progress)}%
         </span>
-      )}
-
-      {/* Top-right badge: Checkmark for unlocked, Lock for locked */}
-      {isUnlocked ? (
-        <motion.div
-          className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-biolum-cyan"
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ type: 'spring', stiffness: 500, damping: 25 }}
-        >
-          <Check size={10} className="text-void-blue" strokeWidth={3} />
-        </motion.div>
-      ) : (
-        <div className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full border border-mist-white/15 bg-void-blue">
-          <Lock size={8} className="text-mist-white/35" strokeWidth={2.5} />
-        </div>
       )}
     </motion.div>
   );
