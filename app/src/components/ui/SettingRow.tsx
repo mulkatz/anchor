@@ -40,14 +40,17 @@ export const SettingRow: FC<SettingRowProps> = ({
 }) => {
   const isClickable = !toggle && onClick;
 
+  // Don't disable button for toggle rows - iOS blocks touch events to children of disabled buttons
+  const isDisabled = !toggle && !onClick;
+
   return (
     <button
       onClick={isClickable ? onClick : undefined}
-      disabled={toggle || !onClick}
+      disabled={isDisabled}
       className={cn(
         'flex w-full items-center justify-between p-4 text-left transition-all duration-300 ease-viscous',
         isClickable && 'cursor-pointer active:bg-glass-bg-hover',
-        toggle && 'cursor-default'
+        (toggle || isDisabled) && 'cursor-default'
       )}
     >
       <div className="flex min-w-0 flex-1 items-center gap-3">
