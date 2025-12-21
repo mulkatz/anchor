@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import * as LucideIcons from 'lucide-react';
-import { Lock, Star } from 'lucide-react';
+import { Lock } from 'lucide-react';
 import { cn } from '../../../utils/cn';
 import type { Achievement } from '../../../models';
 
@@ -45,29 +45,12 @@ export const AchievementCard: FC<AchievementCardProps> = ({ achievement }) => {
       className={cn(
         'relative flex aspect-square w-full flex-col items-center justify-center rounded-xl p-2',
         'transition-all duration-500 ease-viscous',
-        isUnlocked ? 'bg-biolum-cyan/10' : 'bg-void-blue/40'
+        isUnlocked ? 'bg-transparent' : 'bg-void-blue/40'
       )}
       whileTap={{ scale: 0.95 }}
     >
-      {/* No borders - clean borderless design */}
-
-      {/* Glow for unlocked */}
-      {isUnlocked && (
-        <motion.div
-          className="pointer-events-none absolute inset-0 rounded-xl"
-          animate={{
-            boxShadow: [
-              '0 0 12px rgba(100, 255, 218, 0.15), inset 0 0 12px rgba(100, 255, 218, 0.05)',
-              '0 0 20px rgba(100, 255, 218, 0.25), inset 0 0 20px rgba(100, 255, 218, 0.1)',
-              '0 0 12px rgba(100, 255, 218, 0.15), inset 0 0 12px rgba(100, 255, 218, 0.05)',
-            ],
-          }}
-          transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
-        />
-      )}
-
       {/* Icon container */}
-      <div className="relative mb-1">
+      <div className="relative mb-2">
         {/* Progress ring for locked achievements with progress */}
         {hasProgress && (
           <svg className="absolute -inset-1 h-[44px] w-[44px] -rotate-90">
@@ -114,17 +97,8 @@ export const AchievementCard: FC<AchievementCardProps> = ({ achievement }) => {
             )}
           />
 
-          {/* Bottom-right badge on icon: Checkmark for unlocked, Lock for locked */}
-          {isUnlocked ? (
-            <motion.div
-              className="absolute -bottom-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full border border-biolum-cyan/50 bg-biolum-cyan"
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ type: 'spring', stiffness: 500, damping: 25 }}
-            >
-              <Star size={8} className="fill-void-blue text-void-blue" />
-            </motion.div>
-          ) : (
+          {/* Bottom-right badge: Lock for locked items only */}
+          {!isUnlocked && (
             <div className="absolute -bottom-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full border border-mist-white/20 bg-void-blue">
               <Lock size={8} className="text-mist-white/40" strokeWidth={2.5} />
             </div>

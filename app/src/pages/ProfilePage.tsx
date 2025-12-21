@@ -287,39 +287,22 @@ export const ProfilePage: FC = () => {
         {/* Treasures Hero Card */}
         <motion.button
           onClick={handleViewAchievements}
-          className="relative mb-6 w-full overflow-hidden rounded-2xl text-left"
+          className="mb-6 w-full overflow-hidden rounded-3xl border border-glass-border bg-glass-bg text-left shadow-glass backdrop-blur-glass"
           whileTap={{ scale: 0.98 }}
         >
-          {/* Background gradient */}
-          <div className="absolute inset-0 bg-gradient-to-br from-biolum-cyan/20 via-biolum-cyan/10 to-transparent" />
-
-          {/* Subtle animated glow */}
-          <motion.div
-            className="absolute inset-0"
-            animate={{
-              background: [
-                'radial-gradient(circle at 30% 50%, rgba(100, 255, 218, 0.15) 0%, transparent 50%)',
-                'radial-gradient(circle at 70% 50%, rgba(100, 255, 218, 0.15) 0%, transparent 50%)',
-                'radial-gradient(circle at 30% 50%, rgba(100, 255, 218, 0.15) 0%, transparent 50%)',
-              ],
-            }}
-            transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-          />
-
-          {/* Border */}
-          <div className="absolute inset-0 rounded-2xl border border-biolum-cyan/30" />
-
           {/* Content */}
-          <div className="relative flex items-center gap-4 p-4">
+          <div className="flex items-center gap-4 p-4">
             {/* Icon */}
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-biolum-cyan/20">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-mist-white/5">
               <Shell size={24} className="text-biolum-cyan" />
             </div>
 
             {/* Text & Progress */}
             <div className="flex-1">
               <div className="flex items-center justify-between">
-                <h3 className="text-lg font-semibold text-mist-white">{t('settings.treasures')}</h3>
+                <h3 className="text-base font-semibold text-mist-white">
+                  {t('settings.treasures')}
+                </h3>
                 <span className="text-sm font-medium text-biolum-cyan">
                   {unlockedCount}
                   <span className="text-mist-white/40">/{totalCount}</span>

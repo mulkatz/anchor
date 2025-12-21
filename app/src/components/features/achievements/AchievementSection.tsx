@@ -54,7 +54,7 @@ export const AchievementSection: FC<AchievementSectionProps> = ({
 
   return (
     <motion.div
-      className="mb-6"
+      className="mb-4"
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{
