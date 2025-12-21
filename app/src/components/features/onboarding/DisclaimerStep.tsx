@@ -97,10 +97,10 @@ export function DisclaimerStep({ onComplete, direction }: DisclaimerStepProps) {
         {t('disclaimer.description')}
       </motion.p>
 
-      {/* Crisis Resources Box */}
+      {/* Crisis Resources Box - hidden on very small screens (iPhone SE) */}
       <motion.div
         variants={itemVariants}
-        className="mb-6 w-full rounded-xl border border-glass-border bg-glass-bg p-4 backdrop-blur-glass"
+        className="mb-6 hidden w-full rounded-xl border border-glass-border bg-glass-bg p-4 backdrop-blur-glass [@media(min-height:700px)]:block"
       >
         <p className="mb-3 text-xs font-medium uppercase tracking-wide text-mist-white/50">
           {t('disclaimer.crisisTitle')}
