@@ -27,3 +27,6 @@ export { generateWeeklyInsight, markInsightViewed, rateInsight } from './insight
 
 // Export Psychological Profile functions
 export { createPsychologicalProfile } from './psychologicalProfile';
+
+// Export Achievement/Streak functions
+export { onActivityLogWrite } from './achievements';
