@@ -25,6 +25,7 @@ import { useDialogContext } from '../contexts/DialogContext';
 import { useUI } from '../contexts/UIContext';
 import { useHaptics } from '../hooks/useHaptics';
 import { useSettings } from '../hooks/useSettings';
+import { useOnboarding } from '../hooks/useOnboarding';
 import { SettingRow } from '../components/ui/SettingRow';
 import { SettingSection } from '../components/ui/SettingSection';
 import { ConfirmDialog } from '../components/ui/ConfirmDialog';
@@ -56,6 +57,7 @@ export const ProfilePage: FC = () => {
   const { navbarBottom } = useUI();
   const { light, medium, heavy } = useHaptics();
   const { settings, updateSetting } = useSettings();
+  const { resetOnboarding } = useOnboarding();
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [confirmDialogProps, setConfirmDialogProps] = useState<any>({});
   const [exporting, setExporting] = useState(false);
@@ -196,7 +198,7 @@ export const ProfilePage: FC = () => {
   // Support handlers
   const handleResetTutorial = async () => {
     await light();
-    localStorage.setItem('hasSeenOnboarding', 'false');
+    resetOnboarding();
     logAnalyticsEvent(AnalyticsEvent.ONBOARDING_RESET);
     showToast.success(t('toasts.tutorialReset'));
   };
@@ -434,12 +436,12 @@ export const ProfilePage: FC = () => {
               )}
             </AnimatePresence>
           </div>
-          {/*<SettingRow*/}
-          {/*  icon={<RotateCcw size={24} />}*/}
-          {/*  label={t('settings.resetTutorial')}*/}
-          {/*  description={t('settings.resetTutorialDesc')}*/}
-          {/*  onClick={handleResetTutorial}*/}
-          {/*/>*/}
+          <SettingRow
+            icon={<RotateCcw size={24} />}
+            label={t('settings.resetTutorial')}
+            description={t('settings.resetTutorialDesc')}
+            onClick={handleResetTutorial}
+          />
           <SettingRow
             icon={<Globe size={24} />}
             label={t('settings.visitWebsite')}

@@ -1,5 +1,5 @@
 import { type FC } from 'react';
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { AppProvider } from '../contexts/AppContext';
 import { DialogProvider } from '../contexts/DialogContext';
@@ -7,6 +7,7 @@ import { UIProvider } from '../contexts/UIContext';
 import { DiveProvider } from '../contexts/DiveContext';
 import { InsightProvider } from '../contexts/InsightContext';
 import { MainLayout } from '../components/layouts/MainLayout';
+import { useOnboarding } from '../hooks/useOnboarding';
 import { HomePage } from './HomePage';
 import { SOSPage } from './SOSPage';
 import { ChatPage } from './ChatPage';
@@ -19,6 +20,7 @@ import { DiveLessonPage } from './DiveLessonPage';
 import { LighthousePage } from './LighthousePage';
 import { IlluminateDetailPage } from './IlluminateDetailPage';
 import { HorizonPage } from './HorizonPage';
+import { OnboardingPage } from './OnboardingPage';
 
 // Animation variants for page transitions
 // Note: Using negative y for initial (starts above, slides down) to work with overflow-hidden parent
@@ -43,13 +45,14 @@ const pageTransition = {
   ease: [0.22, 1, 0.36, 1] as [number, number, number, number], // cubic-bezier(0.22, 1, 0.36, 1) - viscous easing
 };
 
-// Animated route wrapper component
+// Animated route wrapper component (for main app routes)
 const AnimatedRoutes: FC = () => {
   const location = useLocation();
 
   return (
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
+        <Route path="/onboarding" element={<Navigate to="/" replace />} />
         <Route
           path="/"
           element={
@@ -235,6 +238,29 @@ const AnimatedRoutes: FC = () => {
   );
 };
 
+// Router content component that handles onboarding redirect logic
+const RouterContent: FC = () => {
+  const { hasCompleted } = useOnboarding();
+  const location = useLocation();
+
+  // If onboarding not completed and not on onboarding page, redirect to onboarding
+  if (!hasCompleted && location.pathname !== '/onboarding') {
+    return <Navigate to="/onboarding" replace />;
+  }
+
+  // If on onboarding page, render OnboardingPage directly (no MainLayout)
+  if (location.pathname === '/onboarding') {
+    return <OnboardingPage />;
+  }
+
+  // Otherwise, render the main app with MainLayout
+  return (
+    <MainLayout>
+      <AnimatedRoutes />
+    </MainLayout>
+  );
+};
+
 const App: FC = () => {
   // Auth is now handled in AppContext with proper onAuthStateChanged tracking
   return (
@@ -244,9 +270,7 @@ const App: FC = () => {
           <InsightProvider>
             <DialogProvider>
               <BrowserRouter>
-                <MainLayout>
-                  <AnimatedRoutes />
-                </MainLayout>
+                <RouterContent />
               </BrowserRouter>
             </DialogProvider>
           </InsightProvider>

@@ -698,6 +698,24 @@
       "creating": "Creating conversation...",
       "errorCreate": "Failed to create conversation. Please try again."
     },
+    "onboarding": {
+      "welcome": {
+        "title": "Anchor",
+        "subtitle": "A safe space for difficult moments",
+        "privacy": "Private. Encrypted. Yours.",
+        "continue": "Continue"
+      },
+      "pillars": {
+        "headline": "Here's how I can help:",
+        "talk": "Talk it through",
+        "talkDesc": "When you need to get it out",
+        "reflect": "Reflect & reframe",
+        "reflectDesc": "When thoughts feel stuck",
+        "understand": "Understand yourself",
+        "understandDesc": "When you want to go deeper",
+        "start": "Start Exploring"
+      }
+    },
     "errors": {
       "chat": {
         "connection": "Unable to connect to chat. Please check your connection.",

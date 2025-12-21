@@ -706,6 +706,24 @@
       "creating": "Gespräch wird erstellt...",
       "errorCreate": "Gespräch konnte nicht erstellt werden. Bitte versuche es erneut."
     },
+    "onboarding": {
+      "welcome": {
+        "title": "Anchor",
+        "subtitle": "Ein sicherer Ort für schwierige Momente",
+        "privacy": "Privat. Verschlüsselt. Deins.",
+        "continue": "Weiter"
+      },
+      "pillars": {
+        "headline": "So kann ich dir helfen:",
+        "talk": "Darüber reden",
+        "talkDesc": "Wenn du es loswerden musst",
+        "reflect": "Reflektieren & neu einordnen",
+        "reflectDesc": "Wenn Gedanken feststecken",
+        "understand": "Dich selbst verstehen",
+        "understandDesc": "Wenn du tiefer gehen willst",
+        "start": "Los geht's"
+      }
+    },
     "errors": {
       "chat": {
         "connection": "Verbindung zum Chat nicht möglich. Bitte überprüfe deine Internetverbindung.",

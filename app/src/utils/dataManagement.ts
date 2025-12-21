@@ -352,7 +352,7 @@ export const deleteAllUserData = async (userId: string): Promise<void> => {
       // Ignore if folder doesn't exist or permission errors
     }
 
-    // 9. Clear localStorage (except settings)
+    // 9. Clear localStorage (except settings and onboarding status)
     const keysToKeep = [
       'hapticsEnabled',
       'analyticsEnabled',
@@ -360,6 +360,9 @@ export const deleteAllUserData = async (userId: string): Promise<void> => {
       'pinkNoiseVolume',
       'language',
       'i18nextLng',
+      // Onboarding state - preserve so users don't see onboarding again after data deletion
+      'onboardingCompleted',
+      'onboardingCompletedAt',
     ];
     Object.keys(localStorage).forEach((key) => {
       if (!keysToKeep.includes(key)) {
