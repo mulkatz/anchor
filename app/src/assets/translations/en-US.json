@@ -72,8 +72,8 @@
       "termsOfServiceDesc": "Terms and conditions of use",
 
       "progress": "Progress",
-      "achievements": "Achievements",
-      "achievementsDesc": "Your journey milestones"
+      "treasures": "Treasures",
+      "treasuresDesc": "Discoveries from your journey"
     },
     "sos": {
       "breach": {
@@ -720,10 +720,10 @@
         "start": "Start Exploring"
       }
     },
-    "achievements": {
-      "title": "Achievements",
-      "subtitle": "{{count}} of {{total}} unlocked",
-      "unlocked": "Achievement Unlocked",
+    "treasures": {
+      "title": "Treasures",
+      "subtitle": "Discoveries from the deep",
+      "unlocked": "Treasure Found",
       "categories": {
         "chat": "Deep Talk",
         "dive": "The Dive",

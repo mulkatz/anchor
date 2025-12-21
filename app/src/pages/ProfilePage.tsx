@@ -5,7 +5,6 @@ import {
   Zap,
   BarChart3,
   Music,
-  Download,
   Trash2,
   UserX,
   Phone,
@@ -19,7 +18,8 @@ import {
   Languages,
   ChevronRight,
   Circle,
-  Award,
+  Shell,
+  Anchor,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../contexts/AppContext';
@@ -323,7 +323,7 @@ export const ProfilePage: FC = () => {
         {/* Data & Privacy */}
         <SettingSection title={t('settings.dataPrivacy')}>
           <SettingRow
-            icon={<Download size={24} />}
+            icon={<Anchor size={24} />}
             label={t('settings.exportData')}
             description={t('settings.exportDataDesc')}
             onClick={handleExportData}
@@ -358,9 +358,9 @@ export const ProfilePage: FC = () => {
         {/* Progress */}
         <SettingSection title={t('settings.progress')}>
           <SettingRow
-            icon={<Award size={24} />}
-            label={t('settings.achievements')}
-            description={t('settings.achievementsDesc')}
+            icon={<Shell size={24} />}
+            label={t('settings.treasures')}
+            description={t('settings.treasuresDesc')}
             value={`${unlockedCount}/${totalCount}`}
             onClick={handleViewAchievements}
           />

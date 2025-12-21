@@ -45,10 +45,8 @@ export const StreakCard: FC<StreakCardProps> = ({ currentStreak, longestStreak }
 
           {/* Encouragement text */}
           <div className="flex-1">
-            <p className="text-sm font-medium text-mist-white/70">
-              {t('achievements.streak.start')}
-            </p>
-            <p className="text-xs text-mist-white/40">{t('achievements.streak.firstGoal')}</p>
+            <p className="text-sm font-medium text-mist-white/70">{t('treasures.streak.start')}</p>
+            <p className="text-xs text-mist-white/40">{t('treasures.streak.firstGoal')}</p>
           </div>
 
           {/* Target icon */}
@@ -122,15 +120,13 @@ export const StreakCard: FC<StreakCardProps> = ({ currentStreak, longestStreak }
                   {currentStreak}
                 </motion.span>
                 <span className="text-base font-normal text-mist-white/50">
-                  {currentStreak === 1
-                    ? t('achievements.streak.day')
-                    : t('achievements.streak.days')}
+                  {currentStreak === 1 ? t('treasures.streak.day') : t('treasures.streak.days')}
                 </span>
               </div>
 
               <p className="flex items-center gap-1 text-xs text-mist-white/40">
                 <TrendingUp size={12} className="text-warm-ember/60" />
-                {t('achievements.streak.keepGoing')}
+                {t('treasures.streak.keepGoing')}
               </p>
             </div>
           </div>
@@ -145,13 +141,13 @@ export const StreakCard: FC<StreakCardProps> = ({ currentStreak, longestStreak }
             >
               <Sparkles size={12} className="text-warm-ember" />
               <span className="text-[10px] font-semibold uppercase tracking-wide text-warm-ember">
-                {t('achievements.streak.personalBest')}
+                {t('treasures.streak.personalBest')}
               </span>
             </motion.div>
           ) : (
             <div className="text-right">
               <p className="text-[10px] uppercase tracking-wide text-mist-white/30">
-                {t('achievements.streak.next')}
+                {t('treasures.streak.next')}
               </p>
               <p className="text-lg font-semibold text-warm-ember/70">{nextMilestone}</p>
             </div>
@@ -175,7 +171,7 @@ export const StreakCard: FC<StreakCardProps> = ({ currentStreak, longestStreak }
         {/* Longest streak hint (only when significantly higher) */}
         {longestStreak > currentStreak + 2 && (
           <p className="mt-2 text-[10px] text-mist-white/25">
-            {t('achievements.streak.longest', { count: longestStreak })}
+            {t('treasures.streak.longest', { count: longestStreak })}
           </p>
         )}
       </div>

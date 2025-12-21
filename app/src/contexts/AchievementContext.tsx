@@ -395,6 +395,30 @@ export const AchievementProvider: FC<PropsWithChildren> = ({ children }) => {
     refreshAchievements,
   };
 
+  // Debug function for testing achievement toasts (DEV only)
+  useEffect(() => {
+    if (import.meta.env.DEV) {
+      (window as any).testAchievementToast = async (achievementId?: string) => {
+        const { showAchievementToast } =
+          await import('../components/features/achievements/AchievementToast');
+        const id = achievementId || 'first_light';
+        const achievement = getAchievementById(id);
+        if (achievement) {
+          showAchievementToast(id, achievement.iconName, { medium });
+          console.log(`Triggered toast for: ${id}`);
+        } else {
+          console.log('Available achievements:', achievements.map((a) => a.id).join(', '));
+        }
+      };
+      console.log('🎯 Debug: testAchievementToast(achievementId?) available on window');
+    }
+    return () => {
+      if (import.meta.env.DEV) {
+        delete (window as any).testAchievementToast;
+      }
+    };
+  }, [medium]);
+
   return <AchievementContext.Provider value={value}>{children}</AchievementContext.Provider>;
 };
 

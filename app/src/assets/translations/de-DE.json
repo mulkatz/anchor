@@ -72,8 +72,8 @@
       "termsOfServiceDesc": "Allgemeine Geschäftsbedingungen",
 
       "progress": "Fortschritt",
-      "achievements": "Erfolge",
-      "achievementsDesc": "Deine Meilensteine"
+      "treasures": "Schätze",
+      "treasuresDesc": "Entdeckungen deiner Reise"
     },
     "sos": {
       "breach": {
@@ -728,13 +728,13 @@
         "start": "Los geht's"
       }
     },
-    "achievements": {
-      "title": "Erfolge",
-      "subtitle": "{{count}} von {{total}} freigeschaltet",
-      "unlocked": "Freigeschaltet!",
-      "locked": "Gesperrt",
+    "treasures": {
+      "title": "Schätze",
+      "subtitle": "Entdeckungen aus der Tiefe",
+      "unlocked": "Schatz gefunden",
+      "locked": "Verborgen",
       "progress": "{{percent}}% abgeschlossen",
-      "justUnlocked": "Erfolg freigeschaltet",
+      "justUnlocked": "Schatz entdeckt",
       "categories": {
         "chat": "Gespräche",
         "dive": "The Dive",

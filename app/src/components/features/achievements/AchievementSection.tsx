@@ -54,7 +54,7 @@ export const AchievementSection: FC<AchievementSectionProps> = ({
 
   return (
     <motion.div
-      className="mb-8"
+      className="mb-6"
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{
@@ -64,23 +64,23 @@ export const AchievementSection: FC<AchievementSectionProps> = ({
       }}
     >
       {/* Section header */}
-      <div className="mb-4 flex items-center gap-3">
+      <div className="mb-3 flex items-center gap-3">
         {/* Title */}
-        <h3 className="shrink-0 text-xs font-semibold uppercase tracking-widest text-mist-white/60">
+        <h3 className="shrink-0 text-[11px] font-semibold uppercase tracking-widest text-mist-white/50">
           {title}
         </h3>
 
         {/* Decorative line */}
-        <div className="h-px flex-1 bg-gradient-to-r from-mist-white/10 to-transparent" />
+        <div className="h-px flex-1 bg-mist-white/10" />
 
         {/* Count badge - styled based on progress */}
         <div
           className={cn(
-            'flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5',
+            'flex shrink-0 items-center gap-0.5 rounded-full px-2 py-0.5',
             'border transition-colors duration-300',
             unlockedInCategory > 0
               ? 'border-biolum-cyan/30 bg-biolum-cyan/10'
-              : 'border-mist-white/10 bg-void-blue/50'
+              : 'border-mist-white/10 bg-mist-white/5'
           )}
         >
           <span
@@ -91,20 +91,20 @@ export const AchievementSection: FC<AchievementSectionProps> = ({
           >
             {unlockedInCategory}
           </span>
-          <span className="text-[10px] text-mist-white/30">/</span>
-          <span className="text-[10px] text-mist-white/40">{achievements.length}</span>
+          <span className="text-[10px] text-mist-white/25">/</span>
+          <span className="text-[10px] text-mist-white/35">{achievements.length}</span>
         </div>
       </div>
 
-      {/* Achievement grid - always 4 columns */}
+      {/* Achievement grid - 4 equal columns with consistent gaps */}
       <motion.div
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="grid grid-cols-4 gap-2"
+        className="grid grid-cols-4 gap-3"
       >
         {achievements.map((achievement) => (
-          <motion.div key={achievement.id} variants={itemVariants}>
+          <motion.div key={achievement.id} variants={itemVariants} className="w-full">
             <AchievementCard achievement={achievement} />
           </motion.div>
         ))}

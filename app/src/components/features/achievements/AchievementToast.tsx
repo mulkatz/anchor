@@ -52,10 +52,10 @@ const AchievementToastContent: FC<AchievementToastContentProps> = ({ achievement
       {/* Text content */}
       <div className="flex flex-col">
         <span className="text-xs font-medium uppercase tracking-wide text-biolum-cyan/70">
-          {t('achievements.unlocked')}
+          {t('treasures.unlocked')}
         </span>
         <span className="text-sm font-medium text-mist-white">
-          {t(`achievements.names.${achievementId}`)}
+          {t(`treasures.names.${achievementId}`)}
         </span>
       </div>
     </motion.div>

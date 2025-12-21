@@ -43,9 +43,9 @@ export const AchievementCard: FC<AchievementCardProps> = ({ achievement }) => {
   return (
     <motion.div
       className={cn(
-        'relative flex aspect-square flex-col items-center justify-center rounded-xl p-1.5',
+        'relative flex aspect-square w-full flex-col items-center justify-center rounded-xl p-2',
         'transition-all duration-500 ease-viscous',
-        isUnlocked ? 'bg-biolum-cyan/10' : 'bg-void-blue/50'
+        isUnlocked ? 'bg-biolum-cyan/10' : 'bg-void-blue/60'
       )}
       whileTap={{ scale: 0.95 }}
     >
@@ -53,7 +53,7 @@ export const AchievementCard: FC<AchievementCardProps> = ({ achievement }) => {
       <div
         className={cn(
           'pointer-events-none absolute inset-0 rounded-xl border',
-          isUnlocked ? 'border-biolum-cyan/40' : 'border-mist-white/10'
+          isUnlocked ? 'border-biolum-cyan/40' : 'border-mist-white/8'
         )}
       />
 
@@ -137,7 +137,7 @@ export const AchievementCard: FC<AchievementCardProps> = ({ achievement }) => {
           isUnlocked ? 'text-mist-white' : 'text-mist-white/35'
         )}
       >
-        {t(`achievements.names.${achievement.id}`)}
+        {t(`treasures.names.${achievement.id}`)}
       </span>
 
       {/* Progress percentage */}
