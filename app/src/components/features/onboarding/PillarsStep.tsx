@@ -77,10 +77,10 @@ const pillarVariants: Variants = {
 
 export function PillarsStep({ onComplete, direction }: PillarsStepProps) {
   const { t } = useTranslation();
-  const { medium } = useHaptics();
+  const { light } = useHaptics();
 
-  const handleStart = async () => {
-    await medium();
+  const handleNext = async () => {
+    await light();
     onComplete();
   };
 
@@ -129,11 +129,11 @@ export function PillarsStep({ onComplete, direction }: PillarsStepProps) {
       {/* CTA Button */}
       <motion.button
         variants={itemVariants}
-        onClick={handleStart}
+        onClick={handleNext}
         whileTap={{ scale: 0.95 }}
         className="rounded-full bg-biolum-cyan px-10 py-4 text-lg font-medium text-void-blue shadow-[0_0_20px_rgba(100,255,218,0.4)] transition-shadow duration-300 hover:shadow-[0_0_30px_rgba(100,255,218,0.6)]"
       >
-        {t('onboarding.pillars.start')}
+        {t('onboarding.pillars.next')}
       </motion.button>
     </motion.div>
   );
