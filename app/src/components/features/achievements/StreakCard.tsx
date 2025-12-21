@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import { Flame, Sparkles, TrendingUp } from 'lucide-react';
+import { Flame, Sparkles, TrendingUp, Target } from 'lucide-react';
 
 interface StreakCardProps {
   currentStreak: number;
@@ -9,12 +9,13 @@ interface StreakCardProps {
 }
 
 /**
- * StreakCard - Prominent streak display (redesigned)
+ * StreakCard - Prominent streak display (polished)
  *
  * Design philosophy:
  * - Warm-ember themed (differentiate from cyan achievements)
  * - Celebrates growth without pressure
- * - Visual milestone markers
+ * - Compact zero-state with encouragement
+ * - Visual milestone markers for active streaks
  * - NO negative messaging about broken streaks
  */
 export const StreakCard: FC<StreakCardProps> = ({ currentStreak, longestStreak }) => {
@@ -27,152 +28,153 @@ export const StreakCard: FC<StreakCardProps> = ({ currentStreak, longestStreak }
   const nextMilestone = milestones.find((m) => m > currentStreak) || 30;
   const progressToNext = hasStreak ? Math.min((currentStreak / nextMilestone) * 100, 100) : 0;
 
+  // Zero state - compact and encouraging
+  if (!hasStreak) {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] }}
+        className="relative mb-6 overflow-hidden rounded-xl border border-glass-border/50 bg-glass-bg/30"
+      >
+        <div className="flex items-center gap-3 px-4 py-3">
+          {/* Inactive flame */}
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-mist-white/5">
+            <Flame size={20} className="text-mist-white/20" />
+          </div>
+
+          {/* Encouragement text */}
+          <div className="flex-1">
+            <p className="text-sm font-medium text-mist-white/70">
+              {t('achievements.streak.start')}
+            </p>
+            <p className="text-xs text-mist-white/40">{t('achievements.streak.firstGoal')}</p>
+          </div>
+
+          {/* Target icon */}
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-warm-ember/10">
+            <Target size={16} className="text-warm-ember/50" />
+          </div>
+        </div>
+      </motion.div>
+    );
+  }
+
+  // Active streak state
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] }}
-      className="relative mb-8 overflow-hidden rounded-2xl"
+      className="relative mb-6 overflow-hidden rounded-2xl"
     >
       {/* Background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-warm-ember/20 via-warm-ember/10 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-br from-warm-ember/15 via-warm-ember/5 to-transparent" />
 
       {/* Animated glow effect */}
-      {hasStreak && (
-        <motion.div
-          className="absolute inset-0"
-          animate={{
-            background: [
-              'radial-gradient(circle at 20% 50%, rgba(255, 179, 138, 0.15) 0%, transparent 50%)',
-              'radial-gradient(circle at 80% 50%, rgba(255, 179, 138, 0.15) 0%, transparent 50%)',
-              'radial-gradient(circle at 20% 50%, rgba(255, 179, 138, 0.15) 0%, transparent 50%)',
-            ],
-          }}
-          transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-        />
-      )}
+      <motion.div
+        className="absolute inset-0"
+        animate={{
+          background: [
+            'radial-gradient(circle at 20% 50%, rgba(255, 179, 138, 0.1) 0%, transparent 50%)',
+            'radial-gradient(circle at 80% 50%, rgba(255, 179, 138, 0.1) 0%, transparent 50%)',
+            'radial-gradient(circle at 20% 50%, rgba(255, 179, 138, 0.1) 0%, transparent 50%)',
+          ],
+        }}
+        transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+      />
 
       {/* Border */}
-      <div className="absolute inset-0 rounded-2xl border border-warm-ember/30" />
+      <div className="absolute inset-0 rounded-2xl border border-warm-ember/25" />
 
       {/* Content */}
-      <div className="relative p-5">
-        <div className="flex items-start justify-between">
+      <div className="relative p-4">
+        <div className="flex items-center justify-between">
           {/* Left side - Streak info */}
-          <div className="flex items-center gap-4">
-            {/* Flame icon with enhanced glow */}
+          <div className="flex items-center gap-3">
+            {/* Flame icon with glow */}
             <motion.div
               className="relative"
-              animate={
-                hasStreak
-                  ? {
-                      scale: [1, 1.05, 1],
-                    }
-                  : {}
-              }
+              animate={{ scale: [1, 1.05, 1] }}
               transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
             >
-              {/* Glow rings */}
-              {hasStreak && (
-                <>
-                  <motion.div
-                    className="absolute inset-0 rounded-full bg-warm-ember/20"
-                    animate={{ scale: [1, 1.5], opacity: [0.5, 0] }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                  />
-                  <motion.div
-                    className="absolute inset-0 rounded-full bg-warm-ember/20"
-                    animate={{ scale: [1, 1.8], opacity: [0.3, 0] }}
-                    transition={{ duration: 2, repeat: Infinity, delay: 0.3 }}
-                  />
-                </>
-              )}
+              {/* Glow ring */}
+              <motion.div
+                className="absolute inset-0 rounded-full bg-warm-ember/30"
+                animate={{ scale: [1, 1.4], opacity: [0.4, 0] }}
+                transition={{ duration: 1.5, repeat: Infinity }}
+              />
 
-              <div
-                className={`relative flex h-14 w-14 items-center justify-center rounded-full ${
-                  hasStreak ? 'bg-warm-ember/30' : 'bg-mist-white/5'
-                }`}
-              >
-                <Flame
-                  size={28}
-                  className={hasStreak ? 'text-warm-ember' : 'text-mist-white/30'}
-                  fill={hasStreak ? 'rgba(255, 179, 138, 0.3)' : 'none'}
-                />
+              <div className="relative flex h-12 w-12 items-center justify-center rounded-full bg-warm-ember/25">
+                <Flame size={24} className="text-warm-ember" fill="rgba(255, 179, 138, 0.4)" />
               </div>
             </motion.div>
 
             {/* Streak numbers */}
             <div>
-              <div className="flex items-baseline gap-2">
+              <div className="flex items-baseline gap-1.5">
                 <motion.span
                   key={currentStreak}
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="text-4xl font-bold text-mist-white"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="text-3xl font-bold text-mist-white"
                 >
                   {currentStreak}
                 </motion.span>
-                <span className="text-lg font-normal text-mist-white/60">
+                <span className="text-base font-normal text-mist-white/50">
                   {currentStreak === 1
                     ? t('achievements.streak.day')
                     : t('achievements.streak.days')}
                 </span>
               </div>
 
-              <p className="mt-0.5 flex items-center gap-1.5 text-sm text-mist-white/50">
-                {hasStreak ? (
-                  <>
-                    <TrendingUp size={14} className="text-warm-ember/70" />
-                    {t('achievements.streak.keepGoing')}
-                  </>
-                ) : (
-                  t('achievements.streak.start')
-                )}
+              <p className="flex items-center gap-1 text-xs text-mist-white/40">
+                <TrendingUp size={12} className="text-warm-ember/60" />
+                {t('achievements.streak.keepGoing')}
               </p>
             </div>
           </div>
 
-          {/* Right side - Personal best badge */}
-          {isPersonalBest && (
+          {/* Right side - Personal best badge or milestone progress */}
+          {isPersonalBest ? (
             <motion.div
-              initial={{ opacity: 0, scale: 0.8, rotate: -10 }}
-              animate={{ opacity: 1, scale: 1, rotate: 0 }}
-              transition={{ type: 'spring', stiffness: 400, damping: 20, delay: 0.3 }}
-              className="flex items-center gap-1 rounded-full bg-warm-ember/25 px-3 py-1.5"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ type: 'spring', stiffness: 400, damping: 20, delay: 0.2 }}
+              className="flex items-center gap-1 rounded-full bg-warm-ember/20 px-2.5 py-1"
             >
-              <Sparkles size={14} className="text-warm-ember" />
-              <span className="text-xs font-semibold text-warm-ember">
+              <Sparkles size={12} className="text-warm-ember" />
+              <span className="text-[10px] font-semibold uppercase tracking-wide text-warm-ember">
                 {t('achievements.streak.personalBest')}
               </span>
             </motion.div>
+          ) : (
+            <div className="text-right">
+              <p className="text-[10px] uppercase tracking-wide text-mist-white/30">
+                {t('achievements.streak.next')}
+              </p>
+              <p className="text-lg font-semibold text-warm-ember/70">{nextMilestone}</p>
+            </div>
           )}
         </div>
 
-        {/* Progress to next milestone */}
-        {hasStreak && currentStreak < 30 && (
-          <div className="mt-4">
-            <div className="mb-1.5 flex items-center justify-between">
-              <span className="text-xs text-mist-white/40">
-                {t('achievements.streak.nextMilestone', { days: nextMilestone })}
-              </span>
-              <span className="text-xs font-medium text-warm-ember/70">
-                {currentStreak}/{nextMilestone}
-              </span>
-            </div>
-            <div className="h-1.5 overflow-hidden rounded-full bg-mist-white/10">
+        {/* Progress bar to next milestone */}
+        {currentStreak < 30 && (
+          <div className="mt-3">
+            <div className="h-1 overflow-hidden rounded-full bg-mist-white/5">
               <motion.div
-                className="h-full rounded-full bg-gradient-to-r from-warm-ember/60 to-warm-ember"
+                className="h-full rounded-full bg-gradient-to-r from-warm-ember/50 to-warm-ember"
                 initial={{ width: 0 }}
                 animate={{ width: `${progressToNext}%` }}
-                transition={{ duration: 0.8, ease: 'easeOut', delay: 0.3 }}
+                transition={{ duration: 0.8, ease: 'easeOut', delay: 0.2 }}
               />
             </div>
           </div>
         )}
 
-        {/* Longest streak (when different from current) */}
-        {longestStreak > 0 && longestStreak > currentStreak && (
-          <p className="mt-3 text-xs text-mist-white/30">
+        {/* Longest streak hint (only when significantly higher) */}
+        {longestStreak > currentStreak + 2 && (
+          <p className="mt-2 text-[10px] text-mist-white/25">
             {t('achievements.streak.longest', { count: longestStreak })}
           </p>
         )}

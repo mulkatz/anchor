@@ -1,6 +1,7 @@
 import type { FC } from 'react';
 import { motion } from 'framer-motion';
 import { AchievementCard } from './AchievementCard';
+import { cn } from '../../../utils/cn';
 import type { Achievement } from '../../../models';
 
 interface AchievementSectionProps {
@@ -65,17 +66,34 @@ export const AchievementSection: FC<AchievementSectionProps> = ({
       {/* Section header */}
       <div className="mb-4 flex items-center gap-3">
         {/* Title */}
-        <h3 className="shrink-0 text-xs font-semibold uppercase tracking-widest text-mist-white/70">
+        <h3 className="shrink-0 text-xs font-semibold uppercase tracking-widest text-mist-white/60">
           {title}
         </h3>
 
         {/* Decorative line */}
-        <div className="h-px flex-1 bg-gradient-to-r from-glass-border/50 to-transparent" />
+        <div className="h-px flex-1 bg-gradient-to-r from-mist-white/10 to-transparent" />
 
-        {/* Count badge */}
-        <span className="shrink-0 rounded-full bg-glass-bg/80 px-2 py-0.5 text-[10px] font-medium text-mist-white/50">
-          {unlockedInCategory}/{achievements.length}
-        </span>
+        {/* Count badge - styled based on progress */}
+        <div
+          className={cn(
+            'flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5',
+            'border transition-colors duration-300',
+            unlockedInCategory > 0
+              ? 'border-biolum-cyan/30 bg-biolum-cyan/10'
+              : 'border-mist-white/10 bg-void-blue/50'
+          )}
+        >
+          <span
+            className={cn(
+              'text-[10px] font-semibold',
+              unlockedInCategory > 0 ? 'text-biolum-cyan' : 'text-mist-white/40'
+            )}
+          >
+            {unlockedInCategory}
+          </span>
+          <span className="text-[10px] text-mist-white/30">/</span>
+          <span className="text-[10px] text-mist-white/40">{achievements.length}</span>
+        </div>
       </div>
 
       {/* Achievement grid - always 4 columns */}

@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import * as LucideIcons from 'lucide-react';
-import { Lock } from 'lucide-react';
+import { Lock, Check } from 'lucide-react';
 import { cn } from '../../../utils/cn';
 import type { Achievement } from '../../../models';
 
@@ -20,11 +20,11 @@ function getLucideIcon(name: string): LucideIcons.LucideIcon {
 }
 
 /**
- * AchievementCard - Single achievement display (redesigned)
+ * AchievementCard - Single achievement display (polished)
  *
  * Features:
  * - Fixed aspect ratio for consistent grid
- * - Internal circular progress ring for locked items
+ * - Clean circular progress ring for locked items
  * - Strong visual distinction between locked/unlocked
  * - Elegant glow effect for unlocked achievements
  */
@@ -33,130 +33,129 @@ export const AchievementCard: FC<AchievementCardProps> = ({ achievement }) => {
   const Icon = getLucideIcon(achievement.iconName);
 
   // Calculate the circular progress (for the ring)
-  const circumference = 2 * Math.PI * 20; // radius = 20
+  const radius = 18;
+  const circumference = 2 * Math.PI * radius;
   const progressOffset = circumference - (achievement.progress / 100) * circumference;
+
+  const isUnlocked = achievement.isUnlocked;
+  const hasProgress = !isUnlocked && achievement.progress > 0;
 
   return (
     <motion.div
       className={cn(
-        'relative flex aspect-square flex-col items-center justify-center rounded-2xl p-2',
+        'relative flex aspect-square flex-col items-center justify-center rounded-xl p-1.5',
         'transition-all duration-500 ease-viscous',
-        achievement.isUnlocked
-          ? 'bg-gradient-to-br from-biolum-cyan/20 via-biolum-cyan/10 to-transparent'
-          : 'bg-glass-bg/50'
+        isUnlocked ? 'bg-biolum-cyan/10' : 'bg-void-blue/50'
       )}
-      whileHover={{ scale: 1.02 }}
-      whileTap={{ scale: 0.98 }}
+      whileTap={{ scale: 0.95 }}
     >
-      {/* Outer glow for unlocked */}
-      {achievement.isUnlocked && (
-        <motion.div
-          className="pointer-events-none absolute inset-0 rounded-2xl"
-          style={{
-            boxShadow: '0 0 20px rgba(100, 255, 218, 0.3), inset 0 0 20px rgba(100, 255, 218, 0.1)',
-          }}
-          animate={{
-            boxShadow: [
-              '0 0 15px rgba(100, 255, 218, 0.2), inset 0 0 15px rgba(100, 255, 218, 0.05)',
-              '0 0 25px rgba(100, 255, 218, 0.4), inset 0 0 25px rgba(100, 255, 218, 0.15)',
-              '0 0 15px rgba(100, 255, 218, 0.2), inset 0 0 15px rgba(100, 255, 218, 0.05)',
-            ],
-          }}
-          transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-        />
-      )}
-
       {/* Border */}
       <div
         className={cn(
-          'pointer-events-none absolute inset-0 rounded-2xl border',
-          achievement.isUnlocked ? 'border-biolum-cyan/60' : 'border-glass-border/50'
+          'pointer-events-none absolute inset-0 rounded-xl border',
+          isUnlocked ? 'border-biolum-cyan/40' : 'border-mist-white/10'
         )}
       />
 
-      {/* Icon container with progress ring */}
-      <div className="relative mb-1.5">
-        {/* Progress ring for locked achievements */}
-        {!achievement.isUnlocked && achievement.progress > 0 && (
-          <svg className="absolute -inset-1.5 h-[52px] w-[52px] -rotate-90">
+      {/* Glow for unlocked */}
+      {isUnlocked && (
+        <motion.div
+          className="pointer-events-none absolute inset-0 rounded-xl"
+          animate={{
+            boxShadow: [
+              '0 0 12px rgba(100, 255, 218, 0.15), inset 0 0 12px rgba(100, 255, 218, 0.05)',
+              '0 0 20px rgba(100, 255, 218, 0.25), inset 0 0 20px rgba(100, 255, 218, 0.1)',
+              '0 0 12px rgba(100, 255, 218, 0.15), inset 0 0 12px rgba(100, 255, 218, 0.05)',
+            ],
+          }}
+          transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
+        />
+      )}
+
+      {/* Icon container */}
+      <div className="relative mb-1">
+        {/* Progress ring for locked achievements with progress */}
+        {hasProgress && (
+          <svg className="absolute -inset-1 h-[44px] w-[44px] -rotate-90">
             {/* Background ring */}
             <circle
-              cx="26"
-              cy="26"
-              r="20"
+              cx="22"
+              cy="22"
+              r={radius}
               fill="none"
-              stroke="rgba(226, 232, 240, 0.1)"
-              strokeWidth="3"
+              stroke="rgba(100, 255, 218, 0.1)"
+              strokeWidth="2.5"
             />
             {/* Progress ring */}
             <motion.circle
-              cx="26"
-              cy="26"
-              r="20"
+              cx="22"
+              cy="22"
+              r={radius}
               fill="none"
-              stroke="rgba(100, 255, 218, 0.5)"
-              strokeWidth="3"
+              stroke="rgba(100, 255, 218, 0.6)"
+              strokeWidth="2.5"
               strokeLinecap="round"
               strokeDasharray={circumference}
               initial={{ strokeDashoffset: circumference }}
               animate={{ strokeDashoffset: progressOffset }}
-              transition={{ duration: 0.8, ease: 'easeOut' }}
+              transition={{ duration: 0.6, ease: 'easeOut' }}
             />
           </svg>
         )}
 
-        {/* Icon background circle */}
+        {/* Icon circle */}
         <div
           className={cn(
-            'relative flex h-10 w-10 items-center justify-center rounded-full',
-            'transition-all duration-500 ease-viscous',
-            achievement.isUnlocked
-              ? 'bg-biolum-cyan/30 text-biolum-cyan'
-              : 'bg-mist-white/5 text-mist-white/25'
+            'relative flex h-9 w-9 items-center justify-center rounded-full',
+            'transition-all duration-300',
+            isUnlocked ? 'bg-biolum-cyan/25' : 'bg-mist-white/5'
           )}
         >
-          {achievement.isUnlocked ? (
-            <Icon size={20} strokeWidth={2} />
-          ) : (
-            <div className="relative">
-              <Icon size={18} strokeWidth={1.5} className="opacity-40" />
-              <Lock
-                size={10}
-                className="absolute -bottom-0.5 -right-0.5 text-mist-white/40"
-                strokeWidth={2.5}
-              />
+          <Icon
+            size={18}
+            strokeWidth={isUnlocked ? 2 : 1.5}
+            className={cn(
+              'transition-colors duration-300',
+              isUnlocked ? 'text-biolum-cyan' : 'text-mist-white/20'
+            )}
+          />
+
+          {/* Lock overlay for locked achievements */}
+          {!isUnlocked && (
+            <div className="absolute -bottom-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full border border-mist-white/20 bg-void-blue">
+              <Lock size={9} className="text-mist-white/40" strokeWidth={2.5} />
             </div>
           )}
         </div>
       </div>
 
-      {/* Name - single line with ellipsis */}
+      {/* Name */}
       <span
         className={cn(
-          'w-full text-center text-[10px] font-medium leading-tight',
-          'line-clamp-2 px-1',
-          achievement.isUnlocked ? 'text-mist-white' : 'text-mist-white/40'
+          'w-full text-center text-[9px] font-medium leading-tight',
+          'line-clamp-2 px-0.5',
+          isUnlocked ? 'text-mist-white' : 'text-mist-white/35'
         )}
       >
         {t(`achievements.names.${achievement.id}`)}
       </span>
 
-      {/* Progress percentage for locked (shown below name) */}
-      {!achievement.isUnlocked && achievement.progress > 0 && (
-        <span className="mt-0.5 text-[9px] font-medium text-biolum-cyan/60">
+      {/* Progress percentage */}
+      {hasProgress && (
+        <span className="mt-0.5 text-[8px] font-semibold text-biolum-cyan/70">
           {Math.round(achievement.progress)}%
         </span>
       )}
 
-      {/* Unlocked checkmark badge */}
-      {achievement.isUnlocked && (
+      {/* Checkmark badge for unlocked */}
+      {isUnlocked && (
         <motion.div
-          className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-biolum-cyan shadow-glow-sm"
+          className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-biolum-cyan"
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{ type: 'spring', stiffness: 500, damping: 25 }}
         >
-          <LucideIcons.Check size={12} className="text-void-blue" strokeWidth={3} />
+          <Check size={10} className="text-void-blue" strokeWidth={3} />
         </motion.div>
       )}
     </motion.div>

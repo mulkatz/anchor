@@ -748,6 +748,8 @@
         "days": "Tage",
         "keepGoing": "Dein Rhythmus wächst",
         "start": "Starte deine Serie heute",
+        "firstGoal": "Erstes Ziel: 3 Tage",
+        "next": "Nächstes",
         "personalBest": "Persönlicher Rekord!",
         "longest": "Dein Rekord: {{count}} Tage",
         "nextMilestone": "Nächster Meilenstein: {{days}} Tage"

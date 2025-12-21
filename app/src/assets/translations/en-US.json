@@ -736,6 +736,8 @@
         "days": "days",
         "keepGoing": "Your rhythm is growing",
         "start": "Start your streak today",
+        "firstGoal": "First goal: 3 days",
+        "next": "Next",
         "personalBest": "Personal best!",
         "longest": "Your longest: {{count}} days",
         "nextMilestone": "Next milestone: {{days}} days"
