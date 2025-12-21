@@ -188,6 +188,35 @@ service cloud.firestore {
           allow read, write: if isOwner(userId);
         }
       }
+
+      // Achievements (gamification/reward system)
+      match /achievements/{docId} {
+        allow read: if isOwner(userId);
+
+        // Create: initialize achievement summary
+        allow create: if isOwner(userId)
+                      && request.resource.data.userId == userId;
+
+        // Update: unlock achievements, update stats
+        allow update: if isOwner(userId)
+                      && request.resource.data.userId == userId;
+
+        // Allow deletion for data management
+        allow delete: if isOwner(userId);
+      }
+
+      // Activity log (for streak tracking)
+      match /activity_log/{date} {
+        allow read: if isOwner(userId);
+
+        // Create/Update: log daily activity
+        allow create, update: if isOwner(userId)
+                              && request.resource.data.date is string
+                              && request.resource.data.activities is list;
+
+        // Allow deletion for data management
+        allow delete: if isOwner(userId);
+      }
     }
 
     // Feedback collection - write-only for users

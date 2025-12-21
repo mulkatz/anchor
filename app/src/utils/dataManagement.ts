@@ -9,6 +9,7 @@ import { isNativePlatform } from './platform';
 import { showToast } from './toast';
 import { db } from '../db/db';
 import { clearDiveProgressCache } from '../contexts/DiveContext';
+import { clearAchievementCache } from '../contexts/AchievementContext';
 
 /**
  * Data management utilities
@@ -144,6 +145,39 @@ export const exportUserData = async (userId: string): Promise<void> => {
       });
     }
 
+    // Fetch achievements
+    const achievementsRef = collection(firestore, `users/${userId}/achievements`);
+    const achievementsSnapshot = await getDocs(achievementsRef);
+
+    const achievements = achievementsSnapshot.docs.map((achieveDoc) => {
+      const data = achieveDoc.data();
+      // Convert Firestore timestamps in achievementDates
+      const achievementDates: Record<string, string> = {};
+      if (data.achievementDates) {
+        for (const [id, timestamp] of Object.entries(data.achievementDates)) {
+          achievementDates[id] = (timestamp as any)?.toDate?.()?.toISOString() || String(timestamp);
+        }
+      }
+      return {
+        id: achieveDoc.id,
+        unlockedAchievements: data.unlockedAchievements || [],
+        achievementDates,
+        stats: data.stats || {},
+        createdAt: data.createdAt?.toDate().toISOString(),
+        updatedAt: data.updatedAt?.toDate().toISOString(),
+      };
+    });
+
+    // Fetch activity log (for streaks)
+    const activityLogRef = collection(firestore, `users/${userId}/activity_log`);
+    const activityLogSnapshot = await getDocs(activityLogRef);
+
+    const activityLog = activityLogSnapshot.docs.map((logDoc) => ({
+      date: logDoc.id,
+      activities: logDoc.data().activities || [],
+      updatedAt: logDoc.data().updatedAt?.toDate().toISOString(),
+    }));
+
     // Build export JSON
     const exportData = {
       exportDate: new Date().toISOString(),
@@ -154,6 +188,8 @@ export const exportUserData = async (userId: string): Promise<void> => {
       journalEntries,
       diveProgress,
       diveSessions,
+      achievements,
+      activityLog,
       settings: {
         hapticsEnabled: localStorage.getItem('hapticsEnabled'),
         analyticsEnabled: localStorage.getItem('analyticsEnabled'),
@@ -235,6 +271,9 @@ export const clearLocalStorage = async (): Promise<void> => {
     // Clear dive progress cache
     clearDiveProgressCache();
 
+    // Clear achievement cache
+    clearAchievementCache();
+
     // Delete old audio files from Cloud Storage (older than 7 days)
     // This is a placeholder - actual implementation would need Cloud Function
 
@@ -313,7 +352,23 @@ export const deleteAllUserData = async (userId: string): Promise<void> => {
       await deleteDoc(sessionDoc.ref);
     }
 
-    // 6. Delete profile subcollection (includes conversationProfile and psychologicalProfile)
+    // 6. Delete achievements
+    const achievementsRef = collection(firestore, `users/${userId}/achievements`);
+    const achievementsSnapshot = await getDocs(achievementsRef);
+
+    for (const achieveDoc of achievementsSnapshot.docs) {
+      await deleteDoc(achieveDoc.ref);
+    }
+
+    // 7. Delete activity log (streak tracking)
+    const activityLogRef = collection(firestore, `users/${userId}/activity_log`);
+    const activityLogSnapshot = await getDocs(activityLogRef);
+
+    for (const logDoc of activityLogSnapshot.docs) {
+      await deleteDoc(logDoc.ref);
+    }
+
+    // 8. Delete profile subcollection (includes conversationProfile and psychologicalProfile)
     const profileRef = collection(firestore, `users/${userId}/profile`);
     const profileSnapshot = await getDocs(profileRef);
 
@@ -333,7 +388,7 @@ export const deleteAllUserData = async (userId: string): Promise<void> => {
       await deleteDoc(profileDoc.ref);
     }
 
-    // 7. Delete all audio files from Cloud Storage (recursive)
+    // 9. Delete all audio files from Cloud Storage (recursive)
     // Audio files are stored as: audio-messages/{userId}/{conversationId}/{messageId}.m4a
     const audioRef = ref(storage, `audio-messages/${userId}`);
     try {
@@ -343,7 +398,7 @@ export const deleteAllUserData = async (userId: string): Promise<void> => {
       // Ignore if folder doesn't exist or permission errors
     }
 
-    // 8. Delete Dive audio files from Cloud Storage
+    // 10. Delete Dive audio files from Cloud Storage
     const diveAudioRef = ref(storage, `dive-audio/${userId}`);
     try {
       await deleteStorageFolder(diveAudioRef);
@@ -352,7 +407,7 @@ export const deleteAllUserData = async (userId: string): Promise<void> => {
       // Ignore if folder doesn't exist or permission errors
     }
 
-    // 9. Clear localStorage (except settings and onboarding status)
+    // 11. Clear localStorage (except settings and onboarding status)
     const keysToKeep = [
       'hapticsEnabled',
       'analyticsEnabled',
@@ -370,10 +425,13 @@ export const deleteAllUserData = async (userId: string): Promise<void> => {
       }
     });
 
-    // 10. Clear dive progress cache specifically
+    // 12. Clear dive progress cache specifically
     clearDiveProgressCache();
 
-    // 11. Clear IndexedDB (Dexie database)
+    // 13. Clear achievement cache
+    clearAchievementCache();
+
+    // 14. Clear IndexedDB (Dexie database)
     await db.journalEntries.clear();
 
     logAnalyticsEvent(AnalyticsEvent.DATA_DELETED);

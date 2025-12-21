@@ -19,10 +19,13 @@ import {
   Languages,
   ChevronRight,
   Circle,
+  Award,
 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { useApp } from '../contexts/AppContext';
 import { useDialogContext } from '../contexts/DialogContext';
 import { useUI } from '../contexts/UIContext';
+import { useAchievements } from '../contexts/AchievementContext';
 import { useHaptics } from '../hooks/useHaptics';
 import { useSettings } from '../hooks/useSettings';
 import { useOnboarding } from '../hooks/useOnboarding';
@@ -52,9 +55,11 @@ import { getCrisisResources } from '../utils/crisisHotlines';
 
 export const ProfilePage: FC = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const { version } = useApp();
   const dialogs = useDialogContext();
   const { navbarBottom } = useUI();
+  const { unlockedCount, totalCount } = useAchievements();
   const { light, medium, heavy } = useHaptics();
   const { settings, updateSetting } = useSettings();
   const { resetOnboarding } = useOnboarding();
@@ -203,6 +208,11 @@ export const ProfilePage: FC = () => {
     showToast.success(t('toasts.tutorialReset'));
   };
 
+  const handleViewAchievements = async () => {
+    await light();
+    navigate('/achievements');
+  };
+
   const handleVisitWebsite = async () => {
     await light();
     window.open('https://anchor.franz.cx', '_blank');
@@ -342,6 +352,17 @@ export const ProfilePage: FC = () => {
             onClick={handleDeleteAccount}
             destructive
             loading={deletingAccount}
+          />
+        </SettingSection>
+
+        {/* Progress */}
+        <SettingSection title={t('settings.progress')}>
+          <SettingRow
+            icon={<Award size={24} />}
+            label={t('settings.achievements')}
+            description={t('settings.achievementsDesc')}
+            value={`${unlockedCount}/${totalCount}`}
+            onClick={handleViewAchievements}
           />
         </SettingSection>
 

@@ -6,6 +6,7 @@ import { DialogProvider } from '../contexts/DialogContext';
 import { UIProvider } from '../contexts/UIContext';
 import { DiveProvider } from '../contexts/DiveContext';
 import { InsightProvider } from '../contexts/InsightContext';
+import { AchievementProvider } from '../contexts/AchievementContext';
 import { MainLayout } from '../components/layouts/MainLayout';
 import { useOnboarding } from '../hooks/useOnboarding';
 import { HomePage } from './HomePage';
@@ -21,6 +22,7 @@ import { LighthousePage } from './LighthousePage';
 import { IlluminateDetailPage } from './IlluminateDetailPage';
 import { HorizonPage } from './HorizonPage';
 import { OnboardingPage } from './OnboardingPage';
+import { AchievementsPage } from './AchievementsPage';
 
 // Animation variants for page transitions
 // Note: Using negative y for initial (starts above, slides down) to work with overflow-hidden parent
@@ -204,6 +206,21 @@ const AnimatedRoutes: FC = () => {
           }
         />
         <Route
+          path="/achievements"
+          element={
+            <motion.div
+              variants={pageVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              transition={pageTransition}
+              className="h-full w-full"
+            >
+              <AchievementsPage />
+            </motion.div>
+          }
+        />
+        <Route
           path="/dive"
           element={
             <motion.div
@@ -267,13 +284,15 @@ const App: FC = () => {
     <AppProvider>
       <UIProvider>
         <DiveProvider>
-          <InsightProvider>
-            <DialogProvider>
-              <BrowserRouter>
-                <RouterContent />
-              </BrowserRouter>
-            </DialogProvider>
-          </InsightProvider>
+          <AchievementProvider>
+            <InsightProvider>
+              <DialogProvider>
+                <BrowserRouter>
+                  <RouterContent />
+                </BrowserRouter>
+              </DialogProvider>
+            </InsightProvider>
+          </AchievementProvider>
         </DiveProvider>
       </UIProvider>
     </AppProvider>

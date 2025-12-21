@@ -69,7 +69,11 @@
       "privacyPolicy": "Privacy Policy",
       "privacyPolicyDesc": "How we handle your data",
       "termsOfService": "Terms of Service",
-      "termsOfServiceDesc": "Terms and conditions of use"
+      "termsOfServiceDesc": "Terms and conditions of use",
+
+      "progress": "Progress",
+      "achievements": "Achievements",
+      "achievementsDesc": "Your journey milestones"
     },
     "sos": {
       "breach": {
@@ -714,6 +718,67 @@
         "understand": "Understand yourself",
         "understandDesc": "When you want to go deeper",
         "start": "Start Exploring"
+      }
+    },
+    "achievements": {
+      "title": "Achievements",
+      "subtitle": "{{count}} of {{total}} unlocked",
+      "unlocked": "Achievement Unlocked",
+      "categories": {
+        "chat": "Deep Talk",
+        "dive": "The Dive",
+        "lighthouse": "Lighthouse",
+        "tidelog": "Tide Log",
+        "milestone": "Milestones"
+      },
+      "streak": {
+        "day": "day",
+        "days": "days",
+        "keepGoing": "Your rhythm is growing",
+        "start": "Start your streak today",
+        "personalBest": "Personal best!",
+        "longest": "Your longest: {{count}} days",
+        "nextMilestone": "Next milestone: {{days}} days"
+      },
+      "names": {
+        "first_light": "First Light",
+        "echoes_in_the_deep": "Echoes in the Deep",
+        "the_depths_know_you": "The Depths Know You",
+        "first_descent": "First Descent",
+        "twilight_explorer": "Twilight Explorer",
+        "midnight_navigator": "Midnight Navigator",
+        "trench_walker": "Trench Walker",
+        "first_beam": "First Beam",
+        "pattern_spotter": "Pattern Spotter",
+        "lighthouse_keeper": "Lighthouse Keeper",
+        "first_tide": "First Tide",
+        "reef_builder": "Reef Builder",
+        "coral_garden": "Coral Garden",
+        "tide_chronicler": "Tide Chronicler",
+        "gentle_current": "Gentle Current",
+        "steady_tide": "Steady Tide",
+        "moon_cycle": "Moon Cycle",
+        "deep_release": "Deep Release"
+      },
+      "descriptions": {
+        "first_light": "Start your first conversation",
+        "echoes_in_the_deep": "Complete 10 conversations",
+        "the_depths_know_you": "Complete 50 conversations",
+        "first_descent": "Complete your first Dive lesson",
+        "twilight_explorer": "Complete 5 Dive lessons",
+        "midnight_navigator": "Complete 15 Dive lessons",
+        "trench_walker": "Complete all 25 Dive lessons",
+        "first_beam": "Complete your first Lighthouse reflection",
+        "pattern_spotter": "Complete 5 reflections",
+        "lighthouse_keeper": "Complete 25 reflections",
+        "first_tide": "Log your first tide",
+        "reef_builder": "Log 7 days",
+        "coral_garden": "Log 30 days",
+        "tide_chronicler": "Log 100 days",
+        "gentle_current": "3 days of activity",
+        "steady_tide": "7 days of activity",
+        "moon_cycle": "30 days of activity",
+        "deep_release": "Release a thought to the depths"
       }
     },
     "errors": {

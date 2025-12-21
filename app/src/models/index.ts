@@ -292,3 +292,58 @@ export interface WeeklyInsight {
   viewedAt?: Date;
   helpfulnessRating?: number; // 1-5
 }
+
+// ============================================
+// Achievement System
+// ============================================
+
+export type AchievementCategory =
+  | 'chat' // Deep Talk conversations
+  | 'dive' // The Dive lessons
+  | 'lighthouse' // Illuminate reflections
+  | 'tidelog' // Tide Log entries
+  | 'streak' // Consistency
+  | 'milestone'; // Special moments
+
+export type AchievementRequirementType = 'count' | 'streak' | 'milestone';
+
+export interface AchievementRequirement {
+  type: AchievementRequirementType;
+  target: number;
+  metric: string; // e.g., 'conversations', 'dive_lessons', etc.
+}
+
+export interface AchievementDefinition {
+  id: string;
+  category: AchievementCategory;
+  iconName: string; // Lucide icon name
+  requirement: AchievementRequirement;
+  order: number; // Display order within category
+}
+
+export interface AchievementStats {
+  conversations: number;
+  dive_lessons: number;
+  illuminate_entries: number;
+  daily_logs: number;
+  released_logs: number;
+  current_streak: number;
+  longest_streak: number;
+  last_activity_date: string; // YYYY-MM-DD
+}
+
+export interface AchievementSummary {
+  userId: string;
+  unlockedAchievements: string[];
+  achievementDates: Record<string, Date>;
+  stats: AchievementStats;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+// Computed achievement with unlock state and progress
+export interface Achievement extends AchievementDefinition {
+  isUnlocked: boolean;
+  unlockedAt?: Date;
+  progress: number; // 0-100 percentage toward unlock
+}

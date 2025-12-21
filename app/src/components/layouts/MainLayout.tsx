@@ -1,12 +1,16 @@
 import { type FC, type ReactNode } from 'react';
 import { FloatingDock } from '../features/navigation/FloatingDock';
 import { OceanicBubbles } from '../ui/OceanicBubbles';
+import { useAchievementTracker } from '../../hooks/useAchievementTracker';
 
 interface MainLayoutProps {
   children: ReactNode;
 }
 
 export const MainLayout: FC<MainLayoutProps> = ({ children }) => {
+  // Track user activity for achievement unlocks
+  useAchievementTracker();
+
   return (
     <div className="relative h-screen w-full overflow-hidden bg-void-blue">
       {/* Persistent bubble background - sits behind all content, survives route changes */}

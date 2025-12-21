@@ -69,7 +69,11 @@
       "privacyPolicy": "Datenschutzerklärung",
       "privacyPolicyDesc": "Wie wir mit deinen Daten umgehen",
       "termsOfService": "Nutzungsbedingungen",
-      "termsOfServiceDesc": "Allgemeine Geschäftsbedingungen"
+      "termsOfServiceDesc": "Allgemeine Geschäftsbedingungen",
+
+      "progress": "Fortschritt",
+      "achievements": "Erfolge",
+      "achievementsDesc": "Deine Meilensteine"
     },
     "sos": {
       "breach": {
@@ -722,6 +726,71 @@
         "understand": "Dich selbst verstehen",
         "understandDesc": "Wenn du tiefer gehen willst",
         "start": "Los geht's"
+      }
+    },
+    "achievements": {
+      "title": "Erfolge",
+      "subtitle": "{{count}} von {{total}} freigeschaltet",
+      "unlocked": "Freigeschaltet!",
+      "locked": "Gesperrt",
+      "progress": "{{percent}}% abgeschlossen",
+      "justUnlocked": "Erfolg freigeschaltet",
+      "categories": {
+        "chat": "Gespräche",
+        "dive": "The Dive",
+        "lighthouse": "Leuchtturm",
+        "tidelog": "Gezeitenprotokoll",
+        "streak": "Beständigkeit",
+        "milestone": "Meilensteine"
+      },
+      "streak": {
+        "day": "Tag",
+        "days": "Tage",
+        "keepGoing": "Dein Rhythmus wächst",
+        "start": "Starte deine Serie heute",
+        "personalBest": "Persönlicher Rekord!",
+        "longest": "Dein Rekord: {{count}} Tage",
+        "nextMilestone": "Nächster Meilenstein: {{days}} Tage"
+      },
+      "names": {
+        "first_light": "Erstes Licht",
+        "echoes_in_the_deep": "Echos in der Tiefe",
+        "the_depths_know_you": "Die Tiefe kennt dich",
+        "first_descent": "Erster Abstieg",
+        "twilight_explorer": "Dämmerungsforscher",
+        "midnight_navigator": "Mitternachtsnavigator",
+        "trench_walker": "Grabenläufer",
+        "first_beam": "Erster Strahl",
+        "pattern_spotter": "Mustererkenner",
+        "lighthouse_keeper": "Leuchtturmwärter",
+        "first_tide": "Erste Gezeit",
+        "reef_builder": "Riffbauer",
+        "coral_garden": "Korallengarten",
+        "tide_chronicler": "Gezeitenchronist",
+        "gentle_current": "Sanfte Strömung",
+        "steady_tide": "Stetige Gezeit",
+        "moon_cycle": "Mondzyklus",
+        "deep_release": "Tiefes Loslassen"
+      },
+      "descriptions": {
+        "first_light": "Starte dein erstes Gespräch",
+        "echoes_in_the_deep": "Führe 10 Gespräche",
+        "the_depths_know_you": "Führe 50 Gespräche",
+        "first_descent": "Schließe deine erste Dive-Lektion ab",
+        "twilight_explorer": "Schließe 5 Dive-Lektionen ab",
+        "midnight_navigator": "Schließe 15 Dive-Lektionen ab",
+        "trench_walker": "Schließe alle 25 Dive-Lektionen ab",
+        "first_beam": "Erstelle deinen ersten Leuchtturm-Eintrag",
+        "pattern_spotter": "Erstelle 5 Leuchtturm-Einträge",
+        "lighthouse_keeper": "Erstelle 25 Leuchtturm-Einträge",
+        "first_tide": "Schreibe deinen ersten Tagebucheintrag",
+        "reef_builder": "Schreibe 7 Tagebucheinträge",
+        "coral_garden": "Schreibe 30 Tagebucheinträge",
+        "tide_chronicler": "Schreibe 100 Tagebucheinträge",
+        "gentle_current": "Halte eine 3-Tage-Serie",
+        "steady_tide": "Halte eine 7-Tage-Serie",
+        "moon_cycle": "Halte eine 30-Tage-Serie",
+        "deep_release": "Gib einen Tagebucheintrag frei"
       }
     },
     "errors": {
