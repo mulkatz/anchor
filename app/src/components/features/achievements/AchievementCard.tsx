@@ -117,15 +117,15 @@ export const AchievementCard: FC<AchievementCardProps> = ({ achievement }) => {
           {/* Bottom-right badge on icon: Checkmark for unlocked, Lock for locked */}
           {isUnlocked ? (
             <motion.div
-              className="absolute -bottom-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-biolum-cyan"
+              className="absolute -bottom-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full border border-biolum-cyan/50 bg-biolum-cyan"
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ type: 'spring', stiffness: 500, damping: 25 }}
             >
-              <Check size={10} className="text-void-blue" strokeWidth={3} />
+              <Check size={8} className="text-void-blue" strokeWidth={3} />
             </motion.div>
           ) : (
-            <div className="absolute -bottom-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-void-blue">
+            <div className="absolute -bottom-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full border border-mist-white/20 bg-void-blue">
               <Lock size={8} className="text-mist-white/40" strokeWidth={2.5} />
             </div>
           )}
