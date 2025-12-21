@@ -95,32 +95,31 @@ export const DiveLessonPage: FC = () => {
   return (
     <div className="flex h-full flex-col overflow-hidden bg-void-blue/85">
       {/* Header */}
-      <header
-        className="flex shrink-0 items-center gap-4 px-4 pb-4 pt-safe"
-        style={{ borderBottom: `1px solid ${theme.glow}` }}
-      >
-        <button
-          onClick={handleBack}
-          className="rounded-full p-2 transition-colors hover:bg-glass-bg-hover"
-        >
-          <ArrowLeft className="h-5 w-5 text-mist-white" />
-        </button>
-        <div className="flex-1">
-          <div className="flex items-center gap-2">
-            <div className="h-2 w-2 rounded-full" style={{ backgroundColor: theme.primary }} />
-            <span className="text-xs text-mist-white/60">
-              {localizedLesson?.zone || t(getZoneTranslationKey(lessonBase.zone))}
-            </span>
+      <header className="shrink-0 border-b border-glass-border bg-void-blue px-4 py-4 pt-safe">
+        <div className="flex items-center gap-4">
+          <button
+            onClick={handleBack}
+            className="rounded-full p-2 transition-colors hover:bg-glass-bg-hover"
+          >
+            <ArrowLeft className="h-5 w-5 text-mist-white" />
+          </button>
+          <div className="flex-1">
+            <div className="flex items-center gap-2">
+              <div className="h-2 w-2 rounded-full" style={{ backgroundColor: theme.primary }} />
+              <span className="text-xs text-mist-white/60">
+                {localizedLesson?.zone || t(getZoneTranslationKey(lessonBase.zone))}
+              </span>
+            </div>
+            <h1 className="font-medium text-mist-white">
+              {isLessonLoading ? (
+                <span className="inline-block h-5 w-32 animate-pulse rounded bg-mist-white/10" />
+              ) : (
+                localizedLesson?.title || lessonBase.title
+              )}
+            </h1>
           </div>
-          <h1 className="font-medium text-mist-white">
-            {isLessonLoading ? (
-              <span className="inline-block h-5 w-32 animate-pulse rounded bg-mist-white/10" />
-            ) : (
-              localizedLesson?.title || lessonBase.title
-            )}
-          </h1>
+          {isLessonComplete && <CheckCircle className="h-6 w-6 text-green-400" />}
         </div>
-        {isLessonComplete && <CheckCircle className="h-6 w-6 text-green-400" />}
       </header>
 
       <AnimatePresence mode="wait">
@@ -241,11 +240,14 @@ export const DiveLessonPage: FC = () => {
               messages={messages}
               isThinking={isThinking}
               isLessonComplete={isLessonComplete}
+              zoneColor={theme.primary}
               onNavigateBack={handleBack}
             />
 
-            {/* Input - reuse ChatInput for consistent UX */}
+            {/* Input - dive variant for meditative experience */}
             <ChatInput
+              variant="dive"
+              zoneColor={theme.primary}
               onSend={sendReflection}
               onSendVoice={sendVoiceReflection}
               disabled={isThinking}

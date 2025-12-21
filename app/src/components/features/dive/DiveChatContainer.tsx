@@ -2,30 +2,41 @@ import { type FC, useRef, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { Sparkles, ChevronRight, Anchor } from 'lucide-react';
-import { AssistantMessage } from '../chat/AssistantMessage';
-import { UserMessage } from '../chat/UserMessage';
-import { AudioMessageBubble } from '../chat/AudioMessageBubble';
-import { ThinkingIndicator } from '../chat/ThinkingIndicator';
+import { DiveGuideMessage } from './DiveGuideMessage';
+import { DiveUserMessage } from './DiveUserMessage';
+import { DiveMessageBubble } from './DiveMessageBubble';
+import { DiveThinkingIndicator } from './DiveThinkingIndicator';
+import { DiveAudioMessage } from './DiveAudioMessage';
 import { useNavbarHeight } from '../../../hooks/useNavbarHeight';
 import type { DiveMessage, Message } from '../../../models';
 import { cn } from '../../../utils/cn';
+
+/** Zone colors for each ocean depth */
+export const ZONE_COLORS: Record<string, string> = {
+  'the-shallows': '#64FFDA',
+  'the-twilight-zone': '#FFB38A',
+  'the-midnight-zone': '#A78BFA',
+  'the-trench': '#60A5FA',
+};
 
 interface DiveChatContainerProps {
   messages: DiveMessage[];
   isThinking: boolean;
   isLessonComplete: boolean;
+  zoneColor: string;
   onNavigateBack: () => void;
 }
 
 /**
  * Dive Chat Container
- * Reuses standard chat components for consistent UX
- * Displays messages from the Somatic Guide and user reflections
+ * Immersive, meditative message display with zone-colored atmosphere
+ * Uses centered italic guide text and whisper-like user thoughts
  */
 export const DiveChatContainer: FC<DiveChatContainerProps> = ({
   messages,
   isThinking,
   isLessonComplete,
+  zoneColor,
   onNavigateBack,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -84,7 +95,7 @@ export const DiveChatContainer: FC<DiveChatContainerProps> = ({
   // Calculate the space needed for input area: navbar offset + input height (~80px) + gap (16px)
   const inputAreaHeight = navbarOffset > 0 ? navbarOffset + 80 + 16 : 160;
 
-  // Map DiveMessage to Message format for reusing chat components
+  // Map DiveMessage to Message format for audio bubbles (only thing we still reuse)
   const mapToMessage = (msg: DiveMessage): Message => ({
     id: msg.id,
     conversationId: msg.sessionId,
@@ -99,22 +110,18 @@ export const DiveChatContainer: FC<DiveChatContainerProps> = ({
     metadata: msg.metadata,
   });
 
-  // Animation variants
-  const messageVariants = {
-    initial: { opacity: 0, y: 20, scale: 0.95 },
-    animate: { opacity: 1, y: 0, scale: 1 },
+  // Convert hex to rgba for gradient
+  const hexToRgba = (hex: string, alpha: number) => {
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
   };
-
-  const messageTransition = (index: number) => ({
-    duration: 0.6,
-    ease: [0.22, 1, 0.36, 1] as [number, number, number, number],
-    delay: index * 0.05,
-  });
 
   return (
     <div
       ref={containerRef}
-      className="absolute left-0 right-0 top-0 overflow-y-auto px-4 pb-4 pt-4 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-white/5 [&::-webkit-scrollbar-thumb]:transition-colors hover:[&::-webkit-scrollbar-thumb]:bg-white/10 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar]:w-1.5"
+      className="absolute left-0 right-0 top-0 overflow-y-auto pb-8 pt-12 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-white/5 [&::-webkit-scrollbar-thumb]:transition-colors hover:[&::-webkit-scrollbar-thumb]:bg-white/10 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar]:w-1.5"
       style={{
         bottom: `${inputAreaHeight}px`,
       }}
@@ -124,31 +131,42 @@ export const DiveChatContainer: FC<DiveChatContainerProps> = ({
         const isLastMessage = index === messages.length - 1;
         const isCompletionMessage = message.metadata?.isLessonComplete === true;
 
+        // Check if speaker changed from previous message
+        const prevMessage = index > 0 ? messages[index - 1] : null;
+        const speakerChanged = prevMessage && prevMessage.role !== message.role;
+        const isUserMessage = message.role === 'user';
+
         return (
-          <motion.div
-            key={message.id}
-            ref={isLastMessage ? lastMessageRef : undefined}
-            variants={messageVariants}
-            initial="initial"
-            animate="animate"
-            transition={messageTransition(index)}
-            layout
-          >
-            {message.role === 'guide' ? (
-              <AssistantMessage text={message.text} timestamp={message.createdAt} />
-            ) : message.hasAudio ? (
-              <AudioMessageBubble message={mappedMessage} />
-            ) : (
-              <UserMessage text={message.text} timestamp={message.createdAt} />
+          <div key={message.id} ref={isLastMessage ? lastMessageRef : undefined}>
+            {/* Ethereal divider when speaker changes */}
+            {speakerChanged && (
+              <div className="my-10 flex justify-center">
+                <div
+                  className="h-px w-10 rounded-full"
+                  style={{
+                    background: `linear-gradient(90deg, transparent, ${isUserMessage ? '#FFB38A' : zoneColor}25, transparent)`,
+                  }}
+                />
+              </div>
             )}
+
+            <DiveMessageBubble index={index}>
+              {message.role === 'guide' ? (
+                <DiveGuideMessage text={message.text} zoneColor={zoneColor} />
+              ) : message.hasAudio ? (
+                <DiveAudioMessage message={mappedMessage} />
+              ) : (
+                <DiveUserMessage text={message.text} />
+              )}
+            </DiveMessageBubble>
 
             {/* Show lesson complete card inline after the completion message */}
             {isCompletionMessage && <LessonCompleteCard onNavigateBack={onNavigateBack} />}
-          </motion.div>
+          </div>
         );
       })}
 
-      {isThinking && <ThinkingIndicator />}
+      {isThinking && <DiveThinkingIndicator zoneColor={zoneColor} />}
 
       {/* Scroll anchor */}
       <div ref={messagesEndRef} />

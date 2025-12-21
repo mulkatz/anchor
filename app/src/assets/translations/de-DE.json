@@ -297,6 +297,9 @@
       },
       "nextLesson": "Zur nächsten Lektion",
       "returnToMap": "Zurück zur Karte",
+      "input": {
+        "placeholder": "Lass deine Gedanken aufsteigen..."
+      },
       "zones": {
         "shallows": "Die Untiefen",
         "shallowsDesc": "Ventral Vagal - Ruhig, Verbunden",

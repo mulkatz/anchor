@@ -289,6 +289,9 @@
       },
       "nextLesson": "Continue to Next Lesson",
       "returnToMap": "Return to Map",
+      "input": {
+        "placeholder": "Surface your thoughts..."
+      },
       "zones": {
         "shallows": "The Shallows",
         "shallowsDesc": "Ventral Vagal - Calm, Connected",

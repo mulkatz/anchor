@@ -17,9 +17,10 @@ interface ChatInputBaseProps {
 }
 
 interface ChatVariantProps extends ChatInputBaseProps {
-  variant?: 'chat';
+  variant?: 'chat' | 'dive';
   onSend: (text: string) => void;
   onSendVoice?: (recordingData: RecordingData) => void;
+  zoneColor?: string; // For dive variant - subtle accent color
   value?: undefined;
   onChange?: undefined;
 }
@@ -36,13 +37,16 @@ type ChatInputProps = ChatVariantProps | FormVariantProps;
 
 /**
  * Chat Input Component
- * Supports two variants:
+ * Supports three variants:
  * - "chat": Positioned at bottom, auto-resizing, with send/mic button (default)
+ * - "dive": Like chat but with meditative placeholder for The Dive feature
  * - "form": Inline, stretched textarea with mic button, externally controlled
  */
 export const ChatInput: FC<ChatInputProps> = (props) => {
   const { variant = 'chat', disabled, placeholder, className } = props;
   const isFormVariant = variant === 'form';
+  const isDiveVariant = variant === 'dive';
+  const zoneColor = !isFormVariant ? (props as ChatVariantProps).zoneColor : undefined;
 
   const { t } = useTranslation();
   const [internalText, setInternalText] = useState('');
@@ -221,16 +225,15 @@ export const ChatInput: FC<ChatInputProps> = (props) => {
     );
   }
 
-  // Chat variant: positioned at bottom
+  // Chat/Dive variant: positioned at bottom
   return (
     <div
       className={cn(
         'absolute bottom-0 left-0 right-0 z-40',
-        'px-4 pb-4 pt-3 sm:px-6',
-        'bg-void-blue/95 backdrop-blur-glass',
-        'border-t border-glass-border',
+        'px-4 pb-4 sm:px-6',
         'pointer-events-auto',
         'touch-manipulation',
+        'border-t border-glass-border bg-void-blue/95 pt-3 backdrop-blur-glass',
         className
       )}
       style={{
@@ -241,10 +244,10 @@ export const ChatInput: FC<ChatInputProps> = (props) => {
         onClick={() => textareaRef.current?.focus()}
         className={cn(
           'flex items-center gap-3',
-          'bg-glass-bg backdrop-blur-glass',
-          'rounded-3xl border border-glass-border',
-          'px-4 py-3 shadow-glass',
-          'cursor-text'
+          'rounded-3xl px-4 py-3',
+          'cursor-text',
+          'transition-all duration-300',
+          'border border-glass-border bg-glass-bg shadow-glass backdrop-blur-glass'
         )}
       >
         <textarea
@@ -253,7 +256,9 @@ export const ChatInput: FC<ChatInputProps> = (props) => {
           onChange={(e) => setText(e.target.value)}
           onKeyPress={handleKeyPress}
           onTouchStart={() => textareaRef.current?.focus()}
-          placeholder={placeholder || t('chat.inputPlaceholder')}
+          placeholder={
+            placeholder || t(isDiveVariant ? 'dive.input.placeholder' : 'chat.inputPlaceholder')
+          }
           disabled={disabled}
           inputMode="text"
           enterKeyHint="send"
@@ -285,11 +290,13 @@ export const ChatInput: FC<ChatInputProps> = (props) => {
             className={cn(
               'flex items-center justify-center self-end',
               'h-10 w-10 shrink-0 rounded-full',
-              'bg-biolum-cyan text-void-blue',
               'transition-all duration-300 ease-viscous',
               'active:scale-90',
               'disabled:cursor-not-allowed disabled:opacity-30',
-              !disabled && text.trim() && 'shadow-glow-md'
+              // Dive variant: very subtle send button
+              isDiveVariant
+                ? 'bg-white/10 text-mist-white/60 hover:bg-white/15 hover:text-mist-white/80'
+                : cn('bg-biolum-cyan text-void-blue', !disabled && text.trim() && 'shadow-glow-md')
             )}
           >
             <Send size={20} />

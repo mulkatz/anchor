@@ -19,7 +19,7 @@ interface MicRecordButtonProps {
  * - Form variant: records, transcribes, and appends text
  *
  * Features:
- * - Consistent styling across the app (biolum-cyan theme)
+ * - Subtle, minimal styling (white/10 background)
  * - Recording state: scales up, pulses, danger color
  * - Transcribing state: loading spinner
  * - Prevents event propagation to avoid textarea focus issues
@@ -48,15 +48,16 @@ export const MicRecordButton: FC<MicRecordButtonProps> = ({
       className={cn(
         'flex items-center justify-center',
         'h-10 w-10 rounded-full',
-        'bg-biolum-cyan text-void-blue',
         'transition-all duration-300 ease-viscous',
         'disabled:cursor-not-allowed disabled:opacity-30',
-        // Idle state
-        !isRecording && !isTranscribing && 'shadow-glow-md hover:shadow-glow-lg active:scale-95',
-        // Recording state
+        // Idle state: subtle appearance
+        !isRecording &&
+          !isTranscribing &&
+          'bg-white/10 text-mist-white/60 hover:bg-white/15 hover:text-mist-white/80 active:scale-95',
+        // Recording state: danger color with pulse
         isRecording && 'scale-110 animate-pulse bg-danger text-white shadow-glow-lg',
-        // Transcribing state
-        isTranscribing && 'bg-biolum-cyan/50',
+        // Transcribing state: subtle with spinner
+        isTranscribing && 'bg-white/10 text-mist-white/60',
         className
       )}
       title={
