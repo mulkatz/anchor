@@ -8,7 +8,6 @@ import { DiveProvider } from '../contexts/DiveContext';
 import { InsightProvider } from '../contexts/InsightContext';
 import { AchievementProvider } from '../contexts/AchievementContext';
 import { MainLayout } from '../components/layouts/MainLayout';
-import { useOnboarding } from '../hooks/useOnboarding';
 import { HomePage } from './HomePage';
 import { SOSPage } from './SOSPage';
 import { ChatPage } from './ChatPage';
@@ -257,8 +256,11 @@ const AnimatedRoutes: FC = () => {
 
 // Router content component that handles onboarding redirect logic
 const RouterContent: FC = () => {
-  const { hasCompleted } = useOnboarding();
   const location = useLocation();
+
+  // Read directly from localStorage to ensure we get the latest value
+  // (React state in useOnboarding doesn't sync between hook instances)
+  const hasCompleted = localStorage.getItem('onboardingCompleted') === 'true';
 
   // If onboarding not completed and not on onboarding page, redirect to onboarding
   if (!hasCompleted && location.pathname !== '/onboarding') {
