@@ -4,9 +4,14 @@ import { AnimatePresence } from 'framer-motion';
 import { useOnboarding } from '../hooks/useOnboarding';
 import { useHaptics } from '../hooks/useHaptics';
 import { OceanicBubbles } from '../components/ui/OceanicBubbles';
-import { OnboardingProgress, WelcomeStep, PillarsStep } from '../components/features/onboarding';
+import {
+  OnboardingProgress,
+  WelcomeStep,
+  PillarsStep,
+  DisclaimerStep,
+} from '../components/features/onboarding';
 
-const TOTAL_STEPS = 2;
+const TOTAL_STEPS = 3;
 
 export function OnboardingPage() {
   const [step, setStep] = useState(1);
@@ -40,7 +45,10 @@ export function OnboardingPage() {
           <WelcomeStep key="welcome" onContinue={() => goToStep(2)} direction={direction} />
         )}
         {step === 2 && (
-          <PillarsStep key="pillars" onComplete={handleComplete} direction={direction} />
+          <PillarsStep key="pillars" onComplete={() => goToStep(3)} direction={direction} />
+        )}
+        {step === 3 && (
+          <DisclaimerStep key="disclaimer" onComplete={handleComplete} direction={direction} />
         )}
       </AnimatePresence>
     </div>
