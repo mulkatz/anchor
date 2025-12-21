@@ -35,23 +35,23 @@ export const StreakCard: FC<StreakCardProps> = ({ currentStreak, longestStreak }
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] }}
-        className="relative mb-6 overflow-hidden rounded-xl border border-glass-border/50 bg-glass-bg/30"
+        className="relative mb-6 overflow-hidden rounded-xl border border-warm-ember/15 bg-void-blue/80"
       >
         <div className="flex items-center gap-3 px-4 py-3">
           {/* Inactive flame */}
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-mist-white/5">
-            <Flame size={20} className="text-mist-white/20" />
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-warm-ember/10">
+            <Flame size={20} className="text-warm-ember/30" />
           </div>
 
           {/* Encouragement text */}
           <div className="flex-1">
-            <p className="text-sm font-medium text-mist-white/70">{t('treasures.streak.start')}</p>
-            <p className="text-xs text-mist-white/40">{t('treasures.streak.firstGoal')}</p>
+            <p className="text-sm font-medium text-mist-white/60">{t('treasures.streak.start')}</p>
+            <p className="text-xs text-mist-white/35">{t('treasures.streak.firstGoal')}</p>
           </div>
 
           {/* Target icon */}
           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-warm-ember/10">
-            <Target size={16} className="text-warm-ember/50" />
+            <Target size={16} className="text-warm-ember/40" />
           </div>
         </div>
       </motion.div>

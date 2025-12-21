@@ -45,17 +45,14 @@ export const AchievementCard: FC<AchievementCardProps> = ({ achievement }) => {
       className={cn(
         'relative flex aspect-square w-full flex-col items-center justify-center rounded-xl p-2',
         'transition-all duration-500 ease-viscous',
-        isUnlocked ? 'bg-biolum-cyan/10' : 'bg-void-blue/60'
+        isUnlocked ? 'bg-biolum-cyan/10' : 'bg-void-blue/40'
       )}
       whileTap={{ scale: 0.95 }}
     >
-      {/* Border */}
-      <div
-        className={cn(
-          'pointer-events-none absolute inset-0 rounded-xl border',
-          isUnlocked ? 'border-biolum-cyan/40' : 'border-mist-white/8'
-        )}
-      />
+      {/* Border - only for unlocked items */}
+      {isUnlocked && (
+        <div className="pointer-events-none absolute inset-0 rounded-xl border border-biolum-cyan/40" />
+      )}
 
       {/* Glow for unlocked */}
       {isUnlocked && (
@@ -116,25 +113,18 @@ export const AchievementCard: FC<AchievementCardProps> = ({ achievement }) => {
             strokeWidth={isUnlocked ? 2 : 1.5}
             className={cn(
               'transition-colors duration-300',
-              isUnlocked ? 'text-biolum-cyan' : 'text-mist-white/20'
+              isUnlocked ? 'text-biolum-cyan' : 'text-mist-white/25'
             )}
           />
-
-          {/* Lock overlay for locked achievements */}
-          {!isUnlocked && (
-            <div className="absolute -bottom-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full border border-mist-white/20 bg-void-blue">
-              <Lock size={9} className="text-mist-white/40" strokeWidth={2.5} />
-            </div>
-          )}
         </div>
       </div>
 
-      {/* Name */}
+      {/* Name - fixed 2 lines for consistent height */}
       <span
         className={cn(
           'w-full text-center text-[9px] font-medium leading-tight',
-          'line-clamp-2 px-0.5',
-          isUnlocked ? 'text-mist-white' : 'text-mist-white/35'
+          'line-clamp-2 min-h-[24px] px-0.5',
+          isUnlocked ? 'text-mist-white' : 'text-mist-white/40'
         )}
       >
         {t(`treasures.names.${achievement.id}`)}
@@ -142,13 +132,13 @@ export const AchievementCard: FC<AchievementCardProps> = ({ achievement }) => {
 
       {/* Progress percentage */}
       {hasProgress && (
-        <span className="mt-0.5 text-[8px] font-semibold text-biolum-cyan/70">
+        <span className="text-[8px] font-semibold text-biolum-cyan/70">
           {Math.round(achievement.progress)}%
         </span>
       )}
 
-      {/* Checkmark badge for unlocked */}
-      {isUnlocked && (
+      {/* Top-right badge: Checkmark for unlocked, Lock for locked */}
+      {isUnlocked ? (
         <motion.div
           className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-biolum-cyan"
           initial={{ scale: 0 }}
@@ -157,6 +147,10 @@ export const AchievementCard: FC<AchievementCardProps> = ({ achievement }) => {
         >
           <Check size={10} className="text-void-blue" strokeWidth={3} />
         </motion.div>
+      ) : (
+        <div className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full border border-mist-white/15 bg-void-blue">
+          <Lock size={8} className="text-mist-white/35" strokeWidth={2.5} />
+        </div>
       )}
     </motion.div>
   );
