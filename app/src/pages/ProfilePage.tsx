@@ -210,7 +210,7 @@ export const ProfilePage: FC = () => {
 
   const handleViewAchievements = async () => {
     await light();
-    navigate('/achievements');
+    navigate('/treasures');
   };
 
   const handleVisitWebsite = async () => {

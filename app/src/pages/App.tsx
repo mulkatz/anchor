@@ -206,7 +206,7 @@ const AnimatedRoutes: FC = () => {
           }
         />
         <Route
-          path="/achievements"
+          path="/treasures"
           element={
             <motion.div
               variants={pageVariants}

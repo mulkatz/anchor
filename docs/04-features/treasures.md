@@ -130,7 +130,7 @@ Only one activity per type per day counts (idempotent via `arrayUnion`).
 
 ## UI Components
 
-### AchievementsPage (`/achievements`)
+### AchievementsPage (`/treasures`)
 
 - Header with title + progress count
 - StreakCard at top (warm-ember themed)

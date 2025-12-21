@@ -7,6 +7,7 @@ import { useAchievements } from '../contexts/AchievementContext';
 import { useUI } from '../contexts/UIContext';
 import { useHaptics } from '../hooks/useHaptics';
 import { AchievementSection, StreakCard } from '../components/features/achievements';
+import { LoadingSpinner } from '../components/ui';
 import { categoryOrder } from '../data/achievements';
 import { cn } from '../utils/cn';
 import type { AchievementCategory } from '../models';
@@ -100,15 +101,7 @@ export const AchievementsPage: FC = () => {
         style={{ paddingBottom: `${navbarBottom + 24}px` }}
       >
         {isLoading ? (
-          <div className="flex items-center justify-center py-12">
-            <motion.div
-              animate={{ opacity: [0.5, 1, 0.5] }}
-              transition={{ duration: 1.5, repeat: Infinity }}
-              className="text-mist-white/50"
-            >
-              {t('general.loading')}
-            </motion.div>
-          </div>
+          <LoadingSpinner className="flex-1" />
         ) : (
           <>
             {/* Streak Card - Prominent at top */}
