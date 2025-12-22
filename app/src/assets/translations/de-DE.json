@@ -178,6 +178,7 @@
     },
     "appLikePrompt": {
       "title": "Gefällt dir Anchor?",
+      "subtitle": "Dein Feedback hilft uns, das Erlebnis für alle zu verbessern.",
       "yes": "Ja, ich liebe es!",
       "no": "Nicht wirklich"
     },

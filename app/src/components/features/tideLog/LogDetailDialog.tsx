@@ -84,33 +84,38 @@ export const LogDetailDialog: FC<LogDetailDialogProps> = ({ log, onClose }) => {
 
   return (
     <>
-      <div className="fixed inset-0 z-[9999] flex items-center justify-center px-4 pt-safe pb-safe">
-        {/* Backdrop */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.2 }}
-          className="absolute inset-0 bg-void-blue/80 backdrop-blur-md"
-          onClick={handleClose}
-        />
+      {/* Backdrop */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.2 }}
+        className="fixed inset-0 z-[9998] bg-void-blue/80 backdrop-blur-md"
+        onClick={handleClose}
+      />
 
-        {/* Dialog */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95, y: 20 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.95, y: 20 }}
-          transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-          className="relative z-10 w-full max-w-lg"
-          onClick={(e) => e.stopPropagation()}
-        >
-          <div className="rounded-3xl border border-glass-border bg-glass-bg p-6 shadow-glass backdrop-blur-glass">
+      {/* Dialog */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.9, y: 20 }}
+        transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+        className="pointer-events-none fixed inset-0 z-[9999] flex items-center justify-center px-4 pt-safe pb-safe"
+      >
+        <div className="pointer-events-auto w-full max-w-lg">
+          <div
+            className={cn(
+              'rounded-2xl border border-glass-border',
+              'bg-void-blue/95 backdrop-blur-glass',
+              'p-6 shadow-glass'
+            )}
+          >
             {/* Header */}
             <div className="mb-6 flex items-start justify-between">
               <div className="flex items-center gap-3">
                 <Icon size={56} className={iconColor} />
                 <div>
-                  <h2 className="text-xl font-semibold text-mist-white">
+                  <h2 className="text-xl font-medium text-mist-white">
                     {t(`tideLog.weather.${log.weather}`)}
                   </h2>
                   <p className="text-sm text-mist-white/60">
@@ -200,8 +205,8 @@ export const LogDetailDialog: FC<LogDetailDialogProps> = ({ log, onClose }) => {
               <span>{isDeleting ? 'Deleting...' : t('general.delete')}</span>
             </button>
           </div>
-        </motion.div>
-      </div>
+        </div>
+      </motion.div>
 
       {/* Delete confirmation dialog */}
       <ConfirmDialog

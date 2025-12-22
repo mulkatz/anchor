@@ -1,6 +1,6 @@
 import { type FC } from 'react';
 import { motion } from 'framer-motion';
-import { Heart, Meh } from 'lucide-react';
+import { Anchor } from 'lucide-react';
 import { useHaptics } from '../../../hooks/useHaptics';
 import { logAnalyticsEvent, AnalyticsEvent } from '../../../services/analytics.service';
 import { cn } from '../../../utils/cn';
@@ -9,7 +9,6 @@ import { useTranslation } from 'react-i18next';
 /**
  * AppLikePromptDialog Component
  * Pre-rating prompt to filter users before showing native rating dialog
- * Adapted from cap2cal's AppLikePrompt
  */
 
 interface AppLikePromptDialogProps {
@@ -41,65 +40,77 @@ export const AppLikePromptDialog: FC<AppLikePromptDialogProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center px-4 pt-safe pb-safe">
+    <>
       {/* Backdrop */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         transition={{ duration: 0.2 }}
-        className="absolute inset-0 bg-void-blue/80 backdrop-blur-md"
+        className="fixed inset-0 z-[9998] bg-void-blue/80 backdrop-blur-md"
         onClick={onClose}
       />
 
       {/* Dialog */}
       <motion.div
-        initial={{ opacity: 0, scale: 0.95, y: 20 }}
+        initial={{ opacity: 0, scale: 0.9, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.95, y: 20 }}
+        exit={{ opacity: 0, scale: 0.9, y: 20 }}
         transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-        className="relative z-10 w-full max-w-sm"
-        onClick={(e) => e.stopPropagation()}
+        className="pointer-events-none fixed inset-0 z-[9999] flex items-center justify-center px-4 pt-safe pb-safe"
       >
-        <div className="rounded-3xl border border-glass-border bg-glass-bg p-6 shadow-glass backdrop-blur-glass">
-          <h2 className="mb-6 text-center text-xl font-semibold text-mist-white">
-            {t('appLikePrompt.title')}
-          </h2>
+        <div className="pointer-events-auto w-full max-w-md">
+          <div
+            className={cn(
+              'rounded-2xl border border-glass-border',
+              'bg-void-blue/95 backdrop-blur-glass',
+              'p-6 shadow-glass'
+            )}
+          >
+            {/* Icon */}
+            <div className="mb-4 flex justify-center">
+              <Anchor size={40} className="text-biolum-cyan" />
+            </div>
 
-          {/* Buttons */}
-          <div className="flex gap-3">
-            {/* No button */}
-            <button
-              onClick={handleDislike}
-              className={cn(
-                'flex flex-1 flex-col items-center gap-2 rounded-2xl p-6',
-                'border border-glass-border bg-glass-bg',
-                'transition-all duration-300 ease-viscous',
-                'hover:bg-glass-bg-hover active:scale-95'
-              )}
-            >
-              <Meh className="text-mist-white/60" size={32} />
-              <span className="text-sm font-medium text-mist-white/80">
+            {/* Content */}
+            <h2 className="mb-2 text-center text-xl font-medium text-mist-white">
+              {t('appLikePrompt.title')}
+            </h2>
+            <p className="mb-6 text-center text-sm text-mist-white/70">
+              {t('appLikePrompt.subtitle')}
+            </p>
+
+            {/* Actions - both neutral style for unbiased selection */}
+            <div className="flex gap-3">
+              <button
+                onClick={handleDislike}
+                className={cn(
+                  'flex-1 rounded-full px-4 py-3',
+                  'border border-glass-border bg-glass-bg',
+                  'text-sm font-medium text-mist-white',
+                  'transition-all duration-300 ease-viscous',
+                  'hover:bg-glass-bg-hover active:scale-95'
+                )}
+              >
                 {t('appLikePrompt.no')}
-              </span>
-            </button>
+              </button>
 
-            {/* Yes button */}
-            <button
-              onClick={handleLike}
-              className={cn(
-                'flex flex-1 flex-col items-center gap-2 rounded-2xl p-6',
-                'bg-biolum-cyan',
-                'transition-all duration-300 ease-viscous',
-                'shadow-glow-md active:scale-95'
-              )}
-            >
-              <Heart className="text-void-blue" size={32} fill="currentColor" />
-              <span className="text-sm font-medium text-void-blue">{t('appLikePrompt.yes')}</span>
-            </button>
+              <button
+                onClick={handleLike}
+                className={cn(
+                  'flex-1 rounded-full px-4 py-3',
+                  'border border-glass-border bg-glass-bg',
+                  'text-sm font-medium text-mist-white',
+                  'transition-all duration-300 ease-viscous',
+                  'hover:bg-glass-bg-hover active:scale-95'
+                )}
+              >
+                {t('appLikePrompt.yes')}
+              </button>
+            </div>
           </div>
         </div>
       </motion.div>
-    </div>
+    </>
   );
 };

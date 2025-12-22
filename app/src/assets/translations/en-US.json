@@ -169,7 +169,8 @@
       "understand": "I Understand"
     },
     "appLikePrompt": {
-      "title": "Are you enjoying Anchor?",
+      "title": "Enjoying Anchor?",
+      "subtitle": "Your feedback helps us improve the experience for everyone.",
       "yes": "Yes, I love it!",
       "no": "Not really"
     },
