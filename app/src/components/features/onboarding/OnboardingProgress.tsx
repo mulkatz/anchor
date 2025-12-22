@@ -17,7 +17,7 @@ export function OnboardingProgress({ currentStep, totalSteps }: OnboardingProgre
               backgroundColor:
                 step <= currentStep ? 'rgba(100, 255, 218, 1)' : 'rgba(226, 232, 240, 0.2)',
             }}
-            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
             className="h-2 rounded-full"
             style={{
               boxShadow: step === currentStep ? '0 0 10px rgba(100, 255, 218, 0.5)' : 'none',
