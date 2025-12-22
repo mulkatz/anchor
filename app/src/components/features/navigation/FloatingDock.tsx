@@ -51,7 +51,7 @@ export const FloatingDock: FC = () => {
     >
       <nav
         className={cn(
-          'flex items-center gap-4 rounded-full px-6 py-3',
+          'flex items-center gap-4 overflow-visible rounded-full px-6 py-3',
           'bg-glass-bg backdrop-blur-glass',
           'border border-glass-border shadow-glass',
           'no-select'
