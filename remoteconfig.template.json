@@ -33,7 +33,7 @@
         },
         "update_url_ios": {
           "defaultValue": {
-            "value": "https://apps.apple.com/app/idXXXXXXXXXX"
+            "value": "https://apps.apple.com/app/id6756347720"
           },
           "description": "App Store URL for iOS app updates.",
           "valueType": "STRING"

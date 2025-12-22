@@ -98,7 +98,7 @@ export const initRemoteConfig = (): RemoteConfig => {
     min_required_version_android: '0.0.0',
     latest_version_ios: '0.0.0',
     latest_version_android: '0.0.0',
-    update_url_ios: 'https://apps.apple.com/app/idXXXXXXXXXX',
+    update_url_ios: 'https://apps.apple.com/app/id6756347720',
     update_url_android: 'https://play.google.com/store/apps/details?id=cx.franz.anxietybuddy',
   };
 
