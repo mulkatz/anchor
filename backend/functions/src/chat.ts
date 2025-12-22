@@ -243,11 +243,13 @@ IMPORTANT: You can now reference when things happened in your conversation. Each
           });
         });
 
-        // Get current story context for prompt injection
-        userStoryContext = await getLocalizedStoryContext(userId, languageCode);
-
-        // Get recent topics context (mid-term memory) for prompt injection
-        recentTopicsContext = await getLocalizedRecentTopicsContext(userId, languageCode);
+        // Get both contexts IN PARALLEL - don't add unnecessary latency!
+        const [storyContext, topicsContext] = await Promise.all([
+          getLocalizedStoryContext(userId, languageCode),
+          getLocalizedRecentTopicsContext(userId, languageCode),
+        ]);
+        userStoryContext = storyContext;
+        recentTopicsContext = topicsContext;
       } catch (storyError) {
         // Don't fail the main message flow if story operations fail
         logger.error('Failed in user story processing', {

@@ -159,6 +159,8 @@ export type TopicCategory =
   | 'life-event'
   | 'other';
 export type TopicStatus = 'active' | 'resolved' | 'fading';
+export type TopicValence = 'positive' | 'negative' | 'neutral';
+export type ResolutionOutcome = 'success' | 'neutral' | 'difficult' | undefined;
 
 export interface TopicExtraction {
   type: 'topic';
@@ -166,6 +168,8 @@ export interface TopicExtraction {
   context: string; // "Interview at Google on Friday"
   category: TopicCategory;
   status: TopicStatus;
+  valence?: TopicValence; // Is this positive/negative for them emotionally?
+  resolutionOutcome?: ResolutionOutcome; // If resolved, how did it go?
 }
 
 export interface ExtractionResult {
@@ -198,6 +202,16 @@ export interface RecentTopic {
 
   // Status
   status: TopicStatus;
+
+  // Emotional context - helps AI know how to bring it up
+  valence?: TopicValence; // positive/negative/neutral
+
+  // Resolution tracking - for celebrating wins
+  resolutionOutcome?: ResolutionOutcome; // How did it go? (only for resolved topics)
+  resolvedAt?: Date | FirebaseFirestore.Timestamp;
+
+  // Pattern detection - flag recurring themes
+  isRecurring?: boolean; // true if mentionCount >= 3
 
   // Optional: linked to user story fields
   relatedFields?: string[]; // ['therapeuticContext.knownTriggers']

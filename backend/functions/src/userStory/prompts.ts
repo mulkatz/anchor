@@ -78,15 +78,19 @@ Extract any specific problem, situation, or topic they're currently dealing with
 These are NOT permanent facts like name/age, but CURRENT situations with temporal relevance.
 
 Examples of what to extract as topics:
-- "I have a job interview next week" → topic about job interview anxiety
-- "My roommate and I had a fight" → topic about roommate conflict
-- "I can't sleep because of work stress" → topic about work-related sleep issues
-- "I started therapy last month" → topic about new therapy journey
-- "My mom is sick" → topic about family health concerns
-- "I have exams coming up" → topic about exam stress
+- "I have a job interview next week" → topic about job interview anxiety, valence: negative
+- "My roommate and I had a fight" → topic about roommate conflict, valence: negative
+- "I can't sleep because of work stress" → topic about work-related sleep issues, valence: negative
+- "I started therapy last month" → topic about new therapy journey, valence: positive (good step!)
+- "My mom is sick" → topic about family health concerns, valence: negative
+- "I have exams coming up" → topic about exam stress, valence: negative
+- "I got the job!" → topic about job interview, status: resolved, resolutionOutcome: success
+- "The interview didn't go well" → topic about job interview, status: resolved, resolutionOutcome: difficult
 
 Categories: work, relationships, health, anxiety, life-event, other
 Status: active (ongoing), resolved (they said it's done), fading (old, not mentioned recently)
+Valence: positive (exciting, hopeful), negative (stressful, worrying), neutral (informational)
+Resolution outcome (only for resolved topics): success, neutral, difficult
 
 Also detect if the user is asking to FORGET something they previously shared.
 
@@ -106,11 +110,27 @@ Output ONLY valid JSON:
       "topic": "job interview anxiety",
       "context": "Interview at Google on Friday",
       "category": "work",
-      "status": "active"
+      "status": "active",
+      "valence": "negative"
     }
   ],
   "suggestedFollowUps": ["occupation", "location"],
   "detectedForgetRequest": null
+}
+
+For resolved topics with outcomes:
+{
+  "topicExtractions": [
+    {
+      "type": "topic",
+      "topic": "job interview",
+      "context": "Got the job at Google!",
+      "category": "work",
+      "status": "resolved",
+      "valence": "positive",
+      "resolutionOutcome": "success"
+    }
+  ]
 }
 
 RULES:
@@ -205,15 +225,19 @@ Extrahiere jedes spezifische Problem, Situation oder Thema mit dem sie gerade zu
 Das sind KEINE permanenten Fakten wie Name/Alter, sondern AKTUELLE Situationen mit zeitlicher Relevanz.
 
 Beispiele was als Themen extrahiert werden soll:
-- "Ich hab nächste Woche ein Vorstellungsgespräch" → Thema über Bewerbungsangst
-- "Mein Mitbewohner und ich hatten Streit" → Thema über Mitbewohner-Konflikt
-- "Ich kann nicht schlafen wegen Arbeitsstress" → Thema über arbeitsbedingte Schlafprobleme
-- "Ich hab letzten Monat mit Therapie angefangen" → Thema über neue Therapie-Reise
-- "Meine Mama ist krank" → Thema über Gesundheitssorgen in der Familie
-- "Ich hab Prüfungen vor mir" → Thema über Prüfungsstress
+- "Ich hab nächste Woche ein Vorstellungsgespräch" → Thema über Bewerbungsangst, valence: negative
+- "Mein Mitbewohner und ich hatten Streit" → Thema über Mitbewohner-Konflikt, valence: negative
+- "Ich kann nicht schlafen wegen Arbeitsstress" → Thema über arbeitsbedingte Schlafprobleme, valence: negative
+- "Ich hab letzten Monat mit Therapie angefangen" → Thema über neue Therapie-Reise, valence: positive
+- "Meine Mama ist krank" → Thema über Gesundheitssorgen in der Familie, valence: negative
+- "Ich hab Prüfungen vor mir" → Thema über Prüfungsstress, valence: negative
+- "Ich hab den Job bekommen!" → Thema über Vorstellungsgespräch, status: resolved, resolutionOutcome: success
+- "Das Gespräch lief nicht gut" → Thema über Vorstellungsgespräch, status: resolved, resolutionOutcome: difficult
 
 Kategorien: work, relationships, health, anxiety, life-event, other
 Status: active (laufend), resolved (sie sagten es ist erledigt), fading (alt, nicht kürzlich erwähnt)
+Valence: positive (aufregend, hoffnungsvoll), negative (stressig, besorgniserregend), neutral (informativ)
+Resolution outcome (nur für resolved topics): success, neutral, difficult
 
 Erkenne auch ob der Nutzer darum bittet etwas zu VERGESSEN was er zuvor geteilt hat.
 
@@ -233,11 +257,27 @@ Gib NUR gültiges JSON aus:
       "topic": "Bewerbungsangst",
       "context": "Vorstellungsgespräch bei Google am Freitag",
       "category": "work",
-      "status": "active"
+      "status": "active",
+      "valence": "negative"
     }
   ],
   "suggestedFollowUps": ["occupation", "location"],
   "detectedForgetRequest": null
+}
+
+Für abgeschlossene Themen mit Ausgang:
+{
+  "topicExtractions": [
+    {
+      "type": "topic",
+      "topic": "Vorstellungsgespräch",
+      "context": "Job bei Google bekommen!",
+      "category": "work",
+      "status": "resolved",
+      "valence": "positive",
+      "resolutionOutcome": "success"
+    }
+  ]
 }
 
 REGELN:

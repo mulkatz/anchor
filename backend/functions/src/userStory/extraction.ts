@@ -405,6 +405,84 @@ export async function recordQuestionAsked(userId: string, topic: string): Promis
 // ============================================
 
 /**
+ * Calculate similarity between two topic strings using word overlap
+ * Returns a score from 0 to 1
+ */
+function calculateTopicSimilarity(topic1: string, topic2: string): number {
+  // Normalize and tokenize
+  const stopWords = new Set([
+    'the',
+    'a',
+    'an',
+    'and',
+    'or',
+    'but',
+    'in',
+    'on',
+    'at',
+    'to',
+    'for',
+    'of',
+    'with',
+    'about',
+    'my',
+    'i',
+    'me',
+  ]);
+  const tokenize = (s: string): Set<string> => {
+    const words = s
+      .toLowerCase()
+      .replace(/[^a-zA-Z0-9äöüß\s]/g, '') // Remove punctuation
+      .split(/\s+/)
+      .filter((w) => w.length > 2 && !stopWords.has(w));
+    return new Set(words);
+  };
+
+  const words1 = tokenize(topic1);
+  const words2 = tokenize(topic2);
+
+  if (words1.size === 0 || words2.size === 0) return 0;
+
+  // Calculate Jaccard similarity
+  const intersection = new Set([...words1].filter((w) => words2.has(w)));
+  const union = new Set([...words1, ...words2]);
+
+  return intersection.size / union.size;
+}
+
+/**
+ * Find the best matching existing topic for a new extraction
+ * Returns the index of the best match, or -1 if no good match
+ */
+function findMatchingTopic(newTopic: TopicExtraction, existingTopics: RecentTopic[]): number {
+  const SIMILARITY_THRESHOLD = 0.4; // 40% word overlap required
+  const CATEGORY_BOOST = 0.15; // Bonus for same category
+
+  let bestIndex = -1;
+  let bestScore = 0;
+
+  for (let i = 0; i < existingTopics.length; i++) {
+    const existing = existingTopics[i];
+
+    // Calculate base similarity
+    let score = calculateTopicSimilarity(newTopic.topic, existing.topic);
+
+    // Boost score if categories match
+    if (newTopic.category === existing.category) {
+      score += CATEGORY_BOOST;
+    }
+
+    // Check if this is the best match so far
+    if (score > bestScore && score >= SIMILARITY_THRESHOLD) {
+      bestScore = score;
+      bestIndex = i;
+    }
+  }
+
+  return bestIndex;
+}
+
+/**
  * Apply topic extractions to mid-term memory
  * Stores recent topics/problems for cross-conversation continuity
  */
@@ -423,29 +501,53 @@ export async function applyTopicExtractions(
     const existingTopics: RecentTopic[] = existingData?.recentTopics || [];
 
     for (const topicExtraction of topics) {
-      // Check if similar topic exists (fuzzy match on topic name)
-      const existingIndex = existingTopics.findIndex((t) => {
-        const existingLower = t.topic.toLowerCase();
-        const newLower = topicExtraction.topic.toLowerCase();
-        return (
-          existingLower.includes(newLower) ||
-          newLower.includes(existingLower) ||
-          existingLower === newLower
-        );
-      });
+      // Find best matching existing topic using smart similarity
+      const existingIndex = findMatchingTopic(topicExtraction, existingTopics);
 
       if (existingIndex >= 0) {
+        const existing = existingTopics[existingIndex];
+
         // Update existing topic
-        existingTopics[existingIndex].lastMentionedAt = now;
-        existingTopics[existingIndex].mentionCount += 1;
-        existingTopics[existingIndex].context = topicExtraction.context;
-        existingTopics[existingIndex].status = topicExtraction.status;
-        existingTopics[existingIndex].category = topicExtraction.category;
+        existing.lastMentionedAt = now;
+        existing.mentionCount += 1;
+        existing.context = topicExtraction.context;
+        existing.category = topicExtraction.category;
+
+        // Update valence if provided
+        if (topicExtraction.valence) {
+          existing.valence = topicExtraction.valence;
+        }
+
+        // Handle status change to resolved
+        if (topicExtraction.status === 'resolved' && existing.status !== 'resolved') {
+          existing.status = 'resolved';
+          existing.resolvedAt = now;
+          existing.resolutionOutcome = topicExtraction.resolutionOutcome;
+
+          logger.info('Topic resolved', {
+            userId,
+            topic: existing.topic,
+            outcome: existing.resolutionOutcome,
+          });
+        } else {
+          existing.status = topicExtraction.status;
+        }
+
+        // Pattern detection: mark as recurring if mentioned 3+ times
+        if (existing.mentionCount >= 3 && !existing.isRecurring) {
+          existing.isRecurring = true;
+          logger.info('Topic marked as recurring pattern', {
+            userId,
+            topic: existing.topic,
+            mentionCount: existing.mentionCount,
+          });
+        }
 
         logger.info('Updated existing topic', {
           userId,
-          topic: existingTopics[existingIndex].topic,
-          mentionCount: existingTopics[existingIndex].mentionCount,
+          topic: existing.topic,
+          mentionCount: existing.mentionCount,
+          isRecurring: existing.isRecurring,
         });
       } else {
         // Add new topic
@@ -455,10 +557,18 @@ export async function applyTopicExtractions(
           context: topicExtraction.context,
           category: topicExtraction.category,
           status: topicExtraction.status,
+          valence: topicExtraction.valence,
           firstMentionedAt: now,
           lastMentionedAt: now,
           mentionCount: 1,
+          isRecurring: false,
         };
+
+        // If it's already resolved on first mention, track it
+        if (topicExtraction.status === 'resolved') {
+          newTopic.resolvedAt = now;
+          newTopic.resolutionOutcome = topicExtraction.resolutionOutcome;
+        }
 
         existingTopics.push(newTopic);
 
@@ -466,6 +576,7 @@ export async function applyTopicExtractions(
           userId,
           topic: newTopic.topic,
           category: newTopic.category,
+          valence: newTopic.valence,
         });
       }
     }

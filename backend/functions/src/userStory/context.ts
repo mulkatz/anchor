@@ -360,16 +360,37 @@ export async function getRecentTopicsForPrompt(userId: string): Promise<string |
     const now = new Date();
     const lines: string[] = [];
 
-    // Take max 5 most recent active topics
-    const activeTopics = topics
+    // Filter and sort topics by relevance:
+    // 1. Check-in candidates (3-7 days old, active) first - these are worth proactively asking about
+    // 2. Then by recency
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const processedTopics = topics
       .filter((t: { status: string }) => t.status === 'active' || t.status === 'fading')
+      .map((t: any) => {
+        const lastMentioned =
+          t.lastMentionedAt?.toDate?.() || new Date(t.lastMentionedAt as string);
+        const daysAgo = Math.floor(
+          (now.getTime() - lastMentioned.getTime()) / (1000 * 60 * 60 * 24)
+        );
+        const isCheckInCandidate = daysAgo >= 3 && daysAgo <= 7 && t.status === 'active';
+        return { ...t, daysAgo, isCheckInCandidate, lastMentionedTime: lastMentioned.getTime() };
+      })
+      .sort(
+        (
+          a: { isCheckInCandidate: boolean; lastMentionedTime: number },
+          b: { isCheckInCandidate: boolean; lastMentionedTime: number }
+        ) => {
+          // Check-in candidates first
+          if (a.isCheckInCandidate && !b.isCheckInCandidate) return -1;
+          if (!a.isCheckInCandidate && b.isCheckInCandidate) return 1;
+          // Then by recency
+          return b.lastMentionedTime - a.lastMentionedTime;
+        }
+      )
       .slice(0, 5);
 
-    for (const topic of activeTopics) {
-      const lastMentioned =
-        topic.lastMentionedAt?.toDate?.() || new Date(topic.lastMentionedAt as unknown as string);
-
-      const daysAgo = Math.floor((now.getTime() - lastMentioned.getTime()) / (1000 * 60 * 60 * 24));
+    for (const topic of processedTopics) {
+      const { daysAgo, isCheckInCandidate } = topic;
 
       // Format time label
       let timeLabel: string;
@@ -379,16 +400,33 @@ export async function getRecentTopicsForPrompt(userId: string): Promise<string |
       else if (daysAgo < 14) timeLabel = 'last week';
       else timeLabel = `${Math.floor(daysAgo / 7)} weeks ago`;
 
-      // Add check-in marker for topics 3-7 days old
-      const checkInMarker =
-        daysAgo >= 3 && daysAgo <= 7 && topic.status === 'active' ? ' → worth checking in' : '';
+      // Build markers
+      const markers: string[] = [];
 
       // Status marker
-      const statusMarker = topic.status === 'resolved' ? ' (resolved)' : '';
+      if (topic.status === 'resolved') {
+        const outcomeText =
+          topic.resolutionOutcome === 'success'
+            ? 'went well!'
+            : topic.resolutionOutcome === 'difficult'
+              ? 'was tough'
+              : 'resolved';
+        markers.push(`(${outcomeText})`);
+      }
 
-      lines.push(
-        `- [${timeLabel}] ${topic.topic}: ${topic.context}${statusMarker}${checkInMarker}`
-      );
+      // Recurring pattern marker - important therapeutic signal
+      if (topic.isRecurring) {
+        markers.push('(recurring theme)');
+      }
+
+      // Check-in suggestion
+      if (isCheckInCandidate) {
+        markers.push('→ worth checking in');
+      }
+
+      const markerText = markers.length > 0 ? ' ' + markers.join(' ') : '';
+
+      lines.push(`- [${timeLabel}] ${topic.topic}: ${topic.context}${markerText}`);
     }
 
     return lines.length > 0 ? lines.join('\n') : undefined;
@@ -415,16 +453,35 @@ export async function getRecentTopicsForPromptDE(userId: string): Promise<string
     const now = new Date();
     const lines: string[] = [];
 
-    // Take max 5 most recent active topics
-    const activeTopics = topics
+    // Filter and sort topics by relevance (same logic as EN):
+    // 1. Check-in candidates (3-7 days old, active) first
+    // 2. Then by recency
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const processedTopics = topics
       .filter((t: { status: string }) => t.status === 'active' || t.status === 'fading')
+      .map((t: any) => {
+        const lastMentioned =
+          t.lastMentionedAt?.toDate?.() || new Date(t.lastMentionedAt as string);
+        const daysAgo = Math.floor(
+          (now.getTime() - lastMentioned.getTime()) / (1000 * 60 * 60 * 24)
+        );
+        const isCheckInCandidate = daysAgo >= 3 && daysAgo <= 7 && t.status === 'active';
+        return { ...t, daysAgo, isCheckInCandidate, lastMentionedTime: lastMentioned.getTime() };
+      })
+      .sort(
+        (
+          a: { isCheckInCandidate: boolean; lastMentionedTime: number },
+          b: { isCheckInCandidate: boolean; lastMentionedTime: number }
+        ) => {
+          if (a.isCheckInCandidate && !b.isCheckInCandidate) return -1;
+          if (!a.isCheckInCandidate && b.isCheckInCandidate) return 1;
+          return b.lastMentionedTime - a.lastMentionedTime;
+        }
+      )
       .slice(0, 5);
 
-    for (const topic of activeTopics) {
-      const lastMentioned =
-        topic.lastMentionedAt?.toDate?.() || new Date(topic.lastMentionedAt as unknown as string);
-
-      const daysAgo = Math.floor((now.getTime() - lastMentioned.getTime()) / (1000 * 60 * 60 * 24));
+    for (const topic of processedTopics) {
+      const { daysAgo, isCheckInCandidate } = topic;
 
       // Format time label (German)
       let timeLabel: string;
@@ -434,16 +491,33 @@ export async function getRecentTopicsForPromptDE(userId: string): Promise<string
       else if (daysAgo < 14) timeLabel = 'letzte Woche';
       else timeLabel = `vor ${Math.floor(daysAgo / 7)} Wochen`;
 
-      // Add check-in marker for topics 3-7 days old (German)
-      const checkInMarker =
-        daysAgo >= 3 && daysAgo <= 7 && topic.status === 'active' ? ' → nachfragen lohnt sich' : '';
+      // Build markers (German)
+      const markers: string[] = [];
 
-      // Status marker (German)
-      const statusMarker = topic.status === 'resolved' ? ' (erledigt)' : '';
+      // Status marker
+      if (topic.status === 'resolved') {
+        const outcomeText =
+          topic.resolutionOutcome === 'success'
+            ? 'lief gut!'
+            : topic.resolutionOutcome === 'difficult'
+              ? 'war schwierig'
+              : 'erledigt';
+        markers.push(`(${outcomeText})`);
+      }
 
-      lines.push(
-        `- [${timeLabel}] ${topic.topic}: ${topic.context}${statusMarker}${checkInMarker}`
-      );
+      // Recurring pattern marker - important therapeutic signal
+      if (topic.isRecurring) {
+        markers.push('(wiederkehrendes Thema)');
+      }
+
+      // Check-in suggestion
+      if (isCheckInCandidate) {
+        markers.push('→ nachfragen lohnt sich');
+      }
+
+      const markerText = markers.length > 0 ? ' ' + markers.join(' ') : '';
+
+      lines.push(`- [${timeLabel}] ${topic.topic}: ${topic.context}${markerText}`);
     }
 
     return lines.length > 0 ? lines.join('\n') : undefined;
