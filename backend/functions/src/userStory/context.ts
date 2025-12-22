@@ -38,11 +38,28 @@ function formatLocation(loc: { city?: string; country?: string } | undefined): s
 }
 
 /**
- * Format occupation value for display
+ * Format occupation value for display (English)
  */
-function formatOccupation(occ: { type: string; details?: string } | undefined): string | undefined {
+function formatOccupation(
+  occ: { type: string; details?: string } | undefined,
+  language: 'en' | 'de' = 'en'
+): string | undefined {
   if (!occ) return undefined;
   if (occ.details) return occ.details;
+
+  if (language === 'de') {
+    switch (occ.type) {
+      case 'work':
+        return 'berufstätig';
+      case 'student':
+        return 'Student/in';
+      case 'between':
+        return 'zwischen Jobs';
+      default:
+        return occ.type;
+    }
+  }
+
   switch (occ.type) {
     case 'work':
       return 'working';
@@ -58,10 +75,13 @@ function formatOccupation(occ: { type: string; details?: string } | undefined): 
 /**
  * Format pets value for display
  */
-function formatPets(pets: { has: boolean; details?: string } | undefined): string | undefined {
+function formatPets(
+  pets: { has: boolean; details?: string } | undefined,
+  language: 'en' | 'de' = 'en'
+): string | undefined {
   if (!pets) return undefined;
   if (!pets.has) return undefined;
-  return pets.details || 'has pets';
+  return pets.details || (language === 'de' ? 'hat Haustiere' : 'has pets');
 }
 
 /**
@@ -235,7 +255,7 @@ export async function getUserStoryForPromptDE(userId: string): Promise<string | 
   if (location) lines.push(`Wohnort: ${location}`);
 
   // Life Situation
-  const occupation = formatOccupation(getFieldValue(story.lifeSituation?.occupation));
+  const occupation = formatOccupation(getFieldValue(story.lifeSituation?.occupation), 'de');
   if (occupation) lines.push(`Arbeit/Studium: ${occupation}`);
 
   const living = getFieldValue(story.lifeSituation?.livingArrangement);
@@ -252,7 +272,7 @@ export async function getUserStoryForPromptDE(userId: string): Promise<string | 
     }
   }
 
-  const pets = formatPets(getFieldValue(story.relationships?.hasPets));
+  const pets = formatPets(getFieldValue(story.relationships?.hasPets), 'de');
   if (pets) lines.push(`Haustiere: ${pets}`);
 
   // Personal
