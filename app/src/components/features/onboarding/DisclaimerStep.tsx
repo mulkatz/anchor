@@ -102,7 +102,7 @@ export function DisclaimerStep({ onComplete, direction }: DisclaimerStepProps) {
             const Icon = resource.icon;
             return (
               <div key={resource.id} className="flex items-center gap-3">
-                <div className="flex h-7 w-7 items-center justify-center rounded-full bg-mist-white/5">
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-mist-white/5">
                   <Icon size={14} className="text-biolum-cyan" />
                 </div>
                 <span className="text-sm text-mist-white/80">{t(`disclaimer.${resource.id}`)}</span>
