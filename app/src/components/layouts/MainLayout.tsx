@@ -2,6 +2,7 @@ import { type FC, type ReactNode } from 'react';
 import { FloatingDock } from '../features/navigation/FloatingDock';
 import { OceanicBubbles } from '../ui/OceanicBubbles';
 import { useAchievementTracker } from '../../hooks/useAchievementTracker';
+import { useUpdateDialog } from '../../hooks/useUpdateDialog';
 
 interface MainLayoutProps {
   children: ReactNode;
@@ -10,6 +11,9 @@ interface MainLayoutProps {
 export const MainLayout: FC<MainLayoutProps> = ({ children }) => {
   // Track user activity for achievement unlocks
   useAchievementTracker();
+
+  // Expose update dialog triggers on window object
+  useUpdateDialog();
 
   return (
     <div className="relative h-screen w-full overflow-hidden bg-void-blue">

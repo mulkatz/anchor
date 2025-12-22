@@ -180,6 +180,17 @@
         "microphoneAdvice": "We can't record voice messages without microphone access. Grant permission in your settings to use this feature.",
         "toSettings": "Settings"
       },
+      "updateRequired": {
+        "title": "Update Required",
+        "message": "A new version of Anchor is available. Please update to continue using the app.",
+        "button": "Update Now"
+      },
+      "updateAvailable": {
+        "title": "Update Available",
+        "message": "A new version of Anchor is available with improvements and new features.",
+        "button": "Update",
+        "later": "Later"
+      },
       "confirmClearCache": "Clear Cache?",
       "confirmClearCacheMessage": "This will clear cached audio files and temporary data. Your conversations will be preserved.",
       "confirmDeleteAllData": "Delete All Data?",

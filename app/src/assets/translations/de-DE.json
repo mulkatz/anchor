@@ -188,6 +188,17 @@
         "microphoneAdvice": "Wir können keine Sprachnachrichten aufnehmen ohne Mikrofon-Zugriff. Erteile die Berechtigung in deinen Einstellungen, um diese Funktion zu nutzen.",
         "toSettings": "Einstellungen"
       },
+      "updateRequired": {
+        "title": "Update erforderlich",
+        "message": "Eine neue Version von Anchor ist verfügbar. Bitte aktualisiere, um die App weiter zu nutzen.",
+        "button": "Jetzt aktualisieren"
+      },
+      "updateAvailable": {
+        "title": "Update verfügbar",
+        "message": "Eine neue Version von Anchor ist verfügbar mit Verbesserungen und neuen Funktionen.",
+        "button": "Aktualisieren",
+        "later": "Später"
+      },
       "confirmClearCache": "Cache leeren?",
       "confirmClearCacheMessage": "Dies löscht zwischengespeicherte Audiodateien und temporäre Daten. Deine Gespräche bleiben erhalten.",
       "confirmDeleteAllData": "Alle Daten löschen?",
