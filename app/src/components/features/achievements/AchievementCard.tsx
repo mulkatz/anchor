@@ -92,22 +92,20 @@ export const AchievementCard: FC<AchievementCardProps> = ({ achievement }) => {
           )}
         >
           <Icon
-            size={18}
             strokeWidth={isUnlocked ? 2 : 1.5}
             className={cn(
               'h-[18px] w-[18px] min-[385px]:h-[22px] min-[385px]:w-[22px]',
               'transition-colors duration-300',
-              isUnlocked ? 'text-biolum-cyan' : 'text-mist-white/25'
+              isUnlocked ? 'text-biolum-cyan' : 'text-[#545968]'
             )}
           />
 
           {/* Bottom-right badge: Lock for locked items only */}
           {!isUnlocked && (
-            <div className="absolute -bottom-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full border border-mist-white/20 bg-void-blue min-[385px]:h-5 min-[385px]:w-5">
+            <div className="absolute -bottom-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-void-blue ring-1 ring-inset ring-mist-white/20 min-[385px]:h-5 min-[385px]:w-5">
               <Lock
-                size={8}
-                className="h-2 w-2 text-mist-white/40 min-[385px]:h-2.5 min-[385px]:w-2.5"
-                strokeWidth={2.5}
+                className="h-[8px] w-[8px] text-[#6B7180] min-[385px]:h-[10px] min-[385px]:w-[10px]"
+                strokeWidth={2}
               />
             </div>
           )}
