@@ -1,4 +1,4 @@
-import { FC, useMemo } from 'react';
+import { FC, useMemo, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 
 interface Bubble {
@@ -30,6 +30,17 @@ interface Bubble {
  * - Reduced motion support
  */
 export const OceanicBubbles: FC = () => {
+  // Delay bubble visibility to let blur overlay render first
+  const [isReady, setIsReady] = useState(false);
+
+  useEffect(() => {
+    // Small delay to ensure blur overlay is rendered before showing bubbles
+    const timer = requestAnimationFrame(() => {
+      setIsReady(true);
+    });
+    return () => cancelAnimationFrame(timer);
+  }, []);
+
   // Check for reduced motion preference
   const prefersReducedMotion =
     typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -57,7 +68,12 @@ export const OceanicBubbles: FC = () => {
   // Reduced motion: Show static bubbles
   if (prefersReducedMotion) {
     return (
-      <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
+      <motion.div
+        className="pointer-events-none fixed inset-0 z-0 overflow-hidden"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: isReady ? 1 : 0 }}
+        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+      >
         {bubbles.slice(0, 10).map((bubble) => (
           <div
             key={bubble.id}
@@ -72,13 +88,18 @@ export const OceanicBubbles: FC = () => {
             }}
           />
         ))}
-      </div>
+      </motion.div>
     );
   }
 
   // Animated bubbles
   return (
-    <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
+    <motion.div
+      className="pointer-events-none fixed inset-0 z-0 overflow-hidden"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: isReady ? 1 : 0 }}
+      transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+    >
       {bubbles.map((bubble) => (
         <motion.div
           key={bubble.id}
@@ -111,6 +132,6 @@ export const OceanicBubbles: FC = () => {
           }}
         />
       ))}
-    </div>
+    </motion.div>
   );
 };
