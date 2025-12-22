@@ -1,6 +1,6 @@
 import { motion, Variants } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import { AlertTriangle, Phone, Stethoscope, Building2, HeartHandshake } from 'lucide-react';
+import { AlertTriangle, Phone, Stethoscope, Building2 } from 'lucide-react';
 import { useHaptics } from '../../../hooks/useHaptics';
 
 interface DisclaimerStepProps {
@@ -68,14 +68,6 @@ export function DisclaimerStep({ onComplete, direction }: DisclaimerStepProps) {
       exit="exit"
       className="flex h-full flex-col items-center justify-center px-6 pb-safe"
     >
-      {/* Warning Icon */}
-      <motion.div
-        variants={itemVariants}
-        className="mb-6 flex h-16 w-16 items-center justify-center rounded-full border border-warm-ember/30 bg-warm-ember/10"
-      >
-        <HeartHandshake size={32} className="text-warm-ember" />
-      </motion.div>
-
       {/* Title */}
       <motion.h2
         variants={itemVariants}
