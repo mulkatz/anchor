@@ -38,11 +38,27 @@ export const useChat = ({ conversationId }: UseChatProps) => {
   // Ref to track pending voice message for use in listener callback
   const pendingVoiceRef = useRef<Message | null>(null);
   pendingVoiceRef.current = pendingVoiceMessage;
+  // Ref to track timeout for "taking longer" message
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Reset loading state when conversation changes
+  // Reset loading state and clear timeout when conversation changes
   useEffect(() => {
     setIsLoading(true);
+    // Clear any pending timeout when conversation changes
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
   }, [conversationId]);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
 
   // Real-time Firestore listener for messages in specific conversation
   useEffect(() => {
@@ -134,6 +150,11 @@ export const useChat = ({ conversationId }: UseChatProps) => {
 
         if (hasNewAssistantMessage) {
           setIsThinking(false);
+          // Clear the timeout when response arrives
+          if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current);
+            timeoutRef.current = null;
+          }
         }
         if (transcriptionJustCompleted) {
           setIsThinking(true);
@@ -196,8 +217,13 @@ export const useChat = ({ conversationId }: UseChatProps) => {
           },
         });
 
-        // Timeout: Show error if no response after 30 seconds
-        setTimeout(() => {
+        // Clear any existing timeout before setting a new one
+        if (timeoutRef.current) {
+          clearTimeout(timeoutRef.current);
+        }
+
+        // Timeout: Show error if no response after 12 seconds
+        timeoutRef.current = setTimeout(() => {
           setIsThinking((thinking) => {
             if (thinking) {
               setError(i18next.t('errors.chat.timeout'));
@@ -205,7 +231,8 @@ export const useChat = ({ conversationId }: UseChatProps) => {
             }
             return thinking;
           });
-        }, 30000);
+          timeoutRef.current = null;
+        }, 12000);
       } catch (err) {
         console.error('Error sending message:', err);
         setError(i18next.t('errors.chat.sendFailed'));
