@@ -222,7 +222,7 @@ export const useChat = ({ conversationId }: UseChatProps) => {
           clearTimeout(timeoutRef.current);
         }
 
-        // Timeout: Show error if no response after 12 seconds
+        // Timeout: Show error if no response after 15 seconds
         timeoutRef.current = setTimeout(() => {
           setIsThinking((thinking) => {
             if (thinking) {
@@ -232,7 +232,7 @@ export const useChat = ({ conversationId }: UseChatProps) => {
             return thinking;
           });
           timeoutRef.current = null;
-        }, 12000);
+        }, 15000);
       } catch (err) {
         console.error('Error sending message:', err);
         setError(i18next.t('errors.chat.sendFailed'));
