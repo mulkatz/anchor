@@ -92,7 +92,7 @@ export const StreakCard: FC<StreakCardProps> = ({ currentStreak, longestStreak }
           <div className="flex items-center gap-3">
             {/* Flame icon with subtle pulse */}
             <motion.div
-              className="relative flex h-12 w-12 items-center justify-center rounded-full bg-warm-ember/25"
+              className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-warm-ember/25"
               animate={{ scale: [1, 1.05, 1] }}
               transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
             >
@@ -123,6 +123,7 @@ export const StreakCard: FC<StreakCardProps> = ({ currentStreak, longestStreak }
           </div>
 
           {/* Right side - Personal best badge or milestone progress */}
+          {/* TODO: Re-enable when layout is fixed
           {isPersonalBest ? (
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
@@ -143,6 +144,7 @@ export const StreakCard: FC<StreakCardProps> = ({ currentStreak, longestStreak }
               <p className="text-lg font-semibold text-warm-ember/70">{nextMilestone}</p>
             </div>
           )}
+          */}
         </div>
 
         {/* Progress bar to next milestone */}
