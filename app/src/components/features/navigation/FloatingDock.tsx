@@ -49,35 +49,42 @@ export const FloatingDock: FC = () => {
       data-floating-dock
       className="safe-area-margin-bottom fixed bottom-6 left-0 right-0 z-50 flex justify-center px-4 sm:px-6"
     >
-      <nav
-        className={cn(
-          'flex items-center gap-4 overflow-visible rounded-full px-6 py-3',
-          'bg-glass-bg backdrop-blur-glass',
-          'border border-glass-border shadow-glass',
-          'no-select'
-        )}
-      >
-        {navItems.map(({ path, icon: Icon, label }) => {
-          const isActive = location.pathname === path || location.pathname.startsWith(`${path}/`);
+      {/* Wrapper with relative positioning for the background layer */}
+      <div className="relative">
+        {/* Background layer with backdrop-blur - separate from content to avoid iOS clipping */}
+        <div
+          className={cn(
+            'absolute inset-0 z-0 rounded-full',
+            'bg-glass-bg backdrop-blur-glass',
+            'border border-glass-border shadow-glass'
+          )}
+          aria-hidden="true"
+        />
 
-          return (
-            <button
-              key={path}
-              onClick={() => handleNavigation(path)}
-              className={cn(
-                'flex flex-col items-center justify-center',
-                'transition-all duration-300 ease-viscous',
-                'p-2 active:scale-95',
-                isActive && 'drop-shadow-glow'
-              )}
-              style={{ color: isActive ? '#64FFDA' : '#9A9FAC' }}
-              aria-label={label}
-            >
-              <Icon size={24} className="transition-transform duration-300" />
-            </button>
-          );
-        })}
-      </nav>
+        {/* Content layer - can overflow without being clipped by backdrop-filter */}
+        <nav className={cn('relative z-10 flex items-center gap-4 px-6 py-3', 'no-select')}>
+          {navItems.map(({ path, icon: Icon, label }) => {
+            const isActive = location.pathname === path || location.pathname.startsWith(`${path}/`);
+
+            return (
+              <button
+                key={path}
+                onClick={() => handleNavigation(path)}
+                className={cn(
+                  'flex flex-col items-center justify-center',
+                  'transition-all duration-300 ease-viscous',
+                  'p-2 active:scale-95',
+                  isActive && 'drop-shadow-glow'
+                )}
+                style={{ color: isActive ? '#64FFDA' : '#9A9FAC' }}
+                aria-label={label}
+              >
+                <Icon size={24} className="transition-transform duration-300" />
+              </button>
+            );
+          })}
+        </nav>
+      </div>
     </div>
   );
 };
