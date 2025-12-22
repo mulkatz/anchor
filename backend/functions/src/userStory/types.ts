@@ -107,10 +107,24 @@ export interface UserStory {
   therapeuticContext: {
     knownTriggers?: StoryFieldValue<string[]>;
     anxietyManifestations?: StoryFieldValue<string[]>; // How anxiety shows up physically/mentally
+    anxietyType?: StoryFieldValue<string>; // "social", "generalized", "panic", "health", etc.
+    bodyExperience?: StoryFieldValue<string>; // "chest tightness", "racing thoughts", etc.
+    whatDoesntWork?: StoryFieldValue<string[]>; // Things they've tried that don't help
     pastTherapyExperience?: StoryFieldValue<boolean>;
     currentProfessionalSupport?: StoryFieldValue<boolean>;
+    therapyFocus?: StoryFieldValue<string>; // What they're working on in therapy
     medicationContext?: StoryFieldValue<string>; // Only if user shares
     significantAnxietyHistory?: StoryFieldValue<string>;
+  };
+
+  // Tier 7: Strengths & Protective Factors (Therapeutic resources)
+  strengths: {
+    whatGivesHope?: StoryFieldValue<string[]>; // Sources of hope/meaning
+    proudMoments?: StoryFieldValue<string[]>; // Things they're proud of
+    pastWins?: StoryFieldValue<string[]>; // Challenges they've overcome
+    motivators?: StoryFieldValue<string[]>; // What drives them
+    positiveRelationships?: StoryFieldValue<string[]>; // People who lift them up
+    coreValues?: StoryFieldValue<string[]>; // What matters most to them
   };
 
   // Metadata for extraction system
@@ -157,6 +171,7 @@ export const createEmptyUserStory = (userId: string): UserStory => ({
   background: {},
   personal: {},
   therapeuticContext: {},
+  strengths: {},
   extractionMeta: {
     questionsAskedCount: 0,
     topicsDiscovered: [],

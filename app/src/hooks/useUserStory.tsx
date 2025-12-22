@@ -25,6 +25,7 @@ const createEmptyStory = (userId: string): UserStory => ({
   background: {},
   personal: {},
   therapeuticContext: {},
+  strengths: {},
   extractionMeta: {
     questionsAskedCount: 0,
     topicsDiscovered: [],

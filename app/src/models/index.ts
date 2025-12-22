@@ -456,10 +456,24 @@ export interface UserStory {
   therapeuticContext: {
     knownTriggers?: StoryFieldValue<string[]>;
     anxietyManifestations?: StoryFieldValue<string[]>;
+    anxietyType?: StoryFieldValue<string>; // "social", "generalized", "panic", "health", etc.
+    bodyExperience?: StoryFieldValue<string>; // How anxiety feels in their body
+    whatDoesntWork?: StoryFieldValue<string[]>; // Things they've tried that don't help
     pastTherapyExperience?: StoryFieldValue<boolean>;
     currentProfessionalSupport?: StoryFieldValue<boolean>;
+    therapyFocus?: StoryFieldValue<string>; // What they're working on in therapy
     medicationContext?: StoryFieldValue<string>;
     significantAnxietyHistory?: StoryFieldValue<string>;
+  };
+
+  // Tier 7: Strengths & Protective Factors (Therapeutic resources)
+  strengths: {
+    whatGivesHope?: StoryFieldValue<string[]>; // Sources of hope/meaning
+    proudMoments?: StoryFieldValue<string[]>; // Things they're proud of
+    pastWins?: StoryFieldValue<string[]>; // Challenges they've overcome
+    motivators?: StoryFieldValue<string[]>; // What drives them
+    positiveRelationships?: StoryFieldValue<string[]>; // People who lift them up
+    coreValues?: StoryFieldValue<string[]>; // What matters most to them
   };
 
   // Metadata for extraction system

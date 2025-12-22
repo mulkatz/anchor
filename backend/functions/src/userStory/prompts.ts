@@ -58,8 +58,20 @@ TIER 5 - Personal:
 TIER 6 - Therapeutic Context (only if explicitly shared):
 - knownTriggers: Specific anxiety triggers
 - anxietyManifestations: How their anxiety shows up
+- anxietyType: Type of anxiety (social, generalized, panic, health, specific phobias)
+- bodyExperience: How anxiety feels in their body (chest tightness, racing heart, etc.)
+- whatDoesntWork: Things they've tried that don't help (avoid suggesting these!)
 - pastTherapyExperience: If they've been to therapy before
 - currentProfessionalSupport: If they're currently seeing a therapist/counselor
+- therapyFocus: What they're working on in therapy
+
+TIER 7 - Strengths & Resources (actively look for these - they're therapeutic gold):
+- whatGivesHope: Sources of hope, meaning, or purpose they mention
+- proudMoments: Things they're proud of or accomplishments
+- pastWins: Challenges they've overcome (proof they can handle hard things)
+- motivators: What drives or inspires them
+- positiveRelationships: People who make them feel good or supported
+- coreValues: What matters most to them
 
 Also detect if the user is asking to FORGET something they previously shared.
 
@@ -149,8 +161,20 @@ TIER 5 - Persönliches:
 TIER 6 - Therapeutischer Kontext (nur wenn explizit geteilt):
 - knownTriggers: Spezifische Angstauslöser
 - anxietyManifestations: Wie sich ihre Angst zeigt
+- anxietyType: Art der Angst (soziale Angst, generalisierte Angst, Panik, Gesundheitsangst, spezifische Phobien)
+- bodyExperience: Wie sich Angst in ihrem Körper anfühlt (Engegefühl in der Brust, Herzrasen, etc.)
+- whatDoesntWork: Dinge die sie probiert haben die nicht helfen (diese nicht vorschlagen!)
 - pastTherapyExperience: Ob sie schon in Therapie waren
 - currentProfessionalSupport: Ob sie aktuell einen Therapeuten sehen
+- therapyFocus: Woran sie in der Therapie arbeiten
+
+TIER 7 - Stärken & Ressourcen (aktiv danach suchen - therapeutisch sehr wertvoll):
+- whatGivesHope: Quellen von Hoffnung, Sinn oder Zweck die sie erwähnen
+- proudMoments: Dinge auf die sie stolz sind oder Errungenschaften
+- pastWins: Herausforderungen die sie gemeistert haben (Beweis dass sie schwieriges schaffen können)
+- motivators: Was sie antreibt oder inspiriert
+- positiveRelationships: Menschen die ihnen gut tun oder sie unterstützen
+- coreValues: Was ihnen am wichtigsten ist
 
 Erkenne auch ob der Nutzer darum bittet etwas zu VERGESSEN was er zuvor geteilt hat.
 

@@ -146,15 +146,56 @@ export async function getUserStoryForPrompt(userId: string): Promise<string | un
     lines.push(`What helps them: ${coping.slice(0, 3).join(', ')}`);
   }
 
-  // Therapeutic (handle with care)
+  // Therapeutic (handle with care - reframe clinically to humanely)
   const triggers = getFieldValue(story.therapeuticContext?.knownTriggers);
   if (triggers && triggers.length > 0) {
-    lines.push(`Known triggers (be mindful): ${triggers.join(', ')}`);
+    lines.push(`Things that are hard for them: ${triggers.join(', ')}`);
+  }
+
+  const anxietyType = getFieldValue(story.therapeuticContext?.anxietyType);
+  if (anxietyType) {
+    lines.push(`Their anxiety tends to be: ${anxietyType}`);
+  }
+
+  const bodyExperience = getFieldValue(story.therapeuticContext?.bodyExperience);
+  if (bodyExperience) {
+    lines.push(`How anxiety shows up for them: ${bodyExperience}`);
+  }
+
+  const whatDoesntWork = getFieldValue(story.therapeuticContext?.whatDoesntWork);
+  if (whatDoesntWork && whatDoesntWork.length > 0) {
+    lines.push(`DON'T suggest (doesn't work for them): ${whatDoesntWork.join(', ')}`);
   }
 
   const hasTherapist = getFieldValue(story.therapeuticContext?.currentProfessionalSupport);
   if (hasTherapist === true) {
-    lines.push(`Currently seeing a professional`);
+    const therapyFocus = getFieldValue(story.therapeuticContext?.therapyFocus);
+    if (therapyFocus) {
+      lines.push(`Working on in therapy: ${therapyFocus} (support this work)`);
+    } else {
+      lines.push(`Currently seeing a therapist (you're the between-sessions friend)`);
+    }
+  }
+
+  // Strengths & Resources (therapeutic gold - use these actively!)
+  const pastWins = getFieldValue(story.strengths?.pastWins);
+  if (pastWins && pastWins.length > 0) {
+    lines.push(`Proof they can handle hard things: ${pastWins.slice(0, 3).join(', ')}`);
+  }
+
+  const whatGivesHope = getFieldValue(story.strengths?.whatGivesHope);
+  if (whatGivesHope && whatGivesHope.length > 0) {
+    lines.push(`What gives them hope: ${whatGivesHope.join(', ')}`);
+  }
+
+  const proudMoments = getFieldValue(story.strengths?.proudMoments);
+  if (proudMoments && proudMoments.length > 0) {
+    lines.push(`Things they're proud of: ${proudMoments.slice(0, 3).join(', ')}`);
+  }
+
+  const motivators = getFieldValue(story.strengths?.motivators);
+  if (motivators && motivators.length > 0) {
+    lines.push(`What drives them: ${motivators.join(', ')}`);
   }
 
   // If we don't know anything yet
@@ -225,10 +266,56 @@ export async function getUserStoryForPromptDE(userId: string): Promise<string | 
     lines.push(`Was hilft: ${coping.slice(0, 3).join(', ')}`);
   }
 
-  // Therapeutic
+  // Therapeutic (mit Bedacht - menschlich formulieren)
   const triggers = getFieldValue(story.therapeuticContext?.knownTriggers);
   if (triggers && triggers.length > 0) {
-    lines.push(`Bekannte Trigger (achtsam sein): ${triggers.join(', ')}`);
+    lines.push(`Was schwierig für sie ist: ${triggers.join(', ')}`);
+  }
+
+  const anxietyType = getFieldValue(story.therapeuticContext?.anxietyType);
+  if (anxietyType) {
+    lines.push(`Ihre Angst zeigt sich als: ${anxietyType}`);
+  }
+
+  const bodyExperience = getFieldValue(story.therapeuticContext?.bodyExperience);
+  if (bodyExperience) {
+    lines.push(`Wie sich Angst bei ihnen anfühlt: ${bodyExperience}`);
+  }
+
+  const whatDoesntWork = getFieldValue(story.therapeuticContext?.whatDoesntWork);
+  if (whatDoesntWork && whatDoesntWork.length > 0) {
+    lines.push(`NICHT vorschlagen (hilft ihnen nicht): ${whatDoesntWork.join(', ')}`);
+  }
+
+  const hasTherapist = getFieldValue(story.therapeuticContext?.currentProfessionalSupport);
+  if (hasTherapist === true) {
+    const therapyFocus = getFieldValue(story.therapeuticContext?.therapyFocus);
+    if (therapyFocus) {
+      lines.push(`Arbeitet in Therapie an: ${therapyFocus} (unterstütze diese Arbeit)`);
+    } else {
+      lines.push(`Geht zur Therapie (du bist der Freund zwischen den Sitzungen)`);
+    }
+  }
+
+  // Stärken & Ressourcen (therapeutisches Gold!)
+  const pastWins = getFieldValue(story.strengths?.pastWins);
+  if (pastWins && pastWins.length > 0) {
+    lines.push(`Beweis dass sie Schweres schaffen: ${pastWins.slice(0, 3).join(', ')}`);
+  }
+
+  const whatGivesHope = getFieldValue(story.strengths?.whatGivesHope);
+  if (whatGivesHope && whatGivesHope.length > 0) {
+    lines.push(`Was ihnen Hoffnung gibt: ${whatGivesHope.join(', ')}`);
+  }
+
+  const proudMoments = getFieldValue(story.strengths?.proudMoments);
+  if (proudMoments && proudMoments.length > 0) {
+    lines.push(`Worauf sie stolz sind: ${proudMoments.slice(0, 3).join(', ')}`);
+  }
+
+  const motivators = getFieldValue(story.strengths?.motivators);
+  if (motivators && motivators.length > 0) {
+    lines.push(`Was sie antreibt: ${motivators.join(', ')}`);
   }
 
   if (lines.length === 0) {
