@@ -10,7 +10,7 @@
 - Improved topic deduplication with context-aware matching
 - Implemented curiosity hints from `suggestedFollowUps`
 - Added age-appropriate tone adjustment (35+ avoids Gen Z slang)
-- Performance: skip extraction for short messages (<15 chars)
+- Extraction runs on ALL messages (short answers like "yes" or "Sarah" are often critical)
 - Full bilingual support with German stop words and forget mappings
 
 ---
@@ -413,15 +413,19 @@ When matching new topics against existing ones, the system considers BOTH topic 
 
 ### Performance Optimizations
 
-**Short Message Skip:**
+**Extract All Messages:**
 
-Messages shorter than 15 characters (e.g., "hi", "ok", "yeah") skip extraction entirely. This saves API costs without losing meaningful data.
+Every user message is sent to extraction, regardless of length. This ensures we capture:
+
+- Short name answers: "Sarah", "Tom"
+- Age responses: "I'm 25"
+- Yes/no answers to questions: "do you have pets?" → "yes"
+
+Since extraction is fire-and-forget (async, doesn't block the response), the only cost is API calls - and the extraction AI returns empty results when there's nothing useful to extract.
 
 ```typescript
-// Only extract from substantial messages
-if (message.text.length >= 15) {
-  extractStoryFromMessage(userId, message.text, ...);
-}
+// Extract ALL messages - short answers are often the most important
+extractStoryFromMessage(userId, message.text, recentMessages, languageCode);
 ```
 
 **Timestamp Consistency:**

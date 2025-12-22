@@ -131,10 +131,8 @@ sequenceDiagram
 
     Note over Chat: Build temporal context<br/>(time, timezone, session breaks)
 
-    alt Message >= 15 chars
-        Chat--)Extract: Fire & Forget extraction
-        Note right of Extract: Async - doesn't block response
-    end
+    Chat--)Extract: Fire & Forget extraction
+    Note right of Extract: Async - extracts ALL messages<br/>(short answers are often critical)
 
     Chat->>Chat: Assemble system prompt
     Note over Chat: Inject all contexts:<br/>• Temporal<br/>• User Story + Curiosity Hints<br/>• Recent Topics<br/>• Conversation Profile<br/>• Age Adjustment
@@ -223,10 +221,8 @@ How information is extracted from user messages and stored.
 
 ```mermaid
 flowchart TB
-    Message[User Message] --> LengthCheck{Length >= 15?}
-
-    LengthCheck -->|No| Skip[Skip Extraction<br/>Save API costs]
-    LengthCheck -->|Yes| Prepare[Prepare Context]
+    Message[User Message] --> Prepare[Prepare Context]
+    Note[All messages extracted<br/>Short answers are critical] -.-> Message
 
     Prepare --> |Last 3 messages| Context[Build Extraction Context]
     Context --> |Existing story| AddStory[Add Current User Story]
@@ -936,7 +932,7 @@ flowchart TB
     PromptAssembly --> AIGeneration
     AIGeneration --> Response
 
-    Trigger -.->|"Fire & Forget<br/>(if len >= 15)"| AsyncExtraction
+    Trigger -.->|"Fire & Forget<br/>(ALL messages)"| AsyncExtraction
     AsyncExtraction -.-> L2
     AsyncExtraction -.-> L3
 
