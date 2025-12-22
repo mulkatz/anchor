@@ -382,10 +382,29 @@ export async function getRecentTopicsForPrompt(userId: string): Promise<string |
 
     // Filter and sort topics by relevance:
     // 1. Check-in candidates (3-7 days old, active) first - these are worth proactively asking about
-    // 2. Then by recency
+    // 2. Recently resolved topics (within 7 days) - for celebrating wins or offering support
+    // 3. Then by recency
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const processedTopics = topics
-      .filter((t: { status: string }) => t.status === 'active' || t.status === 'fading')
+      .filter((t: { status: string; resolvedAt?: unknown; lastMentionedAt?: unknown }) => {
+        // Always include active and fading topics
+        if (t.status === 'active' || t.status === 'fading') return true;
+
+        // Include recently resolved topics (within 7 days) for continuity
+        if (t.status === 'resolved') {
+          const resolvedAt = t.resolvedAt
+            ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              (t.resolvedAt as any)?.toDate?.() || new Date(t.resolvedAt as string)
+            : null;
+          if (resolvedAt) {
+            const daysSinceResolved = Math.floor(
+              (now.getTime() - resolvedAt.getTime()) / (1000 * 60 * 60 * 24)
+            );
+            return daysSinceResolved <= 7; // Show resolved topics from last week
+          }
+        }
+        return false;
+      })
       .map((t: any) => {
         const lastMentioned =
           t.lastMentionedAt?.toDate?.() || new Date(t.lastMentionedAt as string);
@@ -475,10 +494,29 @@ export async function getRecentTopicsForPromptDE(userId: string): Promise<string
 
     // Filter and sort topics by relevance (same logic as EN):
     // 1. Check-in candidates (3-7 days old, active) first
-    // 2. Then by recency
+    // 2. Recently resolved topics (within 7 days) - for celebrating wins or offering support
+    // 3. Then by recency
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const processedTopics = topics
-      .filter((t: { status: string }) => t.status === 'active' || t.status === 'fading')
+      .filter((t: { status: string; resolvedAt?: unknown; lastMentionedAt?: unknown }) => {
+        // Always include active and fading topics
+        if (t.status === 'active' || t.status === 'fading') return true;
+
+        // Include recently resolved topics (within 7 days) for continuity
+        if (t.status === 'resolved') {
+          const resolvedAt = t.resolvedAt
+            ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              (t.resolvedAt as any)?.toDate?.() || new Date(t.resolvedAt as string)
+            : null;
+          if (resolvedAt) {
+            const daysSinceResolved = Math.floor(
+              (now.getTime() - resolvedAt.getTime()) / (1000 * 60 * 60 * 24)
+            );
+            return daysSinceResolved <= 7; // Show resolved topics from last week
+          }
+        }
+        return false;
+      })
       .map((t: any) => {
         const lastMentioned =
           t.lastMentionedAt?.toDate?.() || new Date(t.lastMentionedAt as string);

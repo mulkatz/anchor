@@ -298,11 +298,60 @@ REGELN:
 9. NIEMALS Felder extrahieren die in der gelöschten Liste sind`;
 
 /**
+ * Localized labels for story fields
+ */
+const STORY_LABELS = {
+  en: {
+    empty: 'No information known yet.',
+    name: 'Name',
+    nickname: 'Nickname',
+    age: 'Age',
+    pronouns: 'Pronouns',
+    location: 'Location',
+    occupation: 'Occupation',
+    living: 'Living',
+    relationship: 'Relationship',
+    partner: 'Partner',
+    pets: 'Pets',
+    interests: 'Interests',
+    hobbies: 'Hobbies',
+    triggers: 'Known triggers',
+    coping: 'What helps them',
+    strengths: 'Past wins',
+    hope: 'What gives hope',
+  },
+  de: {
+    empty: 'Noch keine Informationen bekannt.',
+    name: 'Name',
+    nickname: 'Spitzname',
+    age: 'Alter',
+    pronouns: 'Pronomen',
+    location: 'Wohnort',
+    occupation: 'Beruf',
+    living: 'Wohnt',
+    relationship: 'Beziehung',
+    partner: 'Partner',
+    pets: 'Haustiere',
+    interests: 'Interessen',
+    hobbies: 'Hobbys',
+    triggers: 'Bekannte Auslöser',
+    coping: 'Was hilft',
+    strengths: 'Geschaffte Herausforderungen',
+    hope: 'Was Hoffnung gibt',
+  },
+};
+
+/**
  * Format existing story for injection into extraction prompt
  */
-export function formatStoryForExtractionPrompt(story: Record<string, unknown> | null): string {
+export function formatStoryForExtractionPrompt(
+  story: Record<string, unknown> | null,
+  languageCode: string = 'en'
+): string {
+  const labels = languageCode.startsWith('de') ? STORY_LABELS.de : STORY_LABELS.en;
+
   if (!story) {
-    return 'No information known yet.';
+    return labels.empty;
   }
 
   const lines: string[] = [];
@@ -342,23 +391,27 @@ export function formatStoryForExtractionPrompt(story: Record<string, unknown> | 
     }
   };
 
-  // Extract known fields
-  formatField('coreIdentity.name', 'Name');
-  formatField('coreIdentity.nickname', 'Nickname');
-  formatField('coreIdentity.age', 'Age');
-  formatField('coreIdentity.pronouns', 'Pronouns');
-  formatField('coreIdentity.location', 'Location');
-  formatField('lifeSituation.occupation', 'Occupation');
-  formatField('lifeSituation.livingArrangement', 'Living');
-  formatField('relationships.romanticStatus', 'Relationship');
-  formatField('relationships.partnerName', 'Partner');
-  formatField('relationships.hasPets', 'Pets');
-  formatField('personal.interests', 'Interests');
-  formatField('personal.hobbies', 'Hobbies');
-  formatField('therapeuticContext.knownTriggers', 'Known triggers');
+  // Extract known fields with localized labels
+  formatField('coreIdentity.name', labels.name);
+  formatField('coreIdentity.nickname', labels.nickname);
+  formatField('coreIdentity.age', labels.age);
+  formatField('coreIdentity.pronouns', labels.pronouns);
+  formatField('coreIdentity.location', labels.location);
+  formatField('lifeSituation.occupation', labels.occupation);
+  formatField('lifeSituation.livingArrangement', labels.living);
+  formatField('relationships.romanticStatus', labels.relationship);
+  formatField('relationships.partnerName', labels.partner);
+  formatField('relationships.hasPets', labels.pets);
+  formatField('personal.interests', labels.interests);
+  formatField('personal.hobbies', labels.hobbies);
+  formatField('personal.copingActivities', labels.coping);
+  formatField('therapeuticContext.knownTriggers', labels.triggers);
+  // Include strengths (was missing!)
+  formatField('strengths.pastWins', labels.strengths);
+  formatField('strengths.whatGivesHope', labels.hope);
 
   if (lines.length === 0) {
-    return 'No information known yet.';
+    return labels.empty;
   }
 
   return lines.join('\n');
@@ -367,13 +420,21 @@ export function formatStoryForExtractionPrompt(story: Record<string, unknown> | 
 /**
  * Format recent conversation context for extraction
  */
-export function formatRecentContext(messages: Array<{ role: string; text: string }>): string {
+export function formatRecentContext(
+  messages: Array<{ role: string; text: string }>,
+  languageCode: string = 'en'
+): string {
+  const isGerman = languageCode.startsWith('de');
+
   if (!messages || messages.length === 0) {
-    return 'No recent context available.';
+    return isGerman ? 'Kein aktueller Kontext verfügbar.' : 'No recent context available.';
   }
 
+  const userLabel = isGerman ? 'Nutzer' : 'User';
+  const assistantLabel = 'Anchor'; // Brand name, don't translate
+
   return messages
-    .map((msg) => `${msg.role === 'user' ? 'User' : 'Anchor'}: ${msg.text}`)
+    .map((msg) => `${msg.role === 'user' ? userLabel : assistantLabel}: ${msg.text}`)
     .join('\n');
 }
 

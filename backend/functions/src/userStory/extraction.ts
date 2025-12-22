@@ -48,11 +48,21 @@ export async function extractStoryFromMessage(
     const prompt = basePrompt
       .replace(
         '{EXISTING_STORY}',
-        formatStoryForExtractionPrompt(existingStory as unknown as Record<string, unknown>)
+        formatStoryForExtractionPrompt(
+          existingStory as unknown as Record<string, unknown>,
+          languageCode
+        )
       )
       .replace('{MESSAGE_TEXT}', messageText)
-      .replace('{RECENT_CONTEXT}', formatRecentContext(recentMessages))
-      .replace('{DELETED_FIELDS}', deletedFields.length > 0 ? deletedFields.join(', ') : 'None');
+      .replace('{RECENT_CONTEXT}', formatRecentContext(recentMessages, languageCode))
+      .replace(
+        '{DELETED_FIELDS}',
+        deletedFields.length > 0
+          ? deletedFields.join(', ')
+          : languageCode.startsWith('de')
+            ? 'Keine'
+            : 'None'
+      );
 
     // Call Vertex AI for extraction
     const vertexAI = new VertexAI({
@@ -274,6 +284,7 @@ async function applyExtractions(
 
 /**
  * Handle user request to forget information
+ * Handles both User Story fields AND mid-term memory topics
  */
 async function handleForgetRequest(
   userId: string,
@@ -281,6 +292,7 @@ async function handleForgetRequest(
   existingStory: UserStory | null
 ): Promise<void> {
   const storyRef = admin.firestore().doc(`users/${userId}/profile/userStory`);
+  const topicLower = topic.toLowerCase();
 
   // Bilingual mapping of common topic names to field paths
   // Supports both English and German forget requests
@@ -351,24 +363,88 @@ async function handleForgetRequest(
     'meine auslöser': 'therapeuticContext.knownTriggers',
   };
 
-  const fieldPath = topicToField[topic.toLowerCase()] || topic;
+  const fieldPath = topicToField[topicLower];
 
-  // Add to deleted fields list
-  const deletedFields = existingStory?.extractionMeta?.fieldsDeletedByUser || [];
-  if (!deletedFields.includes(fieldPath)) {
-    deletedFields.push(fieldPath);
+  // If it's a known User Story field, delete from User Story
+  if (fieldPath) {
+    const deletedFields = existingStory?.extractionMeta?.fieldsDeletedByUser || [];
+    if (!deletedFields.includes(fieldPath)) {
+      deletedFields.push(fieldPath);
+    }
+
+    const updates: Record<string, unknown> = {
+      [fieldPath]: admin.firestore.FieldValue.delete(),
+      'extractionMeta.fieldsDeletedByUser': deletedFields,
+      updatedAt: admin.firestore.Timestamp.now(),
+    };
+
+    await storyRef.set(updates, { merge: true });
+    logger.info('Processed forget request for User Story field', { userId, topic, fieldPath });
   }
 
-  // Remove the field value and update deleted list
-  const updates: Record<string, unknown> = {
-    [fieldPath]: admin.firestore.FieldValue.delete(),
-    'extractionMeta.fieldsDeletedByUser': deletedFields,
-    updatedAt: admin.firestore.Timestamp.now(),
-  };
+  // Also try to delete from mid-term memory topics
+  // This handles cases like "forget about that interview thing"
+  await deleteMatchingTopics(userId, topicLower);
+}
 
-  await storyRef.set(updates, { merge: true });
+/**
+ * Delete topics from mid-term memory that match the forget request
+ * Uses fuzzy matching to find relevant topics
+ */
+async function deleteMatchingTopics(userId: string, forgetTopic: string): Promise<void> {
+  const memoryRef = admin.firestore().doc(`users/${userId}/profile/midTermMemory`);
 
-  logger.info('Processed forget request', { userId, topic, fieldPath });
+  try {
+    const memoryDoc = await memoryRef.get();
+    if (!memoryDoc.exists) return;
+
+    const existingData = memoryDoc.data();
+    const existingTopics: RecentTopic[] = existingData?.recentTopics || [];
+
+    if (existingTopics.length === 0) return;
+
+    // Find topics that match the forget request
+    const topicsToKeep: RecentTopic[] = [];
+    const topicsDeleted: string[] = [];
+
+    for (const topic of existingTopics) {
+      // Check if the topic matches the forget request
+      const similarity = calculateTopicSimilarity(forgetTopic, topic.topic);
+      const contextSimilarity = calculateTopicSimilarity(forgetTopic, topic.context);
+
+      // If either topic name or context has good match, delete it
+      if (similarity >= 0.3 || contextSimilarity >= 0.3) {
+        topicsDeleted.push(topic.topic);
+      } else {
+        topicsToKeep.push(topic);
+      }
+    }
+
+    // Only update if we actually deleted something
+    if (topicsDeleted.length > 0) {
+      await memoryRef.set(
+        {
+          recentTopics: topicsToKeep,
+          updatedAt: admin.firestore.Timestamp.now(),
+        },
+        { merge: true }
+      );
+
+      logger.info('Deleted topics from mid-term memory', {
+        userId,
+        forgetTopic,
+        deletedTopics: topicsDeleted,
+        remainingCount: topicsToKeep.length,
+      });
+    }
+  } catch (error) {
+    logger.error('Failed to delete topics from mid-term memory', {
+      userId,
+      forgetTopic,
+      error: error instanceof Error ? error.message : String(error),
+    });
+    // Don't throw - this is non-critical
+  }
 }
 
 /**
@@ -401,16 +477,28 @@ function isHistoryField(fieldPath: string): boolean {
 
 /**
  * Check if a field is an array type
+ * These fields should MERGE new items instead of replacing
  */
 function isArrayField(fieldPath: string): boolean {
   const arrayFields = [
+    // Personal
     'personal.interests',
     'personal.hobbies',
     'personal.copingActivities',
     'personal.avoidances',
+    // Background
+    'background.significantLifeEvents',
+    // Therapeutic Context
     'therapeuticContext.knownTriggers',
     'therapeuticContext.anxietyManifestations',
-    'background.significantLifeEvents',
+    'therapeuticContext.whatDoesntWork',
+    // Strengths & Resources (all array fields!)
+    'strengths.whatGivesHope',
+    'strengths.proudMoments',
+    'strengths.pastWins',
+    'strengths.motivators',
+    'strengths.positiveRelationships',
+    'strengths.coreValues',
   ];
   return arrayFields.includes(fieldPath);
 }
