@@ -96,12 +96,12 @@ export const AchievementSection: FC<AchievementSectionProps> = ({
         </div>
       </div>
 
-      {/* Achievement grid - 4 equal columns with consistent gaps */}
+      {/* Achievement grid - 4 equal columns with responsive gaps */}
       <motion.div
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="grid grid-cols-4 gap-3"
+        className="grid grid-cols-4 gap-2 min-[385px]:gap-3"
       >
         {achievements.map((achievement) => (
           <motion.div key={achievement.id} variants={itemVariants} className="w-full">

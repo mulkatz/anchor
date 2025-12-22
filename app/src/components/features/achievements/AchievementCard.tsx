@@ -53,7 +53,10 @@ export const AchievementCard: FC<AchievementCardProps> = ({ achievement }) => {
       <div className="relative mb-2">
         {/* Progress ring for locked achievements with progress */}
         {hasProgress && (
-          <svg className="absolute -inset-1 h-[44px] w-[44px] -rotate-90">
+          <svg
+            viewBox="0 0 44 44"
+            className="absolute -inset-1 h-[44px] w-[44px] -rotate-90 min-[385px]:h-[52px] min-[385px]:w-[52px]"
+          >
             {/* Background ring */}
             <circle
               cx="22"
@@ -83,7 +86,7 @@ export const AchievementCard: FC<AchievementCardProps> = ({ achievement }) => {
         {/* Icon circle */}
         <div
           className={cn(
-            'relative flex h-9 w-9 items-center justify-center rounded-full',
+            'relative flex h-9 w-9 items-center justify-center rounded-full min-[385px]:h-11 min-[385px]:w-11',
             'transition-all duration-300',
             isUnlocked ? 'bg-biolum-cyan/25' : 'bg-mist-white/5'
           )}
@@ -92,6 +95,7 @@ export const AchievementCard: FC<AchievementCardProps> = ({ achievement }) => {
             size={18}
             strokeWidth={isUnlocked ? 2 : 1.5}
             className={cn(
+              'h-[18px] w-[18px] min-[385px]:h-[22px] min-[385px]:w-[22px]',
               'transition-colors duration-300',
               isUnlocked ? 'text-biolum-cyan' : 'text-mist-white/25'
             )}
@@ -99,8 +103,12 @@ export const AchievementCard: FC<AchievementCardProps> = ({ achievement }) => {
 
           {/* Bottom-right badge: Lock for locked items only */}
           {!isUnlocked && (
-            <div className="absolute -bottom-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full border border-mist-white/20 bg-void-blue">
-              <Lock size={8} className="text-mist-white/40" strokeWidth={2.5} />
+            <div className="absolute -bottom-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full border border-mist-white/20 bg-void-blue min-[385px]:h-5 min-[385px]:w-5">
+              <Lock
+                size={8}
+                className="h-2 w-2 text-mist-white/40 min-[385px]:h-2.5 min-[385px]:w-2.5"
+                strokeWidth={2.5}
+              />
             </div>
           )}
         </div>
@@ -109,8 +117,8 @@ export const AchievementCard: FC<AchievementCardProps> = ({ achievement }) => {
       {/* Name - fixed 2 lines for consistent height, with proper hyphenation */}
       <span
         className={cn(
-          'w-full text-center text-[9px] font-medium leading-tight',
-          'line-clamp-2 min-h-[24px] px-0.5',
+          'w-full text-center text-[9px] font-medium leading-tight min-[385px]:text-[11px]',
+          'line-clamp-2 min-h-[24px] px-0.5 min-[385px]:min-h-[28px]',
           'hyphens-auto break-words',
           isUnlocked ? 'text-mist-white' : 'text-mist-white/40'
         )}
@@ -121,7 +129,7 @@ export const AchievementCard: FC<AchievementCardProps> = ({ achievement }) => {
 
       {/* Progress percentage */}
       {hasProgress && (
-        <span className="text-[8px] font-semibold text-biolum-cyan/70">
+        <span className="text-[8px] font-semibold text-biolum-cyan/70 min-[385px]:text-[10px]">
           {Math.round(achievement.progress)}%
         </span>
       )}
