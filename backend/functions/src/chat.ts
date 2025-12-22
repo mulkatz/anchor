@@ -235,19 +235,16 @@ IMPORTANT: You can now reference when things happened in your conversation. Each
         }));
 
         // Async extraction (fire-and-forget) - don't block response
-        // This now also extracts topics to mid-term memory
-        // Only extract if message is substantial enough to contain useful info (>= 15 chars)
-        // Short messages like "hi", "ok", "yeah" are unlikely to contain extractable data
-        if (message.text.length >= 15) {
-          extractStoryFromMessage(userId, message.text, recentMessages, languageCode).catch(
-            (err) => {
-              logger.error('Background story extraction failed', {
-                userId,
-                error: err instanceof Error ? err.message : String(err),
-              });
-            }
-          );
-        }
+        // This extracts both personal info to User Story AND topics to Mid-Term Memory
+        // We extract ALL messages because even short answers like "yes", "no", "Sarah"
+        // can be important responses to questions (e.g., "do you have pets?" → "yes")
+        // The extraction AI is smart enough to return empty results if nothing to extract
+        extractStoryFromMessage(userId, message.text, recentMessages, languageCode).catch((err) => {
+          logger.error('Background story extraction failed', {
+            userId,
+            error: err instanceof Error ? err.message : String(err),
+          });
+        });
 
         // Get both contexts IN PARALLEL - don't add unnecessary latency!
         const [storyContext, topicsContext] = await Promise.all([
