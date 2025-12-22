@@ -11,7 +11,6 @@ import { ConversationCard } from '../components/features/archive/ConversationCar
 import { EmptyArchive } from '../components/features/archive/EmptyArchive';
 import { ConfirmDialog } from '../components/ui/ConfirmDialog';
 import { LoadingSpinner } from '../components/ui';
-import { cn } from '../utils/cn';
 
 export const ArchivePage: FC = () => {
   const { t } = useTranslation();
@@ -57,35 +56,28 @@ export const ArchivePage: FC = () => {
     <div className="flex h-full flex-col bg-void-blue/75">
       {/* Header */}
       <header className="shrink-0 border-b border-glass-border bg-void-blue px-4 py-4 pt-safe sm:px-6">
-        <div className="mb-4 flex items-center gap-4">
+        <div className="flex items-center gap-3">
           <button
             onClick={handleBack}
-            className={cn(
-              'flex items-center justify-center rounded-full',
-              'h-10 w-10 bg-glass-bg backdrop-blur-glass',
-              'border border-glass-border',
-              'text-mist-white transition-all duration-300 ease-viscous',
-              'active:scale-95'
-            )}
+            className="-ml-2 rounded-full p-2 text-mist-white/70 transition-colors hover:bg-glass-bg hover:text-mist-white active:scale-95"
           >
-            <ArrowLeft size={20} />
+            <ArrowLeft size={24} />
           </button>
 
           <div>
             <h1 className="text-2xl font-light text-mist-white">{t('archive.title')}</h1>
+            <p className="text-sm text-mist-white/60">
+              {t(
+                archivedConversations.length === 0
+                  ? 'archive.savedConversations_zero'
+                  : archivedConversations.length === 1
+                    ? 'archive.savedConversations_one'
+                    : 'archive.savedConversations_other',
+                { count: archivedConversations.length }
+              )}
+            </p>
           </div>
         </div>
-
-        <p className="text-sm text-mist-white/60">
-          {t(
-            archivedConversations.length === 0
-              ? 'archive.savedConversations_zero'
-              : archivedConversations.length === 1
-                ? 'archive.savedConversations_one'
-                : 'archive.savedConversations_other',
-            { count: archivedConversations.length }
-          )}
-        </p>
       </header>
 
       {/* Content */}
