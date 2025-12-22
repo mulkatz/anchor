@@ -1,7 +1,7 @@
 # User Story: The Interested AI Companion
 
 **Status:** Implemented
-**Version:** 1.0
+**Version:** 2.0 (Mid-Term Memory)
 **Last Updated:** December 2024
 
 ---
@@ -16,6 +16,56 @@ The User Story feature enables Anchor to progressively learn about users through
 - **Full transparency** - Users can view, edit, and delete everything the AI knows
 - **Strengths-based** - Focus on resources and resilience, not just problems
 - **Therapeutic utility** - Information is used to help, not just collected
+- **Cross-conversation continuity** - Remember what they're going through, not just who they are
+
+---
+
+## Two-Tier Memory Architecture
+
+Anchor uses a dual-memory system to remember both WHO users are and WHAT they're currently dealing with:
+
+### Tier 1: User Story (Long-term Facts)
+
+Stable personal facts that change rarely:
+
+- Core identity (name, age, location)
+- Life situation (occupation, living arrangement)
+- Relationships (partner, pets, support system)
+- Therapeutic context (triggers, coping strategies)
+- Strengths (past wins, motivators)
+
+**Path:** `users/{userId}/profile/userStory`
+**Retention:** Permanent (until user deletes)
+
+### Tier 2: Mid-Term Memory (Temporal Topics)
+
+Current situations and problems with temporal relevance:
+
+- Active topics they're working through ("job interview anxiety")
+- Recent events ("argument with roommate")
+- Ongoing challenges ("work stress", "sleep issues")
+- Status tracking (active → resolved → fading)
+
+**Path:** `users/{userId}/profile/midTermMemory`
+**Retention:** 60 days max, auto-pruned
+
+### Why Two Tiers?
+
+| Scenario                              | User Story | Mid-Term Memory |
+| ------------------------------------- | ---------- | --------------- |
+| "What's my name?"                     | ✅         | ❌              |
+| "Remember when I had that interview?" | ❌         | ✅              |
+| "I'm a software developer"            | ✅         | ❌              |
+| "My roommate and I fought yesterday"  | ❌         | ✅              |
+| "How did that work thing go?"         | ❌         | ✅              |
+| "You know I hate crowded places"      | ✅         | ❌              |
+
+This separation allows the AI to:
+
+1. Maintain stable facts across months/years
+2. Track evolving situations with temporal context
+3. Check in on recent issues naturally
+4. Let resolved topics fade without losing permanent facts
 
 ---
 
@@ -179,6 +229,107 @@ interface StoryFieldWithHistory<T> extends StoryFieldValue<T> {
 
 ---
 
+## Mid-Term Memory Data Model
+
+### Firestore Path
+
+```
+users/{userId}/profile/midTermMemory
+```
+
+### Schema Structure
+
+```typescript
+interface MidTermMemory {
+  userId: string;
+  createdAt: Date;
+  updatedAt: Date;
+
+  // Recent topics/problems - max 20, older ones pruned
+  recentTopics: RecentTopic[];
+
+  // Check-in tracking to avoid repetition
+  lastCheckIn?: {
+    topicId: string;
+    at: Date;
+  };
+}
+
+interface RecentTopic {
+  id: string;
+  topic: string; // "job interview anxiety"
+  context: string; // "Interview at Google on Friday"
+  category: TopicCategory;
+
+  // Temporal tracking
+  firstMentionedAt: Date;
+  lastMentionedAt: Date;
+  mentionCount: number;
+
+  // Status
+  status: TopicStatus;
+
+  // Optional: linked to user story fields
+  relatedFields?: string[]; // ['therapeuticContext.knownTriggers']
+}
+
+type TopicCategory = 'work' | 'relationships' | 'health' | 'anxiety' | 'life-event' | 'other';
+type TopicStatus = 'active' | 'resolved' | 'fading';
+```
+
+### Topic Lifecycle
+
+```
+User mentions problem
+       │
+       ▼
+┌─────────────────┐
+│ Topic extracted │
+│ status: active  │
+└────────┬────────┘
+         │
+    ┌────┴────────────────┐
+    │                     │
+    ▼                     ▼
+┌────────────┐    ┌───────────────┐
+│ Mentioned  │    │ Not mentioned │
+│   again    │    │ for 3-7 days  │
+└─────┬──────┘    └───────┬───────┘
+      │                   │
+      ▼                   ▼
+┌────────────┐    ┌───────────────┐
+│ mentionCount++│ │ AI checks in  │
+│ lastMentioned │ │ "how'd it go?"│
+│   updated     │ └───────┬───────┘
+└────────────┘           │
+                   ┌─────┴─────┐
+                   │           │
+                   ▼           ▼
+            ┌──────────┐  ┌──────────┐
+            │ resolved │  │  fading  │
+            │ (done!)  │  │(no update)│
+            └──────────┘  └────┬─────┘
+                               │
+                               ▼ 60 days
+                         ┌──────────┐
+                         │  pruned  │
+                         └──────────┘
+```
+
+### Relevance Algorithm
+
+Topics are prioritized for AI check-ins based on:
+
+| Days Since Last Mention | Priority | AI Behavior                    |
+| ----------------------- | -------- | ------------------------------ |
+| 0-2 days                | Current  | Actively reference if relevant |
+| 3-7 days                | Check-in | Proactively ask about it       |
+| 8-30 days               | Low      | Only mention if user brings up |
+| 31-60 days              | Fading   | Rarely reference               |
+| >60 days                | Pruned   | Automatically removed          |
+
+---
+
 ## Extraction System
 
 ### Dual-Mode Approach
@@ -187,7 +338,7 @@ interface StoryFieldWithHistory<T> extends StoryFieldValue<T> {
 
 - Runs asynchronously after each user message
 - Non-blocking (fire-and-forget)
-- Only extracts what user naturally shares
+- Extracts both FACTS (to User Story) and TOPICS (to Mid-Term Memory)
 - Uses Gemini 2.0 Flash with low temperature (0.1)
 
 **Mode B: Active Curiosity (AI-guided)**
@@ -195,7 +346,19 @@ interface StoryFieldWithHistory<T> extends StoryFieldValue<T> {
 - Guidelines embedded in system prompt
 - AI weaves questions naturally into conversation
 - Context-aware timing (not during crisis)
-- Maximum one personal question per conversation
+- Proactive check-ins on topics 3-7 days old
+- One or two natural questions per conversation is ideal
+
+### What Gets Extracted Where
+
+| User Says                            | Extracted To                                  | Example                                                     |
+| ------------------------------------ | --------------------------------------------- | ----------------------------------------------------------- |
+| "I'm Sarah"                          | User Story → coreIdentity.name                | `{ value: "Sarah", confidence: "explicit" }`                |
+| "I work as a nurse"                  | User Story → lifeSituation.occupation         | `{ type: "work", details: "nurse" }`                        |
+| "I have a job interview Friday"      | Mid-Term Memory → recentTopics                | `{ topic: "job interview anxiety", status: "active" }`      |
+| "My roommate and I fought"           | Mid-Term Memory → recentTopics                | `{ topic: "roommate conflict", category: "relationships" }` |
+| "I've always been afraid of crowds"  | User Story → therapeuticContext.knownTriggers | `["crowds", ...]`                                           |
+| "Work is stressing me out this week" | Mid-Term Memory → recentTopics                | `{ topic: "work stress", category: "work" }`                |
 
 ### Extraction Rules
 
@@ -259,6 +422,27 @@ The AI receives explicit instructions on HOW to use collected information:
 - Celebrate progress: "you've been handling these moments better lately"
 ```
 
+### Proactive Check-Ins (Mid-Term Memory)
+
+```
+Topics 3-7 days old get automatic check-in suggestions:
+
+- "hey, how did that interview go?"
+- "been thinking about that thing with your roommate - any updates?"
+- "how's that work project coming along?"
+
+Rules:
+- Only check in on topics marked as 'active' - don't bring up resolved stuff
+- Max one check-in per conversation - don't make every chat feel like a status update
+- If they say it's resolved or don't want to talk about it, move on naturally
+
+What makes a good check-in:
+- Casual and caring, not clinical ("how did that go?" not "can you update me on...")
+- Give them space to not engage if they don't want to
+- Celebrate wins if they share progress
+- Be supportive if it didn't go well
+```
+
 ### Anti-Surveillance Principle
 
 ```
@@ -312,6 +496,11 @@ const {
 What the AI sees in its system prompt:
 
 ```
+CURRENTLY ON THEIR MIND (check in if relevant):
+- [3 days ago] job interview anxiety: Interview at Google on Friday → worth checking in
+- [yesterday] roommate conflict: argument about chores
+- [today] sleep issues: work stress keeping them up
+
 WHAT YOU KNOW ABOUT THEM:
 Name: Sarah
 Age: 24
@@ -327,6 +516,19 @@ Currently seeing a therapist (you're the between-sessions friend)
 Proof they can handle hard things: got through job interview last month
 What gives them hope: travel plans, career growth
 ```
+
+### Topic Context Format
+
+Topics include temporal markers and check-in suggestions:
+
+```
+- [today] {topic}: {context}
+- [yesterday] {topic}: {context}
+- [3 days ago] {topic}: {context} → worth checking in
+- [last week] {topic}: {context} (resolved)
+```
+
+The `→ worth checking in` marker appears for topics 3-7 days old that are still active.
 
 ### Therapeutic Framing
 
@@ -345,11 +547,15 @@ Clinical terms are humanized in the context:
 
 ```
 backend/functions/src/userStory/
-├── types.ts        # Data model interfaces
-├── extraction.ts   # AI extraction logic
-├── prompts.ts      # EN + DE extraction prompts
-├── context.ts      # Format story for prompt injection
+├── types.ts        # Data models (UserStory, MidTermMemory, RecentTopic)
+├── extraction.ts   # AI extraction logic + applyTopicExtractions()
+├── prompts.ts      # EN + DE extraction prompts (facts + topics)
+├── context.ts      # Format story + topics for prompt injection
 └── index.ts        # Module exports
+
+backend/functions/src/
+├── chat.ts         # Fetches both contexts, passes to getSystemPrompt()
+└── languageConfig.ts # getSystemPrompt() injects both contexts
 ```
 
 ### Frontend
@@ -406,9 +612,16 @@ Full EN + DE support in `myStory` namespace:
 ### Firestore Rules
 
 ```javascript
+// User Story - users can read and write (for editing their data)
 match /users/{userId}/profile/userStory {
   allow read: if request.auth != null && request.auth.uid == userId;
   allow write: if request.auth != null && request.auth.uid == userId;
+}
+
+// Mid-Term Memory - users can read, only backend can write
+match /users/{userId}/profile/midTermMemory {
+  allow read: if request.auth != null && request.auth.uid == userId;
+  allow write: if false; // Backend functions only
 }
 ```
 
@@ -424,11 +637,27 @@ match /users/{userId}/profile/userStory {
 
 ## Success Criteria
 
+### User Story (Long-term Facts)
+
 1. AI naturally asks user's name within first 3-5 conversations
 2. User can view everything AI knows on My Story page
 3. User can edit/delete any field
 4. State changes (relationship status) tracked with history
 5. "Forget that" in chat removes corresponding data
 6. Cross-device sync works correctly
-7. No interrogation feeling - questions feel natural
-8. Strengths and resources actively used during difficult moments
+7. Strengths and resources actively used during difficult moments
+
+### Mid-Term Memory (Topics)
+
+8. When user discusses a problem, it's captured in mid-term memory
+9. AI can reference "remember when you mentioned X?" across conversations
+10. Topics fade naturally over time (60+ days = removed)
+11. AI proactively checks in on topics 3-7 days old
+12. No interrogation feeling - check-ins feel natural and caring
+13. Resolved topics are not brought up again
+
+### Proactive Curiosity
+
+14. AI asks follow-up questions when topics are interesting/concerning
+15. Questions weave naturally into conversation flow
+16. AI behaves like a friend who pays attention over time
