@@ -5,6 +5,7 @@ import { Download } from 'lucide-react';
 import { cn } from '../../../utils/cn';
 import { useHaptics } from '../../../hooks/useHaptics';
 import { Capacitor } from '@capacitor/core';
+import { getRemoteConfigValue } from '../../../services/firebase.service';
 
 interface UpdateDialogProps {
   type: 'required' | 'available';
@@ -25,16 +26,14 @@ export const UpdateDialog: FC<UpdateDialogProps> = ({ type, onClose }) => {
   const handleUpdate = async () => {
     await medium();
 
-    // Get the appropriate store URL based on platform
+    // Get the appropriate store URL based on platform (from Remote Config)
     const platform = Capacitor.getPlatform();
     let storeUrl = '';
 
     if (platform === 'ios') {
-      // Replace with your App Store URL
-      storeUrl = 'https://apps.apple.com/app/idXXXXXXXXXX';
+      storeUrl = getRemoteConfigValue('update_url_ios');
     } else if (platform === 'android') {
-      // Replace with your Play Store URL
-      storeUrl = 'https://play.google.com/store/apps/details?id=cx.franz.anxietybuddy';
+      storeUrl = getRemoteConfigValue('update_url_android');
     } else {
       // Web - just close the dialog
       onClose();
@@ -42,7 +41,9 @@ export const UpdateDialog: FC<UpdateDialogProps> = ({ type, onClose }) => {
     }
 
     // Open the store
-    window.open(storeUrl, '_blank');
+    if (storeUrl) {
+      window.open(storeUrl, '_blank');
+    }
 
     // For optional updates, close the dialog after opening store
     if (!isRequired) {

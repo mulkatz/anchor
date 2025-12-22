@@ -5,6 +5,9 @@
     "rules": "firestore.rules",
     "indexes": "firestore.indexes.json"
   },
+  "storage": {
+    "rules": "backend/storage.rules"
+  },
   "functions": [
     {
       "source": "backend/functions",
@@ -26,5 +29,18 @@
   },
   "remoteconfig": {
     "template": "remoteconfig.template.json"
+  },
+  "emulators": {
+    "functions": {
+      "port": 5001
+    },
+    "firestore": {
+      "port": 8080
+    },
+    "ui": {
+      "enabled": true,
+      "port": 4000
+    },
+    "singleProjectMode": true
   }
 }

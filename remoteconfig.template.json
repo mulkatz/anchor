@@ -1,1 +1,59 @@
-{}
+{
+  "parameters": {
+    "min_required_version_ios": {
+      "defaultValue": {
+        "value": "0.0.0"
+      },
+      "description": "Minimum iOS app version required. Users below this version will see a force update dialog.",
+      "valueType": "STRING"
+    },
+    "min_required_version_android": {
+      "defaultValue": {
+        "value": "0.0.0"
+      },
+      "description": "Minimum Android app version required. Users below this version will see a force update dialog.",
+      "valueType": "STRING"
+    },
+    "latest_version_ios": {
+      "defaultValue": {
+        "value": "0.7.0"
+      },
+      "description": "Latest available iOS app version. Users below this version will see an optional update dialog.",
+      "valueType": "STRING"
+    },
+    "latest_version_android": {
+      "defaultValue": {
+        "value": "0.7.0"
+      },
+      "description": "Latest available Android app version. Users below this version will see an optional update dialog.",
+      "valueType": "STRING"
+    },
+    "update_url_ios": {
+      "defaultValue": {
+        "value": "https://apps.apple.com/app/idXXXXXXXXXX"
+      },
+      "description": "App Store URL for iOS app updates.",
+      "valueType": "STRING"
+    },
+    "update_url_android": {
+      "defaultValue": {
+        "value": "https://play.google.com/store/apps/details?id=cx.franz.anxietybuddy"
+      },
+      "description": "Play Store URL for Android app updates.",
+      "valueType": "STRING"
+    }
+  },
+  "parameterGroups": {
+    "App Updates": {
+      "description": "Configuration for app update prompts",
+      "parameters": {
+        "min_required_version_ios": {},
+        "min_required_version_android": {},
+        "latest_version_ios": {},
+        "latest_version_android": {},
+        "update_url_ios": {},
+        "update_url_android": {}
+      }
+    }
+  }
+}
