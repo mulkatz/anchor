@@ -180,8 +180,13 @@ function formatPets(
 export async function getUserStoryForPrompt(userId: string): Promise<string | undefined> {
   const story = await getUserStory(userId);
 
+  // If no story document exists yet, return explicit guidance to ask for name
   if (!story) {
-    return undefined;
+    return `You don't know much about them yet - be naturally curious!
+
+IMPORTANT: You don't even know their name yet. Within your first few exchanges, find a natural moment to ask what you should call them. This is essential for building a real connection. Something casual like "btw what should I call you?" works great.
+
+Other things to naturally discover over time: how old they are, what they do for work/study`;
   }
 
   const lines: string[] = [];
@@ -345,8 +350,13 @@ Other things to naturally discover over time: how old they are, what they do for
 export async function getUserStoryForPromptDE(userId: string): Promise<string | undefined> {
   const story = await getUserStory(userId);
 
+  // If no story document exists yet, return explicit guidance to ask for name
   if (!story) {
-    return undefined;
+    return `Du weißt noch nicht viel über sie - sei natürlich neugierig!
+
+WICHTIG: Du kennst nicht mal ihren Namen. Finde in den ersten paar Nachrichten einen natürlichen Moment um zu fragen, wie du sie nennen sollst. Das ist wichtig um eine echte Verbindung aufzubauen. Etwas lockeres wie "btw wie soll ich dich nennen?" funktioniert super.
+
+Andere Dinge die du mit der Zeit herausfinden kannst: wie alt sie sind, was sie arbeiten/studieren`;
   }
 
   const lines: string[] = [];
