@@ -726,11 +726,15 @@
       "title": "Treasures",
       "subtitle": "Discoveries from the deep",
       "unlocked": "Treasure Found",
+      "locked": "Hidden",
+      "progress": "{{percent}}% complete",
+      "justUnlocked": "Treasure discovered",
       "categories": {
-        "chat": "Deep Talk",
+        "chat": "Deep Conversations",
         "dive": "The Dive",
         "lighthouse": "Lighthouse",
         "tidelog": "Tide Log",
+        "streak": "Consistency",
         "milestone": "Milestones"
       },
       "streak": {

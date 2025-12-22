@@ -738,10 +738,10 @@
       "progress": "{{percent}}% abgeschlossen",
       "justUnlocked": "Schatz entdeckt",
       "categories": {
-        "chat": "Gespräche",
-        "dive": "The Dive",
+        "chat": "Tiefengespräche",
+        "dive": "Der Tauchgang",
         "lighthouse": "Leuchtturm",
-        "tidelog": "Gezeitenprotokoll",
+        "tidelog": "Wellentagebuch",
         "streak": "Beständigkeit",
         "milestone": "Meilensteine"
       },

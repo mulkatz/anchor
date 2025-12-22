@@ -11,9 +11,18 @@ const config: CapacitorConfig = {
   // },
   android: {
     path: './native/android',
+    backgroundColor: '#0A1128',
   },
   ios: {
     path: './native/ios',
+    backgroundColor: '#0A1128',
+  },
+  plugins: {
+    SplashScreen: {
+      backgroundColor: '#0A1128',
+      launchAutoHide: true,
+      androidScaleType: 'CENTER_CROP',
+    },
   },
 };
 
