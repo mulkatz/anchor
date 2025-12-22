@@ -180,6 +180,16 @@ function formatPets(
 export async function getUserStoryForPrompt(userId: string): Promise<string | undefined> {
   const story = await getUserStory(userId);
 
+  // Debug logging to verify story is being read correctly
+  const logger = await import('firebase-functions/logger');
+  logger.info('getUserStoryForPrompt called', {
+    userId,
+    storyExists: !!story,
+    hasCoreIdentity: !!story?.coreIdentity,
+    nameField: story?.coreIdentity?.name,
+    nameValue: story?.coreIdentity?.name?.value,
+  });
+
   // If no story document exists yet, return explicit guidance to ask for name
   if (!story) {
     return `You don't know much about them yet - be naturally curious!

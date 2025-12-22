@@ -329,8 +329,10 @@ async function applyExtractions(
   // Update topics discovered
   updates['extractionMeta.topicsDiscovered'] = Array.from(topicsDiscovered);
 
-  // Apply all updates
-  await storyRef.set(updates, { merge: true });
+  // Apply all updates using update() - NOT set() with merge!
+  // update() interprets dots as nested paths: 'coreIdentity.name' → { coreIdentity: { name: ... } }
+  // set() with merge treats dots as literal field names: creates field called "coreIdentity.name"
+  await storyRef.update(updates);
 }
 
 /**
@@ -429,7 +431,8 @@ async function handleForgetRequest(
       updatedAt: admin.firestore.Timestamp.now(),
     };
 
-    await storyRef.set(updates, { merge: true });
+    // Use update() to interpret dots as paths (same reason as applyExtractions)
+    await storyRef.update(updates);
     logger.info('Processed forget request for User Story field', { userId, topic, fieldPath });
   }
 
@@ -504,14 +507,12 @@ async function deleteMatchingTopics(userId: string, forgetTopic: string): Promis
 async function updateSuggestedFollowUps(userId: string, suggestions: string[]): Promise<void> {
   const storyRef = admin.firestore().doc(`users/${userId}/profile/userStory`);
 
-  await storyRef.set(
-    {
-      'extractionMeta.topicsToExplore': admin.firestore.FieldValue.arrayUnion(
-        ...suggestions.slice(0, 5)
-      ),
-    },
-    { merge: true }
-  );
+  // Use update() to interpret dots as nested paths
+  await storyRef.update({
+    'extractionMeta.topicsToExplore': admin.firestore.FieldValue.arrayUnion(
+      ...suggestions.slice(0, 5)
+    ),
+  });
 }
 
 /**
@@ -583,11 +584,15 @@ function getNestedValue(
 export async function recordQuestionAsked(userId: string, topic: string): Promise<void> {
   const storyRef = admin.firestore().doc(`users/${userId}/profile/userStory`);
 
+  // Use properly nested object (not dot notation) with set/merge
+  // This works even if document doesn't exist yet
   await storyRef.set(
     {
-      'extractionMeta.questionsAskedCount': admin.firestore.FieldValue.increment(1),
-      'extractionMeta.lastQuestionTopic': topic,
-      'extractionMeta.lastQuestionAt': admin.firestore.Timestamp.now(),
+      extractionMeta: {
+        questionsAskedCount: admin.firestore.FieldValue.increment(1),
+        lastQuestionTopic: topic,
+        lastQuestionAt: admin.firestore.Timestamp.now(),
+      },
     },
     { merge: true }
   );
