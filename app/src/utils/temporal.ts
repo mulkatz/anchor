@@ -3,6 +3,19 @@
  * Formats timestamps for natural language AI context and UI display
  */
 
+import i18next from 'i18next';
+
+/**
+ * Get the current locale for date formatting
+ * Maps i18n language to locale string
+ */
+function getLocale(): string {
+  const lang = i18next.language || 'en-US';
+  // Map language codes to locale codes
+  if (lang.startsWith('de')) return 'de-DE';
+  return 'en-US';
+}
+
 /**
  * Get relative time description for AI context
  * Examples: "2 minutes ago", "5 hours ago", "yesterday at 3:42 PM", "last Monday at 10:15 AM"
@@ -68,10 +81,11 @@ export function getRelativeTimeForUI(date: Date, now: Date = new Date()): string
   const diffMins = Math.floor(diffMs / (1000 * 60));
   const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
   const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+  const locale = getLocale();
 
   // Less than 1 hour
   if (diffMins < 60) {
-    if (diffMins < 1) return 'Now';
+    if (diffMins < 1) return i18next.t('common.now');
     return `${diffMins}m`;
   }
 
@@ -82,16 +96,16 @@ export function getRelativeTimeForUI(date: Date, now: Date = new Date()): string
 
   // Yesterday
   if (diffDays === 1 || (diffDays < 2 && !isSameDay(date, now))) {
-    return 'Yesterday';
+    return i18next.t('common.yesterday');
   }
 
   // Within last week
   if (diffDays < 7) {
-    return date.toLocaleDateString('en-US', { weekday: 'short' });
+    return date.toLocaleDateString(locale, { weekday: 'short' });
   }
 
   // Older
-  return date.toLocaleDateString('en-US', {
+  return date.toLocaleDateString(locale, {
     month: 'short',
     day: 'numeric',
   });
@@ -102,10 +116,11 @@ export function getRelativeTimeForUI(date: Date, now: Date = new Date()): string
  * Example: "Yesterday 3:42 PM", "Dec 8 at 10:15 AM"
  */
 export function getFullTimestamp(date: Date, now: Date = new Date()): string {
-  const timeStr = date.toLocaleTimeString('en-US', {
+  const locale = getLocale();
+  const timeStr = date.toLocaleTimeString(locale, {
     hour: 'numeric',
     minute: '2-digit',
-    hour12: true,
+    hour12: locale === 'en-US',
   });
 
   const diffDays = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
@@ -117,21 +132,21 @@ export function getFullTimestamp(date: Date, now: Date = new Date()): string {
 
   // Yesterday
   if (diffDays === 1 || (diffDays < 2 && !isSameDay(date, now))) {
-    return `Yesterday ${timeStr}`;
+    return `${i18next.t('common.yesterday')} ${timeStr}`;
   }
 
   // Within last week
   if (diffDays < 7) {
-    const dayName = date.toLocaleDateString('en-US', { weekday: 'long' });
+    const dayName = date.toLocaleDateString(locale, { weekday: 'long' });
     return `${dayName} ${timeStr}`;
   }
 
   // Older
-  const dateStr = date.toLocaleDateString('en-US', {
+  const dateStr = date.toLocaleDateString(locale, {
     month: 'short',
     day: 'numeric',
   });
-  return `${dateStr} at ${timeStr}`;
+  return `${dateStr}, ${timeStr}`;
 }
 
 /**
@@ -140,33 +155,34 @@ export function getFullTimestamp(date: Date, now: Date = new Date()): string {
  */
 export function getDateDivider(date: Date, now: Date = new Date()): string {
   const diffDays = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
+  const locale = getLocale();
 
   // Today
   if (isSameDay(date, now)) {
-    return 'Today';
+    return i18next.t('common.today');
   }
 
   // Yesterday
   if (diffDays === 1 || (diffDays < 2 && !isSameDay(date, now))) {
-    return 'Yesterday';
+    return i18next.t('common.yesterday');
   }
 
   // Within last week
   if (diffDays < 7) {
-    return date.toLocaleDateString('en-US', { weekday: 'long' });
+    return date.toLocaleDateString(locale, { weekday: 'long' });
   }
 
   // Within current year
   const sameYear = date.getFullYear() === now.getFullYear();
   if (sameYear) {
-    return date.toLocaleDateString('en-US', {
+    return date.toLocaleDateString(locale, {
       month: 'long',
       day: 'numeric',
     });
   }
 
   // Different year
-  return date.toLocaleDateString('en-US', {
+  return date.toLocaleDateString(locale, {
     month: 'long',
     day: 'numeric',
     year: 'numeric',
