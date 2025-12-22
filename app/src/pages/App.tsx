@@ -22,6 +22,7 @@ import { IlluminateDetailPage } from './IlluminateDetailPage';
 import { HorizonPage } from './HorizonPage';
 import { OnboardingPage } from './OnboardingPage';
 import { AchievementsPage } from './AchievementsPage';
+import { MyStoryPage } from './MyStoryPage';
 
 // Animation variants for page transitions
 // Note: Using negative y for initial (starts above, slides down) to work with overflow-hidden parent
@@ -201,6 +202,21 @@ const AnimatedRoutes: FC = () => {
               className="h-full w-full"
             >
               <ProfilePage />
+            </motion.div>
+          }
+        />
+        <Route
+          path="/my-story"
+          element={
+            <motion.div
+              variants={pageVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              transition={pageTransition}
+              className="h-full w-full"
+            >
+              <MyStoryPage />
             </motion.div>
           }
         />

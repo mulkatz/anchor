@@ -845,6 +845,85 @@
         "saveFailed": "Eintrag konnte nicht gespeichert werden. Bitte versuche es erneut.",
         "deleteFailed": "Eintrag konnte nicht gelöscht werden"
       }
+    },
+    "myStory": {
+      "title": "Meine Geschichte",
+      "subtitle": "Was Anchor über dich weiß",
+      "emptyField": "Noch nicht bekannt",
+      "emptyState": {
+        "title": "Deine Geschichte ist ungeschrieben",
+        "description": "Während du mit Anchor chattest, werden hier natürlich Details über dein Leben erscheinen. Du kannst auch alles direkt hinzufügen oder bearbeiten.",
+        "startChat": "Gespräch starten",
+        "hint": "Anchor lernt über dich durch natürliche Gespräche, niemals durch Verhöre."
+      },
+      "sections": {
+        "coreIdentity": "Wer du bist",
+        "lifeSituation": "Dein Leben",
+        "relationships": "Deine Menschen",
+        "background": "Dein Hintergrund",
+        "personal": "Was du liebst",
+        "therapeuticContext": "Deine Reise",
+        "therapeuticContextSubtitle": "Sensible Informationen - mit Vorsicht behandeln"
+      },
+      "fields": {
+        "name": "Name",
+        "nickname": "Spitzname",
+        "age": "Alter",
+        "pronouns": "Pronomen",
+        "location": "Wohnort",
+        "occupation": "Arbeit / Schule",
+        "livingArrangement": "Wohnsituation",
+        "dailySchedule": "Tagesablauf",
+        "romanticStatus": "Beziehungsstatus",
+        "hasPets": "Haustiere",
+        "supportSystem": "Unterstützungsnetzwerk",
+        "hometown": "Heimatstadt",
+        "culturalBackground": "Kultureller Hintergrund",
+        "interests": "Interessen",
+        "hobbies": "Hobbys",
+        "copingActivities": "Was dir hilft",
+        "knownTriggers": "Bekannte Trigger"
+      },
+      "placeholders": {
+        "name": "Wie soll Anchor dich nennen?",
+        "age": "Dein Alter",
+        "pronouns": "z.B. sie/ihr, er/ihm, they/them",
+        "location": "Wo lebst du?",
+        "occupation": "Was machst du?",
+        "livingArrangement": "z.B. allein, mit Mitbewohnern, mit Familie",
+        "dailySchedule": "z.B. 9-5, Schichtarbeit, Studentenplan",
+        "romanticStatus": "z.B. single, in einer Beziehung",
+        "hasPets": "z.B. Hund namens Max, zwei Katzen",
+        "supportSystem": "An wen wendest du dich für Unterstützung?",
+        "hometown": "Woher kommst du?",
+        "culturalBackground": "Dein kultureller Hintergrund",
+        "interests": "Dinge die dich interessieren (Komma getrennt)",
+        "hobbies": "Aktivitäten die du genießt (Komma getrennt)",
+        "copingActivities": "Was hilft wenn du ängstlich bist? (Komma getrennt)",
+        "knownTriggers": "Bekannte Angstauslöser (Komma getrennt)"
+      },
+      "labels": {
+        "learnedFrom": "Im Chat gelernt",
+        "addedByYou": "Von dir hinzugefügt",
+        "lastConfirmed": "Zuletzt bestätigt",
+        "viewHistory": "Änderungen ansehen"
+      },
+      "actions": {
+        "edit": "Bearbeiten",
+        "save": "Speichern",
+        "cancel": "Abbrechen",
+        "delete": "Vergessen",
+        "add": "Hinzufügen"
+      },
+      "confirmDelete": {
+        "title": "Das vergessen?",
+        "message": "Anchor wird sich nicht mehr daran erinnern. Du kannst es jederzeit wieder hinzufügen.",
+        "confirm": "Vergessen"
+      },
+      "privacy": {
+        "note": "Diese Informationen helfen Anchor dich besser zu verstehen. Sie werden sicher gespeichert und niemals geteilt.",
+        "learnMore": "Mehr über Datenschutz erfahren"
+      }
     }
   }
 }

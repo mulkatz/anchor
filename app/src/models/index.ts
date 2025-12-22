@@ -347,3 +347,140 @@ export interface Achievement extends AchievementDefinition {
   unlockedAt?: Date;
   progress: number; // 0-100 percentage toward unlock
 }
+
+// ============================================
+// User Story (Progressive Profile Learning)
+// ============================================
+
+// Confidence levels for extracted information
+export type StoryFieldConfidence = 'explicit' | 'inferred' | 'mentioned';
+
+// How the information was obtained
+export type StoryFieldSource = 'conversation' | 'user_edit';
+
+// Base interface for a single field value
+export interface StoryFieldValue<T = string> {
+  value: T;
+  confidence: StoryFieldConfidence;
+  source: StoryFieldSource;
+  learnedAt: Date;
+  lastConfirmed?: Date;
+}
+
+// Extended interface for fields that can change over time (e.g., relationship status)
+export interface StoryFieldWithHistory<T = string> extends StoryFieldValue<T> {
+  history?: Array<{
+    value: T;
+    changedAt: Date;
+    source: StoryFieldSource;
+  }>;
+}
+
+// Location structure
+export interface StoryLocationValue {
+  city?: string;
+  country?: string;
+  timezone?: string;
+}
+
+// Occupation structure
+export interface StoryOccupationValue {
+  type: 'work' | 'student' | 'between' | 'other';
+  details?: string;
+}
+
+// Pets structure
+export interface StoryPetsValue {
+  has: boolean;
+  details?: string;
+}
+
+/**
+ * Main UserStory interface
+ * Organized by priority tiers (1 = learn first, 6 = opportunistic)
+ */
+export interface UserStory {
+  userId: string;
+  schemaVersion: '1.0';
+  createdAt: Date;
+  updatedAt: Date;
+  lastExtractionAt?: Date;
+
+  // Tier 1: Core Identity (Priority - learn early)
+  coreIdentity: {
+    name?: StoryFieldValue<string>;
+    nickname?: StoryFieldValue<string>;
+    age?: StoryFieldValue<number>;
+    birthdate?: StoryFieldValue<string>;
+    pronouns?: StoryFieldValue<string>;
+    location?: StoryFieldValue<StoryLocationValue>;
+  };
+
+  // Tier 2: Life Situation (High value for context)
+  lifeSituation: {
+    occupation?: StoryFieldWithHistory<StoryOccupationValue>;
+    livingArrangement?: StoryFieldValue<string>;
+    dailySchedule?: StoryFieldValue<string>;
+    currentLifePhase?: StoryFieldValue<string>;
+  };
+
+  // Tier 3: Relationships (Context for support system)
+  relationships: {
+    romanticStatus?: StoryFieldWithHistory<string>;
+    partnerName?: StoryFieldValue<string>;
+    hasPets?: StoryFieldValue<StoryPetsValue>;
+    closeFriends?: StoryFieldValue<string>;
+    familyContext?: StoryFieldValue<string>;
+    supportSystem?: StoryFieldValue<string>;
+  };
+
+  // Tier 4: Background & Origin (Deeper context)
+  background: {
+    culturalBackground?: StoryFieldValue<string>;
+    upbringing?: StoryFieldValue<string>;
+    significantLifeEvents?: StoryFieldValue<string[]>;
+    educationLevel?: StoryFieldValue<string>;
+    hometown?: StoryFieldValue<string>;
+  };
+
+  // Tier 5: Personal Interests & Coping (Therapeutic value)
+  personal: {
+    interests?: StoryFieldValue<string[]>;
+    hobbies?: StoryFieldValue<string[]>;
+    copingActivities?: StoryFieldValue<string[]>;
+    avoidances?: StoryFieldValue<string[]>;
+    favorites?: StoryFieldValue<Record<string, string>>;
+  };
+
+  // Tier 6: Therapeutic Context (Sensitive, high value)
+  therapeuticContext: {
+    knownTriggers?: StoryFieldValue<string[]>;
+    anxietyManifestations?: StoryFieldValue<string[]>;
+    pastTherapyExperience?: StoryFieldValue<boolean>;
+    currentProfessionalSupport?: StoryFieldValue<boolean>;
+    medicationContext?: StoryFieldValue<string>;
+    significantAnxietyHistory?: StoryFieldValue<string>;
+  };
+
+  // Metadata for extraction system
+  extractionMeta: {
+    questionsAskedCount: number;
+    lastQuestionTopic?: string;
+    lastQuestionAt?: Date;
+    topicsDiscovered: string[];
+    topicsToExplore: string[];
+    fieldsDeletedByUser: string[];
+  };
+}
+
+// Field metadata for UI display
+export interface StoryFieldMetadata {
+  path: string;
+  tier: 1 | 2 | 3 | 4 | 5 | 6;
+  sensitivity: 'basic' | 'personal' | 'sensitive' | 'intimate';
+  hasHistory: boolean;
+}
+
+// Helper type for extracting field value type
+export type ExtractFieldType<T> =
+  T extends StoryFieldValue<infer U> ? U : T extends StoryFieldWithHistory<infer U> ? U : never;

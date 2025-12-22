@@ -837,6 +837,85 @@
         "saveFailed": "Failed to save entry. Please try again.",
         "deleteFailed": "Failed to delete entry"
       }
+    },
+    "myStory": {
+      "title": "My Story",
+      "subtitle": "What Anchor knows about you",
+      "emptyField": "Not yet known",
+      "emptyState": {
+        "title": "Your story is unwritten",
+        "description": "As you chat with Anchor, details about your life will naturally appear here. You can also add or edit anything directly.",
+        "startChat": "Start a conversation",
+        "hint": "Anchor learns about you through natural conversation, never through interrogation."
+      },
+      "sections": {
+        "coreIdentity": "Who You Are",
+        "lifeSituation": "Your Life",
+        "relationships": "Your People",
+        "background": "Your Background",
+        "personal": "What You Love",
+        "therapeuticContext": "Your Journey",
+        "therapeuticContextSubtitle": "Sensitive information - handle with care"
+      },
+      "fields": {
+        "name": "Name",
+        "nickname": "Nickname",
+        "age": "Age",
+        "pronouns": "Pronouns",
+        "location": "Location",
+        "occupation": "Work / School",
+        "livingArrangement": "Living Situation",
+        "dailySchedule": "Daily Schedule",
+        "romanticStatus": "Relationship Status",
+        "hasPets": "Pets",
+        "supportSystem": "Support System",
+        "hometown": "Hometown",
+        "culturalBackground": "Cultural Background",
+        "interests": "Interests",
+        "hobbies": "Hobbies",
+        "copingActivities": "What Helps You",
+        "knownTriggers": "Known Triggers"
+      },
+      "placeholders": {
+        "name": "What should Anchor call you?",
+        "age": "Your age",
+        "pronouns": "e.g., she/her, he/him, they/them",
+        "location": "Where do you live?",
+        "occupation": "What do you do?",
+        "livingArrangement": "e.g., alone, with roommates, with family",
+        "dailySchedule": "e.g., 9-5, shift work, student schedule",
+        "romanticStatus": "e.g., single, in a relationship",
+        "hasPets": "e.g., dog named Max, two cats",
+        "supportSystem": "Who do you turn to for support?",
+        "hometown": "Where are you from?",
+        "culturalBackground": "Your cultural background",
+        "interests": "Things you're interested in (comma separated)",
+        "hobbies": "Activities you enjoy (comma separated)",
+        "copingActivities": "What helps when you're anxious? (comma separated)",
+        "knownTriggers": "Known anxiety triggers (comma separated)"
+      },
+      "labels": {
+        "learnedFrom": "Learned from chat",
+        "addedByYou": "Added by you",
+        "lastConfirmed": "Last confirmed",
+        "viewHistory": "View changes"
+      },
+      "actions": {
+        "edit": "Edit",
+        "save": "Save",
+        "cancel": "Cancel",
+        "delete": "Forget this",
+        "add": "Add"
+      },
+      "confirmDelete": {
+        "title": "Forget this?",
+        "message": "Anchor will no longer remember this. You can add it again anytime.",
+        "confirm": "Forget"
+      },
+      "privacy": {
+        "note": "This information helps Anchor understand you better. It's stored securely and never shared.",
+        "learnMore": "Learn more about privacy"
+      }
     }
   }
 }

@@ -16,6 +16,7 @@ import {
   analyzeUserStyle,
   shouldWaitForAnalysis,
 } from './adaptiveLanguage';
+import { extractStoryFromMessage, getLocalizedStoryContext } from './userStory';
 
 /**
  * Cloud Function: onMessageCreate
@@ -218,6 +219,34 @@ IMPORTANT: You can now reference when things happened in your conversation. Each
         });
       }
 
+      // 7.6 User Story: Extract personal info and get context for prompt
+      let userStoryContext: string | undefined;
+
+      try {
+        // Build recent messages context for extraction
+        const recentMessages = conversationHistory.slice(-3).map((msg) => ({
+          role: msg.role,
+          text: msg.text,
+        }));
+
+        // Async extraction (fire-and-forget) - don't block response
+        extractStoryFromMessage(userId, message.text, recentMessages, languageCode).catch((err) => {
+          logger.error('Background story extraction failed', {
+            userId,
+            error: err instanceof Error ? err.message : String(err),
+          });
+        });
+
+        // Get current story context for prompt injection
+        userStoryContext = await getLocalizedStoryContext(userId, languageCode);
+      } catch (storyError) {
+        // Don't fail the main message flow if story operations fail
+        logger.error('Failed in user story processing', {
+          userId,
+          error: storyError instanceof Error ? storyError.message : String(storyError),
+        });
+      }
+
       // 8. Build Gemini Conversation Format with temporal awareness (timezone-aware)
       const contents = conversationHistory.map((msg) => {
         const relativeTime = getRelativeTimeForAI(msg.timestamp, now, userTimezone);
@@ -229,12 +258,18 @@ IMPORTANT: You can now reference when things happened in your conversation. Each
         };
       });
 
-      // 9. Get language-specific system prompt with temporal context and adaptive language
-      const systemPrompt = getSystemPrompt(languageCode, temporalContext, conversationProfile);
+      // 9. Get language-specific system prompt with temporal context, adaptive language, and user story
+      const systemPrompt = getSystemPrompt(
+        languageCode,
+        temporalContext,
+        conversationProfile,
+        userStoryContext
+      );
       logger.info('Using system prompt', {
         languageCode,
         hasTemporalContext: !!temporalContext,
         hasConversationProfile: !!conversationProfile,
+        hasUserStoryContext: !!userStoryContext,
       });
 
       // 10. Call Vertex AI (Gemini 2.5 Flash)

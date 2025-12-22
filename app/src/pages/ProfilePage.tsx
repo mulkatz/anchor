@@ -20,6 +20,7 @@ import {
   Circle,
   Shell,
   Anchor,
+  BookOpen,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../contexts/AppContext';
@@ -213,6 +214,11 @@ export const ProfilePage: FC = () => {
     navigate('/treasures');
   };
 
+  const handleViewMyStory = async () => {
+    await light();
+    navigate('/my-story');
+  };
+
   const handleVisitWebsite = async () => {
     await light();
     window.open('https://anchor.franz.cx', '_blank');
@@ -319,6 +325,29 @@ export const ProfilePage: FC = () => {
                   transition={{ duration: 0.8, ease: 'easeOut', delay: 0.2 }}
                 />
               </div>
+            </div>
+
+            {/* Chevron */}
+            <ChevronRight size={20} className="text-mist-white/40" />
+          </div>
+        </motion.button>
+
+        {/* My Story Card */}
+        <motion.button
+          onClick={handleViewMyStory}
+          className="mb-6 w-full overflow-hidden rounded-3xl border border-glass-border bg-glass-bg text-left shadow-glass backdrop-blur-glass"
+          whileTap={{ scale: 0.98 }}
+        >
+          <div className="flex items-center gap-4 p-4">
+            {/* Icon */}
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-mist-white/5">
+              <BookOpen size={24} className="text-warm-ember" />
+            </div>
+
+            {/* Text */}
+            <div className="flex-1">
+              <h3 className="text-base font-semibold text-mist-white">{t('myStory.title')}</h3>
+              <p className="mt-0.5 text-xs text-mist-white/50">{t('myStory.subtitle')}</p>
             </div>
 
             {/* Chevron */}
