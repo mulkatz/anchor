@@ -387,6 +387,17 @@ export function getSystemPrompt(
 
   prompt = prompt.replace('{USER_STORY_CONTEXT}', userStoryContext || defaultStoryContext);
 
+  // Age-appropriate tone adjustment: avoid Gen Z slang for users over 35
+  if (userStoryContext) {
+    const ageMatch = userStoryContext.match(/(?:Age|Alter):\s*(\d+)/);
+    if (ageMatch && parseInt(ageMatch[1], 10) >= 35) {
+      const ageModifier = languageCode.startsWith('de')
+        ? '\n\nWICHTIG: Nutzer ist über 35 - vermeide Gen-Z-Slang wie "ngl", "lowkey", "tbh", "fr fr", "no cap", "slay". Schreib natürlich aber etwas erwachsener - weniger Internet-Slang, mehr authentischer Gesprächston.'
+        : '\n\nIMPORTANT: User is over 35 - avoid Gen Z slang like "ngl", "lowkey", "tbh", "fr fr", "no cap", "slay". Write naturally but slightly more mature - less internet slang, more authentic conversational tone.';
+      prompt += ageModifier;
+    }
+  }
+
   // Add temporal context if provided (prepended)
   if (temporalContext) {
     prompt = `${temporalContext}\n\n${prompt}`;

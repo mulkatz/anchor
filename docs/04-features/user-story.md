@@ -1,8 +1,17 @@
 # User Story: The Interested AI Companion
 
 **Status:** Implemented
-**Version:** 2.0 (Mid-Term Memory)
+**Version:** 2.1 (Polished Mid-Term Memory)
 **Last Updated:** December 2024
+
+### Recent Updates (v2.1)
+
+- Added validation for AI extraction values (category, status, valence)
+- Improved topic deduplication with context-aware matching
+- Implemented curiosity hints from `suggestedFollowUps`
+- Added age-appropriate tone adjustment (35+ avoids Gen Z slang)
+- Performance: skip extraction for short messages (<15 chars)
+- Full bilingual support with German stop words and forget mappings
 
 ---
 
@@ -374,6 +383,51 @@ Topics are prioritized for AI check-ins based on:
 4. Array fields (interests, triggers) merge, don't replace
 5. Deleted fields are never re-extracted
 
+### Validation & Data Quality
+
+All AI extractions are validated before storage:
+
+**Topic Extractions:**
+
+- Topics with empty/short topic or context (<2 chars) are rejected
+- Invalid categories are corrected to `'other'`
+- Invalid statuses default to `'active'`
+- Invalid valences are removed
+
+```typescript
+// Valid enum values
+const VALID_CATEGORIES = ['work', 'relationships', 'health', 'anxiety', 'life-event', 'other'];
+const VALID_STATUSES = ['active', 'resolved', 'fading'];
+const VALID_VALENCES = ['positive', 'negative', 'neutral'];
+```
+
+**Context-Aware Deduplication:**
+
+When matching new topics against existing ones, the system considers BOTH topic similarity AND context similarity. This prevents incorrectly merging different situations:
+
+| Scenario                       | Topic           | Context            | Result                   |
+| ------------------------------ | --------------- | ------------------ | ------------------------ |
+| Same topic, same context       | "job interview" | "Google interview" | Merged (update existing) |
+| Same topic, different context  | "job interview" | "Apple interview"  | Kept separate            |
+| Similar topic, similar context | "work stress"   | "project deadline" | Merged                   |
+
+### Performance Optimizations
+
+**Short Message Skip:**
+
+Messages shorter than 15 characters (e.g., "hi", "ok", "yeah") skip extraction entirely. This saves API costs without losing meaningful data.
+
+```typescript
+// Only extract from substantial messages
+if (message.text.length >= 15) {
+  extractStoryFromMessage(userId, message.text, ...);
+}
+```
+
+**Timestamp Consistency:**
+
+A unified `toDate()` helper handles all timestamp formats (Firestore Timestamp, Date, string) to prevent comparison bugs during topic pruning and sorting.
+
 ### "Forget That" Detection
 
 When users say things like "forget that" or "don't remember my name":
@@ -451,6 +505,50 @@ What makes a good check-in:
 - Weave it naturally: "crowds are rough for you - totally valid to skip that"
 ```
 
+### Curiosity Hints (SuggestedFollowUps)
+
+The AI extraction system suggests natural things to learn about the user. These suggestions are stored in `extractionMeta.topicsToExplore` and shown to the AI as gentle hints:
+
+```
+WHAT YOU KNOW ABOUT THEM:
+Name: Sarah
+Age: 24
+...
+
+Natural things to learn about when the moment feels right: what they do for work/study, where they live
+```
+
+Field names are translated to natural language:
+
+| Field              | English Hint                       | German Hint                    |
+| ------------------ | ---------------------------------- | ------------------------------ |
+| `occupation`       | "what they do for work/study"      | "was sie arbeiten/studieren"   |
+| `location`         | "where they live"                  | "wo sie wohnen"                |
+| `interests`        | "what they're interested in"       | "wofür sie sich interessieren" |
+| `copingActivities` | "what helps when they're stressed" | "was ihnen bei Stress hilft"   |
+
+Maximum 3 hints shown at a time to avoid overwhelming the AI.
+
+### Age-Appropriate Tone
+
+The AI adjusts its communication style based on user age:
+
+**Users under 35:** Default Gen Z-friendly tone with casual language like "ngl", "lowkey", "tbh".
+
+**Users 35 and older:** More mature conversational tone:
+
+- Avoids Gen Z slang ("ngl", "lowkey", "tbh", "fr fr", "no cap", "slay")
+- Still casual and friendly, just less internet-speak
+- More authentic adult conversation style
+
+```typescript
+// Age detection from user story context
+if (age >= 35) {
+  // EN: "avoid Gen Z slang... Write naturally but slightly more mature"
+  // DE: "vermeide Gen-Z-Slang... Schreib natürlich aber etwas erwachsener"
+}
+```
+
 ---
 
 ## Frontend Implementation
@@ -498,7 +596,7 @@ What the AI sees in its system prompt:
 ```
 CURRENTLY ON THEIR MIND (check in if relevant):
 - [3 days ago] job interview anxiety: Interview at Google on Friday → worth checking in
-- [yesterday] roommate conflict: argument about chores
+- [yesterday] roommate conflict: argument about chores (recurring theme)
 - [today] sleep issues: work stress keeping them up
 
 WHAT YOU KNOW ABOUT THEM:
@@ -515,20 +613,53 @@ DON'T suggest (doesn't work for them): meditation apps, journaling
 Currently seeing a therapist (you're the between-sessions friend)
 Proof they can handle hard things: got through job interview last month
 What gives them hope: travel plans, career growth
+
+Natural things to learn about when the moment feels right: their background, what drives them
+```
+
+**German version:**
+
+```
+AKTUELL BESCHÄFTIGT SIE (frag nach wenn relevant):
+- [vor 3 Tagen] Vorstellungsgespräch-Angst: Interview bei Google am Freitag → nachfragen lohnt sich
+- [gestern] Mitbewohner-Konflikt: Streit wegen Hausarbeit (wiederkehrendes Thema)
+- [heute] Schlafprobleme: Arbeitsstress hält sie wach
+
+WAS DU ÜBER SIE WEISST:
+Name: Sarah
+Alter: 24
+Arbeit/Studium: Softwareentwicklerin
+...
+
+Dinge die du natürlich herausfinden kannst wenn sich der Moment ergibt: ihren Hintergrund, was sie antreibt
 ```
 
 ### Topic Context Format
 
-Topics include temporal markers and check-in suggestions:
+Topics include temporal markers, status indicators, and check-in suggestions:
 
 ```
 - [today] {topic}: {context}
-- [yesterday] {topic}: {context}
+- [yesterday] {topic}: {context} (recurring theme)
 - [3 days ago] {topic}: {context} → worth checking in
-- [last week] {topic}: {context} (resolved)
+- [last week] {topic}: {context} (went well!)
+- [last week] {topic}: {context} (was tough)
 ```
 
-The `→ worth checking in` marker appears for topics 3-7 days old that are still active.
+**Markers:**
+| Marker | Meaning |
+|--------|---------|
+| `→ worth checking in` | Topic 3-7 days old, still active - AI should ask about it |
+| `(recurring theme)` | Topic has come up multiple times - therapeutic signal |
+| `(went well!)` | Resolved with positive outcome - celebrate |
+| `(was tough)` | Resolved with difficult outcome - be supportive |
+| `(resolved)` | Resolved, neutral outcome |
+
+Recently resolved topics (within 7 days) are still shown so the AI can:
+
+- Celebrate wins if things went well
+- Offer support if things were difficult
+- Avoid awkwardly asking about something already concluded
 
 ### Therapeutic Framing
 
@@ -571,6 +702,41 @@ app/src/
     ├── EmptyStoryPrompt.tsx     # Empty state
     └── index.ts                 # Exports
 ```
+
+---
+
+## Bilingual Support (EN + DE)
+
+The entire extraction and context system is fully localized:
+
+### Extraction Prompts
+
+Prompts are language-specific to ensure natural extraction in both languages:
+
+| Component        | English                    | German                                 |
+| ---------------- | -------------------------- | -------------------------------------- |
+| System prompt    | "Extract information..."   | "Extrahiere Informationen..."          |
+| Stop words       | ~80 English words filtered | ~120 German words filtered             |
+| Forget detection | "forget", "don't remember" | "vergiss", "vergessen", "nicht merken" |
+| Context labels   | "Work/Study:", "Age:"      | "Arbeit/Studium:", "Alter:"            |
+
+### Stop Words
+
+Common words are filtered before extraction to improve AI focus:
+
+- **English:** the, a, an, I, you, me, my, we, our, it, is, are, was, were, have, has, do, does, did, just, really, very, actually, basically...
+- **German:** der, die, das, ein, eine, ich, du, mich, mir, wir, sie, es, ist, sind, war, waren, habe, hat, mache, macht, einfach, wirklich, sehr, eigentlich, halt, eben, schon, noch, auch, aber, oder, und, wenn, weil, dass...
+
+Unicode-aware regex (`\p{L}\p{N}`) handles special characters like umlauts (ä, ö, ü, ß).
+
+### Forget Request Mappings
+
+| English Pattern         | German Pattern                     | Action                                     |
+| ----------------------- | ---------------------------------- | ------------------------------------------ |
+| "forget my name"        | "vergiss meinen namen"             | Delete coreIdentity.name                   |
+| "forget my job/work"    | "vergiss meinen job/beruf/arbeit"  | Delete lifeSituation.occupation            |
+| "forget my triggers"    | "vergiss meine trigger/auslöser"   | Delete therapeuticContext.knownTriggers    |
+| "forget that interview" | "vergiss das vorstellungsgespräch" | Delete matching topic from mid-term memory |
 
 ---
 

@@ -29,6 +29,28 @@ function generateTopicId(): string {
 }
 
 /**
+ * Safely convert various timestamp formats to Date
+ * Handles Firestore Timestamp, Date, string, and objects with toDate()
+ */
+function toDate(timestamp: unknown): Date {
+  if (!timestamp) return new Date();
+  if (timestamp instanceof admin.firestore.Timestamp) return timestamp.toDate();
+  if (timestamp instanceof Date) return timestamp;
+  if (typeof timestamp === 'string') return new Date(timestamp);
+  if (typeof timestamp === 'object' && 'toDate' in timestamp) {
+    return (timestamp as { toDate: () => Date }).toDate();
+  }
+  return new Date();
+}
+
+/**
+ * Valid values for topic extraction enums
+ */
+const VALID_CATEGORIES = ['work', 'relationships', 'health', 'anxiety', 'life-event', 'other'];
+const VALID_STATUSES = ['active', 'resolved', 'fading'];
+const VALID_VALENCES = ['positive', 'negative', 'neutral'];
+
+/**
  * Extract story information from a user message
  * This runs asynchronously (fire-and-forget) to not block chat responses
  */
@@ -170,6 +192,35 @@ function parseExtractionResult(responseText: string): ExtractionResult | null {
     if (!Array.isArray(parsed.suggestedFollowUps)) {
       parsed.suggestedFollowUps = [];
     }
+
+    // Validate and sanitize topic extractions
+    parsed.topicExtractions = parsed.topicExtractions.filter((t: Record<string, unknown>) => {
+      // Reject empty or too-short topics/contexts
+      if (!t.topic || typeof t.topic !== 'string' || t.topic.trim().length < 2) return false;
+      if (!t.context || typeof t.context !== 'string' || t.context.trim().length < 2) return false;
+
+      // Sanitize category - default to 'other' if invalid
+      if (!VALID_CATEGORIES.includes(t.category as string)) {
+        t.category = 'other';
+      }
+
+      // Sanitize status - default to 'active' if invalid
+      if (!VALID_STATUSES.includes(t.status as string)) {
+        t.status = 'active';
+      }
+
+      // Sanitize valence - set to undefined if invalid
+      if (t.valence && !VALID_VALENCES.includes(t.valence as string)) {
+        t.valence = undefined;
+      }
+
+      return true;
+    });
+
+    // Validate suggested follow-ups (should be strings)
+    parsed.suggestedFollowUps = parsed.suggestedFollowUps.filter(
+      (s: unknown) => typeof s === 'string' && s.trim().length > 0
+    );
 
     return parsed as ExtractionResult;
   } catch (error) {
@@ -1018,7 +1069,9 @@ function calculateTopicSimilarity(topic1: string, topic2: string): number {
  */
 function findMatchingTopic(newTopic: TopicExtraction, existingTopics: RecentTopic[]): number {
   const SIMILARITY_THRESHOLD = 0.4; // 40% word overlap required
+  const HIGH_SIMILARITY_THRESHOLD = 0.6; // For when contexts differ
   const CATEGORY_BOOST = 0.15; // Bonus for same category
+  const CONTEXT_MISMATCH_THRESHOLD = 0.2; // Below this = very different contexts
 
   let bestIndex = -1;
   let bestScore = 0;
@@ -1026,12 +1079,28 @@ function findMatchingTopic(newTopic: TopicExtraction, existingTopics: RecentTopi
   for (let i = 0; i < existingTopics.length; i++) {
     const existing = existingTopics[i];
 
-    // Calculate base similarity
-    let score = calculateTopicSimilarity(newTopic.topic, existing.topic);
+    // Calculate topic name similarity
+    const topicScore = calculateTopicSimilarity(newTopic.topic, existing.topic);
+
+    // Calculate context similarity (prevents merging different job interviews, etc.)
+    const contextScore = calculateTopicSimilarity(newTopic.context, existing.context);
+
+    let score = topicScore;
 
     // Boost score if categories match
     if (newTopic.category === existing.category) {
       score += CATEGORY_BOOST;
+    }
+
+    // If contexts are very different, require higher topic similarity
+    // This prevents "job interview at Google" merging with "job interview at Amazon"
+    if (contextScore < CONTEXT_MISMATCH_THRESHOLD && topicScore < HIGH_SIMILARITY_THRESHOLD) {
+      continue; // Skip - likely different situations with similar topic names
+    }
+
+    // Boost if contexts also match well
+    if (contextScore > 0.3) {
+      score += 0.1;
     }
 
     // Check if this is the best match so far
@@ -1148,24 +1217,15 @@ export async function applyTopicExtractions(
     const cutoffDate = new Date(Date.now() - cutoffMs);
 
     const filtered = existingTopics.filter((t) => {
-      const lastMentioned =
-        t.lastMentionedAt instanceof admin.firestore.Timestamp
-          ? t.lastMentionedAt.toDate()
-          : new Date(t.lastMentionedAt as unknown as string);
+      const lastMentioned = toDate(t.lastMentionedAt);
       return lastMentioned > cutoffDate || t.status === 'active';
     });
 
     // Sort by recency and keep max 20 topics
     const sorted = filtered
       .sort((a, b) => {
-        const aTime =
-          a.lastMentionedAt instanceof admin.firestore.Timestamp
-            ? a.lastMentionedAt.toMillis()
-            : new Date(a.lastMentionedAt as unknown as string).getTime();
-        const bTime =
-          b.lastMentionedAt instanceof admin.firestore.Timestamp
-            ? b.lastMentionedAt.toMillis()
-            : new Date(b.lastMentionedAt as unknown as string).getTime();
+        const aTime = toDate(a.lastMentionedAt).getTime();
+        const bTime = toDate(b.lastMentionedAt).getTime();
         return bTime - aTime;
       })
       .slice(0, 20);

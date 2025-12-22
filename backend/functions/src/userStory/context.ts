@@ -29,6 +29,95 @@ function getFieldValue<T>(
 }
 
 /**
+ * Maps field names to natural curiosity hints (English)
+ * These are suggestions for what the AI could naturally ask about
+ */
+const FIELD_TO_CURIOSITY_HINT_EN: Record<string, string> = {
+  name: 'their name',
+  nickname: 'what they like to be called',
+  pronouns: 'their pronouns',
+  age: 'how old they are',
+  location: 'where they live',
+  occupation: 'what they do for work/study',
+  livingArrangement: 'their living situation',
+  dailySchedule: 'their typical schedule',
+  currentLifePhase: "what phase of life they're in",
+  romanticStatus: 'their relationship status',
+  partnerName: "their partner's name",
+  hasPets: 'if they have pets',
+  supportSystem: 'who supports them',
+  hometown: "where they're from",
+  culturalBackground: 'their background',
+  interests: "what they're interested in",
+  hobbies: 'what they do for fun',
+  copingActivities: "what helps when they're stressed",
+  knownTriggers: 'what tends to trigger their anxiety',
+  anxietyType: 'how their anxiety usually shows up',
+  bodyExperience: 'how anxiety feels in their body',
+  whatDoesntWork: "what hasn't helped them",
+  currentProfessionalSupport: 'if they see a therapist',
+  therapyFocus: "what they're working on in therapy",
+  pastWins: "challenges they've overcome",
+  whatGivesHope: 'what gives them hope',
+  proudMoments: "what they're proud of",
+  motivators: 'what drives them',
+};
+
+/**
+ * Maps field names to natural curiosity hints (German)
+ */
+const FIELD_TO_CURIOSITY_HINT_DE: Record<string, string> = {
+  name: 'ihren Namen',
+  nickname: 'wie sie genannt werden möchten',
+  pronouns: 'ihre Pronomen',
+  age: 'wie alt sie sind',
+  location: 'wo sie wohnen',
+  occupation: 'was sie arbeiten/studieren',
+  livingArrangement: 'ihre Wohnsituation',
+  dailySchedule: 'ihren typischen Tagesablauf',
+  currentLifePhase: 'in welcher Lebensphase sie sind',
+  romanticStatus: 'ihren Beziehungsstatus',
+  partnerName: 'den Namen ihres Partners',
+  hasPets: 'ob sie Haustiere haben',
+  supportSystem: 'wer sie unterstützt',
+  hometown: 'woher sie kommen',
+  culturalBackground: 'ihren Hintergrund',
+  interests: 'wofür sie sich interessieren',
+  hobbies: 'was sie in ihrer Freizeit machen',
+  copingActivities: 'was ihnen bei Stress hilft',
+  knownTriggers: 'was ihre Angst auslöst',
+  anxietyType: 'wie sich ihre Angst zeigt',
+  bodyExperience: 'wie sich Angst körperlich anfühlt',
+  whatDoesntWork: 'was ihnen nicht geholfen hat',
+  currentProfessionalSupport: 'ob sie zur Therapie gehen',
+  therapyFocus: 'woran sie in der Therapie arbeiten',
+  pastWins: 'Herausforderungen die sie gemeistert haben',
+  whatGivesHope: 'was ihnen Hoffnung gibt',
+  proudMoments: 'worauf sie stolz sind',
+  motivators: 'was sie antreibt',
+};
+
+/**
+ * Format suggested follow-ups as natural curiosity hints
+ */
+function formatCuriosityHints(
+  topicsToExplore: string[],
+  language: 'en' | 'de'
+): string | undefined {
+  if (!topicsToExplore || topicsToExplore.length === 0) return undefined;
+
+  const hints = language === 'de' ? FIELD_TO_CURIOSITY_HINT_DE : FIELD_TO_CURIOSITY_HINT_EN;
+  const translated = topicsToExplore
+    .slice(0, 3) // Max 3 hints to not overwhelm
+    .map((field) => hints[field])
+    .filter(Boolean);
+
+  if (translated.length === 0) return undefined;
+
+  return translated.join(', ');
+}
+
+/**
  * Format location value for display
  */
 function formatLocation(loc: { city?: string; country?: string } | undefined): string | undefined {
@@ -218,6 +307,13 @@ export async function getUserStoryForPrompt(userId: string): Promise<string | un
     lines.push(`What drives them: ${motivators.join(', ')}`);
   }
 
+  // Add curiosity hints from suggested follow-ups (what AI suggested to learn about)
+  const topicsToExplore = story.extractionMeta?.topicsToExplore || [];
+  const curiosityHints = formatCuriosityHints(topicsToExplore, 'en');
+  if (curiosityHints) {
+    lines.push(`\nNatural things to learn about when the moment feels right: ${curiosityHints}`);
+  }
+
   // If we don't know anything yet
   if (lines.length === 0) {
     return "You don't know much about them yet - be naturally curious!";
@@ -336,6 +432,15 @@ export async function getUserStoryForPromptDE(userId: string): Promise<string | 
   const motivators = getFieldValue(story.strengths?.motivators);
   if (motivators && motivators.length > 0) {
     lines.push(`Was sie antreibt: ${motivators.join(', ')}`);
+  }
+
+  // Add curiosity hints from suggested follow-ups (what AI suggested to learn about)
+  const topicsToExplore = story.extractionMeta?.topicsToExplore || [];
+  const curiosityHints = formatCuriosityHints(topicsToExplore, 'de');
+  if (curiosityHints) {
+    lines.push(
+      `\nDinge die du natürlich herausfinden kannst wenn sich der Moment ergibt: ${curiosityHints}`
+    );
   }
 
   if (lines.length === 0) {
