@@ -148,12 +148,78 @@ export interface StoryExtraction {
   evidence: string; // Quote or explanation of how we learned this
 }
 
+/**
+ * Topic extraction for mid-term memory
+ */
+export type TopicCategory =
+  | 'work'
+  | 'relationships'
+  | 'health'
+  | 'anxiety'
+  | 'life-event'
+  | 'other';
+export type TopicStatus = 'active' | 'resolved' | 'fading';
+
+export interface TopicExtraction {
+  type: 'topic';
+  topic: string; // "job interview anxiety"
+  context: string; // "Interview at Google on Friday"
+  category: TopicCategory;
+  status: TopicStatus;
+}
+
 export interface ExtractionResult {
   extractions: StoryExtraction[];
+  topicExtractions: TopicExtraction[]; // NEW: Topics/problems mentioned
   suggestedFollowUps: string[]; // Natural next things to learn
   detectedForgetRequest?: {
     topic: string;
     fullRequest: string;
+  };
+}
+
+// ============================================
+// Mid-Term Memory (Temporal Topic Tracking)
+// ============================================
+
+/**
+ * A recent topic or problem the user is dealing with
+ */
+export interface RecentTopic {
+  id: string;
+  topic: string; // "job interview anxiety"
+  context: string; // "has an interview at Google on Friday"
+  category: TopicCategory;
+
+  // Temporal tracking
+  firstMentionedAt: Date | FirebaseFirestore.Timestamp;
+  lastMentionedAt: Date | FirebaseFirestore.Timestamp;
+  mentionCount: number;
+
+  // Status
+  status: TopicStatus;
+
+  // Optional: linked to user story fields
+  relatedFields?: string[]; // ['therapeuticContext.knownTriggers']
+}
+
+/**
+ * Mid-Term Memory document
+ * Stores recent topics/problems with temporal relevance
+ * Path: users/{userId}/profile/midTermMemory
+ */
+export interface MidTermMemory {
+  userId: string;
+  createdAt: Date | FirebaseFirestore.Timestamp;
+  updatedAt: Date | FirebaseFirestore.Timestamp;
+
+  // Recent topics/problems - max ~20, older ones pruned
+  recentTopics: RecentTopic[];
+
+  // Check-in tracking to avoid repetition
+  lastCheckIn?: {
+    topicId: string;
+    at: Date | FirebaseFirestore.Timestamp;
   };
 }
 

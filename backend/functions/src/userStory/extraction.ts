@@ -6,13 +6,27 @@
 import * as admin from 'firebase-admin';
 import { VertexAI } from '@google-cloud/vertexai';
 import * as logger from 'firebase-functions/logger';
-import { UserStory, StoryExtraction, ExtractionResult, createEmptyUserStory } from './types';
+import {
+  UserStory,
+  StoryExtraction,
+  ExtractionResult,
+  TopicExtraction,
+  RecentTopic,
+  createEmptyUserStory,
+} from './types';
 import {
   getExtractionPrompt,
   formatStoryForExtractionPrompt,
   formatRecentContext,
 } from './prompts';
 import { getUserStory } from './context';
+
+/**
+ * Generate a unique topic ID
+ */
+function generateTopicId(): string {
+  return `topic_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+}
 
 /**
  * Extract story information from a user message
@@ -82,9 +96,14 @@ export async function extractStoryFromMessage(
       );
     }
 
-    // Apply extractions
+    // Apply story extractions
     if (extractionResult.extractions.length > 0) {
       await applyExtractions(userId, extractionResult.extractions, existingStory);
+    }
+
+    // Apply topic extractions to mid-term memory
+    if (extractionResult.topicExtractions && extractionResult.topicExtractions.length > 0) {
+      await applyTopicExtractions(userId, extractionResult.topicExtractions);
     }
 
     // Update suggested follow-ups
@@ -95,6 +114,7 @@ export async function extractStoryFromMessage(
     logger.info('Story extraction completed', {
       userId,
       extractionsCount: extractionResult.extractions.length,
+      topicExtractionsCount: extractionResult.topicExtractions?.length || 0,
       hasForgetRequest: !!extractionResult.detectedForgetRequest,
     });
   } catch (error) {
@@ -131,6 +151,10 @@ function parseExtractionResult(responseText: string): ExtractionResult | null {
     // Validate structure
     if (!Array.isArray(parsed.extractions)) {
       parsed.extractions = [];
+    }
+
+    if (!Array.isArray(parsed.topicExtractions)) {
+      parsed.topicExtractions = [];
     }
 
     if (!Array.isArray(parsed.suggestedFollowUps)) {
@@ -374,4 +398,126 @@ export async function recordQuestionAsked(userId: string, topic: string): Promis
     },
     { merge: true }
   );
+}
+
+// ============================================
+// Mid-Term Memory: Topic Extraction
+// ============================================
+
+/**
+ * Apply topic extractions to mid-term memory
+ * Stores recent topics/problems for cross-conversation continuity
+ */
+export async function applyTopicExtractions(
+  userId: string,
+  topics: TopicExtraction[]
+): Promise<void> {
+  if (!topics || topics.length === 0) return;
+
+  const memoryRef = admin.firestore().doc(`users/${userId}/profile/midTermMemory`);
+  const now = admin.firestore.Timestamp.now();
+
+  try {
+    const memoryDoc = await memoryRef.get();
+    const existingData = memoryDoc.exists ? memoryDoc.data() : null;
+    const existingTopics: RecentTopic[] = existingData?.recentTopics || [];
+
+    for (const topicExtraction of topics) {
+      // Check if similar topic exists (fuzzy match on topic name)
+      const existingIndex = existingTopics.findIndex((t) => {
+        const existingLower = t.topic.toLowerCase();
+        const newLower = topicExtraction.topic.toLowerCase();
+        return (
+          existingLower.includes(newLower) ||
+          newLower.includes(existingLower) ||
+          existingLower === newLower
+        );
+      });
+
+      if (existingIndex >= 0) {
+        // Update existing topic
+        existingTopics[existingIndex].lastMentionedAt = now;
+        existingTopics[existingIndex].mentionCount += 1;
+        existingTopics[existingIndex].context = topicExtraction.context;
+        existingTopics[existingIndex].status = topicExtraction.status;
+        existingTopics[existingIndex].category = topicExtraction.category;
+
+        logger.info('Updated existing topic', {
+          userId,
+          topic: existingTopics[existingIndex].topic,
+          mentionCount: existingTopics[existingIndex].mentionCount,
+        });
+      } else {
+        // Add new topic
+        const newTopic: RecentTopic = {
+          id: generateTopicId(),
+          topic: topicExtraction.topic,
+          context: topicExtraction.context,
+          category: topicExtraction.category,
+          status: topicExtraction.status,
+          firstMentionedAt: now,
+          lastMentionedAt: now,
+          mentionCount: 1,
+        };
+
+        existingTopics.push(newTopic);
+
+        logger.info('Added new topic', {
+          userId,
+          topic: newTopic.topic,
+          category: newTopic.category,
+        });
+      }
+    }
+
+    // Prune old topics (>60 days with no mentions)
+    const cutoffMs = 60 * 24 * 60 * 60 * 1000; // 60 days
+    const cutoffDate = new Date(Date.now() - cutoffMs);
+
+    const filtered = existingTopics.filter((t) => {
+      const lastMentioned =
+        t.lastMentionedAt instanceof admin.firestore.Timestamp
+          ? t.lastMentionedAt.toDate()
+          : new Date(t.lastMentionedAt as unknown as string);
+      return lastMentioned > cutoffDate || t.status === 'active';
+    });
+
+    // Sort by recency and keep max 20 topics
+    const sorted = filtered
+      .sort((a, b) => {
+        const aTime =
+          a.lastMentionedAt instanceof admin.firestore.Timestamp
+            ? a.lastMentionedAt.toMillis()
+            : new Date(a.lastMentionedAt as unknown as string).getTime();
+        const bTime =
+          b.lastMentionedAt instanceof admin.firestore.Timestamp
+            ? b.lastMentionedAt.toMillis()
+            : new Date(b.lastMentionedAt as unknown as string).getTime();
+        return bTime - aTime;
+      })
+      .slice(0, 20);
+
+    // Save to Firestore
+    await memoryRef.set(
+      {
+        userId,
+        createdAt: existingData?.createdAt || now,
+        updatedAt: now,
+        recentTopics: sorted,
+      },
+      { merge: true }
+    );
+
+    logger.info('Mid-term memory updated', {
+      userId,
+      topicsCount: sorted.length,
+      newTopicsAdded: topics.length,
+    });
+  } catch (error) {
+    logger.error('Failed to apply topic extractions', {
+      userId,
+      error: error instanceof Error ? error.message : String(error),
+    });
+    // Don't throw - this is non-critical
+  }
 }

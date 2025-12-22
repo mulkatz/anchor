@@ -16,7 +16,11 @@ import {
   analyzeUserStyle,
   shouldWaitForAnalysis,
 } from './adaptiveLanguage';
-import { extractStoryFromMessage, getLocalizedStoryContext } from './userStory';
+import {
+  extractStoryFromMessage,
+  getLocalizedStoryContext,
+  getLocalizedRecentTopicsContext,
+} from './userStory';
 
 /**
  * Cloud Function: onMessageCreate
@@ -219,8 +223,9 @@ IMPORTANT: You can now reference when things happened in your conversation. Each
         });
       }
 
-      // 7.6 User Story: Extract personal info and get context for prompt
+      // 7.6 User Story + Mid-Term Memory: Extract personal info and get context for prompt
       let userStoryContext: string | undefined;
+      let recentTopicsContext: string | undefined;
 
       try {
         // Build recent messages context for extraction
@@ -230,6 +235,7 @@ IMPORTANT: You can now reference when things happened in your conversation. Each
         }));
 
         // Async extraction (fire-and-forget) - don't block response
+        // This now also extracts topics to mid-term memory
         extractStoryFromMessage(userId, message.text, recentMessages, languageCode).catch((err) => {
           logger.error('Background story extraction failed', {
             userId,
@@ -239,6 +245,9 @@ IMPORTANT: You can now reference when things happened in your conversation. Each
 
         // Get current story context for prompt injection
         userStoryContext = await getLocalizedStoryContext(userId, languageCode);
+
+        // Get recent topics context (mid-term memory) for prompt injection
+        recentTopicsContext = await getLocalizedRecentTopicsContext(userId, languageCode);
       } catch (storyError) {
         // Don't fail the main message flow if story operations fail
         logger.error('Failed in user story processing', {
@@ -258,18 +267,20 @@ IMPORTANT: You can now reference when things happened in your conversation. Each
         };
       });
 
-      // 9. Get language-specific system prompt with temporal context, adaptive language, and user story
+      // 9. Get language-specific system prompt with temporal context, adaptive language, user story, and recent topics
       const systemPrompt = getSystemPrompt(
         languageCode,
         temporalContext,
         conversationProfile,
-        userStoryContext
+        userStoryContext,
+        recentTopicsContext
       );
       logger.info('Using system prompt', {
         languageCode,
         hasTemporalContext: !!temporalContext,
         hasConversationProfile: !!conversationProfile,
         hasUserStoryContext: !!userStoryContext,
+        hasRecentTopicsContext: !!recentTopicsContext,
       });
 
       // 10. Call Vertex AI (Gemini 2.5 Flash)

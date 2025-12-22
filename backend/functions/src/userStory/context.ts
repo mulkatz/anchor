@@ -337,3 +337,131 @@ export async function getLocalizedStoryContext(
   }
   return getUserStoryForPrompt(userId);
 }
+
+// ============================================
+// Mid-Term Memory: Recent Topics Context
+// ============================================
+
+/**
+ * Get recent topics context for prompt injection (English)
+ * Formats topics with temporal markers and check-in suggestions
+ */
+export async function getRecentTopicsForPrompt(userId: string): Promise<string | undefined> {
+  try {
+    const memoryDoc = await admin.firestore().doc(`users/${userId}/profile/midTermMemory`).get();
+
+    if (!memoryDoc.exists) return undefined;
+
+    const memory = memoryDoc.data();
+    const topics = memory?.recentTopics || [];
+
+    if (topics.length === 0) return undefined;
+
+    const now = new Date();
+    const lines: string[] = [];
+
+    // Take max 5 most recent active topics
+    const activeTopics = topics
+      .filter((t: { status: string }) => t.status === 'active' || t.status === 'fading')
+      .slice(0, 5);
+
+    for (const topic of activeTopics) {
+      const lastMentioned =
+        topic.lastMentionedAt?.toDate?.() || new Date(topic.lastMentionedAt as unknown as string);
+
+      const daysAgo = Math.floor((now.getTime() - lastMentioned.getTime()) / (1000 * 60 * 60 * 24));
+
+      // Format time label
+      let timeLabel: string;
+      if (daysAgo === 0) timeLabel = 'today';
+      else if (daysAgo === 1) timeLabel = 'yesterday';
+      else if (daysAgo < 7) timeLabel = `${daysAgo} days ago`;
+      else if (daysAgo < 14) timeLabel = 'last week';
+      else timeLabel = `${Math.floor(daysAgo / 7)} weeks ago`;
+
+      // Add check-in marker for topics 3-7 days old
+      const checkInMarker =
+        daysAgo >= 3 && daysAgo <= 7 && topic.status === 'active' ? ' → worth checking in' : '';
+
+      // Status marker
+      const statusMarker = topic.status === 'resolved' ? ' (resolved)' : '';
+
+      lines.push(
+        `- [${timeLabel}] ${topic.topic}: ${topic.context}${statusMarker}${checkInMarker}`
+      );
+    }
+
+    return lines.length > 0 ? lines.join('\n') : undefined;
+  } catch (error) {
+    // Don't fail chat for memory errors
+    return undefined;
+  }
+}
+
+/**
+ * Get recent topics context for prompt injection (German)
+ */
+export async function getRecentTopicsForPromptDE(userId: string): Promise<string | undefined> {
+  try {
+    const memoryDoc = await admin.firestore().doc(`users/${userId}/profile/midTermMemory`).get();
+
+    if (!memoryDoc.exists) return undefined;
+
+    const memory = memoryDoc.data();
+    const topics = memory?.recentTopics || [];
+
+    if (topics.length === 0) return undefined;
+
+    const now = new Date();
+    const lines: string[] = [];
+
+    // Take max 5 most recent active topics
+    const activeTopics = topics
+      .filter((t: { status: string }) => t.status === 'active' || t.status === 'fading')
+      .slice(0, 5);
+
+    for (const topic of activeTopics) {
+      const lastMentioned =
+        topic.lastMentionedAt?.toDate?.() || new Date(topic.lastMentionedAt as unknown as string);
+
+      const daysAgo = Math.floor((now.getTime() - lastMentioned.getTime()) / (1000 * 60 * 60 * 24));
+
+      // Format time label (German)
+      let timeLabel: string;
+      if (daysAgo === 0) timeLabel = 'heute';
+      else if (daysAgo === 1) timeLabel = 'gestern';
+      else if (daysAgo < 7) timeLabel = `vor ${daysAgo} Tagen`;
+      else if (daysAgo < 14) timeLabel = 'letzte Woche';
+      else timeLabel = `vor ${Math.floor(daysAgo / 7)} Wochen`;
+
+      // Add check-in marker for topics 3-7 days old (German)
+      const checkInMarker =
+        daysAgo >= 3 && daysAgo <= 7 && topic.status === 'active' ? ' → nachfragen lohnt sich' : '';
+
+      // Status marker (German)
+      const statusMarker = topic.status === 'resolved' ? ' (erledigt)' : '';
+
+      lines.push(
+        `- [${timeLabel}] ${topic.topic}: ${topic.context}${statusMarker}${checkInMarker}`
+      );
+    }
+
+    return lines.length > 0 ? lines.join('\n') : undefined;
+  } catch (error) {
+    // Don't fail chat for memory errors
+    return undefined;
+  }
+}
+
+/**
+ * Get localized recent topics context
+ */
+export async function getLocalizedRecentTopicsContext(
+  userId: string,
+  languageCode: string
+): Promise<string | undefined> {
+  if (languageCode.startsWith('de')) {
+    return getRecentTopicsForPromptDE(userId);
+  }
+  return getRecentTopicsForPrompt(userId);
+}

@@ -73,6 +73,21 @@ TIER 7 - Strengths & Resources (actively look for these - they're therapeutic go
 - positiveRelationships: People who make them feel good or supported
 - coreValues: What matters most to them
 
+TOPICS & CURRENT CONCERNS (extract actively - these enable continuity across conversations):
+Extract any specific problem, situation, or topic they're currently dealing with.
+These are NOT permanent facts like name/age, but CURRENT situations with temporal relevance.
+
+Examples of what to extract as topics:
+- "I have a job interview next week" → topic about job interview anxiety
+- "My roommate and I had a fight" → topic about roommate conflict
+- "I can't sleep because of work stress" → topic about work-related sleep issues
+- "I started therapy last month" → topic about new therapy journey
+- "My mom is sick" → topic about family health concerns
+- "I have exams coming up" → topic about exam stress
+
+Categories: work, relationships, health, anxiety, life-event, other
+Status: active (ongoing), resolved (they said it's done), fading (old, not mentioned recently)
+
 Also detect if the user is asking to FORGET something they previously shared.
 
 Output ONLY valid JSON:
@@ -83,6 +98,15 @@ Output ONLY valid JSON:
       "value": "Sarah",
       "confidence": "explicit",
       "evidence": "User said 'my name is Sarah'"
+    }
+  ],
+  "topicExtractions": [
+    {
+      "type": "topic",
+      "topic": "job interview anxiety",
+      "context": "Interview at Google on Friday",
+      "category": "work",
+      "status": "active"
     }
   ],
   "suggestedFollowUps": ["occupation", "location"],
@@ -176,6 +200,21 @@ TIER 7 - Stärken & Ressourcen (aktiv danach suchen - therapeutisch sehr wertvol
 - positiveRelationships: Menschen die ihnen gut tun oder sie unterstützen
 - coreValues: Was ihnen am wichtigsten ist
 
+THEMEN & AKTUELLE ANLIEGEN (aktiv extrahieren - ermöglichen Kontinuität über Gespräche):
+Extrahiere jedes spezifische Problem, Situation oder Thema mit dem sie gerade zu tun haben.
+Das sind KEINE permanenten Fakten wie Name/Alter, sondern AKTUELLE Situationen mit zeitlicher Relevanz.
+
+Beispiele was als Themen extrahiert werden soll:
+- "Ich hab nächste Woche ein Vorstellungsgespräch" → Thema über Bewerbungsangst
+- "Mein Mitbewohner und ich hatten Streit" → Thema über Mitbewohner-Konflikt
+- "Ich kann nicht schlafen wegen Arbeitsstress" → Thema über arbeitsbedingte Schlafprobleme
+- "Ich hab letzten Monat mit Therapie angefangen" → Thema über neue Therapie-Reise
+- "Meine Mama ist krank" → Thema über Gesundheitssorgen in der Familie
+- "Ich hab Prüfungen vor mir" → Thema über Prüfungsstress
+
+Kategorien: work, relationships, health, anxiety, life-event, other
+Status: active (laufend), resolved (sie sagten es ist erledigt), fading (alt, nicht kürzlich erwähnt)
+
 Erkenne auch ob der Nutzer darum bittet etwas zu VERGESSEN was er zuvor geteilt hat.
 
 Gib NUR gültiges JSON aus:
@@ -186,6 +225,15 @@ Gib NUR gültiges JSON aus:
       "value": "Sarah",
       "confidence": "explicit",
       "evidence": "Nutzer sagte 'ich heiße Sarah'"
+    }
+  ],
+  "topicExtractions": [
+    {
+      "type": "topic",
+      "topic": "Bewerbungsangst",
+      "context": "Vorstellungsgespräch bei Google am Freitag",
+      "category": "work",
+      "status": "active"
     }
   ],
   "suggestedFollowUps": ["occupation", "location"],
