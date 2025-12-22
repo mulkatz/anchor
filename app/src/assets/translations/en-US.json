@@ -178,7 +178,7 @@
       "permissionDenied": {
         "title": "Permission Needed",
         "microphoneAdvice": "We can't record voice messages without microphone access. Grant permission in your settings to use this feature.",
-        "toSettings": "Go to Settings"
+        "toSettings": "Settings"
       },
       "confirmClearCache": "Clear Cache?",
       "confirmClearCacheMessage": "This will clear cached audio files and temporary data. Your conversations will be preserved.",
