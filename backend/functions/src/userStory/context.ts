@@ -314,9 +314,26 @@ export async function getUserStoryForPrompt(userId: string): Promise<string | un
     lines.push(`\nNatural things to learn about when the moment feels right: ${curiosityHints}`);
   }
 
-  // If we don't know anything yet
+  // If we don't know anything yet, provide default curiosity hints for essential info
   if (lines.length === 0) {
+    // Check if we know the most basic thing - their name
+    const knowsName = !!getFieldValue(story.coreIdentity?.name);
+    if (!knowsName) {
+      return `You don't know much about them yet - be naturally curious!
+
+IMPORTANT: You don't even know their name yet. Within your first few exchanges, find a natural moment to ask what you should call them. This is essential for building a real connection. Something casual like "btw what should I call you?" works great.
+
+Other things to naturally discover over time: how old they are, what they do for work/study`;
+    }
     return "You don't know much about them yet - be naturally curious!";
+  }
+
+  // Even if we have some info, check if we're missing the name (most important)
+  const knowsName = !!getFieldValue(story.coreIdentity?.name);
+  if (!knowsName && lines.length < 5) {
+    lines.push(
+      `\nIMPORTANT: You still don't know their name! Find a natural moment to ask - a friend would want to know this.`
+    );
   }
 
   return lines.join('\n');
@@ -443,8 +460,26 @@ export async function getUserStoryForPromptDE(userId: string): Promise<string | 
     );
   }
 
+  // If we don't know anything yet, provide default curiosity hints for essential info
   if (lines.length === 0) {
+    // Check if we know the most basic thing - their name
+    const knowsName = !!getFieldValue(story.coreIdentity?.name);
+    if (!knowsName) {
+      return `Du weißt noch nicht viel über sie - sei natürlich neugierig!
+
+WICHTIG: Du kennst nicht mal ihren Namen. Finde in den ersten paar Nachrichten einen natürlichen Moment um zu fragen, wie du sie nennen sollst. Das ist wichtig um eine echte Verbindung aufzubauen. Etwas lockeres wie "btw wie soll ich dich nennen?" funktioniert super.
+
+Andere Dinge die du mit der Zeit herausfinden kannst: wie alt sie sind, was sie arbeiten/studieren`;
+    }
     return 'Du weißt noch nicht viel über sie - sei natürlich neugierig!';
+  }
+
+  // Even if we have some info, check if we're missing the name (most important)
+  const knowsName = !!getFieldValue(story.coreIdentity?.name);
+  if (!knowsName && lines.length < 5) {
+    lines.push(
+      `\nWICHTIG: Du kennst immer noch nicht ihren Namen! Finde einen natürlichen Moment um zu fragen - ein Freund würde das wissen wollen.`
+    );
   }
 
   return lines.join('\n');
