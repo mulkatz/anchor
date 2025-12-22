@@ -328,9 +328,14 @@ export const useChat = ({ conversationId }: UseChatProps) => {
   const allMessages = (() => {
     if (!pendingVoiceMessage) return messages;
 
-    // Check if real audio message has arrived (last message is audio from user)
-    const lastMessage = messages[messages.length - 1];
-    if (lastMessage?.hasAudio && lastMessage?.role === 'user') {
+    // Check if a real user audio message exists in the last few messages
+    // We check last 3 messages because: user audio → AI response → (potential next message)
+    // The AI may respond quickly before we clear the pending message
+    const recentMessages = messages.slice(-3);
+    const hasRecentUserAudioMessage = recentMessages.some(
+      (msg) => msg.hasAudio && msg.role === 'user'
+    );
+    if (hasRecentUserAudioMessage) {
       // Real message exists, don't show pending
       return messages;
     }
