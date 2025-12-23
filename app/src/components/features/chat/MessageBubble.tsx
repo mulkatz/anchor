@@ -10,24 +10,31 @@ interface MessageBubbleProps {
   message: Message;
   index: number;
   skipAnimation?: boolean;
+  isInitialLoad?: boolean; // True only during first render batch
 }
 
 /**
  * Message Bubble Wrapper
  * Handles Framer Motion animations and routes to correct message component
  */
-export const MessageBubble: FC<MessageBubbleProps> = ({ message, index, skipAnimation }) => {
+export const MessageBubble: FC<MessageBubbleProps> = ({
+  message,
+  index,
+  skipAnimation,
+  isInitialLoad,
+}) => {
   // Slide up + fade in animation
   const messageVariants = {
     initial: skipAnimation ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: 20, scale: 0.95 },
     animate: { opacity: 1, y: 0, scale: 1 },
   };
 
-  // Cap stagger delay at 5 messages (0.25s max) so new messages appear quickly
-  const staggerDelay = skipAnimation ? 0 : Math.min(index, 5) * 0.05;
+  // Stagger delay ONLY applies during initial load (when many messages load at once)
+  // New messages during conversation should animate immediately (no delay)
+  const staggerDelay = skipAnimation || !isInitialLoad ? 0 : Math.min(index, 5) * 0.05;
 
   const messageTransition = {
-    duration: skipAnimation ? 0 : 0.6,
+    duration: skipAnimation ? 0 : 0.4, // Reduced from 0.6 for snappier feel
     ease: [0.22, 1, 0.36, 1] as [number, number, number, number], // Viscous easing
     delay: staggerDelay,
   };
@@ -58,7 +65,8 @@ export const MessageBubble: FC<MessageBubbleProps> = ({ message, index, skipAnim
       initial="initial"
       animate="animate"
       transition={messageTransition}
-      layout // Smooth repositioning when new messages arrive
+      // Removed 'layout' prop - it was causing existing messages to animate
+      // when new messages arrived, making it look like the wrong message was animating
     >
       {renderMessage()}
     </motion.div>
