@@ -34,8 +34,11 @@ export const ChatContainer: FC<ChatContainerProps> = ({
   const isInitialLoadRef = useRef(true);
   // Track message IDs that existed on initial load (skip their animation)
   const initialMessageIdsRef = useRef<Set<string>>(new Set());
-  // Track which real message ID has taken over the pending audio slot
-  const stableKeyMessageIdRef = useRef<string | null>(null);
+  // Voice flow tracking: each voice message flow gets a unique key
+  // This prevents duplicate keys and avoids key changes that cause re-animation
+  const voiceFlowCounterRef = useRef(0);
+  const currentPendingIdRef = useRef<string | null>(null);
+  const messageFlowMapRef = useRef<Map<string, number>>(new Map());
   const navbarOffset = useNavbarHeight();
 
   // Capture initial message IDs synchronously during render (before effects run)
@@ -128,32 +131,55 @@ export const ChatContainer: FC<ChatContainerProps> = ({
         <EmptyState />
       ) : (
         <>
+          {/* Detect new voice flow BEFORE the map loop */}
+          {(() => {
+            const pendingMsg = messages.find((m) => m.id.startsWith('pending-voice-'));
+            if (pendingMsg && currentPendingIdRef.current !== pendingMsg.id) {
+              // New pending message = new voice flow, increment counter
+              voiceFlowCounterRef.current++;
+              currentPendingIdRef.current = pendingMsg.id;
+            } else if (!pendingMsg && currentPendingIdRef.current) {
+              // Pending cleared, reset tracking (but keep the map for existing messages)
+              currentPendingIdRef.current = null;
+            }
+            return null;
+          })()}
           {messages.map((message, index) => {
             // Check if we need a date divider before this message
             const showDateDivider =
               index === 0 || !isSameDay(messages[index - 1].createdAt, message.createdAt);
             const isLastMessage = index === messages.length - 1;
 
-            // Use stable key for audio messages in "pending voice" flow
-            // This prevents re-animation when real message replaces pending
             const isPendingAudio = message.id.startsWith('pending-voice-');
 
-            // When real audio message takes over pending slot, remember its ID
-            const isReplacingPending =
-              isLastMessage && message.hasAudio && hasPendingVoice && !isPendingAudio;
-            if (isReplacingPending) {
-              stableKeyMessageIdRef.current = message.id;
+            // Determine the React key for this message
+            // Voice messages use flow-based keys to prevent duplicate keys and re-animation
+            let messageKey: string;
+            if (isPendingAudio) {
+              // Pending message uses current flow counter
+              messageKey = `voice-flow-${voiceFlowCounterRef.current}`;
+            } else if (message.hasAudio && messageFlowMapRef.current.has(message.id)) {
+              // Previously associated with a flow, use that key forever
+              messageKey = `voice-flow-${messageFlowMapRef.current.get(message.id)}`;
+            } else if (
+              message.hasAudio &&
+              message.role === 'user' &&
+              hasPendingVoice &&
+              !initialMessageIdsRef.current.has(message.id)
+            ) {
+              // New real audio message replacing pending - associate with current flow
+              // Check: hasAudio, is user message, pending flow active, not from initial load
+              messageFlowMapRef.current.set(message.id, voiceFlowCounterRef.current);
+              messageKey = `voice-flow-${voiceFlowCounterRef.current}`;
+            } else {
+              // Regular message or non-pending audio
+              messageKey = message.id;
             }
 
-            // Use stable key for pending audio OR for the message that replaced it
-            const usesStableSlot = isPendingAudio || message.id === stableKeyMessageIdRef.current;
-            const messageKey = usesStableSlot ? 'pending-audio-slot' : message.id;
-            // Skip animation for: messages from initial load, or audio message replacements
+            // Skip animation for messages from initial load
+            // Note: voice messages sharing a key with pending don't re-animate (same React element)
             const isInitialMessage = initialMessageIdsRef.current.has(message.id);
-            const shouldSkipAnimation =
-              isInitialMessage ||
-              isReplacingPending ||
-              message.id === stableKeyMessageIdRef.current;
+            const shouldSkipAnimation = isInitialMessage;
 
             return (
               <div key={messageKey}>
@@ -162,7 +188,7 @@ export const ChatContainer: FC<ChatContainerProps> = ({
                   <MessageBubble
                     message={message}
                     index={index}
-                    skipAnimation={shouldSkipAnimation && !isPendingAudio}
+                    skipAnimation={shouldSkipAnimation}
                   />
                 </div>
               </div>
