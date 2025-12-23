@@ -33,7 +33,8 @@ export type FeatureType =
   | 'psychological_profile_update'
   | 'transcription'
   | 'audio_messages'
-  | 'dive_audio';
+  | 'dive_audio'
+  | 'conversation_title';
 
 export type AIModel = 'gemini-2.5-flash' | 'gemini-2.0-flash';
 

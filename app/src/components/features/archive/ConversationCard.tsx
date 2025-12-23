@@ -1,5 +1,5 @@
 import { type FC } from 'react';
-import { MessageCircle, Trash2, Clock, AlertCircle } from 'lucide-react';
+import { MessageCircle, Trash2, Clock, AlertCircle, Tag } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '../../../utils/cn';
 import { getRelativeTime, formatDate } from '../../../utils/time';
@@ -26,6 +26,11 @@ export const ConversationCard: FC<ConversationCardProps> = ({
     ? getRelativeTime(conversation.archivedAt, t)
     : getRelativeTime(conversation.updatedAt, t);
 
+  // Use AI-generated content if available, fallback to original
+  const displayTitle = conversation.metadata?.aiTitle || conversation.title;
+  const displaySummary = conversation.metadata?.aiSummary || conversation.preview;
+  const topics = conversation.metadata?.aiTopics || [];
+
   return (
     <div
       className={cn(
@@ -39,11 +44,9 @@ export const ConversationCard: FC<ConversationCardProps> = ({
       {/* Header */}
       <div className="mb-3 flex items-start justify-between">
         <div className="flex-1">
-          <h3 className="mb-1 line-clamp-2 text-lg font-medium text-mist-white">
-            {conversation.title}
-          </h3>
-          <p className="line-clamp-2 text-sm text-mist-white/50">
-            {conversation.preview || t('archive.noPreview')}
+          <h3 className="mb-1 line-clamp-2 text-lg font-medium text-mist-white">{displayTitle}</h3>
+          <p className="line-clamp-4 text-sm text-mist-white/50">
+            {displaySummary || t('archive.noPreview')}
           </p>
         </div>
 
@@ -53,6 +56,25 @@ export const ConversationCard: FC<ConversationCardProps> = ({
           </div>
         )}
       </div>
+
+      {/* Topic Tags */}
+      {topics.length > 0 && (
+        <div className="mb-3 flex flex-wrap gap-2">
+          {topics.map((topic) => (
+            <span
+              key={topic}
+              className={cn(
+                'inline-flex items-center gap-1 px-2 py-1',
+                'rounded-full bg-biolum-cyan/10 text-xs text-biolum-cyan/70',
+                'border border-biolum-cyan/20'
+              )}
+            >
+              <Tag size={10} />
+              {t(`topics.${topic}`, { defaultValue: topic })}
+            </span>
+          ))}
+        </div>
+      )}
 
       {/* Metadata */}
       <div className="mb-4 flex items-center gap-4 text-xs text-mist-white/40">

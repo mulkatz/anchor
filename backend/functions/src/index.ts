@@ -7,7 +7,11 @@ admin.initializeApp();
 export { onMessageCreate } from './chat';
 
 // Export conversation management functions
-export { generateConversationTitle, enforceSingleActiveConversation } from './conversations';
+export {
+  generateConversationTitle,
+  enforceSingleActiveConversation,
+  regenerateTitleOnArchive,
+} from './conversations';
 
 // Export audio transcription functions
 export {

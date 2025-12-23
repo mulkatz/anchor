@@ -24,6 +24,15 @@ export interface Conversation {
     hasCrisisMessages?: boolean;
     firstUserMessage?: string;
     lastUserMessage?: string;
+    // AI-generated title/summary fields
+    aiTitle?: string; // AI-generated title (max 50 chars)
+    aiSummary?: string; // AI-generated summary (max 140 chars)
+    aiTopics?: string[]; // 2-3 topic tags
+    titleGeneration?: {
+      version: 'draft' | 'final';
+      generatedAt: Date;
+      messageCountAtGeneration: number;
+    };
   };
 }
 

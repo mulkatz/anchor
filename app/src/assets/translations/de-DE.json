@@ -935,6 +935,28 @@
         "note": "Diese Informationen helfen Anchor dich besser zu verstehen. Sie werden sicher gespeichert und niemals geteilt.",
         "learnMore": "Mehr über Datenschutz erfahren"
       }
+    },
+    "topics": {
+      "arbeit": "Arbeit",
+      "beziehungen": "Beziehungen",
+      "familie": "Familie",
+      "gesundheit": "Gesundheit",
+      "schlaf": "Schlaf",
+      "soziales": "Soziales",
+      "finanzen": "Finanzen",
+      "selbstwert": "Selbstwert",
+      "zukunft": "Zukunft",
+      "vergangenheit": "Vergangenheit",
+      "atmung": "Atmung",
+      "erdung": "Erdung",
+      "panik": "Panik",
+      "ueberforderung": "Überforderung",
+      "einsamkeit": "Einsamkeit",
+      "unsicherheit": "Unsicherheit",
+      "perfektionismus": "Perfektionismus",
+      "grenzen": "Grenzen",
+      "veraenderung": "Veränderung",
+      "verlust": "Verlust"
     }
   }
 }

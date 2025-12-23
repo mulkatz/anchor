@@ -927,6 +927,28 @@
         "note": "This information helps Anchor understand you better. It's stored securely and never shared.",
         "learnMore": "Learn more about privacy"
       }
+    },
+    "topics": {
+      "work": "Work",
+      "relationships": "Relationships",
+      "family": "Family",
+      "health": "Health",
+      "sleep": "Sleep",
+      "social": "Social",
+      "finances": "Finances",
+      "self-worth": "Self-Worth",
+      "future": "Future",
+      "past": "Past",
+      "breathing": "Breathing",
+      "grounding": "Grounding",
+      "panic": "Panic",
+      "overwhelm": "Overwhelm",
+      "loneliness": "Loneliness",
+      "uncertainty": "Uncertainty",
+      "perfectionism": "Perfectionism",
+      "boundaries": "Boundaries",
+      "change": "Change",
+      "loss": "Loss"
     }
   }
 }
