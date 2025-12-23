@@ -26,9 +26,11 @@ During panic attacks or high anxiety, typing is cognitively overwhelming. Voice 
 ## Complete Architecture Flow
 
 ```
-User clicks mic → Recording starts (60s max) → User clicks again →
+User clicks mic → Recording starts (10 min max) → User clicks again →
 Upload to Cloud Storage → Firestore message (pending) →
-Transcription Cloud Function triggers → Google Speech-to-Text API →
+Transcription Cloud Function triggers →
+  (Short audio <60s): recognize() → instant result
+  (Long audio >60s): longRunningRecognize() → GCS upload → poll for result →
 Update message (completed) → onMessageCreate triggers →
 Crisis detection → Gemini AI response → User sees transcription + AI reply
 ```
@@ -49,9 +51,9 @@ Crisis detection → Gemini AI response → User sees transcription + AI reply
 
 **Configuration:**
 
-- **Max duration:** 60 seconds (optimal for anxiety communication)
+- **Max duration:** 600 seconds (10 minutes) - allows extended voice journaling
 - **UI pattern:** Click-to-start, click-to-stop (simplified from hold-to-record)
-- **Auto-cutoff:** Recording stops automatically at 60s
+- **Auto-cutoff:** Recording stops automatically at 10 minutes
 
 ---
 
@@ -65,7 +67,7 @@ Crisis detection → Gemini AI response → User sees transcription + AI reply
 
 - Manages recording lifecycle (start, stop, cancel)
 - Handles microphone permissions
-- Tracks duration with auto-cutoff at 60s
+- Tracks duration with auto-cutoff at 10 minutes (600s)
 - Converts base64 audio to Blob for upload
 - Integrates haptic feedback (selection patterns)
 
@@ -240,6 +242,11 @@ match /audio-messages/{userId}/{conversationId}/{messageId} {
 
 **Trigger:** `onDocumentCreated` on message creation
 
+**Function Settings:**
+
+- **Memory:** 512MiB
+- **Timeout:** 540 seconds (9 minutes) - supports 10-minute audio
+
 **Flow:**
 
 1. **Download audio from Cloud Storage**
@@ -257,20 +264,31 @@ match /audio-messages/{userId}/{conversationId}/{messageId} {
    - Convert AAC/MP4 → LINEAR16 WAV using `fluent-ffmpeg`
    - Conversion: pcm_s16le codec, mono, 16kHz sample rate
 
-4. **Call Google Cloud Speech-to-Text API**
+4. **Choose Transcription Method Based on Audio Length**
 
    ```typescript
-   const [response] = await speechClient.recognize({
-     config: {
-       encoding: LINEAR16,
-       sampleRateHertz: 16000,
-       languageCode: 'en-US',
-       model: 'latest_long',
-       enableAutomaticPunctuation: true,
-     },
-     audio: { content: audioBuffer },
-   });
+   const isLongAudio = audioBuffer.length > 960000; // ~60s of audio
+
+   if (isLongAudio) {
+     // Long audio (>60s): Use longRunningRecognize
+     // 1. Upload to GCS temp location
+     // 2. Start async recognition with GCS URI
+     // 3. Poll for completion
+     // 4. Clean up GCS file
+     const result = await transcribeLongAudio(audioBuffer, config);
+   } else {
+     // Short audio (<60s): Use synchronous recognize
+     const [response] = await speechClient.recognize({
+       config: { encoding, sampleRateHertz, languageCode, ... },
+       audio: { content: audioBuffer.toString('base64') },
+     });
+   }
    ```
+
+   **Why two methods?**
+   - Google's `recognize()` has a ~60 second limit for inline audio
+   - `longRunningRecognize()` supports hours of audio but requires GCS URI
+   - Same pricing for both ($0.006-0.009 per 15 seconds)
 
 5. **Update Firestore message with transcription**
    ```typescript
@@ -469,8 +487,9 @@ gcloud projects add-iam-policy-binding PROJECT_ID \
 
 1. **Rate limiting:** Max 20 voice messages per user per day
 2. **Client-side silence detection:** Trim silence before upload
-3. **60-second max duration:** Enforced at client level
-4. **Future: On-device transcription** (iOS Speech Framework, Android SpeechRecognizer) - **FREE**
+3. **10-minute max duration:** Enforced at client level
+4. **Smart method selection:** Short audio uses fast `recognize()`, only long audio pays GCS overhead
+5. **Future: On-device transcription** (iOS Speech Framework, Android SpeechRecognizer) - **FREE**
    - Tradeoff: 80-90% accuracy vs. 95%+ (cloud)
 
 ---
@@ -542,7 +561,7 @@ if (hasCrisisKeyword) {
 - [ ] Recording starts on first click, stops on second click
 - [ ] Button shows pulsing red dot during recording
 - [ ] Duration counter updates every second
-- [ ] Auto-cutoff at 60 seconds works
+- [ ] Auto-cutoff at 10 minutes works
 - [ ] Cancel button stops recording without sending
 
 ### Upload & Storage
@@ -554,10 +573,13 @@ if (hasCrisisKeyword) {
 
 ### Transcription
 
+- [ ] Short audio (<60s) transcribes quickly via `recognize()`
+- [ ] Long audio (>60s) transcribes via `longRunningRecognize()`
 - [ ] Transcription appears in chat bubble
 - [ ] Confidence percentage displayed
 - [ ] Low confidence warning shows when < 60%
 - [ ] Failed state shows retry option
+- [ ] 10-minute recording transcribes successfully
 
 ### AI Response
 
