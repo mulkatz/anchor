@@ -283,6 +283,7 @@ export const myFunction = onCall(async (request) => {
 | `adaptiveLanguage.ts`                   | `adaptive_language`                                             | gemini-2.5-flash |
 | `userStory/extraction.ts`               | `user_story`                                                    | gemini-2.0-flash |
 | `psychologicalProfile/profileUpdate.ts` | `psychological_profile_initial`, `psychological_profile_update` | gemini-2.5-flash |
+| `conversationTitle.ts`                  | `conversation_title`                                            | gemini-2.5-flash |
 | `transcription.ts`                      | `transcription`                                                 | Speech-to-Text   |
 
 ---

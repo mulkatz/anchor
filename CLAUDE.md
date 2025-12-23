@@ -76,20 +76,21 @@ Every interaction needs appropriate haptic feedback. See [Haptics Guide](docs/05
 
 ### Task → Required Documentation
 
-| Task                       | Must Read                                                                                                          | Optional                                                       |
-| -------------------------- | ------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------- |
-| **Building UI component**  | [Design System](docs/02-design-system/README.md), [i18n](docs/05-implementation/i18n-guide.md)                     | [Animations](docs/02-design-system/animations.md)              |
-| **Adding new screen**      | [i18n](docs/05-implementation/i18n-guide.md), [Project Structure](docs/03-architecture/project-structure.md)       | [Page Transitions](docs/05-implementation/page-transitions.md) |
-| **Any text changes**       | [i18n Guide](docs/05-implementation/i18n-guide.md) ⚠️                                                              | -                                                              |
-| **Working on SOS flow**    | [SOS Flow](docs/04-features/sos-flow.md), [Haptics](docs/05-implementation/haptics.md)                             | [Animations](docs/02-design-system/animations.md)              |
-| **Voice chat feature**     | [Voice Chat](docs/04-features/voice-chat.md), [Firebase](docs/05-implementation/firebase.md)                       | -                                                              |
-| **AI chat/memory system**  | [Chat Architecture](docs/04-features/chat-system-architecture.md) ⚠️, [User Story](docs/04-features/user-story.md) | [AI Chat](docs/04-features/ai-chat.md)                         |
-| **AI temporal awareness**  | [Temporal Awareness](docs/04-features/temporal-awareness.md)                                                       | -                                                              |
-| **The Dive feature**       | [The Dive](docs/04-features/the-dive.md) ⚠️                                                                        | [AI Chat](docs/04-features/ai-chat.md)                         |
-| **Profile/settings**       | [Profile Settings](docs/04-features/profile-settings.md)                                                           | [State Management](docs/03-architecture/state-management.md)   |
-| **Usage/cost tracking**    | [Usage Monitoring](docs/04-features/usage-monitoring.md)                                                           | [Firebase](docs/05-implementation/firebase.md)                 |
-| **Fixing bug**             | [Troubleshooting](docs/06-development/troubleshooting.md)                                                          | -                                                              |
-| **Understanding codebase** | [Manifest](docs/01-vision/manifest.md), [Tech Stack](docs/03-architecture/tech-stack.md)                           | [Project Structure](docs/03-architecture/project-structure.md) |
+| Task                       | Must Read                                                                                                          | Optional                                                          |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------- |
+| **Building UI component**  | [Design System](docs/02-design-system/README.md), [i18n](docs/05-implementation/i18n-guide.md)                     | [Animations](docs/02-design-system/animations.md)                 |
+| **Adding new screen**      | [i18n](docs/05-implementation/i18n-guide.md), [Project Structure](docs/03-architecture/project-structure.md)       | [Page Transitions](docs/05-implementation/page-transitions.md)    |
+| **Any text changes**       | [i18n Guide](docs/05-implementation/i18n-guide.md) ⚠️                                                              | -                                                                 |
+| **Working on SOS flow**    | [SOS Flow](docs/04-features/sos-flow.md), [Haptics](docs/05-implementation/haptics.md)                             | [Animations](docs/02-design-system/animations.md)                 |
+| **Voice chat feature**     | [Voice Chat](docs/04-features/voice-chat.md), [Firebase](docs/05-implementation/firebase.md)                       | -                                                                 |
+| **AI chat/memory system**  | [Chat Architecture](docs/04-features/chat-system-architecture.md) ⚠️, [User Story](docs/04-features/user-story.md) | [AI Chat](docs/04-features/ai-chat.md)                            |
+| **AI temporal awareness**  | [Temporal Awareness](docs/04-features/temporal-awareness.md)                                                       | -                                                                 |
+| **The Dive feature**       | [The Dive](docs/04-features/the-dive.md) ⚠️                                                                        | [AI Chat](docs/04-features/ai-chat.md)                            |
+| **Profile/settings**       | [Profile Settings](docs/04-features/profile-settings.md)                                                           | [State Management](docs/03-architecture/state-management.md)      |
+| **Usage/cost tracking**    | [Usage Monitoring](docs/04-features/usage-monitoring.md)                                                           | [Firebase](docs/05-implementation/firebase.md)                    |
+| **Vault/archive page**     | [Vault](docs/04-features/vault.md)                                                                                 | [Chat Architecture](docs/04-features/chat-system-architecture.md) |
+| **Fixing bug**             | [Troubleshooting](docs/06-development/troubleshooting.md)                                                          | -                                                                 |
+| **Understanding codebase** | [Manifest](docs/01-vision/manifest.md), [Tech Stack](docs/03-architecture/tech-stack.md)                           | [Project Structure](docs/03-architecture/project-structure.md)    |
 
 ---
 
@@ -121,6 +122,7 @@ docs/
 │   ├── user-story.md            # 📝 Two-tier memory, extraction, personalization
 │   ├── temporal-awareness.md    # 🕐 Time-aware conversations, DST support
 │   ├── the-dive.md              # 🌊 Somatic learning (Polyvagal Theory)
+│   ├── vault.md                 # 🗄️ Session history, AI titles/summaries
 │   ├── profile-settings.md      # ⚙️ Settings, data management
 │   ├── usage-monitoring.md      # 📊 Per-user cost tracking, admin functions
 │   └── planned-features.md      # 📋 Roadmap
@@ -158,7 +160,7 @@ docs/
 - Haptics Integration
 - Journal/Depths (free-form journaling with sedimentation)
 - **The Dive (25-lesson somatic learning, Polyvagal Theory, AI Somatic Guide)**
-- **Vault (session history browser)**
+- **Vault (session history browser, AI-generated titles/summaries/topic tags)**
 - **Usage Monitoring (per-user cost tracking, AI tokens, speech minutes, admin functions)**
 
 ### 🚧 In Progress
@@ -217,6 +219,8 @@ backend/
 │   ├── diveLessonData.ts # Localized lesson content
 │   ├── transcription.ts # Audio transcription (chat + dive)
 │   ├── chat.ts          # Regular chat AI
+│   ├── conversations.ts # Conversation lifecycle triggers
+│   ├── conversationTitle.ts # AI title/summary generation
 │   └── usage/           # Usage monitoring system
 │       ├── usageTracker.ts   # Core tracking service
 │       ├── costCalculator.ts # Cost calculations
