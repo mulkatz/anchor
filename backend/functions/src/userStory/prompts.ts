@@ -99,16 +99,16 @@ Output ONLY valid JSON:
   "extractions": [
     {
       "field": "coreIdentity.name",
-      "value": "Sarah",
+      "value": "<extracted_name>",
       "confidence": "explicit",
-      "evidence": "User said 'my name is Sarah'"
+      "evidence": "<quote from user message>"
     }
   ],
   "topicExtractions": [
     {
       "type": "topic",
-      "topic": "job interview anxiety",
-      "context": "Interview at Google on Friday",
+      "topic": "<topic_description>",
+      "context": "<specific_details_from_message>",
       "category": "work",
       "status": "active",
       "valence": "negative"
@@ -123,8 +123,8 @@ For resolved topics with outcomes:
   "topicExtractions": [
     {
       "type": "topic",
-      "topic": "job interview",
-      "context": "Got the job at Google!",
+      "topic": "<topic_description>",
+      "context": "<resolution_details_from_message>",
       "category": "work",
       "status": "resolved",
       "valence": "positive",
@@ -132,6 +132,10 @@ For resolved topics with outcomes:
     }
   ]
 }
+
+CRITICAL: The JSON structure above uses placeholder markers like <extracted_name> and <topic_description>.
+These are FORMAT EXAMPLES ONLY - never output these placeholders as real values.
+Only extract ACTUAL information found in the USER MESSAGE above.
 
 RULES:
 1. Only extract what is CLEARLY stated or strongly implied
@@ -246,16 +250,16 @@ Gib NUR gültiges JSON aus:
   "extractions": [
     {
       "field": "coreIdentity.name",
-      "value": "Sarah",
+      "value": "<extrahierter_name>",
       "confidence": "explicit",
-      "evidence": "Nutzer sagte 'ich heiße Sarah'"
+      "evidence": "<Zitat aus Nutzernachricht>"
     }
   ],
   "topicExtractions": [
     {
       "type": "topic",
-      "topic": "Bewerbungsangst",
-      "context": "Vorstellungsgespräch bei Google am Freitag",
+      "topic": "<themen_beschreibung>",
+      "context": "<spezifische_details_aus_nachricht>",
       "category": "work",
       "status": "active",
       "valence": "negative"
@@ -270,8 +274,8 @@ Für abgeschlossene Themen mit Ausgang:
   "topicExtractions": [
     {
       "type": "topic",
-      "topic": "Vorstellungsgespräch",
-      "context": "Job bei Google bekommen!",
+      "topic": "<themen_beschreibung>",
+      "context": "<auflösungs_details_aus_nachricht>",
       "category": "work",
       "status": "resolved",
       "valence": "positive",
@@ -279,6 +283,10 @@ Für abgeschlossene Themen mit Ausgang:
     }
   ]
 }
+
+KRITISCH: Die JSON-Struktur oben verwendet Platzhalter wie <extrahierter_name> und <themen_beschreibung>.
+Das sind NUR FORMAT-BEISPIELE - gib diese Platzhalter niemals als echte Werte aus.
+Extrahiere NUR TATSÄCHLICHE Informationen aus der NUTZER-NACHRICHT oben.
 
 REGELN:
 1. Nur extrahieren was KLAR gesagt oder stark impliziert wurde

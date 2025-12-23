@@ -164,8 +164,8 @@ export type ResolutionOutcome = 'success' | 'neutral' | 'difficult' | undefined;
 
 export interface TopicExtraction {
   type: 'topic';
-  topic: string; // "job interview anxiety"
-  context: string; // "Interview at Google on Friday"
+  topic: string; // e.g. "work stress", "relationship issue"
+  context: string; // specific details from user message
   category: TopicCategory;
   status: TopicStatus;
   valence?: TopicValence; // Is this positive/negative for them emotionally?
@@ -191,8 +191,8 @@ export interface ExtractionResult {
  */
 export interface RecentTopic {
   id: string;
-  topic: string; // "job interview anxiety"
-  context: string; // "has an interview at Google on Friday"
+  topic: string; // e.g. "work stress", "family situation"
+  context: string; // specific details extracted from conversation
   category: TopicCategory;
 
   // Temporal tracking
