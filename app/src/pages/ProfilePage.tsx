@@ -36,6 +36,7 @@ import { ConfirmDialog } from '../components/ui/ConfirmDialog';
 import { FeedbackDialog } from '../components/features/profile/FeedbackDialog';
 import { DisclaimerDialog } from '../components/features/profile/DisclaimerDialog';
 import { AppLikePromptDialog } from '../components/features/profile/AppLikePromptDialog';
+import { UsageCard } from '../components/features/profile/UsageCard';
 import { logAnalyticsEvent, AnalyticsEvent } from '../services/analytics.service';
 import { requestAppRating, isRatingAvailable } from '../services/rating.service';
 import {
@@ -354,6 +355,9 @@ export const ProfilePage: FC = () => {
             <ChevronRight size={20} className="text-mist-white/40" />
           </div>
         </motion.button>
+
+        {/* Usage Stats Card */}
+        <UsageCard />
 
         {/* App Preferences */}
         <SettingSection title={t('settings.appPreferences')}>

@@ -30,3 +30,14 @@ export { createPsychologicalProfile } from './psychologicalProfile';
 
 // Export Achievement/Streak functions
 export { onActivityLogWrite } from './achievements';
+
+// Export Usage Monitoring scheduled functions
+export {
+  aggregateDailyUsage,
+  archiveMonthlyUsage,
+  cleanupOldDailyRecords,
+  resetMonthlySummaries,
+} from './usage/admin';
+
+// Export Usage Migration callable
+export { initializeUserUsage } from './usage/migration';

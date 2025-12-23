@@ -13,6 +13,7 @@ import {
   getTimeOfDay,
 } from './temporal';
 import { getLocalizedLesson, type SupportedLanguage, type DiveLessonFull } from './diveLessonData';
+import { trackUsage, flushUsage, extractTokenUsage } from './usage';
 
 /**
  * Cloud Function: onDiveMessageCreate
@@ -194,6 +195,31 @@ export const onDiveMessageCreate = onDocumentWritten(
 
       const responseTime = Date.now() - startTime;
 
+      // Extract token usage for cost tracking
+      const tokenUsage = extractTokenUsage(result);
+
+      // Track AI usage
+      trackUsage({
+        userId,
+        timestamp: new Date(),
+        service: 'ai_gemini_25_flash',
+        feature: 'dive',
+        model: 'gemini-2.5-flash',
+        inputTokens: tokenUsage.inputTokens,
+        outputTokens: tokenUsage.outputTokens,
+        latencyMs: responseTime,
+      });
+
+      // Track Firestore reads and writes
+      trackUsage({
+        userId,
+        timestamp: new Date(),
+        service: 'firestore',
+        feature: 'dive',
+        reads: conversationHistory.length + 2, // Messages + session doc + lesson lookup
+        writes: 2, // Guide response + session update
+      });
+
       let responseText =
         result.response.candidates?.[0]?.content?.parts?.[0]?.text ||
         'I am here with you in the water. Take your time.';
@@ -231,6 +257,8 @@ export const onDiveMessageCreate = onDocumentWritten(
             model: 'gemini-2.5-flash',
             responseTime,
             isLessonComplete,
+            inputTokens: tokenUsage.inputTokens,
+            outputTokens: tokenUsage.outputTokens,
           },
         });
 
@@ -247,6 +275,9 @@ export const onDiveMessageCreate = onDocumentWritten(
       if (isLessonComplete) {
         await updateLessonProgress(userId, lessonId);
       }
+
+      // 16. Flush usage tracking data
+      await flushUsage(userId);
     } catch (error) {
       logger.error('Error processing dive message', { userId, sessionId, error });
 
@@ -406,6 +437,30 @@ export const onDiveSessionCreate = onDocumentWritten(
         result.response.candidates?.[0]?.content?.parts?.[0]?.text ||
         `welcome to ${lesson.content.zone}. the water is calm here. let's begin.`;
 
+      // Extract token usage for cost tracking
+      const openingTokenUsage = extractTokenUsage(result);
+
+      // Track AI usage for opening message
+      trackUsage({
+        userId,
+        timestamp: new Date(),
+        service: 'ai_gemini_25_flash',
+        feature: 'dive_opening',
+        model: 'gemini-2.5-flash',
+        inputTokens: openingTokenUsage.inputTokens,
+        outputTokens: openingTokenUsage.outputTokens,
+      });
+
+      // Track Firestore writes
+      trackUsage({
+        userId,
+        timestamp: new Date(),
+        service: 'firestore',
+        feature: 'dive_opening',
+        reads: 1, // Session doc
+        writes: 3, // Update lesson content + opening message + message count update
+      });
+
       // Write opening message
       await admin
         .firestore()
@@ -420,6 +475,8 @@ export const onDiveSessionCreate = onDocumentWritten(
           metadata: {
             model: 'gemini-2.5-flash',
             isOpening: true,
+            inputTokens: openingTokenUsage.inputTokens,
+            outputTokens: openingTokenUsage.outputTokens,
           },
         });
 
@@ -428,6 +485,9 @@ export const onDiveSessionCreate = onDocumentWritten(
         messageCount: 1,
         updatedAt: admin.firestore.FieldValue.serverTimestamp(),
       });
+
+      // Flush usage tracking data
+      await flushUsage(userId);
 
       logger.info('Sent dive session opening message', { userId, sessionId, lessonId });
     } catch (error) {

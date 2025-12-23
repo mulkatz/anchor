@@ -9,6 +9,7 @@
 import * as logger from 'firebase-functions/logger';
 import * as admin from 'firebase-admin';
 import { VertexAI } from '@google-cloud/vertexai';
+import { trackUsage, flushUsage, extractTokenUsage } from './usage';
 
 // ============================================================================
 // Type Definitions
@@ -214,10 +215,26 @@ export async function analyzeUserStyle(
       },
     });
 
+    // Extract token usage for cost tracking
+    const tokenUsage = extractTokenUsage(result);
+
+    // Track AI usage (async - don't wait for it)
+    trackUsage({
+      userId,
+      timestamp: new Date(),
+      service: 'ai_gemini_25_flash',
+      feature: 'adaptive_language',
+      model: 'gemini-2.5-flash',
+      inputTokens: tokenUsage.inputTokens,
+      outputTokens: tokenUsage.outputTokens,
+      latencyMs: Date.now() - startTime,
+    });
+
     const analysisText = result.response.candidates?.[0]?.content?.parts?.[0]?.text;
 
     if (!analysisText) {
       logger.error('Empty analysis response from Gemini', { userId });
+      await flushUsage(userId);
       return;
     }
 
@@ -246,7 +263,10 @@ export async function analyzeUserStyle(
       sampleCount: sampleMessages.length,
       analysisTimeMs: analysisTime,
       profileLength: analysisText.length,
+      tokenUsage,
     });
+
+    await flushUsage(userId);
   } catch (error) {
     logger.error('Style analysis failed', {
       userId,

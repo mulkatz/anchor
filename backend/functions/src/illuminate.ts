@@ -7,6 +7,7 @@ import {
   buildDistortionDetectionMessage,
   buildReframeMessage,
 } from './illuminatePrompt';
+import { trackUsage, flushUsage, extractTokenUsage } from './usage';
 
 /**
  * Type definitions for Illuminate AI responses
@@ -106,14 +107,29 @@ export const analyzeDistortions = onCall(
         },
       });
 
+      // Extract token usage for cost tracking
+      const tokenUsage = extractTokenUsage(result);
+
+      // Track AI usage
+      trackUsage({
+        userId,
+        timestamp: new Date(),
+        service: 'ai_gemini_25_flash',
+        feature: 'illuminate_distortions',
+        model: 'gemini-2.5-flash',
+        inputTokens: tokenUsage.inputTokens,
+        outputTokens: tokenUsage.outputTokens,
+      });
+
       const responseText = result.response.candidates?.[0]?.content?.parts?.[0]?.text;
 
       if (!responseText) {
         logger.error('No response from AI for distortion detection', { userId });
+        await flushUsage(userId);
         return { distortions: [] };
       }
 
-      logger.info('AI distortion response', { userId, responseText });
+      logger.info('AI distortion response', { userId, responseText, tokenUsage });
 
       // Parse JSON response
       const parsed = parseAIJsonResponse<DistortionDetectionResponse>(responseText);
@@ -132,6 +148,7 @@ export const analyzeDistortions = onCall(
         types: validDistortions.map((d) => d.type),
       });
 
+      await flushUsage(userId);
       return { distortions: validDistortions };
     } catch (error) {
       logger.error('Error analyzing distortions', {
@@ -207,14 +224,29 @@ export const generateReframes = onCall(
         },
       });
 
+      // Extract token usage for cost tracking
+      const reframeTokenUsage = extractTokenUsage(result);
+
+      // Track AI usage
+      trackUsage({
+        userId,
+        timestamp: new Date(),
+        service: 'ai_gemini_25_flash',
+        feature: 'illuminate_reframes',
+        model: 'gemini-2.5-flash',
+        inputTokens: reframeTokenUsage.inputTokens,
+        outputTokens: reframeTokenUsage.outputTokens,
+      });
+
       const responseText = result.response.candidates?.[0]?.content?.parts?.[0]?.text;
 
       if (!responseText) {
         logger.error('No response from AI for reframe generation', { userId });
+        await flushUsage(userId);
         return { reframes: getDefaultReframes(language) };
       }
 
-      logger.info('AI reframe response', { userId, responseText });
+      logger.info('AI reframe response', { userId, responseText, reframeTokenUsage });
 
       // Parse JSON response
       const parsed = parseAIJsonResponse<ReframeGenerationResponse>(responseText);
@@ -225,11 +257,13 @@ export const generateReframes = onCall(
         .slice(0, 3); // Max 3 reframes
 
       if (validReframes.length === 0) {
+        await flushUsage(userId);
         return { reframes: getDefaultReframes(language) };
       }
 
       logger.info('Reframes generated', { userId, count: validReframes.length });
 
+      await flushUsage(userId);
       return { reframes: validReframes };
     } catch (error) {
       logger.error('Error generating reframes', {

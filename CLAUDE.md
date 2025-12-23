@@ -87,6 +87,7 @@ Every interaction needs appropriate haptic feedback. See [Haptics Guide](docs/05
 | **AI temporal awareness**  | [Temporal Awareness](docs/04-features/temporal-awareness.md)                                                       | -                                                              |
 | **The Dive feature**       | [The Dive](docs/04-features/the-dive.md) ⚠️                                                                        | [AI Chat](docs/04-features/ai-chat.md)                         |
 | **Profile/settings**       | [Profile Settings](docs/04-features/profile-settings.md)                                                           | [State Management](docs/03-architecture/state-management.md)   |
+| **Usage/cost tracking**    | [Usage Monitoring](docs/04-features/usage-monitoring.md)                                                           | [Firebase](docs/05-implementation/firebase.md)                 |
 | **Fixing bug**             | [Troubleshooting](docs/06-development/troubleshooting.md)                                                          | -                                                              |
 | **Understanding codebase** | [Manifest](docs/01-vision/manifest.md), [Tech Stack](docs/03-architecture/tech-stack.md)                           | [Project Structure](docs/03-architecture/project-structure.md) |
 
@@ -121,6 +122,7 @@ docs/
 │   ├── temporal-awareness.md    # 🕐 Time-aware conversations, DST support
 │   ├── the-dive.md              # 🌊 Somatic learning (Polyvagal Theory)
 │   ├── profile-settings.md      # ⚙️ Settings, data management
+│   ├── usage-monitoring.md      # 📊 Per-user cost tracking, admin functions
 │   └── planned-features.md      # 📋 Roadmap
 │
 ├── 05-implementation/
@@ -157,6 +159,7 @@ docs/
 - Journal/Depths (free-form journaling with sedimentation)
 - **The Dive (25-lesson somatic learning, Polyvagal Theory, AI Somatic Guide)**
 - **Vault (session history browser)**
+- **Usage Monitoring (per-user cost tracking, AI tokens, speech minutes, admin functions)**
 
 ### 🚧 In Progress
 
@@ -196,7 +199,8 @@ app/
 │   │   └── features/    # Feature-specific (chat/, profile/, dive/)
 │   ├── hooks/           # Custom React hooks
 │   │   ├── useDiveSession.tsx   # Dive session state
-│   │   └── useDiveLesson.tsx    # Localized lesson fetching
+│   │   ├── useDiveLesson.tsx    # Localized lesson fetching
+│   │   └── useUsage.tsx         # Real-time usage subscription
 │   ├── contexts/        # Global state (App, UI, Dialog, Dive)
 │   │   └── DiveContext.tsx      # Dive progress + localStorage cache
 │   ├── data/
@@ -212,7 +216,12 @@ backend/
 │   ├── divePrompt.ts    # Somatic Guide persona
 │   ├── diveLessonData.ts # Localized lesson content
 │   ├── transcription.ts # Audio transcription (chat + dive)
-│   └── chat.ts          # Regular chat AI
+│   ├── chat.ts          # Regular chat AI
+│   └── usage/           # Usage monitoring system
+│       ├── usageTracker.ts   # Core tracking service
+│       ├── costCalculator.ts # Cost calculations
+│       ├── admin.ts          # Scheduled admin functions
+│       └── migration.ts      # User initialization
 ├── firestore.rules      # Database security
 └── storage.rules        # Storage security (incl. dive-audio/)
 ```
@@ -249,4 +258,4 @@ cd backend && firebase deploy
 
 ---
 
-**Last Updated:** December 13, 2024
+**Last Updated:** December 23, 2024

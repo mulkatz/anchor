@@ -3,6 +3,7 @@ import * as admin from 'firebase-admin';
 import { onCall, HttpsError } from 'firebase-functions/v2/https';
 import { VertexAI } from '@google-cloud/vertexai';
 import { getInsightGenerationPrompt, buildInsightMessage } from './insightPrompt';
+import { trackUsage, flushUsage, extractTokenUsage } from './usage';
 
 /**
  * Parse JSON from AI response, handling markdown code blocks
@@ -233,6 +234,20 @@ export const generateWeeklyInsight = onCall(
         },
       });
 
+      // Extract token usage for cost tracking
+      const tokenUsage = extractTokenUsage(result);
+
+      // Track AI usage
+      trackUsage({
+        userId,
+        timestamp: new Date(),
+        service: 'ai_gemini_25_flash',
+        feature: 'insight',
+        model: 'gemini-2.5-flash',
+        inputTokens: tokenUsage.inputTokens,
+        outputTokens: tokenUsage.outputTokens,
+      });
+
       const responseText = result.response.candidates?.[0]?.content?.parts?.[0]?.text;
 
       let insightData: InsightResponse = {
@@ -271,6 +286,8 @@ export const generateWeeklyInsight = onCall(
       const docRef = await db.collection(`users/${userId}/weekly_insights`).add(insightDoc);
 
       logger.info('Weekly insight generated', { userId, weekStartDate, insightId: docRef.id });
+
+      await flushUsage(userId);
 
       return {
         id: docRef.id,

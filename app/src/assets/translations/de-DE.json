@@ -26,7 +26,18 @@
     },
     "profile": {
       "title": "Profil",
-      "subtitle": "Einstellungen & Präferenzen"
+      "subtitle": "Einstellungen & Präferenzen",
+      "usage": {
+        "title": "Nutzung diesen Monat",
+        "estimated": "geschätzt",
+        "aiCalls": "KI-Aufrufe",
+        "tokens": "Tokens",
+        "voice": "Sprache",
+        "daysRemaining": "noch {{count}} Tage",
+        "daysRemaining_one": "noch {{count}} Tag",
+        "lifetime": "Gesamt",
+        "calls": "Aufrufe"
+      }
     },
     "settings": {
       "appPreferences": "App-Einstellungen",

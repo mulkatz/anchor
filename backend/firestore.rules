@@ -233,6 +233,37 @@ service cloud.firestore {
       allow read, update, delete: if false; // Admin only
     }
 
+    // Usage tracking - read-only for users
+    // Users can view their own usage data but cannot modify it (backend only)
+    match /usage/{userId} {
+      // Summary document (stored directly at usage/{userId})
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow write: if false; // Backend functions only
+
+      // Current period documents
+      match /current/{periodId} {
+        allow read: if request.auth != null && request.auth.uid == userId;
+        allow write: if false;
+      }
+
+      // Historical period documents
+      match /history/{periodId} {
+        allow read: if request.auth != null && request.auth.uid == userId;
+        allow write: if false;
+      }
+
+      // Daily usage documents
+      match /daily/{dateId} {
+        allow read: if request.auth != null && request.auth.uid == userId;
+        allow write: if false;
+      }
+    }
+
+    // Admin usage aggregates - backend only
+    match /usage_admin/{document=**} {
+      allow read, write: if false;
+    }
+
     // Default: Deny all other access
     match /{document=**} {
       allow read, write: if false;

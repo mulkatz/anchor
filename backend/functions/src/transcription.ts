@@ -9,6 +9,7 @@ import ffmpegInstaller from '@ffmpeg-installer/ffmpeg';
 import * as os from 'os';
 import * as path from 'path';
 import * as fs from 'fs';
+import { trackUsage, flushUsage } from './usage';
 
 // Set ffmpeg path for Cloud Functions
 ffmpeg.setFfmpegPath(ffmpegInstaller.path);
@@ -339,6 +340,29 @@ async function transcribeAudioMessage(
       confidence,
       lowConfidence: confidence < 0.6,
     });
+
+    // Track speech-to-text usage
+    trackUsage({
+      userId: context.userId,
+      timestamp: new Date(),
+      service: 'speech_to_text',
+      feature: 'transcription',
+      audioDurationMs: message.audioDuration || 0,
+      isLongRunning: isLongAudio,
+    });
+
+    // Track storage download
+    trackUsage({
+      userId: context.userId,
+      timestamp: new Date(),
+      service: 'cloud_storage',
+      feature: context.type === 'dive' ? 'dive_audio' : 'audio_messages',
+      operation: 'download',
+      bytes: audioBuffer.length,
+    });
+
+    // Flush usage tracking
+    await flushUsage(context.userId);
   } catch (error: any) {
     logger.error('Transcription failed - Full error details', {
       messageId: context.messageId,
@@ -561,6 +585,23 @@ export const transcribeAudioCallable = onCall(
         confidence,
         duration: Date.now() - startTime,
       });
+
+      // Track speech-to-text usage for callable transcription
+      // Note: We don't have exact duration, estimate from buffer size
+      // Rough estimate: 16kHz * 2 bytes * seconds = buffer size
+      const estimatedDurationMs = (audioBuffer.length / 32) * 1000; // Very rough estimate
+
+      trackUsage({
+        userId,
+        timestamp: new Date(),
+        service: 'speech_to_text',
+        feature: 'transcription',
+        audioDurationMs: estimatedDurationMs,
+        isLongRunning: false,
+      });
+
+      // Flush usage tracking
+      await flushUsage(userId);
 
       return { text, confidence };
     } catch (error: any) {

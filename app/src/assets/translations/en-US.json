@@ -26,7 +26,18 @@
     },
     "profile": {
       "title": "Profile",
-      "subtitle": "Settings & preferences"
+      "subtitle": "Settings & preferences",
+      "usage": {
+        "title": "Usage This Month",
+        "estimated": "estimated",
+        "aiCalls": "AI Calls",
+        "tokens": "tokens",
+        "voice": "Voice",
+        "daysRemaining": "{{count}} days left",
+        "daysRemaining_one": "{{count}} day left",
+        "lifetime": "Lifetime",
+        "calls": "calls"
+      }
     },
     "settings": {
       "appPreferences": "App Preferences",

@@ -498,3 +498,59 @@ export interface StoryFieldMetadata {
 // Helper type for extracting field value type
 export type ExtractFieldType<T> =
   T extends StoryFieldValue<infer U> ? U : T extends StoryFieldWithHistory<infer U> ? U : never;
+
+// ============================================
+// Usage Monitoring
+// ============================================
+
+/**
+ * Current period usage summary (what users see)
+ */
+export interface UsagePeriodSummary {
+  startDate: string; // YYYY-MM-DD
+  endDate: string; // YYYY-MM-DD
+  totalCostUsd: number;
+  aiCostUsd: number;
+  speechCostUsd: number;
+  storageCostUsd: number;
+  firestoreCostUsd: number;
+  aiCalls: number;
+  totalTokens: number;
+  speechMinutes: number;
+  firestoreReads: number;
+  firestoreWrites: number;
+}
+
+/**
+ * Lifetime usage totals
+ */
+export interface UsageLifetime {
+  totalCostUsd: number;
+  firstActivityAt: Date;
+  aiCalls: number;
+  speechMinutes: number;
+}
+
+/**
+ * Usage limits configuration (for future caps)
+ */
+export interface UsageLimits {
+  monthlyBudgetUsd: number | null;
+  monthlyAiCalls: number | null;
+  monthlySpeechMinutes: number | null;
+  alertThresholdPercent: number; // e.g., 80
+  alertTriggered: boolean;
+  alertTriggeredAt: Date | null;
+}
+
+/**
+ * Main usage summary document (Firestore: usage/{userId})
+ */
+export interface UsageSummary {
+  userId: string;
+  currentPeriod: UsagePeriodSummary;
+  lifetime: UsageLifetime;
+  limits: UsageLimits;
+  lastUpdated: Date;
+  schemaVersion: string;
+}

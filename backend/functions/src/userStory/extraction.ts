@@ -20,6 +20,7 @@ import {
   formatRecentContext,
 } from './prompts';
 import { getUserStory } from './context';
+import { trackUsage, flushUsage, extractTokenUsage } from '../usage';
 
 /**
  * Generate a unique topic ID
@@ -104,6 +105,20 @@ export async function extractStoryFromMessage(
       contents: [{ role: 'user', parts: [{ text: prompt }] }],
     });
 
+    // Extract token usage for cost tracking
+    const tokenUsage = extractTokenUsage(result);
+
+    // Track AI usage (async - don't wait for it)
+    trackUsage({
+      userId,
+      timestamp: new Date(),
+      service: 'ai_gemini_20_flash',
+      feature: 'user_story',
+      model: 'gemini-2.0-flash',
+      inputTokens: tokenUsage.inputTokens,
+      outputTokens: tokenUsage.outputTokens,
+    });
+
     const responseText = result.response.candidates?.[0]?.content?.parts?.[0]?.text;
 
     if (!responseText) {
@@ -149,11 +164,16 @@ export async function extractStoryFromMessage(
       topicExtractionsCount: extractionResult.topicExtractions?.length || 0,
       hasForgetRequest: !!extractionResult.detectedForgetRequest,
     });
+
+    // Flush usage tracking before function ends
+    await flushUsage(userId);
   } catch (error) {
     logger.error('Story extraction failed', {
       userId,
       error: error instanceof Error ? error.message : String(error),
     });
+    // Still flush any tracked usage on error
+    await flushUsage(userId).catch(() => {});
     // Don't throw - this is fire-and-forget
   }
 }

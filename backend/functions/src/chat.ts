@@ -21,6 +21,7 @@ import {
   getLocalizedStoryContext,
   getLocalizedRecentTopicsContext,
 } from './userStory';
+import { trackUsage, flushUsage, extractTokenUsage } from './usage';
 
 /**
  * Cloud Function: onMessageCreate
@@ -312,6 +313,31 @@ IMPORTANT: You can now reference when things happened in your conversation. Each
 
       const responseTime = Date.now() - startTime;
 
+      // Extract token usage for cost tracking
+      const tokenUsage = extractTokenUsage(result);
+
+      // Track AI usage
+      trackUsage({
+        userId,
+        timestamp: new Date(),
+        service: 'ai_gemini_25_flash',
+        feature: 'chat',
+        model: 'gemini-2.5-flash',
+        inputTokens: tokenUsage.inputTokens,
+        outputTokens: tokenUsage.outputTokens,
+        latencyMs: responseTime,
+      });
+
+      // Track Firestore reads (conversation history + context lookups)
+      trackUsage({
+        userId,
+        timestamp: new Date(),
+        service: 'firestore',
+        feature: 'chat',
+        reads: conversationHistory.length + 3, // Messages + conversation doc + profile lookups
+        writes: 2, // AI response + conversation update
+      });
+
       // Debug: Log full response structure
       const candidate = result.response.candidates?.[0];
       logger.info('Gemini raw response', {
@@ -320,6 +346,7 @@ IMPORTANT: You can now reference when things happened in your conversation. Each
         safetyRatings: candidate?.safetyRatings,
         partsCount: candidate?.content?.parts?.length,
         fullResponse: JSON.stringify(candidate),
+        tokenUsage,
       });
 
       const responseText =
@@ -347,6 +374,8 @@ IMPORTANT: You can now reference when things happened in your conversation. Each
           metadata: {
             model: 'gemini-2.5-flash',
             responseTime,
+            inputTokens: tokenUsage.inputTokens,
+            outputTokens: tokenUsage.outputTokens,
           },
         });
 
@@ -358,6 +387,9 @@ IMPORTANT: You can now reference when things happened in your conversation. Each
           updatedAt: admin.firestore.FieldValue.serverTimestamp(),
           messageCount: admin.firestore.FieldValue.increment(1),
         });
+
+      // 13. Flush usage tracking data
+      await flushUsage(userId);
     } catch (error) {
       logger.error('Error processing message', { userId, conversationId, error });
 

@@ -32,6 +32,7 @@ import {
   buildProfileUpdateMessage,
   buildInitialProfileMessage,
 } from './profilePrompt';
+import { trackUsage, flushUsage, extractTokenUsage } from '../usage';
 
 /**
  * Main function to create or update a psychological profile
@@ -85,6 +86,9 @@ export async function createOrUpdateProfile(
   // Save to Firestore
   await profileRef.set(updatedProfile);
 
+  // Flush usage tracking
+  await flushUsage(userId);
+
   logger.info('Psychological profile saved', {
     userId,
     version: updatedProfile.version,
@@ -108,7 +112,7 @@ async function createInitialProfile(
   const formattedData = formatWeeklyDataForAI(weeklyData);
 
   // Call Gemini for initial profile generation
-  const aiResponse = await callGeminiForInitialProfile(formattedData, language);
+  const aiResponse = await callGeminiForInitialProfile(userId, formattedData, language);
 
   const now = Timestamp.now();
 
@@ -216,6 +220,7 @@ async function updateExistingProfile(
 
   // Call Gemini for profile update
   const aiResponse = await callGeminiForProfileUpdate(
+    userId,
     existingProfileContext,
     formattedData,
     previousNoteContext,
@@ -353,6 +358,7 @@ async function updateExistingProfile(
 // ============================================================================
 
 async function callGeminiForInitialProfile(
+  userId: string,
   formattedData: string,
   language: SupportedLanguage
 ): Promise<InitialProfileResponse> {
@@ -379,6 +385,20 @@ async function callGeminiForInitialProfile(
     },
   });
 
+  // Extract token usage for cost tracking
+  const tokenUsage = extractTokenUsage(result);
+
+  // Track AI usage
+  trackUsage({
+    userId,
+    timestamp: new Date(),
+    service: 'ai_gemini_25_flash',
+    feature: 'psychological_profile_initial',
+    model: 'gemini-2.5-flash',
+    inputTokens: tokenUsage.inputTokens,
+    outputTokens: tokenUsage.outputTokens,
+  });
+
   const responseText = result.response.candidates?.[0]?.content?.parts?.[0]?.text;
 
   if (!responseText) {
@@ -389,6 +409,7 @@ async function callGeminiForInitialProfile(
 }
 
 async function callGeminiForProfileUpdate(
+  userId: string,
   existingProfileContext: string,
   formattedData: string,
   previousNoteContext: string | null,
@@ -419,6 +440,20 @@ async function callGeminiForProfileUpdate(
       temperature: 0.4,
       topP: 0.9,
     },
+  });
+
+  // Extract token usage for cost tracking
+  const tokenUsage = extractTokenUsage(result);
+
+  // Track AI usage
+  trackUsage({
+    userId,
+    timestamp: new Date(),
+    service: 'ai_gemini_25_flash',
+    feature: 'psychological_profile_update',
+    model: 'gemini-2.5-flash',
+    inputTokens: tokenUsage.inputTokens,
+    outputTokens: tokenUsage.outputTokens,
   });
 
   const responseText = result.response.candidates?.[0]?.content?.parts?.[0]?.text;
