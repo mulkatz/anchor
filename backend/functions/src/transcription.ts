@@ -16,6 +16,11 @@ ffmpeg.setFfmpegPath(ffmpegInstaller.path);
 const speechClient = new SpeechClient();
 const storage = new Storage();
 
+// Threshold for using long-running recognition (60 seconds of audio)
+// Google's synchronous recognize() API has a ~60 second limit
+const LONG_AUDIO_THRESHOLD_BYTES = 960000; // ~60s at 16kHz 16-bit mono
+const LONG_AUDIO_BUCKET = 'anxiety-buddy-0.firebasestorage.app'; // Use existing bucket
+
 /**
  * Convert audio buffer to LINEAR16 WAV format
  * Required because Speech-to-Text doesn't support AAC/MP4
@@ -58,8 +63,112 @@ async function convertToLinear16Wav(inputBuffer: Buffer, inputFormat: string): P
 }
 
 /**
+ * Transcribe long audio using longRunningRecognize
+ * Required for audio > 60 seconds (Google's synchronous API limit)
+ *
+ * Process:
+ * 1. Upload audio to GCS (required for long-running recognition)
+ * 2. Start async recognition operation
+ * 3. Poll for completion
+ * 4. Clean up GCS file
+ */
+async function transcribeLongAudio(
+  audioBuffer: Buffer,
+  config: {
+    encoding: string;
+    sampleRateHertz: number;
+    languageCode: string;
+  },
+  context: { userId: string; messageId: string }
+): Promise<{ transcription: string; confidence: number }> {
+  const tempGcsPath = `temp-transcription/${context.userId}/${context.messageId}-${Date.now()}.wav`;
+  const bucket = storage.bucket(LONG_AUDIO_BUCKET);
+  const tempFile = bucket.file(tempGcsPath);
+
+  try {
+    logger.info('Starting long audio transcription', {
+      userId: context.userId,
+      messageId: context.messageId,
+      audioSize: audioBuffer.length,
+      gcsPath: tempGcsPath,
+    });
+
+    // 1. Upload audio to GCS
+    await tempFile.save(audioBuffer, {
+      contentType: 'audio/wav',
+      metadata: {
+        purpose: 'transcription',
+        userId: context.userId,
+        messageId: context.messageId,
+      },
+    });
+
+    logger.info('Audio uploaded to GCS for long-running recognition', {
+      gcsPath: tempGcsPath,
+    });
+
+    // 2. Start long-running recognition
+    const gcsUri = `gs://${LONG_AUDIO_BUCKET}/${tempGcsPath}`;
+
+    const [operation] = await speechClient.longRunningRecognize({
+      config: {
+        encoding: config.encoding as any, // LINEAR16, WEBM_OPUS, etc.
+        sampleRateHertz: config.sampleRateHertz,
+        languageCode: config.languageCode,
+        model: 'latest_long',
+        enableAutomaticPunctuation: true,
+        useEnhanced: true,
+        profanityFilter: false,
+      },
+      audio: {
+        uri: gcsUri,
+      },
+    });
+
+    logger.info('Long-running recognition started', {
+      operationName: operation.name,
+    });
+
+    // 3. Wait for operation to complete (with timeout)
+    const [response] = await operation.promise();
+
+    // 4. Extract transcription
+    const transcription =
+      response.results
+        ?.map((result) => result.alternatives?.[0]?.transcript)
+        .join('\n')
+        .trim() || '';
+
+    const confidence = response.results?.[0]?.alternatives?.[0]?.confidence || 0;
+
+    logger.info('Long-running recognition completed', {
+      transcriptionLength: transcription.length,
+      confidence,
+    });
+
+    return { transcription, confidence };
+  } finally {
+    // 5. Clean up GCS file (always, even on error)
+    try {
+      await tempFile.delete();
+      logger.info('Cleaned up temporary GCS file', { gcsPath: tempGcsPath });
+    } catch (cleanupError) {
+      // Don't fail transcription if cleanup fails
+      logger.warn('Failed to clean up temporary GCS file', {
+        gcsPath: tempGcsPath,
+        error: cleanupError,
+      });
+    }
+  }
+}
+
+/**
  * Shared transcription logic
  * Used by both conversation and dive session audio messages
+ *
+ * Automatically chooses between:
+ * - recognize() for short audio (<60s) - fast, synchronous
+ * - longRunningRecognize() for long audio (>60s) - async, no time limit
  */
 async function transcribeAudioMessage(
   message: admin.firestore.DocumentData,
@@ -137,49 +246,72 @@ async function transcribeAudioMessage(
       audioBuffer = await convertToLinear16Wav(audioBuffer, 'mp4');
     }
 
-    logger.info('Using audio encoding', {
+    // 3. Get language from message metadata
+    const languageCode = message.metadata?.language || 'en-US';
+
+    // Determine if we need long-running recognition
+    const isLongAudio = audioBuffer.length > LONG_AUDIO_THRESHOLD_BYTES;
+
+    logger.info('Audio analysis', {
       encoding,
       sampleRateHertz,
       mimeType,
       needsConversion,
+      audioSize: audioBuffer.length,
+      isLongAudio,
+      languageCode,
       detectedFormat:
         mimeType.includes('aac') || mimeType.includes('mp4')
           ? 'mobile (AAC/MP4 → LINEAR16)'
           : 'web (WebM)',
     });
 
-    // 3. Prepare audio for Speech-to-Text
-    const audioContent = audioBuffer.toString('base64');
+    let transcription: string;
+    let confidence: number;
 
-    // 4. Get language from message metadata
-    const languageCode = message.metadata?.language || 'en-US';
+    if (isLongAudio) {
+      // 4a. Long audio: Use longRunningRecognize (async, no time limit)
+      logger.info('Using long-running recognition for audio > 60s', {
+        audioSize: audioBuffer.length,
+        estimatedDuration: `${Math.round(audioBuffer.length / 16000)}s`,
+      });
 
-    logger.info('Using language for transcription', { languageCode });
+      const result = await transcribeLongAudio(
+        audioBuffer,
+        { encoding, sampleRateHertz, languageCode },
+        { userId: context.userId, messageId: context.messageId }
+      );
+      transcription = result.transcription;
+      confidence = result.confidence;
+    } else {
+      // 4b. Short audio: Use synchronous recognize (fast, <60s)
+      logger.info('Using synchronous recognition for short audio');
 
-    // 5. Call Google Cloud Speech-to-Text API
-    const [response] = await speechClient.recognize({
-      config: {
-        encoding: encoding as any,
-        sampleRateHertz,
-        languageCode,
-        model: 'latest_long',
-        enableAutomaticPunctuation: true,
-        useEnhanced: true,
-        profanityFilter: false,
-      },
-      audio: {
-        content: audioContent,
-      },
-    });
+      const audioContent = audioBuffer.toString('base64');
 
-    // 6. Extract transcription and confidence
-    const transcription =
-      response.results
-        ?.map((result) => result.alternatives?.[0]?.transcript)
-        .join('\n')
-        .trim() || '';
+      const [response] = await speechClient.recognize({
+        config: {
+          encoding: encoding as any,
+          sampleRateHertz,
+          languageCode,
+          model: 'latest_long',
+          enableAutomaticPunctuation: true,
+          useEnhanced: true,
+          profanityFilter: false,
+        },
+        audio: {
+          content: audioContent,
+        },
+      });
 
-    const confidence = response.results?.[0]?.alternatives?.[0]?.confidence || 0;
+      transcription =
+        response.results
+          ?.map((result) => result.alternatives?.[0]?.transcript)
+          .join('\n')
+          .trim() || '';
+
+      confidence = response.results?.[0]?.alternatives?.[0]?.confidence || 0;
+    }
 
     logger.info('Transcription completed', {
       messageId: context.messageId,
@@ -187,6 +319,7 @@ async function transcribeAudioMessage(
       transcription: transcription.substring(0, 100),
       confidence,
       duration: Date.now() - startTime,
+      method: isLongAudio ? 'longRunningRecognize' : 'recognize',
     });
 
     // 7. Update Firestore message with transcription
@@ -245,7 +378,7 @@ export const onAudioMessageCreate = onDocumentCreated(
     document: 'users/{userId}/conversations/{conversationId}/messages/{messageId}',
     region: 'us-central1',
     memory: '512MiB',
-    timeoutSeconds: 120,
+    timeoutSeconds: 540, // 9 minutes for long audio (up to 10 min recording)
   },
   async (event) => {
     const message = event.data?.data();
@@ -281,7 +414,7 @@ export const onDiveAudioMessageCreate = onDocumentCreated(
     document: 'users/{userId}/dive_sessions/{sessionId}/messages/{messageId}',
     region: 'us-central1',
     memory: '512MiB',
-    timeoutSeconds: 120,
+    timeoutSeconds: 540, // 9 minutes for long audio (up to 10 min recording)
   },
   async (event) => {
     const message = event.data?.data();
