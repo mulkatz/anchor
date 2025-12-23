@@ -163,7 +163,6 @@ export const ChatContainer: FC<ChatContainerProps> = ({
                     message={message}
                     index={index}
                     skipAnimation={shouldSkipAnimation && !isPendingAudio}
-                    isInitialLoad={isInitialMessage}
                   />
                 </div>
               </div>
