@@ -66,10 +66,10 @@ export const FeelingsStep: FC<FeelingsStepProps> = ({ primaryEmotions, onEmotion
   };
 
   return (
-    <div className="flex h-full w-full flex-col items-center justify-center px-2">
+    <div className="flex h-full w-full flex-col items-center px-2 py-2">
       <div className="w-full max-w-md">
         {/* Title */}
-        <div className="mb-6 text-center">
+        <div className="mb-4 text-center">
           <h3 className="text-xl font-medium text-mist-white">
             {t('illuminate.feelings.title', 'How are you feeling?')}
           </h3>
@@ -136,7 +136,7 @@ export const FeelingsStep: FC<FeelingsStepProps> = ({ primaryEmotions, onEmotion
         </div>
 
         {/* Helper tip */}
-        <p className="mt-5 text-center text-xs text-mist-white/50">
+        <p className="mt-4 pb-2 text-center text-xs text-mist-white/50">
           {t(
             'illuminate.feelings.tip',
             'You can select up to 5 emotions that best describe how you feel'

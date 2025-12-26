@@ -68,21 +68,26 @@ export const IntensityStep: FC<IntensityStepProps> = ({
 
       {/* Intensity display */}
       <motion.div
-        key={emotionalIntensity}
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
         className="flex flex-col items-center gap-2"
       >
         <div
           className={cn(
-            'flex h-28 w-28 items-center justify-center rounded-full border-2 border-current transition-all duration-300',
+            'flex h-28 w-28 items-center justify-center rounded-full border-2 border-current transition-all duration-500 ease-viscous',
             getIntensityColor(emotionalIntensity),
             getGlowStyle(emotionalIntensity)
           )}
         >
           <span className="text-4xl font-bold">{emotionalIntensity}</span>
         </div>
-        <span className={cn('text-lg font-medium', getIntensityColor(emotionalIntensity))}>
+        <span
+          className={cn(
+            'text-lg font-medium transition-colors duration-500 ease-viscous',
+            getIntensityColor(emotionalIntensity)
+          )}
+        >
           {getIntensityLabel(emotionalIntensity)}
         </span>
       </motion.div>

@@ -226,7 +226,7 @@ export const IlluminateModal: FC<IlluminateModalProps> = ({ onClose, onComplete 
           </div>
 
           {/* Step content */}
-          <div className="relative min-h-0 flex-1 overflow-visible">
+          <div className="relative min-h-0 flex-1 overflow-hidden">
             <AnimatePresence mode="wait" custom={direction}>
               {step === 1 && (
                 <motion.div
@@ -237,7 +237,7 @@ export const IlluminateModal: FC<IlluminateModalProps> = ({ onClose, onComplete 
                   animate="center"
                   exit="exit"
                   transition={stepTransition}
-                  className="absolute inset-0 flex items-center justify-center overflow-visible px-1"
+                  className="absolute inset-0 flex items-center justify-center overflow-y-auto px-1"
                 >
                   <SituationStep
                     situation={data.situation}
@@ -255,7 +255,7 @@ export const IlluminateModal: FC<IlluminateModalProps> = ({ onClose, onComplete 
                   animate="center"
                   exit="exit"
                   transition={stepTransition}
-                  className="absolute inset-0 flex items-center justify-center overflow-visible px-1"
+                  className="absolute inset-0 flex items-center justify-center overflow-y-auto px-1"
                 >
                   <ThoughtsStep
                     automaticThoughts={data.automaticThoughts}
@@ -273,7 +273,7 @@ export const IlluminateModal: FC<IlluminateModalProps> = ({ onClose, onComplete 
                   animate="center"
                   exit="exit"
                   transition={stepTransition}
-                  className="absolute inset-0 overflow-visible px-1"
+                  className="absolute inset-0 overflow-y-auto px-1"
                 >
                   <FeelingsStep
                     primaryEmotions={data.primaryEmotions}
@@ -291,7 +291,7 @@ export const IlluminateModal: FC<IlluminateModalProps> = ({ onClose, onComplete 
                   animate="center"
                   exit="exit"
                   transition={stepTransition}
-                  className="absolute inset-0 flex items-center justify-center"
+                  className="absolute inset-0 flex items-center justify-center overflow-y-auto"
                 >
                   <IntensityStep
                     emotionalIntensity={data.emotionalIntensity}
@@ -309,7 +309,7 @@ export const IlluminateModal: FC<IlluminateModalProps> = ({ onClose, onComplete 
                   animate="center"
                   exit="exit"
                   transition={stepTransition}
-                  className="absolute inset-0 overflow-visible px-1"
+                  className="absolute inset-0 overflow-y-auto px-1"
                 >
                   <PatternStep
                     isLoading={isLoading}
@@ -332,7 +332,7 @@ export const IlluminateModal: FC<IlluminateModalProps> = ({ onClose, onComplete 
                   animate="center"
                   exit="exit"
                   transition={stepTransition}
-                  className="absolute inset-0 overflow-visible px-1"
+                  className="absolute inset-0 overflow-y-auto px-1"
                 >
                   <LightStep
                     aiSuggestedReframes={data.aiSuggestedReframes}
