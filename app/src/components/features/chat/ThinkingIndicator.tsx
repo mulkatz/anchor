@@ -22,7 +22,7 @@ export const ThinkingIndicator: FC = () => {
   };
 
   return (
-    <div className="mb-4 flex justify-start px-6">
+    <div className="mb-4 flex justify-start">
       <div
         className={cn(
           'rounded-3xl rounded-tl-lg px-6 py-4',

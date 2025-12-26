@@ -28,7 +28,7 @@ export const AudioMessageBubble: FC<AudioMessageBubbleProps> = ({ message, onRet
   const timeStr = getFullTimestamp(message.createdAt);
 
   return (
-    <div className="group mb-4 flex flex-col items-end gap-1 px-4 sm:px-6">
+    <div className="group mb-4 flex flex-col items-end gap-1">
       <div
         className={cn(
           'max-w-[90%] rounded-3xl',

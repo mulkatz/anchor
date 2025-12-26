@@ -15,7 +15,7 @@ export const UserMessage: FC<UserMessageProps> = ({ text, timestamp }) => {
   const timeStr = getFullTimestamp(timestamp);
 
   return (
-    <div className="group mb-4 flex flex-col items-end gap-1 px-4 sm:px-6">
+    <div className="group mb-4 flex flex-col items-end gap-1">
       <div
         className={cn(
           'max-w-[90%] rounded-3xl rounded-tr-lg px-5 py-3',
