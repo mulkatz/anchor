@@ -4,6 +4,7 @@ import type { SupportedLanguage } from '../models';
 /**
  * Crisis Hotline Configuration
  * Uses i18n for localized crisis resources
+ * Supports: en-US, en-CA, de-DE
  */
 
 export interface CrisisHotline {
@@ -20,10 +21,68 @@ export interface CrisisResources {
 }
 
 /**
- * Get crisis resources for the current language
+ * Canadian crisis resources (hardcoded since we use en-US translations for Canada)
+ */
+const CANADIAN_CRISIS_RESOURCES: CrisisResources = {
+  primaryHotline: {
+    name: 'Talk Suicide Canada',
+    number: '1-833-456-4566',
+    description: '24/7 Mental Health Support',
+    telLink: 'tel:1-833-456-4566',
+  },
+  secondaryHotline: {
+    name: 'Crisis Text Line',
+    number: 'Text HOME to 686868',
+    description: 'Text-based crisis support',
+    telLink: 'sms:686868',
+  },
+  emergency: {
+    name: '911 Emergency',
+    number: '911',
+    description: 'For Immediate Danger',
+    telLink: 'tel:911',
+  },
+};
+
+/**
+ * Detect if user is likely in Canada based on locale/timezone
+ */
+const isCanadianUser = (): boolean => {
+  const language = i18next.language;
+  const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+  // Check for Canadian English locale
+  if (language === 'en-CA') return true;
+
+  // Check for Canadian timezone (covers most major Canadian cities)
+  const canadianTimezones = [
+    'America/Toronto',
+    'America/Vancouver',
+    'America/Montreal',
+    'America/Edmonton',
+    'America/Winnipeg',
+    'America/Halifax',
+    'America/St_Johns',
+    'America/Regina',
+    'America/Calgary',
+    'America/Whitehorse',
+    'America/Yellowknife',
+    'America/Iqaluit',
+  ];
+
+  return canadianTimezones.includes(timezone);
+};
+
+/**
+ * Get crisis resources for the current language/region
  */
 export const getCrisisResources = (): CrisisResources => {
   const currentLanguage = i18next.language;
+
+  // Canadian users get Canadian resources
+  if (isCanadianUser() && currentLanguage.startsWith('en')) {
+    return CANADIAN_CRISIS_RESOURCES;
+  }
 
   const resources: CrisisResources = {
     primaryHotline: {
@@ -54,9 +113,35 @@ export const getCrisisResources = (): CrisisResources => {
 };
 
 /**
+ * Get Canadian crisis message text
+ */
+const getCanadianCrisisMessage = (): string => {
+  return `I'm deeply concerned about what you're sharing. You deserve immediate support from a trained professional.
+
+**Crisis Resources:**
+
+🆘 **Talk Suicide Canada**
+Call: 1-833-456-4566
+Available 24/7
+
+💬 **Crisis Text Line**
+Text HOME to 686868
+
+🚨 **Emergency: 911**
+For immediate danger
+
+You matter. Please reach out to one of these services now.`;
+};
+
+/**
  * Get crisis message text for AI responses
  */
 export const getCrisisMessageText = (language: SupportedLanguage): string => {
+  // Check for Canadian user first
+  if (isCanadianUser() && language.startsWith('en')) {
+    return getCanadianCrisisMessage();
+  }
+
   switch (language) {
     case 'de-DE':
       return `Mir macht Sorgen, was du gerade teilst. Du verdienst sofortige Unterstützung von ausgebildeten Fachleuten.

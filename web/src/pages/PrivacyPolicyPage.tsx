@@ -11,13 +11,13 @@ import { SUPPORT_EMAIL, LEGAL_EMAIL } from '@/lib/constants';
  * Addresses 13+ age requirement and data handling practices
  */
 export function PrivacyPolicyPage() {
-  const lastUpdated = 'December 10, 2024';
+  const lastUpdated = 'December 26, 2024';
 
   return (
     <>
       <SEO
         title="Privacy Policy - Anchor"
-        description="Learn how Anchor protects your privacy. We auto-delete voice recordings after 7 days, never sell your data, and give you full control over your information."
+        description="Learn how Anchor protects your privacy. We never sell your data and give you full control over your information, including the ability to delete it anytime."
         url="https://getanchor.app/privacy"
       />
       <PageWrapper showBubbles={false}>
@@ -158,13 +158,14 @@ export function PrivacyPolicyPage() {
                     When you use voice messaging:
                   </p>
                   <ul className="mt-3 list-disc space-y-2 pl-6 text-mist-white/70">
-                    <li>Audio recordings are temporarily stored for transcription</li>
+                    <li>Audio recordings are securely stored for transcription and playback</li>
                     <li>Transcribed text becomes part of your conversation history</li>
                     <li>
                       <strong className="text-warm-ember">
-                        Audio files are automatically deleted after 7 days
+                        You can delete voice recordings at any time through the app
                       </strong>
                     </li>
+                    <li>Audio files are permanently deleted when you delete your account</li>
                   </ul>
 
                   <h3 className="mt-6 text-lg font-medium text-mist-white">
@@ -305,21 +306,20 @@ export function PrivacyPolicyPage() {
                 <section id="data-retention" className="mt-10">
                   <h2 className="text-xl font-semibold text-mist-white">5. Data Retention</h2>
 
-                  <div className="mt-4 rounded-xl border border-warm-ember/30 bg-warm-ember/10 p-4">
-                    <h3 className="font-semibold text-warm-ember">
-                      Voice Recordings: 7-Day Automatic Deletion
-                    </h3>
+                  <div className="mt-4 rounded-xl border border-biolum-cyan/30 bg-biolum-cyan/10 p-4">
+                    <h3 className="font-semibold text-biolum-cyan">You Control Your Data</h3>
                     <p className="mt-2 text-mist-white/70">
-                      All voice recordings are automatically and permanently deleted from our
-                      servers 7 days after upload. This is enforced at the infrastructure level and
-                      cannot be overridden.
+                      All your data remains under your control. You can delete individual
+                      conversations, voice recordings, or your entire account at any time through
+                      the app settings.
                     </p>
                   </div>
 
                   <h3 className="mt-6 text-lg font-medium text-mist-white">Retention Periods</h3>
                   <ul className="mt-3 list-disc space-y-2 pl-6 text-mist-white/70">
                     <li>
-                      <strong>Voice Recordings:</strong> 7 days (then auto-deleted)
+                      <strong>Voice Recordings:</strong> Retained until you delete them or your
+                      account
                     </li>
                     <li>
                       <strong>Conversation Text:</strong> Retained until you delete it or your

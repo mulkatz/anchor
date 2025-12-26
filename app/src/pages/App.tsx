@@ -7,6 +7,7 @@ import { UIProvider } from '../contexts/UIContext';
 import { DiveProvider } from '../contexts/DiveContext';
 import { InsightProvider } from '../contexts/InsightContext';
 import { AchievementProvider } from '../contexts/AchievementContext';
+import { ErrorBoundary } from '../components/ErrorBoundary';
 import { MainLayout } from '../components/layouts/MainLayout';
 import { HomePage } from './HomePage';
 import { SOSPage } from './SOSPage';
@@ -299,21 +300,23 @@ const RouterContent: FC = () => {
 const App: FC = () => {
   // Auth is now handled in AppContext with proper onAuthStateChanged tracking
   return (
-    <AppProvider>
-      <UIProvider>
-        <DiveProvider>
-          <AchievementProvider>
-            <InsightProvider>
-              <DialogProvider>
-                <BrowserRouter>
-                  <RouterContent />
-                </BrowserRouter>
-              </DialogProvider>
-            </InsightProvider>
-          </AchievementProvider>
-        </DiveProvider>
-      </UIProvider>
-    </AppProvider>
+    <ErrorBoundary>
+      <AppProvider>
+        <UIProvider>
+          <DiveProvider>
+            <AchievementProvider>
+              <InsightProvider>
+                <DialogProvider>
+                  <BrowserRouter>
+                    <RouterContent />
+                  </BrowserRouter>
+                </DialogProvider>
+              </InsightProvider>
+            </AchievementProvider>
+          </DiveProvider>
+        </UIProvider>
+      </AppProvider>
+    </ErrorBoundary>
   );
 };
 
