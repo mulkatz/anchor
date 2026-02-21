@@ -179,7 +179,7 @@ Reusable glass morphism container.
 Real store URLs are configured in `src/lib/constants.ts`:
 
 ```ts
-export const APP_STORE_URL = 'https://apps.apple.com/app/id6756347720';
+export const APP_STORE_URL = 'https://apps.apple.com/de/app/id6756347720';
 export const PLAY_STORE_URL = 'https://play.google.com/store/apps/details?id=cx.franz.anxietybuddy';
 ```
 

@@ -1,10 +1,28 @@
 {
   "name": "anxiety-buddy",
-  "version": "0.1.0",
+  "version": "0.8.0",
   "private": true,
-  "license": "UNLICENSED",
+  "license": "MIT",
   "description": "Anchor: Anxiety Navigator - A therapeutic mobile application for immediate anxiety relief",
   "author": "Franz Benthin",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mulkatz/anxiety-buddy.git"
+  },
+  "homepage": "https://github.com/mulkatz/anxiety-buddy",
+  "keywords": [
+    "anxiety",
+    "mental-health",
+    "therapeutic",
+    "cbt",
+    "panic-attack",
+    "ai-chat",
+    "voice-messages",
+    "capacitor",
+    "react",
+    "firebase",
+    "gemini"
+  ],
   "workspaces": [
     "app",
     "backend/functions",

@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20, 22]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+          cache-dependency-path: |
+            app/package-lock.json
+            backend/functions/package-lock.json
+
+      - name: Install app dependencies
+        run: cd app && npm ci
+
+      - name: Build app
+        run: cd app && npm run build
+
+      - name: Install backend dependencies
+        run: cd backend/functions && npm ci
+
+      - name: Build backend
+        run: cd backend/functions && npm run build

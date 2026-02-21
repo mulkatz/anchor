@@ -1,104 +1,21 @@
-PROPRIETARY SOFTWARE LICENSE AGREEMENT
+MIT License
 
-Copyright (c) 2024-2025 Franz. All Rights Reserved.
+Copyright (c) 2024-2025 Franz Benthin
 
-IMPORTANT: READ CAREFULLY BEFORE USING THIS SOFTWARE
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-This software and associated documentation files (the "Software") are the proprietary
-and confidential property of Franz ("Owner"). The Software is protected by copyright
-laws, international copyright treaties, and other intellectual property laws and
-treaties.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-1. GRANT OF LICENSE
-
-   NO LICENSE IS GRANTED. This Software is provided for viewing purposes only. No
-   rights to use, copy, modify, merge, publish, distribute, sublicense, sell, or
-   otherwise transfer this Software are granted under this license.
-
-2. RESTRICTIONS
-
-   You may NOT:
-
-   a) Use the Software for any purpose whatsoever without explicit written permission
-      from the Owner;
-   b) Copy, reproduce, or duplicate the Software in any form or by any means;
-   c) Modify, adapt, translate, reverse engineer, decompile, disassemble, or create
-      derivative works based on the Software;
-   d) Distribute, sublicense, lease, rent, loan, or transfer the Software to any
-      third party;
-   e) Remove, alter, or obscure any proprietary notices, labels, or marks on the
-      Software;
-   f) Share, publish, or make available the Software or any portion thereof through
-      any means, including but not limited to source code repositories, file sharing
-      services, or electronic transmission;
-   g) Use the Software in any manner that competes with or undermines the Owner's
-      business interests;
-   h) Extract, scrape, or collect any data, code, or content from the Software;
-   i) Create any derivative works, modifications, or improvements based on the
-      Software.
-
-3. OWNERSHIP
-
-   The Software is licensed, not sold. The Owner retains all right, title, and
-   interest in and to the Software, including all intellectual property rights
-   therein. This includes, without limitation, all copyrights, patents, trade
-   secrets, trademarks, and other proprietary rights.
-
-4. CONFIDENTIALITY
-
-   The Software contains trade secrets and proprietary information of the Owner.
-   You agree to maintain the confidentiality of the Software and not disclose it
-   to any third party without the prior written consent of the Owner.
-
-5. NO WARRANTY
-
-   THE SOFTWARE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
-   INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
-   PARTICULAR PURPOSE, AND NONINFRINGEMENT. THE OWNER DOES NOT WARRANT THAT THE
-   SOFTWARE WILL BE ERROR-FREE OR UNINTERRUPTED.
-
-6. LIMITATION OF LIABILITY
-
-   IN NO EVENT SHALL THE OWNER BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-   PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
-   BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-   CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
-   IN ANY WAY OUT OF THE USE OF OR INABILITY TO USE THE SOFTWARE, EVEN IF ADVISED
-   OF THE POSSIBILITY OF SUCH DAMAGE.
-
-7. TERMINATION
-
-   Any unauthorized use of the Software will result in automatic termination of any
-   implied permissions and may subject you to legal action. Upon termination, you
-   must immediately destroy all copies of the Software in your possession or control.
-
-8. LEGAL REMEDIES
-
-   The Owner reserves all rights to seek legal remedies for any unauthorized use,
-   copying, distribution, or modification of the Software, including but not limited
-   to injunctive relief and monetary damages.
-
-9. GOVERNING LAW
-
-   This license shall be governed by and construed in accordance with the laws of
-   the jurisdiction in which the Owner resides, without regard to its conflict of
-   law provisions.
-
-10. ENTIRE AGREEMENT
-
-    This license constitutes the entire agreement between you and the Owner
-    concerning the Software and supersedes all prior or contemporaneous
-    communications and proposals.
-
-11. CONTACT
-
-    For licensing inquiries or permission requests, contact the Owner at:
-    [Your contact information to be added]
-
-BY ACCESSING, VIEWING, OR USING THIS SOFTWARE IN ANY MANNER, YOU ACKNOWLEDGE THAT
-YOU HAVE READ THIS LICENSE AGREEMENT, UNDERSTAND IT, AND AGREE TO BE BOUND BY ITS
-TERMS AND CONDITIONS.
-
-ALL RIGHTS RESERVED. UNAUTHORIZED USE, COPYING, DISTRIBUTION, OR MODIFICATION IS
-STRICTLY PROHIBITED AND WILL BE PROSECUTED TO THE FULLEST EXTENT OF THE LAW.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
