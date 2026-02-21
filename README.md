@@ -1,14 +1,13 @@
+<div align="center">
+  <img src="assets/icon.png" alt="Anchor" width="100" />
+  <h1>Anchor: Anxiety Navigator</h1>
+  <p>Therapeutic mobile app for immediate relief during anxiety and panic attacks.<br/>Evidence-based CBT and somatic grounding delivered through a calming deep-ocean interface.</p>
+  <br/>
+  <a href="https://apps.apple.com/de/app/id6756347720"><img src="assets/badge-app-store.svg" height="40" alt="Download on the App Store" /></a> <a href="https://play.google.com/store/apps/details?id=cx.franz.anxietybuddy"><img src="assets/badge-google-play.svg" height="40" alt="Get it on Google Play" /></a>
+  <br/><br/>
+</div>
+
 <p align="center">
-  <img src="assets/icon.png" alt="Anchor" width="128" height="128">
-</p>
-
-<h1 align="center">Anchor: Anxiety Navigator</h1>
-
-<p align="center">Therapeutic mobile app for immediate relief during anxiety and panic attacks. Evidence-based CBT and somatic grounding delivered through a calming deep-ocean interface.</p>
-
-<p align="center">
-  <a href="https://apps.apple.com/de/app/id6756347720"><img src="https://img.shields.io/badge/App_Store-0D96F6?style=flat-square&logo=app-store&logoColor=white" alt="App Store"></a>
-  <a href="https://play.google.com/store/apps/details?id=cx.franz.anxietybuddy"><img src="https://img.shields.io/badge/Google_Play-414141?style=flat-square&logo=google-play&logoColor=white" alt="Google Play"></a>
   <a href="https://github.com/mulkatz/anxiety-buddy/releases"><img src="https://img.shields.io/badge/version-0.8.0-blue" alt="Version"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-green" alt="License: MIT"></a>
 </p>
