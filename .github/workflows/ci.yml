@@ -23,11 +23,11 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: npm
           cache-dependency-path: |
-            app/package-lock.json
+            package-lock.json
             backend/functions/package-lock.json
 
       - name: Install app dependencies
-        run: cd app && npm ci
+        run: npm ci
 
       - name: Build app
         run: cd app && npm run build
